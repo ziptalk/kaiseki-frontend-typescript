@@ -6,6 +6,7 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "target": "ES2016", // Set this to ES2016 or newer - edited this cause BigInt
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,

@@ -1,0 +1,115 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IMCV2_Bond",
+  "sourceName": "contracts/interfaces/IMCV2_Bond.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "symbol",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "uri",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IMCV2_Bond.MultiTokenParams",
+          "name": "tp",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint16",
+              "name": "mintRoyalty",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "burnRoyalty",
+              "type": "uint16"
+            },
+            {
+              "internalType": "address",
+              "name": "reserveToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint128",
+              "name": "maxSupply",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128[]",
+              "name": "stepRanges",
+              "type": "uint128[]"
+            },
+            {
+              "internalType": "uint128[]",
+              "name": "stepPrices",
+              "type": "uint128[]"
+            }
+          ],
+          "internalType": "struct IMCV2_Bond.BondParams",
+          "name": "bp",
+          "type": "tuple"
+        }
+      ],
+      "name": "createMultiToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "creationFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        }
+      ],
+      "name": "updateBondCreator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
