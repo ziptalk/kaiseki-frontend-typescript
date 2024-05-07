@@ -40,7 +40,7 @@ const Create: NextPage = () => {
         signer = await provider.getSigner();
       }
     }
-    init();
+    // init();
   }, []);
 
   signer = useEthersSigner();

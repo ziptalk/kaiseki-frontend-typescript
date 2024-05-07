@@ -13,6 +13,7 @@ import {
 } from "wagmi";
 import { useState } from "react";
 import { type UseWaitForTransactionReceiptReturnType } from "wagmi";
+import Header from "@/components/Header";
 
 export default function Home() {
   const [to, setTo] = useState<any>();
@@ -20,15 +21,7 @@ export default function Home() {
 
   return (
     <main className="h-screen w-screen">
-      <header className="h-[10vh] w-screen bg-red-100 flex sticky top-0 left-0">
-        <div className="flex justify-between w-full h-full items-center px-5">
-          <div className="flex border border-r-black px-2 w-32">
-            <div className="border ">logo</div>
-            <div className="border ml-5">name</div>
-          </div>
-          <ConnectButton />
-        </div>
-      </header>
+      <Header />
       <div className="w-[900px] h-full bg-blue-100 mx-auto">
         {/* <button onClick={() => mint()}>Transfer</button> */}
         <button
