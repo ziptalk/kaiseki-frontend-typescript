@@ -62,15 +62,6 @@ const Create: NextPage = () => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
   };
 
-  contract.on("TokenCreated", (event) => {
-    console.log(event.log);
-
-    // The `event.log` has the entire EventLog
-
-    // Optionally, stop listening
-    event.removeListener();
-  });
-
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
