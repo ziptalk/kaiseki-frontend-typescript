@@ -5,6 +5,8 @@ import {
   useAccountModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FC } from "react";
 import { useAccount } from "wagmi";
 
@@ -12,21 +14,28 @@ const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected } = useAccount();
+  const pathname = usePathname();
   return (
     <>
-      <header className="h-[90px] w-screen bg-[#1F1F1F] z-10 flex sticky top-0 left-0">
-        <div className="flex justify-between w-full h-full px-[40px] items-center">
-          <div className="flex px-2 h-[40px] items-center  border text-white">
-            <div className="flex border-r items-center w-[330px] justify-evenly border-r-yellow-500  h-full">
-              <div className="border rounded-full w-[40px] h-[40px] ">logo</div>
+      <header className="sticky left-0 top-0 z-10 flex h-[90px] w-screen bg-[#1F1F1F]">
+        {pathname == "/" && (
+          <div className="absolute left-0 top-[90px] h-[80vh] w-[25vw] bg-purple-100"></div>
+        )}
+
+        <div className="flex h-full w-full items-center justify-between px-[40px]">
+          <div className="flex h-[40px] items-center border  px-2 text-white">
+            <div className="flex h-full w-[330px] items-center justify-evenly border-r  border-r-yellow-500">
+              <Link href="/" className="h-[40px] w-[40px] rounded-full border ">
+                logo
+              </Link>
               <div className="">namesino</div>
               <h1 className="">TE</h1>
               <h1 className="">TW</h1>
               <h1 className="">IF</h1>
             </div>
-            <div className="flex items-center h-full">
-              <h1 className="px-[30px]">Dashbord</h1>
-              <div className="w-[25vw] bg-gray-400 h-full"></div>
+            <div className="flex h-full items-center">
+              <h1 className="px-[30px]">Dashboard</h1>
+              <div className="h-full w-[25vw] bg-gray-400"></div>
             </div>
           </div>
           <div className="flex items-center">
@@ -34,20 +43,23 @@ const Header: FC = () => {
             {isConnected ? (
               <button
                 onClick={openAccountModal}
-                className="w-[180px] h-[45px] border rounded-[13.5px] text-white cursor-pointer"
+                className="h-[45px] w-[180px] cursor-pointer rounded-[13.5px] border text-white"
               >
-                Connect Wallet
+                Connected
               </button>
             ) : (
               <button
                 onClick={openConnectModal}
-                className="w-[180px] h-[45px] border rounded-[13.5px] text-white cursor-pointer"
+                className="h-[45px] w-[180px] cursor-pointer rounded-[13.5px] border text-white"
               >
-                Connected
+                Connect Wallet
               </button>
             )}
           </div>
         </div>
+        {pathname == "/" && (
+          <div className="absolute right-0 top-[90px] h-[80vh] w-[25vw] bg-purple-100 "></div>
+        )}
       </header>
     </>
   );
