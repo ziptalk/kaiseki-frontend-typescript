@@ -2,7 +2,7 @@
 
 import Header from "@/components/Header";
 import { NextPage } from "next";
-import contracts from "@/contracts/contracts";
+
 import {
   useAccount,
   useReadContract,
@@ -11,58 +11,19 @@ import {
   useWriteContract,
 } from "wagmi";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-
+import contracts from "@/contracts/contracts";
 import { ethers } from "ethers";
 import { useEffect } from "react";
 import { Contract } from "ethers";
 import { useEthersSigner } from "@/hooks/ethers";
 import { type UseAccountReturnType } from "wagmi";
+import { useEthersProvider } from "@/config";
+import { digital } from "@/fonts/font";
 
 const Create: NextPage = () => {
-  let signer = null;
-  let events;
-  let provider;
-  let filter;
-  useEffect(() => {
-    async function init() {
-      if (window.ethereum == null) {
-        // If MetaMask is not installed, we use the default provider,
-        // which is backed by a variety of third-party services (such
-        // as INFURA). They do not have private keys installed,
-        // so they only have read-only access
-        console.log("MetaMask not installed; using read-only defaults");
-        provider = ethers.getDefaultProvider();
-      } else {
-        // Connect to the MetaMask EIP-1193 object. This is a standard
-        // protocol that allows Ethers access to make all read-only
-        // requests through MetaMask.
-        provider = new ethers.BrowserProvider(window.ethereum);
-        console.log(provider);
-        // It also provides an opportunity to request access to write
-        // operations, which will be performed by the private key
-        // that MetaMask manages for the user.
-        signer = await provider.getSigner();
-      }
-    }
-    init();
-  }, []);
-
-  signer = useEthersSigner();
+  const provider = useEthersProvider();
 
   const contract = new Contract(contracts.MCV2_Bond, abi, provider);
-
-  async function eve() {
-    try {
-      const filter = contract.filters.TokenCreated();
-      const events = await contract.queryFilter(filter, -100);
-      console.log(events[0]);
-    } catch (error) {
-      console.error("Error querying filter:", error);
-    }
-  }
-
-  const account: UseAccountReturnType = useAccount();
-  // console.log(account);
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -76,144 +37,39 @@ const Create: NextPage = () => {
     isSuccess,
     writeContractAsync,
     status,
-    variables,
   } = useWriteContract();
+
+  useEffect(() => {
+    fetchEvent();
+  }, [isSuccess]);
+
+  // 이벤트 이거 가져와짐 개꿀
+  async function fetchEvent() {
+    try {
+      const filter = contract.filters.TokenCreated();
+      const events: any = await contract.queryFilter(filter, -100);
+      console.log(events[0].args[0]); // token contract
+    } catch (error) {
+      console.error("Error querying filter:", error);
+    }
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
-    const symbol = formData.get("symbol") as string;
+    const ticker = formData.get("ticker") as string;
 
-    const {
-      data,
-      error: rErr,
-      isFetched,
-    } = useReadContract({
-      abi,
+    await writeContractAsync({
       address: contracts.MCV2_Bond,
-      functionName: "tokensLength",
-    });
-
-    useEffect(() => {
-      if (isFetched == false) return;
-      writeContractAsync({
-        address: contracts.MCV2_Bond,
-        abi,
-        functionName: "createToken",
-        args: [
-          { name: name, symbol: symbol },
-          {
-            mintRoyalty: 0,
-            burnRoyalty: 0,
-            reserveToken: "0x36602b7f1706200ec47a680ba929995a11cd8ab7", // Should be set later
-            maxSupply: wei(10000000), // supply: 10M
-            stepRanges: [
-              wei(10000),
-              wei(100000),
-              wei(200000),
-              wei(500000),
-              wei(1000000),
-              wei(2000000),
-              wei(5000000),
-              wei(10000000),
-            ],
-            stepPrices: [
-              wei(0, 9),
-              wei(2, 9),
-              wei(3, 9),
-              wei(4, 9),
-              wei(5, 9),
-              wei(7, 9),
-              wei(10, 9),
-              wei(15, 9),
-            ],
-          },
-        ],
-      });
-    }, [isFetched]);
-  }
-
-  // async function submitInEthers(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.target as HTMLFormElement);
-  //   const name = formData.get("name") as string;
-  //   const symbol = formData.get("symbol") as string;
-  //   const tx = await contract.createToken(
-  //     { name: name, symbol: symbol },
-  //     {
-  //       mintRoyalty: 0,
-  //       burnRoyalty: 0,
-  //       reserveToken: "0x36602b7f1706200ec47a680ba929995a11cd8ab7", // Should be set later
-  //       maxSupply: wei(10000000), // supply: 10M
-  //       stepRanges: [
-  //         wei(10000),
-  //         wei(100000),
-  //         wei(200000),
-  //         wei(500000),
-  //         wei(1000000),
-  //         wei(2000000),
-  //         wei(5000000),
-  //         wei(10000000),
-  //       ],
-  //       stepPrices: [
-  //         wei(0, 9),
-  //         wei(2, 9),
-  //         wei(3, 9),
-  //         wei(4, 9),
-  //         wei(5, 9),
-  //         wei(7, 9),
-  //         wei(10, 9),
-  //         wei(15, 9),
-  //       ],
-  //     }
-  //   );
-  //   const CA = await contract.createToken.staticCall(
-  //     { name: name, symbol: symbol },
-  //     {
-  //       mintRoyalty: 0,
-  //       burnRoyalty: 0,
-  //       reserveToken: "0x36602b7f1706200ec47a680ba929995a11cd8ab7", // Should be set later
-  //       maxSupply: wei(10000000), // supply: 10M
-  //       stepRanges: [
-  //         wei(10000),
-  //         wei(100000),
-  //         wei(200000),
-  //         wei(500000),
-  //         wei(1000000),
-  //         wei(2000000),
-  //         wei(5000000),
-  //         wei(10000000),
-  //       ],
-  //       stepPrices: [
-  //         wei(0, 9),
-  //         wei(2, 9),
-  //         wei(3, 9),
-  //         wei(4, 9),
-  //         wei(5, 9),
-  //         wei(7, 9),
-  //         wei(10, 9),
-  //         wei(15, 9),
-  //       ],
-  //     }
-  //   );
-
-  //   console.log(CA);
-  //   await tx.wait();
-  //   console.log(tx);
-  // }
-
-  async function mint(name: string, symbol: string) {
-    const token = await writeContractAsync({
       abi,
-      address: contracts.MCV2_Bond,
       functionName: "createToken",
       args: [
-        { name: name, symbol: symbol },
+        { name: name, symbol: ticker },
         {
           mintRoyalty: 0,
           burnRoyalty: 0,
-          reserveToken: "0x36602b7f1706200ec47a680ba929995a11cd8ab7", // Should be set later
+          reserveToken: contracts.ReserveToken, // Should be set later
           maxSupply: wei(10000000), // supply: 10M
           stepRanges: [
             wei(10000),
@@ -239,29 +95,49 @@ const Create: NextPage = () => {
       ],
     });
 
-    alert(token);
+    await fetchEvent();
   }
 
   return (
     <>
       <Header />
-      <div className="h-screen w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
+      <div className="h-screen w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09] ">
         <div className="mx-auto h-full w-[500px] ">
           <div className="mx-auto h-full  w-[480px] pt-[40px]">
             <div className="">
               <h1 className="text-center text-lg text-[#F9FF00]">Preview</h1>
-              <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_10px_rgba(0,0,0,0.25)] shadow-[#FF2525]">
+              <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
                 <div>
                   <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
                 </div>
                 <div className=" text w-[334px] overflow-hidden px-[10px]">
-                  <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                    Name <br />
-                    [ticker: ticker]
-                  </h1>
+                  <div className="">
+                    <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                      Name
+                    </h1>
+                    <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                      [ticker: ticker]
+                    </h1>
+                  </div>
 
-                  <h1 className="text-xs text-[#C5F900]">Created by: Name</h1>
-                  <h1 className="text-xs text-[#FAFF00]">Market cap: 0.00k</h1>
+                  <div className="flex">
+                    <h1 className="neon-lime text-xs text-[#C5F900] ">
+                      Created by:&nbsp;
+                    </h1>
+                    <h1 className="neon-lime text-xs text-[#C5F900] ">Name</h1>
+                  </div>
+
+                  <div className="flex">
+                    <h1 className="neon-yellow text-xs text-[#FAFF00]">
+                      Market cap:&nbsp;
+                    </h1>
+                    <h1
+                      className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+                    >
+                      0.00K
+                    </h1>
+                  </div>
+
                   <h1 className="h-[90px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
                     Pizza ipsum dolor meat lovers buffalo. Bacon Aussie
                     mozzarella buffalo hand lovers string. Chicago garlic roll
@@ -335,7 +211,7 @@ const Create: NextPage = () => {
             <div>status: {status}</div>
             <div>data : {mintData}</div>
 
-            <button onClick={() => eve()}>eve</button>
+            <button onClick={() => fetchEvent()}>eve</button>
           </div>
         </div>
       </div>

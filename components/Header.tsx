@@ -8,13 +8,28 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useWatchContractEvent } from "wagmi";
+import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import contracts from "@/contracts/contracts";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected } = useAccount();
   const pathname = usePathname();
+
+  useWatchContractEvent({
+    address: contracts.MCV2_Bond,
+    abi,
+    eventName: "TokenCreated",
+    onLogs(logs) {
+      console.log("New logs!", logs);
+    },
+    onError(error) {
+      console.log("Error", error);
+    },
+  });
+
   return (
     <>
       <header className="sticky left-0 top-0 z-10 flex h-[90px] w-screen bg-[#1F1F1F]">
@@ -23,11 +38,12 @@ const Header: FC = () => {
         )}
 
         <div className="flex h-full w-full items-center justify-between px-[40px]">
-          <div className="flex h-[40px] items-center border  px-2 text-white">
-            <div className="flex h-full w-[330px] items-center justify-evenly border-r  border-r-yellow-500">
-              <Link href="/" className="h-[40px] w-[40px] rounded-full border ">
-                logo
-              </Link>
+          <div className="flex h-[40px] items-center px-2 text-white">
+            <div className="flex h-full w-[330px] items-center justify-evenly border-r  border-r-[#EAFF00]">
+              <Link
+                href="/"
+                className="h-[40px] w-[40px] rounded-full  bg-gray-400 "
+              ></Link>
               <div className="">namesino</div>
               <h1 className="">TE</h1>
               <h1 className="">TW</h1>

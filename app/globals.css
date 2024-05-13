@@ -4,3 +4,12 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.neon-lime {
+  color: #c5f900;
+  text-shadow: 0 0 7px #c5f900;
+}
+.neon-yellow {
+  color: #faff00;
+  text-shadow: 0 0 7px #faff00;
+}
