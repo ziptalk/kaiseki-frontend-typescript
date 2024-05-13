@@ -26,20 +26,20 @@ export default function Detail() {
   const cleanedPathname = cleanPathname(pathname);
   const tokenAddress: any = cleanedPathname;
 
-  const { data: steps } = useReadContract({
-    abi,
-    address: contracts.MCV2_Bond,
-    functionName: "getSteps",
-    args: [cleanedPathname],
-  });
-  const { data: nextMintPrice } = useReadContract({
-    abi,
-    address: contracts.MCV2_Bond,
-    functionName: "priceForNextMint",
-    args: [cleanedPathname],
-  });
-  console.log("steps :" + steps);
-  console.log("nextMintPrice :" + nextMintPrice);
+  // const { data: steps } = useReadContract({
+  //   abi,
+  //   address: contracts.MCV2_Bond,
+  //   functionName: "getSteps",
+  //   args: [cleanedPathname],
+  // });
+  // const { data: nextMintPrice } = useReadContract({
+  //   abi,
+  //   address: contracts.MCV2_Bond,
+  //   functionName: "priceForNextMint",
+  //   args: [cleanedPathname],
+  // });
+  // console.log("steps :" + steps);
+  // console.log("nextMintPrice :" + nextMintPrice);
 
   // Initialize web3
   const web3 = new Web3("https://evm-rpc-arctic-1.sei-apis.com");

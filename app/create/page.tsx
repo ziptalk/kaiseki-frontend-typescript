@@ -39,18 +39,36 @@ const Create: NextPage = () => {
     status,
   } = useWriteContract();
 
-  useEffect(() => {
-    fetchEvent();
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   fetchEvent();
+  // }, [isSuccess]);
 
   // 이벤트 이거 가져와짐 개꿀
   async function fetchEvent() {
     try {
       const filter = contract.filters.TokenCreated();
-      const events: any = await contract.queryFilter(filter, -100);
+      const events: any = await contract.queryFilter(filter, -1000);
       console.log(events[0].args[0]); // token contract
     } catch (error) {
       console.error("Error querying filter:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchPrevEvents();
+  }, []);
+  async function fetchPrevEvents() {
+    console.log("entered");
+    try {
+      console.log("entered TRY");
+      const events = await contract.queryFilter(
+        contract.filters.TokenCreated(),
+      );
+      events.forEach((event) => {
+        console.log(event);
+      });
+    } catch (error: any) {
+      console.error("Error fetching events:", error.message);
     }
   }
 
@@ -212,6 +230,7 @@ const Create: NextPage = () => {
             <div>data : {mintData}</div>
 
             <button onClick={() => fetchEvent()}>eve</button>
+            <button onClick={() => fetchPrevEvents()}>Peve</button>
           </div>
         </div>
       </div>
