@@ -214,8 +214,6 @@ export default function Detail() {
 
   return (
     <>
-      <Header />
-
       <main className="flex h-screen w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
         <div className="h-full w-full bg-green-100">
           {cleanedPathname}

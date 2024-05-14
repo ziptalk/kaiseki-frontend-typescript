@@ -7,98 +7,73 @@ import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/contracts/contracts";
 import { type UseReadContractReturnType } from "wagmi";
 import Link from "next/link";
+import TokenCard from "@/components/TokenCard";
 
 export default function Home() {
-  const {
-    data: lengData,
-    error: lengError,
-    isFetched: lengFetched,
-  }: UseReadContractReturnType = useReadContract({
-    abi,
-    address: contracts.MCV2_Bond,
-    functionName: "tokenCount",
-  });
-
-  const account = useAccount();
-
-  const [data, setdata]: any = useState();
-  const [tokenData, setTokenData]: any = useState();
-  const [t, setT] = useState(false);
-
-  useEffect(() => {
-    setdata(Number(lengData));
-    console.log("leng :" + lengData);
-    console.log("leng :" + lengError);
-  }, [lengData]);
-
-  useEffect(() => {
-    refetch();
-  }, [t]);
-
-  const {
-    data: tokensData,
-    error: tokensError,
-    isFetched: tokensFetched,
-    refetch,
-  }: UseReadContractReturnType = useReadContract({
-    abi,
-
-    address: contracts.MCV2_Bond,
-    functionName: "tokens",
-    args: [],
-  });
-
-  useEffect(() => {
-    if (tokensData == undefined || null) {
-      refetch();
-      console.log("Refetched!");
-    } else {
-      setTokenData(tokensData);
-      console.log("tokens :" + tokenData);
-      console.log("tokens :" + tokensError);
-      console.log("tokens :" + tokensFetched);
-    }
-  }, [tokensFetched]);
-
-  let cards = [];
-  useEffect(() => {
-    if (tokenData == undefined) return;
-    for (let i = 0; i < tokenData.length; i++) {
-      cards[i] = tokenData[i];
-    }
-  }, [tokenData]);
-
   return (
     <>
-      <Header />
-
-      <main className="flex  w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
-        <div className="mx-auto h-full w-[50vw] bg-blue-100 pt-10 ">
-          <div className="flex h-[300px] w-full  justify-between bg-red-100 px-10">
+      <main className="flex w-screen bg-black">
+        <div className="mx-auto h-full w-[70vw]  pt-10 ">
+          <div className="mx-auto flex h-[465px] w-[55vw] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
-              <div className="h-[200px] w-[500px] rounded-3xl border bg-green-100"></div>
-              <div className="flex h-12 w-[500px] justify-between bg-green-100">
-                <input className="h-full w-[70%] bg-gray-100"></input>
-                <button className="h-full w-[20%] bg-gray-100"></button>
+              <div className="flex h-full w-[500px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
+                <div className="flex h-[50px] w-[340px] items-center justify-center border bg-gradient-to-b from-zinc-900 to-rose-950">
+                  <h1 className="text-borderline  text-3xl font-black text-white ">
+                    King of the hill
+                  </h1>
+                </div>
+                <TokenCard
+                  name="Name"
+                  ticker="ticker"
+                  cap="1:24"
+                  desc="desc"
+                  createdBy="Me"
+                />
+                <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
+                  <div className="h-full w-[120px] rounded-xl bg-white"></div>
+                  <div className="h-full w-[120px] rounded-xl bg-white"></div>
+                  <div className="h-full w-[120px] rounded-xl bg-white"></div>
+                </div>
               </div>
             </div>
-            <div className="h-[300px] w-[200px] bg-violet-100"></div>
+            <Link href="/create" className="z-10">
+              <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-[30px] rounded-[20px] border-4 border-[#E5180E] ">
+                <h1 className="text-xl font-black text-white">
+                  Create new coin
+                </h1>
+                <div className="h-[140px] w-[80px] rounded-2xl border-4 border-[#A58C07] bg-black"></div>
+              </div>
+            </Link>
           </div>
 
-          <div className="mt-10 h-[100px] w-full bg-red-100 px-10">
-            <div className="h-full w-[500px] bg-green-100"></div>
+          <div className="mt-10 flex h-[50px] w-full justify-between  px-10">
+            <div className="h-full">
+              <button className="mr-[20px] h-[50px] w-[160px] rounded-[10px] bg-[#353535]">
+                sort: newest
+              </button>
+              <button className="h-[50px] w-[160px] rounded-[10px] bg-[#353535]">
+                sort: newest
+              </button>
+            </div>
+            <form className="">
+              <input
+                className="mr-[30px] h-[50px] w-[422px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
+                placeholder="search for token"
+              ></input>
+              <button className="h-[50px] w-[150px] rounded-[10px] bg-[#FF00C6]">
+                search
+              </button>
+            </form>
           </div>
 
-          <div className="mt-10 grid h-[800px] w-full grid-cols-3 grid-rows-4 rounded-3xl bg-red-100 p-8">
-            {tokenData &&
-              tokenData.map((i: string, index: number) => (
-                <Link
-                  href={`/${i}`}
-                  className="h-[150px] w-[250px] overflow-x-hidden rounded-3xl bg-green-100"
-                >
-                  <h1 className="text-sm">{i}</h1>
-                </Link>
-              ))}
+          <div className="mt-10 grid h-[800px] w-full grid-cols-3 grid-rows-4  p-8">
+            <TokenCard
+              name="Name"
+              ticker="ticker"
+              cap="1:24"
+              desc="desc"
+              createdBy="Me"
+            />
           </div>
           <></>
         </div>

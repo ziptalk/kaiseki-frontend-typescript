@@ -13,6 +13,7 @@ import {
   seiDevnet,
 } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import Header from "@/components/Header";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   const config = getDefaultConfig({
@@ -26,7 +27,10 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children} </RainbowKitProvider>
+        <RainbowKitProvider>
+          <Header />
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

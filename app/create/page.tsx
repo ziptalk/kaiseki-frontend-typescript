@@ -13,7 +13,7 @@ import {
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/contracts/contracts";
 import { ethers } from "ethers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Contract } from "ethers";
 import { useEthersSigner } from "@/hooks/ethers";
 import { type UseAccountReturnType } from "wagmi";
@@ -51,24 +51,6 @@ const Create: NextPage = () => {
       console.log(events[0].args[0]); // token contract
     } catch (error) {
       console.error("Error querying filter:", error);
-    }
-  }
-
-  useEffect(() => {
-    fetchPrevEvents();
-  }, []);
-  async function fetchPrevEvents() {
-    console.log("entered");
-    try {
-      console.log("entered TRY");
-      const events = await contract.queryFilter(
-        contract.filters.TokenCreated(),
-      );
-      events.forEach((event) => {
-        console.log(event);
-      });
-    } catch (error: any) {
-      console.error("Error fetching events:", error.message);
     }
   }
 
@@ -116,10 +98,25 @@ const Create: NextPage = () => {
     await fetchEvent();
   }
 
+  const [isToggle, setIsToggle] = useState(false);
+  const [name, setName] = useState("");
+  const [ticker, setTicker] = useState("");
+  const [desc, setDesc] = useState("");
+
+  const nameHandler = (event: any) => {
+    setName(event.target.value);
+  };
+
+  const tickerHandler = (event: any) => {
+    setTicker(event.target.value);
+  };
+
+  const descHandler = (event: any) => {
+    setDesc(event.target.value);
+  };
   return (
     <>
-      <Header />
-      <div className="h-screen w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09] ">
+      <div className=" w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09] ">
         <div className="mx-auto h-full w-[500px] ">
           <div className="mx-auto h-full  w-[480px] pt-[40px]">
             <div className="">
@@ -131,10 +128,10 @@ const Create: NextPage = () => {
                 <div className=" text w-[334px] overflow-hidden px-[10px]">
                   <div className="">
                     <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                      Name
+                      {name ? name : "Name"}
                     </h1>
                     <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                      [ticker: ticker]
+                      [ticker: {ticker ? ticker : "ticker"}]
                     </h1>
                   </div>
 
@@ -157,11 +154,9 @@ const Create: NextPage = () => {
                   </div>
 
                   <h1 className="h-[90px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-                    Pizza ipsum dolor meat lovers buffalo. Bacon Aussie
-                    mozzarella buffalo hand lovers string. Chicago garlic roll
-                    banana mayo tomatoes banana pineapple marinara sauce. Thin
-                    anchovies deep banana lasagna style ranch pesto string.
-                    Onions crust fresh mayo dolor fresh onions pizza buffalo.
+                    {desc
+                      ? desc
+                      : "Pizza ipsum dolor meat lovers buffalo. Bacon Aussie mozzarella buffalo hand lovers string. Chicago garlic roll banana mayo tomatoes banana pineapple marinara sauce. Thin anchovies deep banana lasagna style ranch pesto string. Onions crust fresh mayo dolor fresh onions pizza buffalo."}
                   </h1>
                 </div>
               </div>
@@ -172,65 +167,86 @@ const Create: NextPage = () => {
                 name="name"
                 type="text"
                 placeholder="name"
-                className="h-[60px] w-full rounded-[5px] border border-white bg-[#2E2929] p-[10px] text-white"
+                value={name}
+                onChange={nameHandler}
+                className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
               />
               <h1 className="mt-[30px] text-lg font-bold text-white">ticker</h1>
               <input
                 name="ticker"
                 type="text"
                 placeholder="ticker"
-                className="h-[60px] w-full rounded-[5px] border border-white bg-[#2E2929] p-[10px] text-white"
+                value={ticker}
+                onChange={tickerHandler}
+                className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
               />
               <h1 className="mt-[30px] text-lg font-bold text-white">image</h1>
               <input
                 name="image"
                 type="file"
                 accept="image/*"
-                className=" flex h-[60px] w-full rounded-[5px] border border-white bg-[#2E2929] p-[15px] text-white"
+                className=" flex h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[15px] text-white"
               />
               <h1 className="mt-[30px] text-lg font-bold text-white">
                 description
               </h1>
               <textarea
+                value={desc}
+                onChange={descHandler}
                 name="description"
                 placeholder="description"
-                className="h-[120px] w-full rounded-[5px] border border-white bg-[#2E2929] p-[10px] text-white"
+                className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
               />
-              <button className="text-[#FF2626]">more options +</button>
+              <div
+                onClick={() => setIsToggle(!isToggle)}
+                className="mt-[30px] flex cursor-pointer text-[#FF2626]"
+              >
+                <h1>more options&nbsp;</h1>
+                <h1 className="text-white">{isToggle ? "-" : "+"}</h1>
+              </div>
+              {isToggle && (
+                <>
+                  <h1 className="mt-5 text-lg font-bold text-white">
+                    twitter link
+                  </h1>
+                  <input
+                    name="twitter link"
+                    type="text"
+                    placeholder="(optional)"
+                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                  />
+                  <h1 className="mt-5 text-lg font-bold text-white">
+                    telegram link
+                  </h1>
+                  <input
+                    name="telegram link"
+                    type="text"
+                    placeholder="(optional)"
+                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                  />
+                  <h1 className="mt-5 text-lg font-bold text-white">
+                    website link
+                  </h1>
+                  <input
+                    name="website link"
+                    type="text"
+                    placeholder="(optional)"
+                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                  />
+                </>
+              )}
               <button
                 type="submit"
-                className="h-[60px] w-full rounded-[5px] bg-purple-100 bg-gradient-to-r from-red-600 to-red-800 text-white"
+                className="mt-[20px] h-[60px] w-full rounded-[5px] bg-purple-100 bg-gradient-to-r from-red-600 to-red-800 text-white"
               >
                 Create Token
               </button>
             </form>
-            {/* <form onSubmit={submitInEthers}>
-              <h1>name</h1>
-              <input
-                name="name"
-                type="text"
-                className="h-[60px] w-full rounded-2xl"
-              />
-              <h1>ticker</h1>
-              <input
-                name="symbol"
-                type="text"
-                className="h-[60px] w-full rounded-2xl"
-              />
-              <button
-                type="submit"
-                className="w-full h-[110px] rounded-2xl bg-red-100"
-              >
-                Create Coin
-              </button>
-            </form>
-            {isConfirming && <div>Waiting for confirmation...</div>} */}
 
             <div>status: {status}</div>
             <div>data : {mintData}</div>
 
             <button onClick={() => fetchEvent()}>eve</button>
-            <button onClick={() => fetchPrevEvents()}>Peve</button>
           </div>
         </div>
       </div>
