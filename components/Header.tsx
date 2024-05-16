@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  ConnectButton,
-  useAccountModal,
-  useConnectModal,
-} from "@rainbow-me/rainbowkit";
+import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import contracts from "@/contracts/contracts";
+import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useAccount, useWatchContractEvent } from "wagmi";
-import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/contracts/contracts";
-import Image from "next/image";
-import Logo from "/icons/MainLogo.svg";
-import Web3 from "web3";
+import { useAccount } from "wagmi";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -24,6 +18,7 @@ const Header: FC = () => {
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("user");
+  const [curMintTime, setCurMintTime] = useState("Date");
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [datas, setDatas] = useState<any[]>([]);
@@ -112,6 +107,7 @@ const Header: FC = () => {
   async function fetchMintEventsInBatches(fromBlock: any, batchSize: any) {
     let currentBlock = await provider.getBlockNumber();
     let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
+
     const isFetching = localStorage.getItem("isFetching");
     if (isFetching === "true") {
       console.log("Fetching is already in progress. Aborting this instance.");
@@ -135,22 +131,67 @@ const Header: FC = () => {
         toBlock,
       );
 
-      const newDatas = events.map((event: any) => ({
-        val: String(ether(event.args.amountMinted)),
-        tic: event.args.token.substring(0, 5),
-        user: event.args.receiver.substring(0, 5),
-      }));
+      // const newDatas = events.map((event: any) => ({
+      //   val: String(ether(event.args.amountMinted)),
+      //   tic: event.args.token.substring(0, 5),
+      //   user: event.args.receiver.substring(0, 5),
+      // }));
+
+      // setDatas((prevDatas) => [newDatas, ...prevDatas]);
+
+      // events.forEach((event: any) => {
+      //   console.log(
+      //     `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver} `,
+      //   );
+      //   setCurMintTic(event.args.token.substring(0, 5));
+      //   setCurMintValue(String(ether(event.args.amountMinted)));
+      //   setCurMintUser(event.args.receiver.substring(0, 5));
+      // });
+
+      // for (const event of events) {
+      //   const block = await provider.getBlock(event.blockNumber);
+      //   const timestamp = block.timestamp;
+      //   // Convert timestamp to a readable date format, if necessary
+      //   const date = new Date(timestamp * 1000).toLocaleString();
+
+      //   // Log the event details along with the block timestamp
+      //   console.log(
+      //     `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date}`,
+      //   );
+      //   setCurMintTic(event.args.token.substring(0, 5));
+      //   setCurMintValue(String(ether(event.args.amountMinted)));
+      //   setCurMintUser(event.args.receiver.substring(0, 5));
+      //   setCurMintTime(date);
+      // }
+
+      const newDatas = await Promise.all(
+        events.map(async (event: any) => {
+          const block = await provider.getBlock(event.blockNumber);
+          const timestamp = block.timestamp;
+          const date = new Date(timestamp * 1000);
+
+          // Format the date as DD/MM/YY
+          const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+
+          // Log the event details along with the block timestamp
+          console.log(
+            `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date.toLocaleString()}`,
+          );
+          setCurMintTic(event.args.token.substring(0, 5));
+          setCurMintValue(String(ether(event.args.amountMinted)));
+          setCurMintUser(event.args.receiver.substring(0, 5));
+          setCurMintTime(formattedDate);
+
+          return {
+            val: String(ether(event.args.amountMinted)),
+            tic: event.args.token.substring(0, 5),
+            user: event.args.receiver.substring(0, 5),
+            time: formattedDate,
+          };
+        }),
+      );
 
       setDatas((prevDatas) => [...newDatas, ...prevDatas]);
-
-      events.forEach((event: any) => {
-        console.log(
-          `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}`,
-        );
-        setCurMintTic(event.args.token.substring(0, 5));
-        setCurMintValue(String(ether(event.args.amountMinted)));
-        setCurMintUser(event.args.receiver.substring(0, 5));
-      });
 
       // Prepare for the next batch
       fromBlock = toBlock + 1;
@@ -176,12 +217,6 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  interface EventCardTypes {
-    user: string;
-    value?: string;
-    ticker: string;
-  }
-
   const EventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
@@ -200,7 +235,7 @@ const Header: FC = () => {
     );
   };
 
-  const CreateEventCard: FC<EventCardTypes> = ({ user, ticker }) => {
+  const CreateEventCard: FC<EventCardTypes> = ({ user, ticker, time }) => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
         <div className="flex h-[18px] w-full gap-[3px] ">
@@ -208,7 +243,9 @@ const Header: FC = () => {
           <h1 className="text-sm">{user} created </h1>
         </div>
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
-          <h1 className="text-sm">{ticker} on 05/14/24</h1>
+          <h1 className="text-sm">
+            {ticker} on {time}
+          </h1>
           <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
         </div>
       </div>
@@ -286,7 +323,7 @@ const Header: FC = () => {
               <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD2] text-[#09FFD2]">
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
                 <h1>
-                  {curCreateUser} Created {curCreateTic} on 05/14/24
+                  {curCreateUser} Created {curCreateTic} on {curMintTime}
                 </h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
               </div>

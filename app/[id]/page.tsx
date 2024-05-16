@@ -22,7 +22,7 @@ export default function Detail() {
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
   };
-
+  const account = useAccount();
   const cleanedPathname = cleanPathname(pathname);
   const tokenAddress: any = cleanedPathname;
 
@@ -38,6 +38,14 @@ export default function Detail() {
   //   functionName: "priceForNextMint",
   //   args: [cleanedPathname],
   // });
+
+  const { data: curMemeTokenValue } = useReadContract({
+    abi: MCV2_TokenABI,
+    address: tokenAddress,
+    functionName: "balanceOf",
+    args: [account.address],
+  });
+  console.log("memetokenvalue :" + curMemeTokenValue);
   // console.log("steps :" + steps);
   // console.log("nextMintPrice :" + nextMintPrice);
 
@@ -65,8 +73,6 @@ export default function Detail() {
   );
 
   // Call the getSteps function
-
-  const account = useAccount();
 
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
@@ -215,15 +221,35 @@ export default function Detail() {
   return (
     <>
       <main className="flex h-screen w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
-        <div className="h-full w-full bg-green-100">
-          {cleanedPathname}
-          <TokenCard
-            name={name}
-            ticker={symbol}
-            cap="0.00"
-            createdBy={creator}
-            desc="aa"
-          />
+        <div className="h-full w-full ">
+          <div className="flex h-[245px] w-[1180px] gap-[20px] border px-[20px] py-[30px]">
+            <TokenCard
+              name={name}
+              ticker={symbol}
+              cap="0.00"
+              createdBy={creator}
+              desc="aa"
+            />
+            <div className="h-full w-[176px]">
+              <h1>twitter logo</h1>
+              <h1>twitter logo</h1>
+              <h1>twitter logo</h1>
+            </div>
+            <div className="flex h-full w-[400px] flex-col justify-between border ">
+              <div className="flex">
+                <h1 className="text-lg font-bold text-[#ADADAD]">
+                  bonding curve progress:&nbsp;
+                </h1>
+                <h1 className="text-[#FAFF00]">00%</h1>
+              </div>
+              <div className=" h-[12px] w-full rounded-full bg-[#343434] text-[13px]"></div>
+              <h1 className="h-[75px] text-[#6A6A6A]">
+                Pizza ipsum dolor meat lovers buffalo. Garlic Hawaiian sautéed
+                bell bell roll Bianca wing steak meat. Green spinach deep thin
+              </h1>
+            </div>
+          </div>
+
           <div className="h-[430px] w-[430px] bg-red-100">
             <div className="flex">
               <button onClick={() => setIsBuy(!isBuy)}>
@@ -235,6 +261,7 @@ export default function Detail() {
               <button type="submit">place trade</button>
             </form>
             <div>{status}</div>
+            <div>cur memetoken value : </div>
           </div>
         </div>
 
