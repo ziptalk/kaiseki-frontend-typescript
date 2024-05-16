@@ -1,4 +1,5 @@
 import { digital } from "@/fonts/font";
+import Link from "next/link";
 import { FC } from "react";
 
 interface TokenCardTypes {
@@ -7,6 +8,8 @@ interface TokenCardTypes {
   createdBy: string;
   cap: string;
   desc: string;
+  border?: boolean;
+  tokenAddress?: string;
 }
 
 const TokenCard: FC<TokenCardTypes> = ({
@@ -15,10 +18,15 @@ const TokenCard: FC<TokenCardTypes> = ({
   createdBy,
   cap,
   desc,
+  border,
+  tokenAddress,
 }) => {
   return (
     <>
-      <div className="flex h-[140px] max-h-[185px] w-[480px] justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
+      <Link
+        href={tokenAddress ? tokenAddress : ""}
+        className={`flex h-[140px] max-h-[195px] justify-between gap-[10px] ${border && "border border-dashed border-[#F9FF00] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]"}  bg-black p-[10px] `}
+      >
         <div>
           <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
         </div>
@@ -51,7 +59,7 @@ const TokenCard: FC<TokenCardTypes> = ({
             {desc}
           </h1>
         </div>
-      </div>
+      </Link>
     </>
   );
 };

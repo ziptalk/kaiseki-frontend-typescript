@@ -21,6 +21,7 @@ const Header: FC = () => {
   const [curMintTime, setCurMintTime] = useState("Date");
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
+  const [curCreateTime, setCurCreateTime] = useState("Date");
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
 
@@ -47,8 +48,8 @@ const Header: FC = () => {
     const etherValue = Number(weiValue) / Number(factor);
     return Math.ceil(etherValue * 1000) / 1000;
   };
-
-  async function fetchEventsInBatches(fromBlock: any, batchSize: any) {
+  // MARK: - Create Events
+  async function fetchCreateEventsInBatches(fromBlock: any, batchSize: any) {
     let currentBlock = await provider.getBlockNumber();
     let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
 
@@ -78,21 +79,50 @@ const Header: FC = () => {
         fromBlock,
         toBlock,
       );
+      const newDatas = await Promise.all(
+        events
+          .slice(0)
+          .reverse()
+          .map(async (event: any) => {
+            const block = await provider.getBlock(event.blockNumber);
+            const timestamp = block.timestamp;
+            const date = new Date(timestamp * 1000);
 
-      const newDatas = events.map((event: any) => ({
-        tic: event.args.symbol.substring(0, 5),
-        user: event.args.token.substring(0, 5),
-      }));
+            // Format the date as DD/MM/YY
+            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+
+            // Log the event details along with the block timestamp
+            console.log(
+              `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
+            );
+            setCurCreateTic(event.args.symbol.substring(0, 5));
+            setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
+            setCurCreateTime(formattedDate);
+
+            return {
+              tic: event.args.symbol.substring(0, 5),
+              user: event.args.token.substring(0, 5), // Fake value!
+              time: formattedDate,
+            };
+          }),
+      );
 
       setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
 
-      events.forEach((event: any) => {
-        console.log(
-          `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken}`,
-        );
-        setCurCreateTic(event.args.symbol.substring(0, 5));
-        setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-      });
+      // const newDatas = events.map((event: any) => ({
+      //   tic: event.args.symbol.substring(0, 5),
+      //   user: event.args.token.substring(0, 5),
+      // }));
+
+      // setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
+
+      // events.forEach((event: any) => {
+      //   console.log(
+      //     `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken}`,
+      //   );
+      //   setCurCreateTic(event.args.symbol.substring(0, 5));
+      //   setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
+      // });
 
       // Prepare for the next batch
       fromBlock = toBlock + 1;
@@ -103,7 +133,7 @@ const Header: FC = () => {
     }
     localStorage.setItem("isFetchingCreate", "false");
   }
-
+  // MARK: - Mint Events
   async function fetchMintEventsInBatches(fromBlock: any, batchSize: any) {
     let currentBlock = await provider.getBlockNumber();
     let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
@@ -165,30 +195,33 @@ const Header: FC = () => {
       // }
 
       const newDatas = await Promise.all(
-        events.map(async (event: any) => {
-          const block = await provider.getBlock(event.blockNumber);
-          const timestamp = block.timestamp;
-          const date = new Date(timestamp * 1000);
+        events
+          .slice(0)
+          .reverse()
+          .map(async (event: any) => {
+            const block = await provider.getBlock(event.blockNumber);
+            const timestamp = block.timestamp;
+            const date = new Date(timestamp * 1000);
 
-          // Format the date as DD/MM/YY
-          const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+            // Format the date as DD/MM/YY
+            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
-          // Log the event details along with the block timestamp
-          console.log(
-            `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date.toLocaleString()}`,
-          );
-          setCurMintTic(event.args.token.substring(0, 5));
-          setCurMintValue(String(ether(event.args.amountMinted)));
-          setCurMintUser(event.args.receiver.substring(0, 5));
-          setCurMintTime(formattedDate);
+            // Log the event details along with the block timestamp
+            console.log(
+              `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date.toLocaleString()}`,
+            );
+            setCurMintTic(event.args.token.substring(0, 5));
+            setCurMintValue(String(ether(event.args.amountMinted)));
+            setCurMintUser(event.args.receiver.substring(0, 5));
+            setCurMintTime(formattedDate);
 
-          return {
-            val: String(ether(event.args.amountMinted)),
-            tic: event.args.token.substring(0, 5),
-            user: event.args.receiver.substring(0, 5),
-            time: formattedDate,
-          };
-        }),
+            return {
+              val: String(ether(event.args.amountMinted)),
+              tic: event.args.token.substring(0, 5),
+              user: event.args.receiver.substring(0, 5),
+              time: formattedDate,
+            };
+          }),
       );
 
       setDatas((prevDatas) => [...newDatas, ...prevDatas]);
@@ -209,7 +242,7 @@ const Header: FC = () => {
 
   useEffect(() => {
     fetchMintEventsInBatches(20587998, 5000);
-    fetchEventsInBatches(19966627, 5000);
+    fetchCreateEventsInBatches(19966627, 5000);
   }, []);
 
   useEffect(() => {
@@ -217,7 +250,7 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  const EventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
+  const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
         <div className="flex h-[18px] w-full gap-[3px] ">
@@ -259,7 +292,7 @@ const Header: FC = () => {
           <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
             <div className="h-full overflow-hidden">
               {datas.map((card: any, index: any) => (
-                <EventCard
+                <MintEventCard
                   key={index}
                   value={card.val}
                   ticker={card.tic}
@@ -323,7 +356,7 @@ const Header: FC = () => {
               <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD2] text-[#09FFD2]">
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
                 <h1>
-                  {curCreateUser} Created {curCreateTic} on {curMintTime}
+                  {curCreateUser} Created {curCreateTic} on {curCreateTime}
                 </h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
               </div>
@@ -354,7 +387,7 @@ const Header: FC = () => {
               {createDatas.map((card: any, index: any) => (
                 <CreateEventCard
                   key={index}
-                  value={card.val}
+                  time={card.time}
                   ticker={card.tic}
                   user={card.user}
                 />
