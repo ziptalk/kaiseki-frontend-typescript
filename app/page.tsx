@@ -132,7 +132,7 @@ export default function Home() {
   }, []);
   return (
     <>
-      <main className="flex w-screen bg-black">
+      <main className="flex w-screen bg-[#0E0E0E]">
         <div className="mx-auto h-full w-[70vw]  pt-10 ">
           <div className="mx-auto flex h-[465px] w-[55vw] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
