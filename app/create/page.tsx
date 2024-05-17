@@ -127,12 +127,12 @@ const Create: NextPage = () => {
   };
   return (
     <>
-      <div className=" w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09] ">
+      <div className=" w-screen bg-[#0E0E0E] ">
         <div className="mx-auto h-full w-[500px] ">
-          <div className="mx-auto h-full  w-[480px] pt-[40px]">
+          <div className="mx-auto h-full w-[484px] pt-[30px]">
             <div className="">
-              <h1 className="text-center text-lg text-[#F9FF00]">Preview</h1>
-              <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
+              <h1 className="text-center text-lg text-[#FAFF00] text-[24px] font-[Impact] tracking-wider drop-shadow-[1.7px_1.7px_0_rgba(250,0,0,1)] pb-[20px]">Preview</h1>
+              <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#FAFF00] p-[10px] shadow-[0_0px_20px_rgba(255,38,38,0.5)]">
                 <div>
                   <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
                 </div>
@@ -173,32 +173,32 @@ const Create: NextPage = () => {
               </div>
             </div>
             <form onSubmit={submit}>
-              <h1 className="mt-[30px] text-lg font-bold text-white">name</h1>
+              <h1 className="mt-[30px] pb-[7px] text-[16px] font-normal text-white">name</h1>
               <input
                 name="name"
                 type="text"
                 placeholder="name"
                 value={name}
                 onChange={nameHandler}
-                className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
               />
-              <h1 className="mt-[30px] text-lg font-bold text-white">ticker</h1>
+              <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">ticker</h1>
               <input
                 name="ticker"
                 type="text"
                 placeholder="ticker"
                 value={ticker}
                 onChange={tickerHandler}
-                className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
               />
-              <h1 className="mt-[30px] text-lg font-bold text-white">image</h1>
+              <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">image</h1>
               <input
                 name="image"
                 type="file"
                 accept="image/*"
-                className=" flex h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[15px] text-white"
+                className=" flex h-[50px] items-center w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[15px] text-white"
               />
-              <h1 className="mt-[30px] text-lg font-bold text-white">
+              <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
                 description
               </h1>
               <textarea
@@ -206,49 +206,49 @@ const Create: NextPage = () => {
                 onChange={descHandler}
                 name="description"
                 placeholder="description"
-                className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
               />
               <div
                 onClick={() => setIsToggle(!isToggle)}
-                className="mt-[30px] flex cursor-pointer text-[#FF2626]"
+                className="mt-[18px] flex cursor-pointer text-[#FF2626]"
               >
                 <h1>more options&nbsp;</h1>
                 <h1 className="text-white">{isToggle ? "-" : "+"}</h1>
               </div>
               {isToggle && (
                 <>
-                  <h1 className="mt-5 text-lg font-bold text-white">
+                  <h1 className="mt-[20px] pb-[7px] text-[16px] font-normal text-white">
                     twitter link
                   </h1>
                   <input
                     name="twitter link"
                     type="text"
                     placeholder="(optional)"
-                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                    className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
                   />
-                  <h1 className="mt-5 text-lg font-bold text-white">
+                  <h1 className="mt-[19px] pb-[7px]  text-[16px] font-normal text-white">
                     telegram link
                   </h1>
                   <input
                     name="telegram link"
                     type="text"
                     placeholder="(optional)"
-                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                    className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
                   />
-                  <h1 className="mt-5 text-lg font-bold text-white">
+                  <h1 className="mt-[19px] pb-[7px] text-[16px] font-normal text-white">
                     website link
                   </h1>
                   <input
                     name="website link"
                     type="text"
                     placeholder="(optional)"
-                    className="h-[60px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#2E2929] p-[10px] text-white"
+                    className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
                   />
                 </>
               )}
               <button
                 type="submit"
-                className="mt-[20px] h-[60px] w-full rounded-[5px] bg-purple-100 bg-gradient-to-r from-red-600 to-red-800 text-white"
+                className="mt-[34px] h-[60px] w-full rounded-[8px] bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)] text-white text-[16px] font-light font-['Impact'] tracking-wider"
               >
                 Create Token
               </button>

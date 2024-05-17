@@ -287,7 +287,7 @@ const Header: FC = () => {
 
   return (
     <>
-      <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#1F1F1F]">
+      <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
         {pathname == "/" && (
           <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
             <div className="h-full overflow-hidden">
@@ -353,19 +353,19 @@ const Header: FC = () => {
               </div>
             </div>
             <div className="flex h-full items-center gap-[20px]">
-              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#F900FF] text-[#F900FF]">
-                <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] text-[#FA00FF]">
+                <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
                 <h1 className="">
                   {curMintUser} bought {curMintValue} SEI of {curMintTic}
                 </h1>
-                <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+                <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
               </div>
-              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD2] text-[#09FFD2]">
-                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
+              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] text-[#09FFD3]">
+                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
                 <h1>
                   {curCreateUser} Created {curCreateTic} on {curCreateTime}
                 </h1>
-                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD2]" />
+                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
               </div>
             </div>
             <div className="flex items-center">
@@ -373,9 +373,9 @@ const Header: FC = () => {
               {isConnected ? (
                 <button
                   onClick={openAccountModal}
-                  className="flex h-[45px] w-[180px]
+                  className="flex h-[40px] w-[180px]
                   cursor-pointer
-                  items-center justify-center gap-[9px] rounded-[13.5px] border text-[15px] font-bold  text-white"
+                  items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
                 >
                   {address?.substring(0, 7)}
                   <Image
@@ -388,7 +388,7 @@ const Header: FC = () => {
               ) : (
                 <button
                   onClick={openConnectModal}
-                  className="h-[45px] w-[180px] cursor-pointer rounded-[13.5px] border text-white"
+                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border text-white"
                 >
                   Connect Wallet
                 </button>
