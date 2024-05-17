@@ -12,7 +12,7 @@ import { useAccount } from "wagmi";
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const pathname = usePathname();
 
   const [curMintValue, setCurMintValue] = useState("0.1043");
@@ -311,11 +311,18 @@ const Header: FC = () => {
                 className="flex h-[40px] items-center gap-[15px] rounded-full "
               >
                 <Image
-                  src="/images/logo.svg"
+                  src="/images/memeLogo.png"
                   alt=""
                   width={200}
                   height={200}
-                  className="h-full w-[100px]"
+                  className="h-[29px] w-[26px]"
+                />
+                <Image
+                  src="/images/Memesino.png"
+                  alt=""
+                  width={400}
+                  height={400}
+                  className="h-[28px] w-[94px]"
                 />
               </Link>
 
@@ -366,9 +373,17 @@ const Header: FC = () => {
               {isConnected ? (
                 <button
                   onClick={openAccountModal}
-                  className="h-[45px] w-[180px] cursor-pointer rounded-[13.5px] border text-white"
+                  className="flex h-[45px] w-[180px]
+                  cursor-pointer
+                  items-center justify-center gap-[9px] rounded-[13.5px] border text-[15px] font-bold  text-white"
                 >
-                  Connected
+                  {address?.substring(0, 7)}
+                  <Image
+                    src="/icons/DownTri.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
                 </button>
               ) : (
                 <button

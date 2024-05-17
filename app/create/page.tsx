@@ -5,6 +5,7 @@ import { NextPage } from "next";
 
 import {
   useAccount,
+  useConnect,
   useReadContract,
   useWaitForTransactionReceipt,
   useWatchContractEvent,
@@ -19,12 +20,13 @@ import { useEthersSigner } from "@/hooks/ethers";
 import { type UseAccountReturnType } from "wagmi";
 import { useEthersProvider } from "@/config";
 import { digital } from "@/fonts/font";
+import { injected } from "wagmi/connectors";
 
 const Create: NextPage = () => {
   const provider = useEthersProvider();
-
+  const account = useAccount();
   const contract = new Contract(contracts.MCV2_Bond, abi, provider);
-
+  const { connect } = useConnect();
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
   };
@@ -59,6 +61,15 @@ const Create: NextPage = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
     const ticker = formData.get("ticker") as string;
+
+    if (account.status === "disconnected") {
+      alert("Connect your wallet first!");
+      return;
+    }
+    if (name == "" || ticker == "") {
+      alert("Invalid input value!");
+      return;
+    }
 
     await writeContractAsync({
       address: contracts.MCV2_Bond,

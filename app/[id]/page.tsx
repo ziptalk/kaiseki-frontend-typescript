@@ -279,7 +279,7 @@ export default function Detail() {
                 ticker={symbol}
                 cap="0.00"
                 createdBy={creator.substring(0, 5)}
-                desc="aa"
+                desc="desc"
                 tokenAddress=""
               />
               <div className="flex h-full flex-col items-center justify-center text-lg">
@@ -305,8 +305,8 @@ export default function Detail() {
             <div className="mt-[30px] flex h-[240px]  gap-[20px] border px-[20px] py-[30px]"></div>
           </div>
           <div>
-            <div className="h-[360px] w-[420px] rounded-2xl bg-red-100 p-[30px]">
-              <div className="flex gap-[10px] p-[10px]">
+            <div className="h-[360px] w-[420px]  rounded-[15px] bg-[#A60600] p-[30px]">
+              <div className="flex gap-[10px] rounded-[15px] bg-black p-[10px]">
                 <button
                   className="h-[44px] w-full rounded-2xl bg-white"
                   onClick={() => setIsBuy(true)}
@@ -326,20 +326,23 @@ export default function Detail() {
               >
                 <div className="flex justify-between">
                   <div></div>
-                  <div className=" flex h-[30px] w-[128px] items-center justify-center rounded-lg bg-black text-sm text-white">
+                  <div className="mt-[15px] flex h-[30px] w-[128px] items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]">
                     Set max slippage
                   </div>
                 </div>
 
                 <input
-                  className="h-[55px] bg-black px-[20px] text-[#5C5C5C]"
+                  className="my-[8px] h-[55px] rounded-[5px] bg-black px-[20px] text-[#5C5C5C]"
                   type="number"
                   placeholder="0.00"
                   name="inputValue"
                 ></input>
-                <h1>{curMemeTokenValue} MEME</h1>
-                <div className="flex justify-between">
-                  <h1 className="text-sm">{status}</h1>
+                <h1 className="text-[#B8B8B8]">
+                  {curMemeTokenValue}&nbsp;
+                  {name}
+                </h1>
+                <div className="my-[15px] flex justify-between">
+                  <h1 className="text-sm text-white">{status}</h1>
                   <button>t</button>
                 </div>
 

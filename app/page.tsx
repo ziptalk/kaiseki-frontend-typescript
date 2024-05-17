@@ -8,6 +8,7 @@ import contracts from "@/contracts/contracts";
 import { type UseReadContractReturnType } from "wagmi";
 import Link from "next/link";
 import TokenCard from "@/components/TokenCard";
+import Image from "next/image";
 
 export default function Home() {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
@@ -16,6 +17,7 @@ export default function Home() {
   const [curCreateName, setCurCreateName] = useState("Name");
   const [curCreateAddress, setCurCreateAddress] = useState("");
   const [createDatas, setCreateDatas] = useState<any[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
@@ -137,17 +139,19 @@ export default function Home() {
               <div className="flex h-full w-[500px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
                 <div className="flex h-[50px] w-[340px] items-center justify-center border bg-gradient-to-b from-zinc-900 to-rose-950">
                   <h1 className="text-borderline  text-3xl font-black text-white ">
-                    King of the hill
+                    To the moon
                   </h1>
                 </div>
-                <TokenCard
-                  name="Name"
-                  ticker="ticker"
-                  cap="1:24"
-                  desc="desc"
-                  createdBy="Me"
-                  tokenAddress=""
-                />
+                <div className="w-[390px]">
+                  <TokenCard
+                    name="R5"
+                    ticker="R5"
+                    cap="1:24"
+                    desc=""
+                    createdBy="Me"
+                    tokenAddress="0xfb4a803Eb8Ca7464AC5ad74ae4D08E9cF676d29c"
+                  />
+                </div>
                 <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
                   <div className="h-full w-[120px] rounded-xl bg-white"></div>
                   <div className="h-full w-[120px] rounded-xl bg-white"></div>
@@ -156,11 +160,23 @@ export default function Home() {
               </div>
             </div>
             <Link href="/create" className="z-10">
-              <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-[30px] rounded-[20px] border-4 border-[#E5180E] ">
+              <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-[30px] rounded-[20px] border-4 border-[#E5180E] shadow-inner ">
                 <h1 className="text-xl font-black text-white">
                   Create new coin
                 </h1>
-                <div className="h-[140px] w-[80px] rounded-2xl border-4 border-[#A58C07] bg-black"></div>
+                <div
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className="h-[140px] w-[80px] rounded-2xl "
+                >
+                  <Image
+                    src={isHovered ? "/images/Yellow.svg" : "/images/Red.svg"}
+                    alt="Create"
+                    width={500}
+                    height={500}
+                    className="h-full w-full"
+                  />
+                </div>
               </div>
             </Link>
           </div>
@@ -185,7 +201,7 @@ export default function Home() {
             </form>
           </div>
 
-          <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] border p-8">
+          <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
             {createDatas.map((card: any, index: any) => (
               <TokenCard
                 key={index}
