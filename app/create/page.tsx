@@ -21,6 +21,7 @@ import { type UseAccountReturnType } from "wagmi";
 import { useEthersProvider } from "@/config";
 import { digital } from "@/fonts/font";
 import { injected } from "wagmi/connectors";
+import Image from "next/image";
 
 const Create: NextPage = () => {
   const provider = useEthersProvider();
@@ -132,6 +133,13 @@ const Create: NextPage = () => {
           <div className="mx-auto h-full  w-[480px] pt-[40px]">
             <div className="">
               <h1 className="text-center text-lg text-[#F9FF00]">Preview</h1>
+              <Image
+                src="/images/Preview.png"
+                alt=""
+                width={500}
+                height={500}
+                className="h-[30px] w-[80px]"
+              />
               <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
                 <div>
                   <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>

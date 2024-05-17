@@ -303,7 +303,7 @@ const Header: FC = () => {
           </div>
         )}
 
-        <div className="flex h-full w-full items-center justify-between px-[40px]">
+        <div className="flex h-full w-full items-center justify-between px-[30px]">
           <div className="flex h-[40px] w-full items-center justify-between px-2 text-white">
             <div className="flex h-full items-center justify-evenly gap-[30px]">
               <Link

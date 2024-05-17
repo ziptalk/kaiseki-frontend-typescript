@@ -12,6 +12,7 @@ import TokenCard from "@/components/TokenCard";
 import Web3 from "web3";
 import { useEthersSigner } from "@/hooks/ethers";
 import { ethers } from "ethers";
+import TradingViewWidget from "@/components/TradingViewWidget";
 
 const util = require("util");
 
@@ -301,7 +302,9 @@ export default function Detail() {
                 </h1>
               </div>
             </div>
-            <div className="mt-[20px] flex h-[420px]  gap-[20px] border px-[20px] py-[30px]"></div>
+            <div className="mt-[20px] flex h-[420px]  gap-[20px] border ">
+              <TradingViewWidget />
+            </div>
             <div className="mt-[30px] flex h-[240px]  gap-[20px] border px-[20px] py-[30px]"></div>
           </div>
           <div>
