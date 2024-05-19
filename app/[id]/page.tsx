@@ -13,6 +13,7 @@ import Web3 from "web3";
 import { useEthersSigner } from "@/hooks/ethers";
 import { ethers } from "ethers";
 import TradingViewWidget from "@/components/TradingViewWidget";
+import TradesCard from "@/components/TokenDetail/TradesCard";
 
 const util = require("util");
 
@@ -272,23 +273,26 @@ export default function Detail() {
   return (
     <>
       <main className="flex w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
-        <div className="mx-auto flex h-full justify-between gap-[80px] pt-[60px]">
-          <div>
-            <div className="flex h-[245px] gap-[20px] border px-[20px] py-[30px]">
-              <TokenCard
-                name={name}
-                ticker={symbol}
-                cap="0.00"
-                createdBy={creator.substring(0, 5)}
-                desc="desc"
-                tokenAddress=""
-              />
-              <div className="flex h-full flex-col items-center justify-center text-lg">
+        <div className="mx-auto flex h-full w-full justify-between px-[5vw] pt-[60px]">
+          <div className="w-[60vw] border">
+            <div className="flex h-[245px] justify-between border px-[20px] py-[30px]">
+              <div className="w-[40%]">
+                <TokenCard
+                  name={name}
+                  ticker={symbol}
+                  cap="0.00"
+                  createdBy={creator.substring(0, 5)}
+                  desc="desc"
+                  tokenAddress=""
+                />
+              </div>
+
+              <div className="flex h-full w-[20%] flex-col items-center justify-center text-lg">
                 <h1>[twitter logo]</h1>
                 <h1>[twitter logo]</h1>
                 <h1>[twitter logo]</h1>
               </div>
-              <div className="flex h-full w-[400px] flex-col justify-between border ">
+              <div className="flex h-full w-[40%] flex-col justify-between border ">
                 <div className="flex">
                   <h1 className="text-lg font-bold text-[#ADADAD]">
                     bonding curve progress:&nbsp;
@@ -305,7 +309,41 @@ export default function Detail() {
             <div className="mt-[20px] flex h-[420px]  gap-[20px] border ">
               <TradingViewWidget />
             </div>
-            <div className="mt-[30px] flex h-[240px]  gap-[20px] border px-[20px] py-[30px]"></div>
+            <div className="mt-[30px]  gap-[20px] rounded-[10px] border bg-[#1A1A1A] p-[30px]">
+              <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
+                <h1 className="w-1/6">account</h1>
+                <h1 className="w-1/6">buy / sell</h1>
+                <h1 className="w-1/6">SEI</h1>
+                <h1 className="w-1/6">{symbol}</h1>
+                <h1 className="w-1/6">date</h1>
+                <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
+              </div>
+              <TradesCard
+                isBuy={true}
+                seiAmount="0.0143"
+                memeTokenAmount="124.5k"
+                date="May 14 5:34:37 pm"
+                tx="d3vb4i"
+              />
+              <TradesCard
+                isBuy={false}
+                seiAmount="0.0143"
+                memeTokenAmount="124.5k"
+                date="May 14 5:34:37 pm"
+                tx="d3vb4i"
+              />
+              <div className="mt-[15px] flex h-[60px] items-center justify-between rounded-[10px] bg-[#242424] px-[10px] text-[#6A6A6A]">
+                <div className="flex w-1/6 items-center gap-[5px]">
+                  <div className="h-[18px] w-[18px] rounded-full bg-gray-100"></div>
+                  <h1>acc</h1>
+                </div>
+                <h1 className="w-1/6">buy</h1>
+                <h1 className="w-1/6">sei amount</h1>
+                <h1 className="w-1/6">mc amount</h1>
+                <h1 className="w-1/6">May 14 5:34:37 pm</h1>
+                <h1 className=" flex w-1/6 flex-row-reverse">d3vb4i</h1>
+              </div>
+            </div>
           </div>
           <div>
             <div className="h-[360px] w-[420px]  rounded-[15px] bg-[#A60600] p-[30px]">
@@ -357,7 +395,23 @@ export default function Detail() {
                 </button>
               </form>
             </div>
-            <div className="mt-[70px] h-[560px] w-[420px] border"></div>
+            <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] border bg-[#1A1A1A] p-[30px]">
+              <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
+              <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
+                <div className=" flex justify-between font-bold">
+                  <h1>1. C87gCy 💳 (bonding curve)</h1>
+                  <h1>98.48%</h1>
+                </div>
+                <div className=" flex justify-between">
+                  <h1>2. H41bQv 🛠️ (dev)</h1>
+                  <h1>01.52%</h1>
+                </div>
+                <div className=" flex justify-between">
+                  <h1>3. H41bQv</h1>
+                  <h1>01.52%</h1>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
