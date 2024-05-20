@@ -65,9 +65,9 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "true");
 
     while (fromBlock <= currentBlock) {
-      console.log(
-        `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
-      );
+      // console.log(
+      //   `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
+      // );
 
       // Adjust toBlock for the last batch if it exceeds currentBlock
       if (toBlock > currentBlock) {
@@ -148,7 +148,7 @@ const Header: FC = () => {
     localStorage.setItem("isFetching", "true");
 
     while (fromBlock <= currentBlock) {
-      console.log(`Fetching events from block ${fromBlock} to ${toBlock}`);
+      // console.log(`Fetching events from block ${fromBlock} to ${toBlock}`);
 
       // Adjust toBlock for the last batch if it exceeds currentBlock
       if (toBlock > currentBlock) {

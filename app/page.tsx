@@ -56,9 +56,9 @@ export default function Home() {
     localStorage.setItem("isFetchingHomeCreate", "true");
 
     while (fromBlock <= currentBlock) {
-      console.log(
-        `FetchingHomeCreate events from block ${fromBlock} to ${toBlock}`,
-      );
+      // console.log(
+      //   `FetchingHomeCreate events from block ${fromBlock} to ${toBlock}`,
+      // );
 
       // Adjust toBlock for the last batch if it exceeds currentBlock
       if (toBlock > currentBlock) {
@@ -83,9 +83,9 @@ export default function Home() {
             const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
             // Log the event details along with the block timestamp
-            console.log(
-              `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
-            );
+            // console.log(
+            //   `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
+            // );
             setCurCreateTic(event.args.symbol.substring(0, 5));
             setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
             setCurCreateTime(formattedDate);
@@ -202,7 +202,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
-            {createDatas.map((card: any, index: any) => (
+            {createDatas.slice(-12).map((card: any, index: any) => (
               <TokenCard
                 key={index}
                 name={card.name}

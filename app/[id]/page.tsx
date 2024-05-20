@@ -14,6 +14,10 @@ import { useEthersSigner } from "@/hooks/ethers";
 import { ethers } from "ethers";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import TradesCard from "@/components/TokenDetail/TradesCard";
+import { digital } from "@/fonts/font";
+import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
+import Image from "next/image";
+import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
 
 const util = require("util");
 
@@ -23,6 +27,12 @@ export default function Detail() {
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
+  };
+
+  const ether = (weiValue: bigint, decimals = 18): number => {
+    const factor = BigInt(10) ** BigInt(decimals);
+    const etherValue = Number(weiValue) / Number(factor);
+    return etherValue;
   };
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
@@ -133,6 +143,7 @@ export default function Detail() {
     //   .catch((error: any) => {
     //     console.error(error);
     //   });
+
     const fetchTokenDetail = async () => {
       try {
         const detail = await bondContract.getDetail(tokenAddress);
@@ -165,8 +176,8 @@ export default function Detail() {
       }
       const detail = await memeTokenContract.balanceOf(account.address);
       console.log(detail);
-      const formattedDetail = ethers.utils.formatUnits(detail, 18);
-      setCurMemeTokenValue(formattedDetail);
+
+      setCurMemeTokenValue(String(ether(detail)));
     } catch (error) {
       console.log(error);
     }
@@ -217,6 +228,7 @@ export default function Detail() {
       });
 
       console.log(mintTx);
+      getMemeTokenValue();
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -264,6 +276,7 @@ export default function Detail() {
       functionName: "burn",
       args: [tokenAddress, BigInt(wei(Number(inputValue))), 0, account.address],
     });
+    getMemeTokenValue();
   }
 
   useEffect(() => {
@@ -287,24 +300,8 @@ export default function Detail() {
                 />
               </div>
 
-              <div className="flex h-full w-[20%] flex-col items-center justify-center text-lg">
-                <h1>[twitter logo]</h1>
-                <h1>[twitter logo]</h1>
-                <h1>[twitter logo]</h1>
-              </div>
-              <div className="flex h-full w-[40%] flex-col justify-between border ">
-                <div className="flex">
-                  <h1 className="text-lg font-bold text-[#ADADAD]">
-                    bonding curve progress:&nbsp;
-                  </h1>
-                  <h1 className="text-[#FAFF00]">00%</h1>
-                </div>
-                <div className=" h-[12px] w-full rounded-full bg-[#343434] text-[13px]"></div>
-                <h1 className="h-[75px] text-[#6A6A6A]">
-                  Pizza ipsum dolor meat lovers buffalo. Garlic Hawaiian sautéed
-                  bell bell roll Bianca wing steak meat. Green spinach deep thin
-                </h1>
-              </div>
+              <SocialLinkCard tw="l" />
+              <BondingCurveCard prog="00" desc="desc" />
             </div>
             <div className="mt-[20px] flex h-[420px]  gap-[20px] border ">
               <TradingViewWidget />
@@ -346,16 +343,16 @@ export default function Detail() {
             </div>
           </div>
           <div>
-            <div className="h-[360px] w-[420px]  rounded-[15px] bg-[#A60600] p-[30px]">
+            <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-[#A60600] p-[30px]">
               <div className="flex gap-[10px] rounded-[15px] bg-black p-[10px]">
                 <button
-                  className="h-[44px] w-full rounded-2xl bg-white"
+                  className={`h-[44px] w-full rounded-2xl border-2 ${isBuy && " border-green-400"} bg-white`}
                   onClick={() => setIsBuy(true)}
                 >
                   Buy
                 </button>
                 <button
-                  className="h-[44px] w-full rounded-2xl bg-white"
+                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${!isBuy && " border-green-400"}`}
                   onClick={() => setIsBuy(false)}
                 >
                   Sell
