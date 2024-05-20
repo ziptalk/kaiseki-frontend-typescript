@@ -79,8 +79,8 @@ const Create: NextPage = () => {
       args: [
         { name: name, symbol: ticker },
         {
-          mintRoyalty: 12,
-          burnRoyalty: 12,
+          mintRoyalty: 10,
+          burnRoyalty: 10,
           reserveToken: contracts.ReserveToken, // Should be set later
           maxSupply: wei(10000000), // supply: 10M
           stepRanges: [

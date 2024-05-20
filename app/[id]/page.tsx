@@ -37,6 +37,7 @@ export default function Detail() {
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
   };
+
   const pathname = usePathname();
 
   const account = useAccount();
@@ -67,6 +68,7 @@ export default function Detail() {
   const [creator, setCreator] = useState("Me");
   const [isBuy, setIsBuy] = useState(true);
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
+  const [inputValue, setInputValue] = useState("");
   const [marketCap, setMarketCap] = useState("");
 
   useEffect(() => {
@@ -119,6 +121,19 @@ export default function Detail() {
     writeContractAsync,
     status,
   } = useWriteContract();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleReset = () => {
+    setInputValue("0");
+  };
+
+  const handlePercentage = (percentage: number) => {
+    const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
+    setInputValue(value.toString());
+  };
 
   // MARK: - Buy
 
@@ -216,7 +231,7 @@ export default function Detail() {
               <TradingViewWidget />
             </div>
             <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
-            <div className="mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
+            <div className="mb-20 mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A]  p-[30px]">
               <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
                 <h1 className="w-1/6">account</h1>
                 <h1 className="w-1/6">buy / sell</h1>
@@ -274,6 +289,8 @@ export default function Detail() {
                     placeholder="0.00"
                     step="0.01"
                     name="inputValue"
+                    value={inputValue}
+                    onChange={handleInputChange}
                   ></input>
                   <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
                     <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
@@ -286,13 +303,53 @@ export default function Detail() {
                   {curMemeTokenValue}&nbsp;
                   {name}
                 </h1>
-                <div className="my-[15px] flex items-center justify-between">
-                  <h1 className="text-sm text-white">{status}</h1>
-                  <div className="flex h-[12px] w-[46px] cursor-pointer flex-row-reverse items-center justify-between rounded-full bg-[#4E4B4B]">
-                    <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
-                    <div className="h-[24px] w-[24px] rounded-full bg-[#00FFF0]"></div>
+                {isBuy ? (
+                  <div className="my-[15px] flex h-[20px] items-center justify-between">
+                    <h1 className="text-sm text-white">{status}</h1>
+                    <div className="flex h-[12px] w-[46px] cursor-pointer flex-row-reverse items-center justify-between rounded-full bg-[#4E4B4B]">
+                      <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
+                      <div className="h-[24px] w-[24px] rounded-full bg-[#00FFF0]"></div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
+                    <button
+                      type="button"
+                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                      onClick={handleReset}
+                    >
+                      reset
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                      onClick={() => handlePercentage(25)}
+                    >
+                      25%
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                      onClick={() => handlePercentage(50)}
+                    >
+                      50%
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                      onClick={() => handlePercentage(75)}
+                    >
+                      75%
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                      onClick={() => handlePercentage(100)}
+                    >
+                      100%
+                    </button>
+                  </div>
+                )}
 
                 <button
                   type="submit"
