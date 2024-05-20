@@ -44,53 +44,6 @@ export default function Detail() {
   const tokenAddress: any = cleanedPathname;
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
 
-  // const { data: steps } = useReadContract({
-  //   abi,
-  //   address: contracts.MCV2_Bond,
-  //   functionName: "getSteps",
-  //   args: [cleanedPathname],
-  // });
-  // const { data: nextMintPrice } = useReadContract({
-  //   abi,
-  //   address: contracts.MCV2_Bond,
-  //   functionName: "priceForNextMint",
-  //   args: [cleanedPathname],
-  // });
-
-  // const { data: curMemeTokenValue } = useReadContract({
-  //   abi: MCV2_TokenABI,
-  //   address: tokenAddress,
-  //   functionName: "balanceOf",
-  //   args: [account.address],
-  // });
-
-  // console.log("memetokenvalue :" + curMemeTokenValue);
-  // console.log("steps :" + steps);
-  // console.log("nextMintPrice :" + nextMintPrice);
-
-  // MARK: - Initialize web3
-  // const web3 = new Web3("https://evm-rpc-arctic-1.sei-apis.com");
-
-  // // The contract ABI (Application Binary Interface), you can get this from the Solidity contract or Etherscan
-  // const contractABI = MCV2_TokenABI; //put your ABI here
-  // const tokenContractABI = reserveTokenABI; //put your ABI here
-  // const memeTokenContractABI = MCV2_TokenABI;
-
-  // // The contract address
-  // const contractAddress = contracts.MCV2_Bond;
-  // const tokenContractAddress = contracts.ReserveToken;
-
-  // // Create a new contract instance
-  // const contract = new web3.eth.Contract(contractABI, contractAddress);
-  // const tokenContract = new web3.eth.Contract(
-  //   tokenContractABI,
-  //   contractAddress,
-  // );
-  // const memeTokenContract = new web3.eth.Contract(
-  //   memeTokenContractABI,
-  //   tokenAddress,
-  // );
-
   // MARK: - init ethers.js
   const { ethers } = require("ethers");
   const provider = new ethers.JsonRpcProvider(
@@ -117,33 +70,6 @@ export default function Detail() {
   const [marketCap, setMarketCap] = useState("");
 
   useEffect(() => {
-    // contract.methods
-    //   .getSteps(tokenAddress)
-    //   .call()
-    //   .then((steps: any) => {
-    //     console.log(steps);
-    //   })
-    //   .catch((error: any) => {
-    //     console.error(error);
-    //   });
-
-    // contract.methods
-    //   .getDetail(tokenAddress)
-    //   .call()
-    //   .then((detail: any) => {
-    //     console.log("name :" + detail.info.name);
-    //     console.log("symbol :" + detail.info.symbol);
-    //     console.log("creator :" + detail.info.creator);
-    //     // console.log("currentSupply :" + detail.info.currentSupply);
-    //     setName(detail.info.name);
-    //     setSymbol(detail.info.symbol);
-    //     setCreator(detail.info.creator);
-    //     // setMarketCap(detail.info.marketCap);
-    //   })
-    //   .catch((error: any) => {
-    //     console.error(error);
-    //   });
-
     const fetchTokenDetail = async () => {
       try {
         const detail = await bondContract.getDetail(tokenAddress);
@@ -172,6 +98,7 @@ export default function Detail() {
   const getMemeTokenValue = async () => {
     try {
       if (!account.address) {
+        setCurMemeTokenValue("0");
         throw new Error("Account is not defined");
       }
       const detail = await memeTokenContract.balanceOf(account.address);
@@ -241,26 +168,6 @@ export default function Detail() {
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
 
-    // await memeTokenContract.methods
-    //   .approve(contracts.MCV2_Bond, Number(inputValue))
-    //   .send({ from: account.address })
-    //   .then((reciept) => {
-    //     console.log(reciept);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    // await contract.methods
-    //   .burn(tokenAddress, Number(inputValue), 0, account.address)
-    //   .send({ from: account.address })
-    //   .then((reciept) => {
-    //     console.log(reciept);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
     console.log("start-app");
     const tx = await writeContractAsync({
       address: tokenAddress,
@@ -287,8 +194,8 @@ export default function Detail() {
     <>
       <main className="flex w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
         <div className="mx-auto flex h-full w-full justify-between px-[5vw] pt-[60px]">
-          <div className="w-[60vw] border">
-            <div className="flex h-[245px] justify-between border px-[20px] py-[30px]">
+          <div className="w-[60vw]">
+            <div className="flex h-[245px] justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
               <div className="w-[40%]">
                 <TokenCard
                   name={name}
@@ -303,10 +210,10 @@ export default function Detail() {
               <SocialLinkCard tw="l" />
               <BondingCurveCard prog="00" desc="desc" />
             </div>
-            <div className="mt-[20px] flex h-[420px]  gap-[20px] border ">
+            <div className="mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewWidget />
             </div>
-            <div className="mt-[30px]  gap-[20px] rounded-[10px] border bg-[#1A1A1A] p-[30px]">
+            <div className="mt-[30px]  gap-[20px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
               <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
                 <h1 className="w-1/6">account</h1>
                 <h1 className="w-1/6">buy / sell</h1>
@@ -329,30 +236,19 @@ export default function Detail() {
                 date="May 14 5:34:37 pm"
                 tx="d3vb4i"
               />
-              <div className="mt-[15px] flex h-[60px] items-center justify-between rounded-[10px] bg-[#242424] px-[10px] text-[#6A6A6A]">
-                <div className="flex w-1/6 items-center gap-[5px]">
-                  <div className="h-[18px] w-[18px] rounded-full bg-gray-100"></div>
-                  <h1>acc</h1>
-                </div>
-                <h1 className="w-1/6">buy</h1>
-                <h1 className="w-1/6">sei amount</h1>
-                <h1 className="w-1/6">mc amount</h1>
-                <h1 className="w-1/6">May 14 5:34:37 pm</h1>
-                <h1 className=" flex w-1/6 flex-row-reverse">d3vb4i</h1>
-              </div>
             </div>
           </div>
           <div>
             <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-[#A60600] p-[30px]">
               <div className="flex gap-[10px] rounded-[15px] bg-black p-[10px]">
                 <button
-                  className={`h-[44px] w-full rounded-2xl border-2 ${isBuy && " border-green-400"} bg-white`}
+                  className={`h-[44px] w-full rounded-2xl  ${isBuy ? " border-green-400 bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
                   onClick={() => setIsBuy(true)}
                 >
                   Buy
                 </button>
                 <button
-                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${!isBuy && " border-green-400"}`}
+                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-green-400 bg-white"}`}
                   onClick={() => setIsBuy(false)}
                 >
                   Sell
