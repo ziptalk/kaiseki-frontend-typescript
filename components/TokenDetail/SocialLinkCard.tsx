@@ -11,49 +11,66 @@ interface SocialLinkCardTypes {
 const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
   return (
     <>
-      <div className="flex h-[125px]  w-[20%] flex-col justify-between px-[30px] text-lg">
-        <Link href={tw ? tw : ""}>
-          <h1
-            className={`${tw && "text-[#43FF4B]"} flex h-full items-center gap-[8px]`}
-          >
-            <Image
-              src="/icons/X_logo.svg"
-              alt=""
-              width={50}
-              height={50}
-              className={`h-full w-[15px] ${tw && "fill-[#43FF4B]"}`}
-            />{" "}
-            [twitter]
-          </h1>
-        </Link>
-        <Link href={tg ? tg : ""}>
-          <h1
-            className={`${tw && "text-[#00FFF0]"} flex h-full items-center gap-[8px]`}
-          >
-            <Image
-              src="/icons/telegram_logo.svg"
-              alt=""
-              width={50}
-              height={50}
-              className="h-full w-[15px]"
-            />{" "}
-            [telegram]
-          </h1>
-        </Link>
-        <Link href={web ? web : ""}>
-          <h1
-            className={`${tw && "text-[#FB30FF]"} flex h-full items-center gap-[8px]`}
-          >
-            <Image
-              src="/icons/telegram_logo.svg"
-              alt=""
-              width={50}
-              height={50}
-              className="h-full w-[15px]"
-            />{" "}
-            [website]
-          </h1>
-        </Link>
+      <div className="flex h-[125px] w-[276px] justify-center px-[30px] text-lg">
+        <div className="flex h-full  flex-col justify-between">
+          <Link href={tw ? tw : ""}>
+            {tw ? (
+              <Image
+                src="/images/twitter_active_Default.svg"
+                alt=""
+                width={100}
+                height={100}
+                className={`  ${tw && "fill-[#43FF4B]"}`}
+              />
+            ) : (
+              <Image
+                src="/images/twitter_deactivated_Default.svg"
+                alt=""
+                width={100}
+                height={500}
+                className={`  ${tw && "fill-[#43FF4B]"}`}
+              />
+            )}
+          </Link>
+          <Link href={tg ? tg : ""}>
+            {tg ? (
+              <Image
+                src="/images/tg_active_Default.svg"
+                alt=""
+                width={120}
+                height={120}
+                className={` `}
+              />
+            ) : (
+              <Image
+                src="/images/tg_deactivated_Default.svg"
+                alt=""
+                width={120}
+                height={120}
+                className={` ${tw && "fill-[#43FF4B]"}`}
+              />
+            )}
+          </Link>
+          <Link href={web ? web : ""}>
+            {web ? (
+              <Image
+                src="/images/web_active_Default.svg"
+                alt=""
+                width={110}
+                height={110}
+                className={` `}
+              />
+            ) : (
+              <Image
+                src="/images/web_deactivated_Default.svg"
+                alt=""
+                width={110}
+                height={110}
+                className={` `}
+              />
+            )}
+          </Link>
+        </div>
       </div>
     </>
   );

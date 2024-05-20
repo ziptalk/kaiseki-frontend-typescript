@@ -9,3 +9,8 @@ export const arial = localFont({
   src: "./Arial/Arial.ttf",
   variable: "--font-arial",
 });
+
+export const impact = localFont({
+  src: "./Impact/impact.ttf",
+  variable: "--font-impact",
+});

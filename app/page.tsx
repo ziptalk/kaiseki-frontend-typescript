@@ -137,11 +137,13 @@ export default function Home() {
           <div className="mx-auto flex h-[465px] w-[55vw] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
               <div className="flex h-full w-[500px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
-                <div className="flex h-[50px] w-[340px] items-center justify-center border bg-gradient-to-b from-zinc-900 to-rose-950">
-                  <h1 className="text-borderline  text-3xl font-black text-white ">
-                    To the moon
-                  </h1>
-                </div>
+                <Image
+                  src="/images/To_the_moon.svg"
+                  alt=""
+                  width={300}
+                  height={300}
+                />
+
                 <div className="w-[390px]">
                   <TokenCard
                     name="R5"
@@ -159,7 +161,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <Link href="/create" className="z-10">
+            <Link href={"/create"}>
               <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-[30px] rounded-[20px] border-4 border-[#E5180E] shadow-inner ">
                 <h1 className="text-xl font-black text-white">
                   Create new coin

@@ -14,7 +14,7 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
             bonding curve progress:&nbsp;
           </h1>
           <h1
-            className={`text-[#FAFF00] ${digital.variable} neon-yellow font-digital`}
+            className={`text-[#FAFF00] ${digital.variable} neon-yellow font-digital text-xl`}
           >
             {prog}%
           </h1>

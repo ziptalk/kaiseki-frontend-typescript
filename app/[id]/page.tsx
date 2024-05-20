@@ -14,7 +14,7 @@ import { useEthersSigner } from "@/hooks/ethers";
 import { ethers } from "ethers";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import TradesCard from "@/components/TokenDetail/TradesCard";
-import { digital } from "@/fonts/font";
+import { digital, impact } from "@/fonts/font";
 import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
 import Image from "next/image";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
@@ -192,11 +192,11 @@ export default function Detail() {
 
   return (
     <>
-      <main className="flex w-screen bg-gradient-to-br from-[#1F1F1F] to-[#220A09]">
+      <main className="flex w-screen bg-[#0E0E0E]">
         <div className="mx-auto flex h-full w-full justify-between px-[5vw] pt-[60px]">
           <div className="w-[60vw]">
-            <div className="flex h-[245px] justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
-              <div className="w-[40%]">
+            <div className="flex h-[245px] items-center justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
+              <div className="h-full w-[40%]">
                 <TokenCard
                   name={name}
                   ticker={symbol}
@@ -204,10 +204,12 @@ export default function Detail() {
                   createdBy={creator.substring(0, 5)}
                   desc="desc"
                   tokenAddress=""
+                  border={true}
                 />
               </div>
 
-              <SocialLinkCard tw="l" />
+              <SocialLinkCard tw="l" tg="1" />
+
               <BondingCurveCard prog="00" desc="desc" />
             </div>
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
@@ -240,16 +242,16 @@ export default function Detail() {
             </div>
           </div>
           <div>
-            <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-[#A60600] p-[30px]">
+            <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-gradient-to-b from-[#A60600] to-[#880400] p-[30px]">
               <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
                 <button
-                  className={`h-[44px] w-full rounded-2xl  ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
+                  className={`h-[44px] w-full rounded-2xl ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
                   onClick={() => setIsBuy(true)}
                 >
                   Buy
                 </button>
                 <button
-                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
+                  className={`h-[44px] w-full rounded-2xl border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
                   onClick={() => setIsBuy(false)}
                 >
                   Sell
@@ -260,6 +262,7 @@ export default function Detail() {
                 className="flex flex-col"
               >
                 <div className="flex justify-between">
+                  <div />
                   <div className="mt-[15px] flex h-[30px] w-[128px] items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]">
                     Set max slippage
                   </div>
@@ -293,7 +296,7 @@ export default function Detail() {
 
                 <button
                   type="submit"
-                  className="h-[50px] w-full rounded-2xl border-2 border-[#880400] bg-white"
+                  className={`h-[50px] w-full rounded-2xl border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
                 >
                   place trade
                 </button>
