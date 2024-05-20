@@ -15,6 +15,7 @@ const config: Config = {
       },
       fontFamily: {
         digital: ["var(--font-digital)"],
+        arial: ["var(--font-arial)"],
       },
     },
   },

@@ -213,7 +213,8 @@ export default function Detail() {
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewWidget />
             </div>
-            <div className="mt-[30px]  gap-[20px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
+            <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
+            <div className="mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
               <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
                 <h1 className="w-1/6">account</h1>
                 <h1 className="w-1/6">buy / sell</h1>
@@ -240,15 +241,15 @@ export default function Detail() {
           </div>
           <div>
             <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-[#A60600] p-[30px]">
-              <div className="flex gap-[10px] rounded-[15px] bg-black p-[10px]">
+              <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
                 <button
-                  className={`h-[44px] w-full rounded-2xl  ${isBuy ? " border-green-400 bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
+                  className={`h-[44px] w-full rounded-2xl  ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
                   onClick={() => setIsBuy(true)}
                 >
                   Buy
                 </button>
                 <button
-                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-green-400 bg-white"}`}
+                  className={`h-[44px] w-full rounded-2xl border-2 bg-white ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
                   onClick={() => setIsBuy(false)}
                 >
                   Sell
@@ -259,36 +260,46 @@ export default function Detail() {
                 className="flex flex-col"
               >
                 <div className="flex justify-between">
-                  <div></div>
                   <div className="mt-[15px] flex h-[30px] w-[128px] items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]">
                     Set max slippage
                   </div>
                 </div>
-
-                <input
-                  className="my-[8px] h-[55px] rounded-[5px] bg-black px-[20px] text-[#5C5C5C]"
-                  type="number"
-                  placeholder="0.00"
-                  name="inputValue"
-                ></input>
+                <div className="relative flex w-full items-center">
+                  <input
+                    className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                    type="number"
+                    placeholder="0.00"
+                    step="0.01"
+                    name="inputValue"
+                  ></input>
+                  <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                    <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                    <h1 className="mt-1 text-[15px] font-bold text-white">
+                      {name}
+                    </h1>
+                  </div>
+                </div>
                 <h1 className="text-[#B8B8B8]">
                   {curMemeTokenValue}&nbsp;
                   {name}
                 </h1>
-                <div className="my-[15px] flex justify-between">
+                <div className="my-[15px] flex items-center justify-between">
                   <h1 className="text-sm text-white">{status}</h1>
-                  <button>t</button>
+                  <div className="flex h-[12px] w-[46px] cursor-pointer flex-row-reverse items-center justify-between rounded-full bg-[#4E4B4B]">
+                    <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
+                    <div className="h-[24px] w-[24px] rounded-full bg-[#00FFF0]"></div>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="h-[50px] w-full rounded-2xl bg-white"
+                  className="h-[50px] w-full rounded-2xl border-2 border-[#880400] bg-white"
                 >
                   place trade
                 </button>
               </form>
             </div>
-            <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] border bg-[#1A1A1A] p-[30px]">
+            <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
               <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
               <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
                 <div className=" flex justify-between font-bold">

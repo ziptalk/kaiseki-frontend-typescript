@@ -132,13 +132,12 @@ const Create: NextPage = () => {
         <div className="mx-auto h-full w-[500px] ">
           <div className="mx-auto h-full w-[484px] pt-[30px]">
             <div className="">
-              <h1 className="text-center text-lg text-[#F9FF00]">Preview</h1>
               <Image
-                src="/images/Preview.png"
+                src="/images/Preview.svg"
                 alt=""
                 width={500}
                 height={500}
-                className="h-[30px] w-[80px]"
+                className="mx-auto h-full w-1/4"
               />
               <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
                 <div>

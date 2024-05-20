@@ -2,7 +2,11 @@
 
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/contracts/contracts";
-import { useAccountModal, useConnectModal } from "@rainbow-me/rainbowkit";
+import {
+  ConnectButton,
+  useAccountModal,
+  useConnectModal,
+} from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -388,7 +392,7 @@ const Header: FC = () => {
               ) : (
                 <button
                   onClick={openConnectModal}
-                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border text-white"
+                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border text-[12px] text-white"
                 >
                   Connect Wallet
                 </button>
