@@ -37,7 +37,15 @@ export default function Detail() {
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
   };
-
+  const {
+    writeContract,
+    error,
+    isPending,
+    data: mintData,
+    isSuccess,
+    writeContractAsync,
+    status,
+  } = useWriteContract();
   const pathname = usePathname();
 
   const account = useAccount();
@@ -112,15 +120,21 @@ export default function Detail() {
     }
   };
 
-  const {
-    writeContract,
-    error,
-    isPending,
-    data: mintData,
-    isSuccess,
-    writeContractAsync,
-    status,
-  } = useWriteContract();
+  const getCurSteps = async () => {
+    try {
+      if (!account.address) {
+        throw new Error("Account is not defined");
+      }
+      const detail = await bondContract.getSteps(tokenAddress);
+      console.log(detail);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCurSteps();
+  }, [account.address]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

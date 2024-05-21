@@ -13,15 +13,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected, address } = useAccount();
   const pathname = usePathname();
-
-  const { connect, connectors } = useConnect();
 
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
