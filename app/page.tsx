@@ -102,21 +102,6 @@ export default function Home() {
 
       setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
 
-      // const newDatas = events.map((event: any) => ({
-      //   tic: event.args.symbol.substring(0, 5),
-      //   user: event.args.token.substring(0, 5),
-      // }));
-
-      // setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
-
-      // events.forEach((event: any) => {
-      //   console.log(
-      //     `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken}`,
-      //   );
-      //   setCurCreateTic(event.args.symbol.substring(0, 5));
-      //   setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-      // });
-
       // Prepare for the next batch
       fromBlock = toBlock + 1;
       toBlock = fromBlock + batchSize - 1;
@@ -162,23 +147,22 @@ export default function Home() {
               </div>
             </div>
             <Link href={"/create"}>
-              <div className="flex h-[300px] w-[200px] flex-col items-center justify-center gap-[30px] rounded-[20px] border-4 border-[#E5180E] shadow-inner ">
-                <h1 className="text-xl font-black text-white">
-                  Create new coin
-                </h1>
-                <div
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  className="h-[140px] w-[80px] rounded-2xl "
-                >
-                  <Image
-                    src={isHovered ? "/images/Yellow.svg" : "/images/Red.svg"}
-                    alt="Create"
-                    width={500}
-                    height={500}
-                    className="h-full w-full"
-                  />
-                </div>
+              <div
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="h-[300px] w-[200px]"
+              >
+                <Image
+                  src={
+                    isHovered
+                      ? "/images/create_hovered.svg"
+                      : "/images/create_default.svg"
+                  }
+                  alt="Create"
+                  width={500}
+                  height={1000}
+                  className="h-full w-full"
+                />
               </div>
             </Link>
           </div>

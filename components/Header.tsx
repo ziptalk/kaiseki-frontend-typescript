@@ -11,13 +11,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected, address } = useAccount();
   const pathname = usePathname();
+
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
 
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
@@ -309,7 +312,7 @@ const Header: FC = () => {
 
         <div className="flex h-full w-full items-center justify-between px-[30px]">
           <div className="flex h-[40px] w-full items-center justify-between px-2 text-white">
-            <div className="flex h-full items-center justify-evenly gap-[30px]">
+            <div className="flex h-full w-[300px] items-center justify-evenly gap-[30px]">
               <Link
                 href="/"
                 className="flex h-[40px] items-center gap-[15px] rounded-full "
@@ -372,7 +375,7 @@ const Header: FC = () => {
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
               </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
               {isConnected ? (
                 <button
