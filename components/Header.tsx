@@ -1,6 +1,7 @@
 "use client";
 
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import { walletAddress } from "@/atoms/atoms";
 import contracts from "@/contracts/contracts";
 import {
   ConnectButton,
@@ -11,7 +12,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useRecoilState } from "recoil";
+import { useAccount, useConnect } from "wagmi";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -20,7 +22,6 @@ const Header: FC = () => {
   const pathname = usePathname();
 
   const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
 
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
@@ -31,6 +32,12 @@ const Header: FC = () => {
   const [curCreateTime, setCurCreateTime] = useState("Date");
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
+  const [addr, setAddr] = useRecoilState(walletAddress);
+
+  useEffect(() => {
+    if (address == undefined) return;
+    setAddr(String(address));
+  }, [address]);
 
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
@@ -377,14 +384,14 @@ const Header: FC = () => {
             </div>
             <div className="flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
-              {isConnected ? (
+              {addr != "" ? (
                 <button
                   onClick={openAccountModal}
                   className="flex h-[40px] w-[180px]
                   cursor-pointer
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
                 >
-                  {address?.substring(0, 7)}
+                  {addr?.substring(0, 7)}
                   <Image
                     src="/icons/DownTri.svg"
                     alt=""
