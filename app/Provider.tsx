@@ -19,6 +19,7 @@ import {
 import "@rainbow-me/rainbowkit/styles.css";
 
 const { wallets } = getDefaultWallets();
+
 const config = getDefaultConfig({
   wallets: [...wallets],
   appName: "My RainbowKit App",
@@ -28,6 +29,8 @@ const config = getDefaultConfig({
 });
 
 const queryClient = new QueryClient();
+
+// config와 queryClient를 Provider 바깥으로 호이스팅!!
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (

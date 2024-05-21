@@ -37,15 +37,7 @@ export default function Detail() {
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
   };
-  const {
-    writeContract,
-    error,
-    isPending,
-    data: mintData,
-    isSuccess,
-    writeContractAsync,
-    status,
-  } = useWriteContract();
+
   const pathname = usePathname();
 
   const account = useAccount();
@@ -58,10 +50,23 @@ export default function Detail() {
   const provider = new ethers.JsonRpcProvider(
     "https://evm-rpc-arctic-1.sei-apis.com",
   );
+
+  const reserveTokenWriteContract = new ethers.Contract(
+    contracts.ReserveToken,
+    reserveTokenABI,
+    signer,
+  );
+
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,
     MCV2_BondABI,
     provider,
+  );
+
+  const bondWriteContract = new ethers.Contract(
+    contracts.MCV2_Bond,
+    MCV2_BondABI,
+    signer,
   );
 
   const memeTokenContract = new ethers.Contract(
@@ -69,6 +74,13 @@ export default function Detail() {
     MCV2_TokenABI,
     provider,
   );
+
+  const memeTokenWriteContract = new ethers.Contract(
+    tokenAddress,
+    MCV2_TokenABI,
+    signer,
+  );
+
   // Call the getSteps function
   // MARK: - useState
   const [name, setName] = useState("Name");
@@ -78,6 +90,8 @@ export default function Detail() {
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [inputValue, setInputValue] = useState("");
   const [marketCap, setMarketCap] = useState("");
+  const [txState, setTxState] = useState("idle");
+  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -103,6 +117,8 @@ export default function Detail() {
 
   useEffect(() => {
     getMemeTokenValue();
+    getCurSteps();
+    getNextMintPrice();
   }, [account.address]);
 
   const getMemeTokenValue = async () => {
@@ -119,22 +135,62 @@ export default function Detail() {
       console.log(error);
     }
   };
+  interface BondStep {
+    price: bigint;
+    step: bigint;
+  }
+  // const getCurSteps = async () => {
+  //   try {
+  //     if (!account.address) {
+  //       throw new Error("Account is not defined");
+  //     }
+  //     const steps = await bondContract.getSteps(tokenAddress);
+  //     console.log(steps.target);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getCurSteps = async () => {
     try {
       if (!account.address) {
         throw new Error("Account is not defined");
       }
-      const detail = await bondContract.getSteps(tokenAddress);
-      console.log(detail);
+
+      // Fetch the steps using the getSteps function from the contract
+      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
+      console.log("Fetched steps:", steps);
+      const targetPrice = await bondContract.priceForNextMint(tokenAddress);
+      // Extract the step prices into a new array
+      const stepPrices: bigint[] = steps.map((step) => step.price);
+
+      for (let i = 0; i < stepPrices.length; i++) {
+        console.log("stepPrices[i]:" + stepPrices[i]);
+        console.log("stepPrices.length:" + stepPrices.length);
+
+        if (Number(stepPrices[i]) == Number(targetPrice)) {
+          setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
+        }
+      }
+
+      console.log("Extracted step prices:", stepPrices);
+      return stepPrices;
+    } catch (error: any) {
+      console.error("Error:", error);
+    }
+  };
+
+  const getNextMintPrice = async () => {
+    try {
+      if (!account.address) {
+        throw new Error("Account is not defined");
+      }
+      const detail = await bondContract.priceForNextMint(tokenAddress);
+      console.log("NextMintPrice :" + detail);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    getCurSteps();
-  }, [account.address]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -157,37 +213,40 @@ export default function Detail() {
     const inputValue = formData.get("inputValue") as string;
 
     console.log("start-app");
-
     try {
-      const tx = await writeContractAsync({
-        address: contracts.ReserveToken,
-        abi: reserveTokenABI,
-        functionName: "approve",
-        args: [contracts.MCV2_Bond, BigInt(wei(Number(inputValue)))],
-      });
-
-      console.log(tx);
-
-      // Wait for the approve transaction to be mined
-
-      console.log("start-mint");
-      const mintTx = await writeContractAsync({
-        address: contracts.MCV2_Bond,
-        abi: MCV2_BondABI,
-        functionName: "mint",
-        args: [
-          tokenAddress,
+      if (!account.address) {
+        alert("Connect your wallet first!");
+        throw new Error("Account is not defined");
+      }
+      const allowance = await reserveTokenWriteContract.allowance(
+        account.address,
+        contracts.MCV2_Bond,
+      );
+      if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
+        console.log("Approving token...");
+        setTxState("Approving token...");
+        const detail = await reserveTokenWriteContract.approve(
+          contracts.MCV2_Bond,
           BigInt(wei(Number(inputValue))),
-          MAX_INT_256,
-          account.address,
-        ],
-      });
+        );
+        console.log("Approval detail:", detail);
+      }
 
-      console.log(mintTx);
-      getMemeTokenValue();
-    } catch (error) {
-      console.error("An error occurred:", error);
+      console.log("Minting token...");
+      setTxState("Minting token...");
+      const mintDetail = await bondWriteContract.mint(
+        tokenAddress,
+        BigInt(wei(Number(inputValue))),
+        MAX_INT_256,
+        account.address,
+      );
+      console.log("Mint detail:", mintDetail);
+      setTxState("Success");
+    } catch (error: any) {
+      console.error("Error:", error);
+      setTxState("ERR");
     }
+    await getMemeTokenValue();
   }
 
   // MARK: - Sell
@@ -198,26 +257,36 @@ export default function Detail() {
     const inputValue = formData.get("inputValue") as string;
 
     console.log("start-app");
-    const tx = await writeContractAsync({
-      address: tokenAddress,
-      abi: MCV2_TokenABI,
-      functionName: "approve",
-      args: [contracts.MCV2_Bond, BigInt(wei(Number(inputValue)))],
-    });
 
-    console.log("start-mint");
-    await writeContractAsync({
-      address: contracts.MCV2_Bond,
-      abi: MCV2_BondABI,
-      functionName: "burn",
-      args: [tokenAddress, BigInt(wei(Number(inputValue))), 0, account.address],
-    });
-    getMemeTokenValue();
+    try {
+      if (!account.address) {
+        alert("Connect your wallet first!");
+        throw new Error("Account is not defined");
+      }
+      console.log("Approving token...");
+      setTxState("Approving token...");
+      const detail = await memeTokenWriteContract.approve(
+        contracts.MCV2_Bond,
+        BigInt(wei(Number(inputValue))),
+      );
+      console.log("Approval detail:", detail);
+
+      console.log("Burning token...");
+      setTxState("Burning token...");
+      const burnDetail = await bondWriteContract.burn(
+        tokenAddress,
+        BigInt(wei(Number(inputValue))),
+        0,
+        account.address,
+      );
+      console.log("Burn detail:", burnDetail);
+      setTxState("Success");
+    } catch (error) {
+      console.error("Error:", error);
+      setTxState("ERR");
+    }
+    await getMemeTokenValue();
   }
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   return (
     <>
@@ -237,9 +306,15 @@ export default function Detail() {
                 />
               </div>
 
-              <SocialLinkCard tw="l" tg="1" />
+              <SocialLinkCard
+                tw="https://chatgpt.com/"
+                tg="https://chatgpt.com/"
+              />
 
-              <BondingCurveCard prog="00" desc="desc" />
+              <BondingCurveCard
+                prog={Math.floor(bondingCurveProgress)}
+                desc="desc"
+              />
             </div>
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewWidget />
@@ -271,7 +346,7 @@ export default function Detail() {
             </div>
           </div>
           <div>
-            <div className="h-[360px] w-[420px] rounded-[15px] border border-yellow-400 bg-gradient-to-b from-[#A60600] to-[#880400] p-[30px]">
+            <div className=" w-[420px] rounded-[15px] border border-yellow-400 bg-gradient-to-b from-[#A60600] to-[#880400] p-[30px]">
               <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
                 <button
                   className={`h-[44px] w-full rounded-2xl ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
@@ -319,50 +394,53 @@ export default function Detail() {
                 </h1>
                 {isBuy ? (
                   <div className="my-[15px] flex h-[20px] items-center justify-between">
-                    <h1 className="text-sm text-white">{status}</h1>
+                    <h1 className="text-sm text-white">{txState}</h1>
                     <div className="flex h-[12px] w-[46px] cursor-pointer flex-row-reverse items-center justify-between rounded-full bg-[#4E4B4B]">
                       <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
                       <div className="h-[24px] w-[24px] rounded-full bg-[#00FFF0]"></div>
                     </div>
                   </div>
                 ) : (
-                  <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
-                    <button
-                      type="button"
-                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                      onClick={handleReset}
-                    >
-                      reset
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                      onClick={() => handlePercentage(25)}
-                    >
-                      25%
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                      onClick={() => handlePercentage(50)}
-                    >
-                      50%
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                      onClick={() => handlePercentage(75)}
-                    >
-                      75%
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                      onClick={() => handlePercentage(100)}
-                    >
-                      100%
-                    </button>
-                  </div>
+                  <>
+                    <h1 className="mt-[15px] text-sm text-white">{txState}</h1>
+                    <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
+                      <button
+                        type="button"
+                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                        onClick={handleReset}
+                      >
+                        reset
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                        onClick={() => handlePercentage(25)}
+                      >
+                        25%
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                        onClick={() => handlePercentage(50)}
+                      >
+                        50%
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                        onClick={() => handlePercentage(75)}
+                      >
+                        75%
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+                        onClick={() => handlePercentage(100)}
+                      >
+                        100%
+                      </button>
+                    </div>
+                  </>
                 )}
 
                 <button
