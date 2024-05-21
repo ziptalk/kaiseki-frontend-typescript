@@ -384,14 +384,14 @@ const Header: FC = () => {
             </div>
             <div className="flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
-              {addr != "" ? (
+              {address ? (
                 <button
                   onClick={openAccountModal}
                   className="flex h-[40px] w-[180px]
                   cursor-pointer
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
                 >
-                  {addr?.substring(0, 7)}
+                  {address?.substring(0, 7)}
                   <Image
                     src="/icons/DownTri.svg"
                     alt=""
