@@ -2,7 +2,11 @@
 
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import {
+  getDefaultConfig,
+  getDefaultWallets,
+  RainbowKitProvider,
+} from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import {
   mainnet,
@@ -13,10 +17,11 @@ import {
   seiDevnet,
 } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import Header from "@/components/Header";
+const { wallets } = getDefaultWallets();
 
 export default function Provider({ children }: { children: React.ReactNode }) {
   const config = getDefaultConfig({
+    wallets: [...wallets],
     appName: "My RainbowKit App",
     projectId: "YOUR_PROJECT_ID",
     chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
