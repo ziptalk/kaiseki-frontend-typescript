@@ -16,7 +16,7 @@ import contracts from "@/contracts/contracts";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { Contract } from "ethers";
-import { useEthersSigner } from "@/hooks/ethers";
+import { useEthersSigner } from "@/hooks/ethersSigner";
 import { type UseAccountReturnType } from "wagmi";
 import { useEthersProvider } from "@/config";
 import { digital } from "@/fonts/font";

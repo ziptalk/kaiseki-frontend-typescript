@@ -10,7 +10,7 @@ import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 import contracts from "@/contracts/contracts";
 import TokenCard from "@/components/TokenCard";
 import Web3 from "web3";
-import { useEthersSigner } from "@/hooks/ethers";
+import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ethers } from "ethers";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import TradesCard from "@/components/TokenDetail/TradesCard";
