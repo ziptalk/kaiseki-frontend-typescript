@@ -18,7 +18,7 @@ import { digital, impact } from "@/fonts/font";
 import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
 import Image from "next/image";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
-
+import axios from "axios";
 const util = require("util");
 
 export default function Detail() {
@@ -92,20 +92,31 @@ export default function Detail() {
   const [marketCap, setMarketCap] = useState("");
   const [txState, setTxState] = useState("idle");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  const [SEIPrice, setSEIPrice] = useState(0);
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
       try {
         const detail = await bondContract.getDetail(tokenAddress);
+        // TODO - Make this Value more easy to read
+        // setLoading(true);
+        const response = await axios.get(
+          `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+        );
+        console.log("SEI PRICE" + response.data.price);
+        setSEIPrice(response.data.price);
+        // setLoading(false);
 
         // Log and set the state with the returned details
-        console.log("name :" + detail.info.name);
-        console.log("symbol :" + detail.info.symbol);
-        console.log("creator :" + detail.info.creator);
+        const currentSupply = detail.info.currentSupply;
+        const price = detail.info.priceForNextMint;
         // console.log("currentSupply :" + detail.info.currentSupply);
         setName(detail.info.name);
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
+        setMarketCap(
+          String(ether(currentSupply) * (ether(price) * response.data.price)),
+        );
         // setMarketCap(detail.info.marketCap);
       } catch (error) {
         console.log(error);
@@ -165,8 +176,8 @@ export default function Detail() {
       const stepPrices: bigint[] = steps.map((step) => step.price);
 
       for (let i = 0; i < stepPrices.length; i++) {
-        console.log("stepPrices[i]:" + stepPrices[i]);
-        console.log("stepPrices.length:" + stepPrices.length);
+        // console.log("stepPrices[i]:" + stepPrices[i]);
+        // console.log("stepPrices.length:" + stepPrices.length);
 
         if (Number(stepPrices[i]) == Number(targetPrice)) {
           setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
@@ -298,7 +309,7 @@ export default function Detail() {
                 <TokenCard
                   name={name}
                   ticker={symbol}
-                  cap="0.00"
+                  cap={marketCap}
                   createdBy={creator.substring(0, 5)}
                   desc="desc"
                   tokenAddress=""

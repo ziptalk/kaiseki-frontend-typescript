@@ -9,6 +9,7 @@ import { type UseReadContractReturnType } from "wagmi";
 import Link from "next/link";
 import TokenCard from "@/components/TokenCard";
 import Image from "next/image";
+import axios from "axios";
 
 export default function Home() {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
@@ -18,6 +19,11 @@ export default function Home() {
   const [curCreateAddress, setCurCreateAddress] = useState("");
   const [createDatas, setCreateDatas] = useState<any[]>([]);
   const [isHovered, setIsHovered] = useState(false);
+  const ether = (weiValue: bigint, decimals = 18): number => {
+    const factor = BigInt(10) ** BigInt(decimals);
+    const etherValue = Number(weiValue) / Number(factor);
+    return etherValue;
+  };
 
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
@@ -78,7 +84,14 @@ export default function Home() {
             const block = await provider.getBlock(event.blockNumber);
             const timestamp = block.timestamp;
             const date = new Date(timestamp * 1000);
-
+            const detail = await contract.getDetail(event.args.token);
+            const response = await axios.get(
+              `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+            );
+            const currentSupply = detail.info.currentSupply;
+            const price = detail.info.priceForNextMint;
+            console.log("cursup" + currentSupply);
+            console.log("price" + price);
             // Format the date as DD/MM/YY
             const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
@@ -96,6 +109,7 @@ export default function Home() {
               user: event.args.token.substring(0, 5), // Fake value!
               time: formattedDate,
               addr: event.args.token,
+              cap: ether(currentSupply) * (ether(price) * response.data.price),
             };
           }),
       );
@@ -115,6 +129,7 @@ export default function Home() {
   useEffect(() => {
     fetchCreateHomeEventsInBatches(19966627, 5000);
   }, []);
+
   return (
     <>
       <main className="flex w-screen bg-[#0E0E0E]">
@@ -131,12 +146,12 @@ export default function Home() {
 
                 <div className="w-[390px]">
                   <TokenCard
-                    name="R5"
-                    ticker="R5"
+                    name="ez"
+                    ticker="ez"
                     cap="1:24"
                     desc=""
                     createdBy="Me"
-                    tokenAddress="0xfb4a803Eb8Ca7464AC5ad74ae4D08E9cF676d29c"
+                    tokenAddress="0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
                   />
                 </div>
                 <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
@@ -194,7 +209,7 @@ export default function Home() {
                 name={card.name}
                 ticker={card.tic}
                 tokenAddress={card.addr}
-                cap="1:24"
+                cap={card.cap}
                 createdBy="Me"
                 desc="desc"
               />
