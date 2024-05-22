@@ -18,7 +18,13 @@ function App() {
 
     fetch("http://localhost:3000/TxlogsMintBurn")
       .then((response) => response.json())
-      .then((data) => setEventsFromDB(data));
+      .then((data) => {
+        setEventsFromDB(data);
+        const filteredData = data.filter(
+          (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
+        );
+        setEventsFromDB(filteredData);
+      });
 
     // const val = main();
     // console.log(val);

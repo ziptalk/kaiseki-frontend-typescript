@@ -10,6 +10,7 @@ import Link from "next/link";
 import TokenCard from "@/components/TokenCard";
 import Image from "next/image";
 import axios from "axios";
+import { digital } from "@/fonts/font";
 
 export default function Home() {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
@@ -145,14 +146,43 @@ export default function Home() {
                 />
 
                 <div className="w-[390px]">
-                  <TokenCard
-                    name="ez"
-                    ticker="ez"
-                    cap="1:24"
-                    desc=""
-                    createdBy="Me"
-                    tokenAddress="0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
-                  />
+                  <Link
+                    href="/0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
+                    className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]   shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
+                  >
+                    <div>
+                      <div className="h-[100px] w-[100px] border-black bg-[#D9D9D9]"></div>
+                    </div>
+                    <div className=" text w-[334px] overflow-hidden px-[10px]">
+                      <div className="">
+                        <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                          ez
+                        </h1>
+                        <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                          [ticker: ez]
+                        </h1>
+                      </div>
+
+                      <h1 className="neon-lime text-xs text-[#C5F900] ">
+                        Created by:&nbsp;0x7A2
+                      </h1>
+
+                      <div className="flex">
+                        <h1 className="neon-yellow text-xs text-[#FAFF00]">
+                          Market cap:&nbsp;
+                        </h1>
+                        <h1
+                          className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+                        >
+                          1.1K
+                        </h1>
+                      </div>
+
+                      <h1 className=" text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
+                        desc
+                      </h1>
+                    </div>
+                  </Link>
                 </div>
                 <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
                   <div className="h-full w-[120px] rounded-xl bg-white"></div>
