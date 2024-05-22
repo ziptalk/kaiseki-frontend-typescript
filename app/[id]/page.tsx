@@ -11,7 +11,7 @@ import contracts from "@/contracts/contracts";
 import TokenCard from "@/components/TokenCard";
 import Web3 from "web3";
 import { useEthersSigner } from "@/hooks/ethersSigner";
-import { ethers } from "ethers";
+import { ethers, formatEther } from "ethers";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import TradesCard from "@/components/TokenDetail/TradesCard";
 import { digital, impact } from "@/fonts/font";
@@ -333,6 +333,61 @@ export default function Detail() {
     }
     await getMemeTokenValue();
   }
+  const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
+  const [burnEventsFromDB, setBurnEventsFromDB] = useState<any[]>([]);
+  const [eventsFromDB, setEventsFromDB] = useState<any[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
+  const [filteredBurnEvents, setFilteredBurnEvents] = useState<any[]>([]);
+  const [selectedToken, setSelectedToken] = useState<string>("");
+
+  useEffect(() => {
+    fetch("http://localhost:3000/TxlogsMintBurn")
+      .then((response) => response.json())
+      .then((data) => {
+        setMintEventsFromDB(data.mintEvents);
+        setBurnEventsFromDB(data.burnEvents);
+      });
+  }, []);
+
+  useEffect(() => {
+    const filterAndCombineEvents = () => {
+      let filteredMintEvents = mintEventsFromDB;
+      let filteredBurnEvents = burnEventsFromDB;
+
+      if (tokenAddress) {
+        filteredMintEvents =
+          mintEventsFromDB?.filter((event) => event.token === tokenAddress) ||
+          [];
+        filteredBurnEvents =
+          burnEventsFromDB?.filter((event) => event.token === tokenAddress) ||
+          [];
+      }
+
+      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
+      combinedEvents.sort(
+        (a, b) =>
+          new Date(b.blockTimestamp).getTime() -
+          new Date(a.blockTimestamp).getTime(),
+      );
+
+      setFilteredEvents(combinedEvents);
+    };
+
+    filterAndCombineEvents();
+  }, [tokenAddress, mintEventsFromDB, burnEventsFromDB]);
+
+  const formatSeiAmount = (amount: string) => {
+    const etherValue = parseFloat(formatEther(amount));
+    const roundedValue = Math.ceil(etherValue * 1000) / 1000;
+    return roundedValue.toFixed(3);
+  };
+
+  const formatMemeTokenAmount = (amount: string) => {
+    const etherValue = parseFloat(formatEther(amount));
+    const kValue = etherValue / 1000;
+    const roundedValue = Math.ceil(kValue * 10) / 10;
+    return `${roundedValue.toFixed(2)}k`;
+  };
 
   return (
     <>
@@ -375,20 +430,31 @@ export default function Detail() {
                 <h1 className="w-1/6">date</h1>
                 <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
               </div>
-              <TradesCard
-                isBuy={true}
-                seiAmount="0.0143"
-                memeTokenAmount="124.5k"
-                date="May 14 5:34:37 pm"
-                tx="d3vb4i"
-              />
-              <TradesCard
-                isBuy={false}
-                seiAmount="0.0143"
-                memeTokenAmount="124.5k"
-                date="May 14 5:34:37 pm"
-                tx="d3vb4i"
-              />
+              {filteredEvents?.length > 0 ? (
+                <ul>
+                  {filteredEvents.map((event) => (
+                    <li key={event.eventId}>
+                      <TradesCard
+                        isBuy={event.amountMinted ? true : false}
+                        seiAmount={
+                          event.amountMinted
+                            ? formatSeiAmount(event.amountMinted._hex)
+                            : formatSeiAmount(event.amountBurned._hex)
+                        }
+                        memeTokenAmount={
+                          event.reserveAmount
+                            ? formatMemeTokenAmount(event.reserveAmount._hex)
+                            : formatMemeTokenAmount(event.refundAmount._hex)
+                        }
+                        date={new Date(event.blockTimestamp).toLocaleString()}
+                        tx={event.transactionHash.slice(-6)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p></p>
+              )}
             </div>
           </div>
           <div>
