@@ -50,6 +50,11 @@ export default function Detail() {
   const provider = new ethers.JsonRpcProvider(
     "https://evm-rpc-arctic-1.sei-apis.com",
   );
+  const reserveTokenContract = new ethers.Contract(
+    contracts.ReserveToken,
+    reserveTokenABI,
+    provider,
+  );
 
   const reserveTokenWriteContract = new ethers.Contract(
     contracts.ReserveToken,
@@ -88,11 +93,14 @@ export default function Detail() {
   const [creator, setCreator] = useState("Me");
   const [isBuy, setIsBuy] = useState(true);
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
+  const [curSEIValue, setCurSEIValue] = useState("0");
+  const [curWSEIValue, setCurWSEIValue] = useState("0");
   const [inputValue, setInputValue] = useState("");
   const [marketCap, setMarketCap] = useState("");
   const [txState, setTxState] = useState("idle");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [SEIPrice, setSEIPrice] = useState(0);
+  const [InputState, setInputState] = useState(true);
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -117,7 +125,6 @@ export default function Detail() {
         setMarketCap(
           String(ether(currentSupply) * (ether(price) * response.data.price)),
         );
-        // setMarketCap(detail.info.marketCap);
       } catch (error) {
         console.log(error);
       }
@@ -127,10 +134,49 @@ export default function Detail() {
   }, []);
 
   useEffect(() => {
-    getMemeTokenValue();
-    getCurSteps();
-    getNextMintPrice();
+    try {
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+      getMemeTokenValue();
+      getCurSteps();
+      getNextMintPrice();
+      getWSEIValue();
+    } catch {}
   }, [account.address]);
+
+  const getSEIValue = async () => {
+    try {
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+      const Eprovider = new ethers.BrowserProvider(window.ethereum);
+      // setMarketCap(detail.info.marketCap);
+      const balanceWei = await Eprovider.getBalance(account.address);
+      // Convert the balance to Ether
+      const balanceEther = ether(balanceWei);
+      console.log(balanceEther);
+      setCurSEIValue(String(balanceEther));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getWSEIValue = async () => {
+    try {
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+
+      const balanceWei = await reserveTokenContract.balanceOf(account.address);
+      // Convert the balance to Ether
+      const balanceEther = ether(balanceWei);
+      console.log(balanceEther);
+      setCurWSEIValue(String(balanceEther));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getMemeTokenValue = async () => {
     try {
@@ -150,17 +196,6 @@ export default function Detail() {
     price: bigint;
     step: bigint;
   }
-  // const getCurSteps = async () => {
-  //   try {
-  //     if (!account.address) {
-  //       throw new Error("Account is not defined");
-  //     }
-  //     const steps = await bondContract.getSteps(tokenAddress);
-  //     console.log(steps.target);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const getCurSteps = async () => {
     try {
@@ -367,7 +402,10 @@ export default function Detail() {
                 </button>
                 <button
                   className={`h-[44px] w-full rounded-2xl border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
-                  onClick={() => setIsBuy(false)}
+                  onClick={() => {
+                    setIsBuy(false);
+                    setInputState(true);
+                  }}
                 >
                   Sell
                 </button>
@@ -378,37 +416,75 @@ export default function Detail() {
               >
                 <div className="flex justify-between">
                   <div />
-                  <div className="mt-[15px] flex h-[30px] w-[128px] items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]">
+                  <div
+                    className="mt-[15px]
+                   flex h-[30px] w-[128px] cursor-pointer items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]"
+                  >
                     Set max slippage
                   </div>
                 </div>
-                <div className="relative flex w-full items-center">
-                  <input
-                    className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
-                    type="number"
-                    placeholder="0.00"
-                    step="0.01"
-                    name="inputValue"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                  ></input>
-                  <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                    <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
-                    <h1 className="mt-1 text-[15px] font-bold text-white">
+                {InputState ? (
+                  <>
+                    <div className="relative flex w-full items-center">
+                      <input
+                        className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        type="number"
+                        placeholder="0.00"
+                        step="0.01"
+                        name="inputValue"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                      ></input>
+                      <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                        <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                        <h1 className="mt-1 text-[15px] font-bold text-white">
+                          {name}
+                        </h1>
+                      </div>
+                    </div>
+                    <h1 className="text-[#B8B8B8]">
+                      {curMemeTokenValue}&nbsp;
                       {name}
                     </h1>
-                  </div>
-                </div>
-                <h1 className="text-[#B8B8B8]">
-                  {curMemeTokenValue}&nbsp;
-                  {name}
-                </h1>
+                  </>
+                ) : (
+                  <>
+                    <>
+                      <div className="relative flex w-full items-center">
+                        <input
+                          className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                          type="number"
+                          placeholder="0.00"
+                          step="0.01"
+                          name="inputValue"
+                          value={inputValue}
+                          onChange={handleInputChange}
+                        ></input>
+                        <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                          <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                          <h1 className="mt-1 text-[15px] font-bold text-white">
+                            WSEI
+                          </h1>
+                        </div>
+                      </div>
+                      <h1 className="text-[#B8B8B8]">
+                        {curWSEIValue}&nbsp;WSEI
+                      </h1>
+                    </>
+                  </>
+                )}
+
                 {isBuy ? (
                   <div className="my-[15px] flex h-[20px] items-center justify-between">
                     <h1 className="text-sm text-white">{txState}</h1>
-                    <div className="flex h-[12px] w-[46px] cursor-pointer flex-row-reverse items-center justify-between rounded-full bg-[#4E4B4B]">
+                    <div
+                      onClick={() => setInputState(!InputState)}
+                      className={`flex h-[12px] w-[46px] cursor-pointer ${InputState && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
+                    >
                       <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
-                      <div className="h-[24px] w-[24px] rounded-full bg-[#00FFF0]"></div>
+                      <div
+                        className={`h-[24px] w-[24px] rounded-full ${InputState ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
+                      ></div>
                     </div>
                   </div>
                 ) : (
