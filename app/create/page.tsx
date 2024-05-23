@@ -54,7 +54,7 @@ const Create: NextPage = () => {
       setUploading(true);
       const data = new FormData();
       data.set("file", fileToUpload);
-      const res = await fetch("/api/files", {
+      const res = await fetch("/api/pinata", {
         method: "POST",
         body: data,
       });
@@ -162,14 +162,16 @@ const Create: NextPage = () => {
               />
               <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
                 <div>
-                  <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]">
-                    {cid && (
+                  {cid ? (
+                    <div className="h-[120px] w-[120px]">
                       <img
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                         alt="Image from IPFS"
                       />
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="h-[120px] w-[120px] bg-[#D9D9D9]"></div>
+                  )}
                 </div>
                 <div className=" text w-[334px] overflow-hidden px-[10px]">
                   <div className="">
