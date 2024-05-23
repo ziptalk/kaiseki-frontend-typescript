@@ -1,27 +1,15 @@
 "use client";
 
-import Header from "@/components/Header";
 import { NextPage } from "next";
 
-import {
-  useAccount,
-  useConnect,
-  useReadContract,
-  useWaitForTransactionReceipt,
-  useWatchContractEvent,
-  useWriteContract,
-} from "wagmi";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/contracts/contracts";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { Contract } from "ethers";
-import { useEthersSigner } from "@/hooks/ethersSigner";
-import { type UseAccountReturnType } from "wagmi";
 import { useEthersProvider } from "@/config";
+import contracts from "@/contracts/contracts";
 import { digital } from "@/fonts/font";
-import { injected } from "wagmi/connectors";
+import { Contract } from "ethers";
 import Image from "next/image";
+import { useRef, useState } from "react";
+import { useAccount, useConnect, useWriteContract } from "wagmi";
 
 const Create: NextPage = () => {
   const provider = useEthersProvider();
@@ -56,6 +44,29 @@ const Create: NextPage = () => {
       console.error("Error querying filter:", error);
     }
   }
+
+  const [uploading, setUploading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [cid, setCid] = useState("");
+
+  const uploadFile = async (fileToUpload: File) => {
+    try {
+      setUploading(true);
+      const data = new FormData();
+      data.set("file", fileToUpload);
+      const res = await fetch("/api/files", {
+        method: "POST",
+        body: data,
+      });
+      const resData = await res.json();
+      setCid(resData.IpfsHash);
+      setUploading(false);
+    } catch (e) {
+      console.log(e);
+      setUploading(false);
+      alert("Trouble uploading file");
+    }
+  };
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -115,6 +126,9 @@ const Create: NextPage = () => {
   const [ticker, setTicker] = useState("");
   const [desc, setDesc] = useState("");
 
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const inputFile = useRef(null);
+
   const nameHandler = (event: any) => {
     setName(event.target.value);
   };
@@ -126,6 +140,13 @@ const Create: NextPage = () => {
   const descHandler = (event: any) => {
     setDesc(event.target.value);
   };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+      uploadFile(e.target.files[0]);
+    }
+  };
+
   return (
     <>
       <div className=" w-screen bg-[#0E0E0E] ">
@@ -141,7 +162,14 @@ const Create: NextPage = () => {
               />
               <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
                 <div>
-                  <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
+                  <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]">
+                    {cid && (
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                        alt="Image from IPFS"
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className=" text w-[334px] overflow-hidden px-[10px]">
                   <div className="">
@@ -206,10 +234,12 @@ const Create: NextPage = () => {
                 image
               </h1>
               <input
+                ref={inputFile}
+                onChange={handleFileChange}
                 name="image"
                 type="file"
                 accept="image/*"
-                className=" flex h-[50px] w-full items-center rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[15px] text-white"
+                className=" flex h-[50px] w-full items-center rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
               />
               <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
                 description

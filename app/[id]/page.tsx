@@ -1,24 +1,21 @@
 "use client";
 
-import Header from "@/components/Header";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
-import contracts from "@/contracts/contracts";
 import TokenCard from "@/components/TokenCard";
-import Web3 from "web3";
-import { useEthersSigner } from "@/hooks/ethersSigner";
-import { ethers, formatEther } from "ethers";
-import TradingViewWidget from "@/components/TradingViewWidget";
-import TradesCard from "@/components/TokenDetail/TradesCard";
-import { digital, impact } from "@/fonts/font";
 import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
-import Image from "next/image";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
+import TradesCard from "@/components/TokenDetail/TradesCard";
+import TradingViewWidget from "@/components/TradingViewWidget";
+import contracts from "@/contracts/contracts";
+import { impact } from "@/fonts/font";
+import { useEthersSigner } from "@/hooks/ethersSigner";
 import axios from "axios";
+import { formatEther } from "ethers";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 const util = require("util");
 
 export default function Detail() {
@@ -333,12 +330,12 @@ export default function Detail() {
     }
     await getMemeTokenValue();
   }
+
+  // MARK: - TradesDB
+
   const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
   const [burnEventsFromDB, setBurnEventsFromDB] = useState<any[]>([]);
-  const [eventsFromDB, setEventsFromDB] = useState<any[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
-  const [filteredBurnEvents, setFilteredBurnEvents] = useState<any[]>([]);
-  const [selectedToken, setSelectedToken] = useState<string>("");
 
   useEffect(() => {
     fetch("http://localhost:3000/TxlogsMintBurn")

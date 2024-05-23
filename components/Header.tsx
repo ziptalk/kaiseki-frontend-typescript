@@ -365,14 +365,14 @@ const Header: FC = () => {
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
-              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] text-[#FA00FF]">
+              <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF]">
                 <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} SEI of {curMintTic}
                 </h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
               </div>
-              <div className="flex h-full w-[400px] items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] text-[#09FFD3]">
+              <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
                 <h1 className="text-sm">
                   {curCreateUser} Created {curCreateTic} on {curCreateTime}
