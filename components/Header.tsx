@@ -297,6 +297,12 @@ const Header: FC = () => {
     );
   };
 
+  const handleClick = (url: string) => {
+    if (url) {
+      window.open(url);
+    }
+  };
+
   return (
     <>
       <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
@@ -353,6 +359,9 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px]"
+                  onClick={() =>
+                    handleClick("https://twitter.com/memesinodotfun")
+                  }
                 />
 
                 <Image
@@ -389,6 +398,13 @@ const Header: FC = () => {
                   cursor-pointer
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
                 >
+                  <Image
+                    src="/images/Seiyan.png"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="rounded-full"
+                  />
                   {address?.substring(0, 7)}
                   <Image
                     src="/icons/DownTri.svg"

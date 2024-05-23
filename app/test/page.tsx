@@ -29,7 +29,10 @@ function App() {
     fetch("http://localhost:3000/HolderDistribution")
       .then((response) => response.json())
       .then((data) => {
-        setDistribution(data);
+        const filteredData = data.filter(
+          (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
+        );
+        setDistribution(filteredData);
       });
 
     // const val = main();

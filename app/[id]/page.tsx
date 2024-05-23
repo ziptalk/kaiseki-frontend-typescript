@@ -202,7 +202,7 @@ export default function Detail() {
 
       // Fetch the steps using the getSteps function from the contract
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      console.log("Fetched steps:", steps);
+      // console.log("Fetched steps:", steps);
       const targetPrice = await bondContract.priceForNextMint(tokenAddress);
       // Extract the step prices into a new array
       const stepPrices: bigint[] = steps.map((step) => step.price);
@@ -216,7 +216,7 @@ export default function Detail() {
         }
       }
 
-      console.log("Extracted step prices:", stepPrices);
+      // console.log("Extracted step prices:", stepPrices);
       return stepPrices;
     } catch (error: any) {
       console.error("Error:", error);
