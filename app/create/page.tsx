@@ -104,6 +104,8 @@ const Create: NextPage = () => {
           },
           body: JSON.stringify({
             cid,
+            name: name,
+            ticker: ticker,
             tokenAddress: createdTokenAddress,
             description: desc,
             twitterUrl: tw,
