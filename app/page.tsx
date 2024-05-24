@@ -295,7 +295,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
-            {/* {tokenInfo ? (
+            {tokenInfo ? (
               tokenInfo
                 .slice(-12)
                 .map((card: any, index: any) => (
@@ -311,7 +311,7 @@ export default function Home() {
                 ))
             ) : (
               <p>No token information available.</p>
-            )} */}
+            )}
           </div>
         </div>
       </main>

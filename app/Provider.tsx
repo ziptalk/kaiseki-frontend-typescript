@@ -32,7 +32,7 @@ import {
 const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
-  wallets: [...wallets],
+  // wallets: [...wallets],
   // wallets: [
   //   {
   //     groupName: "Recommended",

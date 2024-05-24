@@ -132,6 +132,7 @@ export default function Detail() {
     getMemeTokenValue();
   }, []);
 
+  // listen event later
   useEffect(() => {
     try {
       if (!window.ethereum) {
@@ -196,6 +197,8 @@ export default function Detail() {
     step: bigint;
   }
 
+  const [priceForNextMint, setPriceForNextMint] = useState(0);
+
   const getCurSteps = async () => {
     try {
       if (!account.address) {
@@ -206,6 +209,7 @@ export default function Detail() {
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       // console.log("Fetched steps:", steps);
       const targetPrice = await bondContract.priceForNextMint(tokenAddress);
+
       // Extract the step prices into a new array
       const stepPrices: bigint[] = steps.map((step) => step.price);
 
@@ -230,7 +234,9 @@ export default function Detail() {
       if (!account.address) {
         throw new Error("Account is not defined");
       }
+
       const detail = await bondContract.priceForNextMint(tokenAddress);
+      setPriceForNextMint(detail);
       console.log("NextMintPrice :" + detail);
     } catch (error) {
       console.log(error);
@@ -512,8 +518,10 @@ export default function Detail() {
                       </div>
                     </div>
                     <h1 className="text-[#B8B8B8]">
-                      {curMemeTokenValue}&nbsp;
-                      {name}
+                      {/* {curMemeTokenValue}&nbsp; */}
+                      {/* {name} */}
+                      {ether(BigInt(inputValue) * BigInt(priceForNextMint))}
+                      &nbsp; WSEI
                     </h1>
                   </>
                 ) : (
@@ -537,7 +545,10 @@ export default function Detail() {
                         </div>
                       </div>
                       <h1 className="text-[#B8B8B8]">
-                        {curWSEIValue}&nbsp;WSEI
+                        {Number(
+                          wei(Number(inputValue)) / BigInt(priceForNextMint),
+                        )}
+                        &nbsp;{name}
                       </h1>
                     </>
                   </>

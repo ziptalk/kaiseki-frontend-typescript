@@ -73,7 +73,7 @@ const Create: NextPage = () => {
 
   const uploadFile = async (fileToUpload: File) => {
     try {
-      setUploading(true);
+      setIsLoading(true);
       const data = new FormData();
       data.set("file", fileToUpload);
       const res = await fetch("/api/pinata", {
@@ -82,10 +82,10 @@ const Create: NextPage = () => {
       });
       const resData = await res.json();
       setCid(resData.IpfsHash);
-      setUploading(false);
+      setIsLoading(false);
     } catch (e) {
       console.log(e);
-      setUploading(false);
+      setIsLoading(false);
       alert("Trouble uploading file");
     }
   };
