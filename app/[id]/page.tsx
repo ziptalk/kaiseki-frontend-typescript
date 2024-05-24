@@ -479,12 +479,12 @@ export default function Detail() {
               >
                 <div className="flex justify-between">
                   <div />
-                  <div
+                  {/* <div
                     className="mt-[15px]
                    flex h-[30px] w-[128px] cursor-pointer items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]"
                   >
                     Set max slippage
-                  </div>
+                  </div> */}
                 </div>
                 {InputState ? (
                   <>
