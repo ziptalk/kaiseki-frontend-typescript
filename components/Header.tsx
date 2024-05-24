@@ -14,11 +14,9 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 
-import { useAccount } from "wagmi";
 import styled from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
-
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -262,13 +260,12 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-
   //const MintEventCard: FC<EventCardTypes> = ({
-   // index,
-   // user,
-   // value,
-   // ticker,
- // }) => {
+  // index,
+  // user,
+  // value,
+  // ticker,
+  // }) => {
 
   useEffect(() => {
     if (chainId != 713715) {
@@ -277,9 +274,9 @@ const Header: FC = () => {
   }, [address]);
 
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
-
     return (
-      <EventWrapper $itemN={index}>
+      <EventWrapper>
+        {/* // <EventWrapper $itemN={index}> */}
         <div className="flex h-[18px] w-full gap-[3px] ">
           {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
           <Image
@@ -392,18 +389,17 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
-
                 <ImageTG alt="telegram icon" />
 
                 <ImageX
                   alt="x icon"
 
-                <Image
-                  src="/icons/telegram_logo.svg"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px] cursor-pointer"
+                  // <Image
+                  //   src="/icons/telegram_logo.svg"
+                  //   alt=""
+                  //   width={50}
+                  //   height={50}
+                  //   className="h-[15px] w-[15px] cursor-pointer"
                 />
 
                 <Image
@@ -412,12 +408,10 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-
                   onClick={() =>
                     handleClick("https://twitter.com/memesinodotfun")
                   }
                 />
-
 
                 {/* <ImageInfo alt="info icon" /> */}
 
@@ -428,7 +422,6 @@ const Header: FC = () => {
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
                 />
-
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
