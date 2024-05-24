@@ -274,16 +274,19 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="mt-10 flex h-[50px] w-full justify-between  px-10">
+          <div className=" mt-10 flex w-full items-end justify-between px-10">
             <div className="h-full">
-              <button className="mr-[20px] h-[50px] w-[160px] rounded-[10px] bg-[#353535]">
-                sort: newest
+              <div className="mb-[20px] text-xl text-white underline">
+                Tokens
+              </div>
+              <button className="mr-[20px] rounded-[10px] bg-[#363636] px-5 py-[15px] text-[#AEAEAE]">
+                sort: created
               </button>
-              <button className="h-[50px] w-[160px] rounded-[10px] bg-[#353535]">
-                sort: newest
+              <button className=" rounded-[10px] bg-[#363636] px-5 py-[15px] text-[#AEAEAE]">
+                order: desc
               </button>
             </div>
-            <form className="">
+            {/* <form className="">
               <input
                 className="mr-[30px] h-[50px] w-[422px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
                 placeholder="search for token"
@@ -291,8 +294,21 @@ export default function Home() {
               <button className="h-[50px] w-[150px] rounded-[10px] bg-[#FF00C6]">
                 search
               </button>
-            </form>
+            </form> */}
           </div>
+
+          {/* <!--           <div className="mb-[130px] mt-10 grid w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
+            {createDatas.slice(-12).map((card: any, index: any) => (
+              <TokenCard
+                key={index}
+                name={card.name}
+                ticker={card.tic}
+                tokenAddress={card.addr}
+                cap={card.cap}
+                createdBy="Me"
+                desc="desc"
+              />
+            ))} --> */}
 
           <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
             {tokenInfo ? (

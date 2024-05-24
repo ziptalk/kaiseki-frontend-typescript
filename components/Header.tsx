@@ -13,6 +13,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+
+import styled from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
 
@@ -258,6 +260,13 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
+  //const MintEventCard: FC<EventCardTypes> = ({
+  // index,
+  // user,
+  // value,
+  // ticker,
+  // }) => {
+
   useEffect(() => {
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
@@ -266,9 +275,17 @@ const Header: FC = () => {
 
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
-      <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
+      <EventWrapper>
+        {/* // <EventWrapper $itemN={index}> */}
         <div className="flex h-[18px] w-full gap-[3px] ">
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
           <h1 className="text-sm">{user} bought </h1>
         </div>
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
@@ -276,26 +293,50 @@ const Header: FC = () => {
             {" "}
             {value} SEI of {ticker}
           </h1>
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
         </div>
-      </div>
+      </EventWrapper>
     );
   };
 
-  const CreateEventCard: FC<EventCardTypes> = ({ user, ticker, time }) => {
+  const CreateEventCard: FC<EventCardTypes> = ({
+    index,
+    user,
+    ticker,
+    time,
+  }) => {
     return (
-      <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
+      <EventWrapper $itemN={index}>
         <div className="flex h-[18px] w-full gap-[3px] ">
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
           <h1 className="text-sm">{user} created </h1>
         </div>
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
           <h1 className="text-sm">
             {ticker} on {time}
           </h1>
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
         </div>
-      </div>
+      </EventWrapper>
     );
   };
 
@@ -317,6 +358,7 @@ const Header: FC = () => {
                   value={card.val}
                   ticker={card.tic}
                   user={card.user}
+                  index={index}
                 />
               ))}
             </div>
@@ -347,12 +389,17 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
-                <Image
-                  src="/icons/telegram_logo.svg"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px] cursor-pointer"
+                <ImageTG alt="telegram icon" />
+
+                <ImageX
+                  alt="x icon"
+
+                  // <Image
+                  //   src="/icons/telegram_logo.svg"
+                  //   alt=""
+                  //   width={50}
+                  //   height={50}
+                  //   className="h-[15px] w-[15px] cursor-pointer"
                 />
 
                 <Image
@@ -365,6 +412,8 @@ const Header: FC = () => {
                     handleClick("https://twitter.com/memesinodotfun")
                   }
                 />
+
+                {/* <ImageInfo alt="info icon" /> */}
 
                 <Image
                   src="/icons/info.svg"
@@ -435,6 +484,7 @@ const Header: FC = () => {
                   time={card.time}
                   ticker={card.tic}
                   user={card.user}
+                  index={index}
                 />
               ))}
             </div>
@@ -446,3 +496,41 @@ const Header: FC = () => {
 };
 
 export default Header;
+
+const ImageSNS = styled.img`
+  height: 15px;
+`;
+
+const ImageX = styled(ImageSNS)`
+  content: url("/icons/X_logo.svg");
+  &:hover {
+    content: url("/icons/x-hover.svg");
+  }
+`;
+
+const ImageTG = styled(ImageSNS)`
+  content: url("/icons/telegram_logo.svg");
+  &:hover {
+    content: url("/icons/telegram-hover.svg");
+  }
+`;
+
+// const ImageInfo = styled(ImageSNS)`
+//   content: url("/icons/info.svg");
+//   &:hover {
+//     content: url("/icons/info-hover.svg");
+//   }
+// `;
+
+const eventCardColors: string[] = ["9EFF00", "00FFFF", "FF20F6"];
+
+const EventWrapper = styled.div<{ $itemN?: number }>`
+  width: 182px;
+  height: 55px;
+  margin-bottom: 20px;
+  padding: 8px 15px;
+  border-radius: 8px;
+
+  background-color: ${({ $itemN }) =>
+    $itemN ? `#${eventCardColors[$itemN % 3]}` : "#0FF"};
+`;

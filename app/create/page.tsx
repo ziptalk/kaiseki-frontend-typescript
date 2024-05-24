@@ -5,7 +5,7 @@ import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { useEthersProvider } from "@/config";
 import contracts from "@/contracts/contracts";
-import { digital } from "@/fonts/font";
+import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -17,6 +17,8 @@ import {
   useWriteContract,
 } from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
+import { ModalContentBox, ModalRootWrapper } from "@/components/Create/Modal";
+import styled from "styled-components";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -26,6 +28,9 @@ const Create: NextPage = () => {
   const signer = useEthersSigner();
   const account = useAccount();
   const contract = new Contract(contracts.MCV2_Bond, abi, provider);
+  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [buyValue, setBuyValue] = useState("");
+  const [modalToggle, setModalToggle] = useState(true);
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -228,8 +233,72 @@ const Create: NextPage = () => {
     }
   };
 
+  const FirstBuyModal = () => {
+    return (
+      <ModalRootWrapper>
+        <ModalContentBox>
+          <div className="flex flex-col items-center justify-center gap-[15px]">
+            <h1 className="whitespace-pre text-[22px] font-bold text-white">{`Select the amount of [token ticker]\nyou wish to buy`}</h1>
+            <h1 className="text-[18px] text-[#8f8f8f]">(this is optional)</h1>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-[15px]">
+            <div className="relative flex w-full items-center">
+              <input
+                className="my-[8px] h-[55px] w-[360px] rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                type="number"
+                placeholder="0.00"
+                step="0.01"
+                name="inputValue"
+                value={buyValue}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setBuyValue(e.target.value);
+                }}
+              ></input>
+              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                <Image
+                  width={24}
+                  height={24}
+                  src={"/icons/sei.svg"}
+                  alt="sei logo"
+                  className="rounded-full"
+                />
+                <h1 className="mt-1 text-[15px] font-bold text-white">SEI</h1>
+              </div>
+            </div>
+
+            <div className="my-[15px] flex h-[20px] w-[360px] items-center justify-between">
+              <h1 className="text-sm text-white">{`Insufficient balance : You have 0.02313 SEI`}</h1>
+              <div
+                onClick={() => setModalToggle(!modalToggle)}
+                className={`flex h-[12px] w-[46px] cursor-pointer ${modalToggle && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
+              >
+                <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
+                <div
+                  className={`h-[24px] w-[24px] rounded-full ${modalToggle ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-[15px]">
+            <button
+              className={`flex h-[60px] w-[400px] items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
+            >
+              create token
+            </button>
+            <h1 className="text-[15px] font-normal text-white">
+              cost to deploy : ~0.02 SEI
+            </h1>
+          </div>
+        </ModalContentBox>
+      </ModalRootWrapper>
+    );
+  };
+
   return (
     <>
+      {isModalVisible && <FirstBuyModal />}
       <div className=" w-screen bg-[#0E0E0E] ">
         <div className="mx-auto h-full w-[500px] ">
           <div className="mx-auto h-full w-[484px] pt-[30px]">
@@ -245,7 +314,7 @@ const Create: NextPage = () => {
                 <div>
                   {cid ? (
                     <div className="h-[120px] w-[120px]">
-                      <img
+                      <Image
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                         alt="Image from IPFS"
                       />
@@ -406,3 +475,11 @@ const Create: NextPage = () => {
 };
 
 export default Create;
+
+const ModalItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+`;
