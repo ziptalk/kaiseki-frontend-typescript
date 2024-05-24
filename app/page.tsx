@@ -235,7 +235,7 @@ export default function Home() {
             </form> */}
           </div>
 
-          <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
+          <div className="mb-[130px] mt-10 grid w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
             {createDatas.slice(-12).map((card: any, index: any) => (
               <TokenCard
                 key={index}
