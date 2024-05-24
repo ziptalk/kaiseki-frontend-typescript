@@ -267,7 +267,14 @@ const Header: FC = () => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
         <div className="flex h-[18px] w-full gap-[3px] ">
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
           <h1 className="text-sm">{user} bought </h1>
         </div>
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
@@ -275,7 +282,13 @@ const Header: FC = () => {
             {" "}
             {value} SEI of {ticker}
           </h1>
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
         </div>
       </div>
     );
@@ -285,14 +298,27 @@ const Header: FC = () => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
         <div className="flex h-[18px] w-full gap-[3px] ">
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
           <h1 className="text-sm">{user} created </h1>
         </div>
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
           <h1 className="text-sm">
             {ticker} on {time}
           </h1>
-          <div className="h-[18px] w-[18px] rounded-full bg-[#F900FF]" />
+          <Image
+            width={18}
+            height={18}
+            className="rounded-full "
+            src="/images/Seiyan.png"
+            alt="user profile"
+          />
         </div>
       </div>
     );
