@@ -232,7 +232,7 @@ const Create: NextPage = () => {
                 <div>
                   {cid ? (
                     <div className="h-[120px] w-[120px]">
-                      <img
+                      <Image
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                         alt="Image from IPFS"
                       />
