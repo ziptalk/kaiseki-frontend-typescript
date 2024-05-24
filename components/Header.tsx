@@ -263,9 +263,14 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
+  const MintEventCard: FC<EventCardTypes> = ({
+    index,
+    user,
+    value,
+    ticker,
+  }) => {
     return (
-      <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
+      <EventWrapper $itemN={index}>
         <div className="flex h-[18px] w-full gap-[3px] ">
           {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
           <Image
@@ -290,13 +295,18 @@ const Header: FC = () => {
             alt="user profile"
           />
         </div>
-      </div>
+      </EventWrapper>
     );
   };
 
-  const CreateEventCard: FC<EventCardTypes> = ({ user, ticker, time }) => {
+  const CreateEventCard: FC<EventCardTypes> = ({
+    index,
+    user,
+    ticker,
+    time,
+  }) => {
     return (
-      <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
+      <EventWrapper $itemN={index}>
         <div className="flex h-[18px] w-full gap-[3px] ">
           {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
           <Image
@@ -320,7 +330,7 @@ const Header: FC = () => {
             alt="user profile"
           />
         </div>
-      </div>
+      </EventWrapper>
     );
   };
 
@@ -342,6 +352,7 @@ const Header: FC = () => {
                   value={card.val}
                   ticker={card.tic}
                   user={card.user}
+                  index={index}
                 />
               ))}
             </div>
@@ -444,6 +455,7 @@ const Header: FC = () => {
                   time={card.time}
                   ticker={card.tic}
                   user={card.user}
+                  index={index}
                 />
               ))}
             </div>
@@ -474,9 +486,22 @@ const ImageTG = styled(ImageSNS)`
   }
 `;
 
-const ImageInfo = styled(ImageSNS)`
-  content: url("/icons/info.svg");
-  &:hover {
-    content: url("/icons/info-hover.svg");
-  }
+// const ImageInfo = styled(ImageSNS)`
+//   content: url("/icons/info.svg");
+//   &:hover {
+//     content: url("/icons/info-hover.svg");
+//   }
+// `;
+
+const eventCardColors: string[] = ["9EFF00", "00FFFF", "FF20F6"];
+
+const EventWrapper = styled.div<{ $itemN?: number }>`
+  width: 182px;
+  height: 55px;
+  margin-bottom: 20px;
+  padding: 8px 15px;
+  border-radius: 8px;
+
+  background-color: ${({ $itemN }) =>
+    $itemN ? `#${eventCardColors[$itemN % 3]}` : "#0FF"};
 `;
