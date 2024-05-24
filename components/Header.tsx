@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { useAccount } from "wagmi";
+import styled from "styled-components";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -345,32 +346,16 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
-                <Image
-                  src="/icons/telegram_logo.svg"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px]"
-                />
+                <ImageTG alt="telegram icon" />
 
-                <Image
-                  src="/icons/X_logo.svg"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px]"
+                <ImageX
+                  alt="x icon"
                   onClick={() =>
                     handleClick("https://twitter.com/memesinodotfun")
                   }
                 />
 
-                <Image
-                  src="/icons/info.svg"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px]"
-                />
+                {/* <ImageInfo alt="info icon" /> */}
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
@@ -444,3 +429,28 @@ const Header: FC = () => {
 };
 
 export default Header;
+
+const ImageSNS = styled.img`
+  height: 15px;
+`;
+
+const ImageX = styled(ImageSNS)`
+  content: url("/icons/X_logo.svg");
+  &:hover {
+    content: url("/icons/x-hover.svg");
+  }
+`;
+
+const ImageTG = styled(ImageSNS)`
+  content: url("/icons/telegram_logo.svg");
+  &:hover {
+    content: url("/icons/telegram-hover.svg");
+  }
+`;
+
+const ImageInfo = styled(ImageSNS)`
+  content: url("/icons/info.svg");
+  &:hover {
+    content: url("/icons/info-hover.svg");
+  }
+`;
