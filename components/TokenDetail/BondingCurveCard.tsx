@@ -3,7 +3,7 @@ import { FC } from "react";
 
 interface BondingCurveCardTypes {
   prog: number;
-  desc: string;
+  desc?: string;
 }
 const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
   return (
@@ -25,7 +25,11 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
             style={{ width: `${prog}%` }}
           ></div>
         </div>
-        <h1 className="h-[75px] text-[#6A6A6A]">{desc}</h1>
+        <h1 className="h-[75px] text-[#6A6A6A] ">
+          Once the bonding curve progress hits 100%, all the liquidity from the
+          bonding curve will be deposited into dragonswap and burned.
+          Progression increases as the price rices.
+        </h1>
       </div>
     </>
   );

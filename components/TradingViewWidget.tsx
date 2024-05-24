@@ -138,6 +138,28 @@ const TradingViewChart: React.FC = () => {
         });
       }, 1000); // Update every second
 
+      // Update data every second
+      const eventIntervalId = setInterval(() => {
+        setChartData((prevData) => {
+          const lastDataPoint = prevData[prevData.length - 1];
+          const updatedDataPoint: BarData = {
+            ...lastDataPoint,
+            high: Math.max(
+              lastDataPoint.high,
+              lastDataPoint.close + Math.random(),
+            ),
+            low: Math.min(
+              lastDataPoint.low,
+              lastDataPoint.close - Math.random(),
+            ),
+            close: lastDataPoint.close + (Math.random() - 0.5),
+          };
+          candlestickSeries.update(updatedDataPoint);
+          const newData = [...prevData.slice(0, -1), updatedDataPoint];
+          return newData;
+        });
+      }, 1000); // Update every second
+
       // Add new candle every 5 seconds
       const fiveSecondIntervalId = setInterval(() => {
         setChartData((prevData) => {

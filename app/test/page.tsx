@@ -1,11 +1,13 @@
 "use client";
-import main from "../api/distribution";
+
 import React, { useEffect, useState } from "react";
 
 function App() {
   const [priceHistory, setPriceHistory] = useState(null);
   const [eventsFromDB, setEventsFromDB] = useState(null);
   const [distribution, setDistribution] = useState(null);
+  const [tokenInfo, setTokenInfo] = useState(null);
+
   const targetToken = "0xfb4a803Eb8Ca7464AC5ad74ae4D08E9cF676d29c";
   useEffect(() => {
     fetch("http://localhost:3000/priceHistory")
@@ -34,13 +36,16 @@ function App() {
         );
         setDistribution(filteredData);
       });
-
+    fetch("http://localhost:3000/homeTokenInfo") // Add this block
+      .then((response) => response.json())
+      .then((data) => setTokenInfo(data));
     // const val = main();
     // console.log(val);
   }, []);
 
   return (
     <div className="App">
+      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
       <h1>REST API Example</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre>
       <h2>Price History</h2>

@@ -15,7 +15,7 @@ import axios from "axios";
 import { formatEther } from "ethers";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
 const util = require("util");
 
 export default function Detail() {
@@ -98,6 +98,8 @@ export default function Detail() {
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [SEIPrice, setSEIPrice] = useState(0);
   const [InputState, setInputState] = useState(true);
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -130,6 +132,7 @@ export default function Detail() {
     getMemeTokenValue();
   }, []);
 
+  // listen event later
   useEffect(() => {
     try {
       if (!window.ethereum) {
@@ -194,6 +197,8 @@ export default function Detail() {
     step: bigint;
   }
 
+  const [priceForNextMint, setPriceForNextMint] = useState(0);
+
   const getCurSteps = async () => {
     try {
       if (!account.address) {
@@ -204,6 +209,7 @@ export default function Detail() {
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       // console.log("Fetched steps:", steps);
       const targetPrice = await bondContract.priceForNextMint(tokenAddress);
+
       // Extract the step prices into a new array
       const stepPrices: bigint[] = steps.map((step) => step.price);
 
@@ -228,7 +234,9 @@ export default function Detail() {
       if (!account.address) {
         throw new Error("Account is not defined");
       }
+
       const detail = await bondContract.priceForNextMint(tokenAddress);
+      setPriceForNextMint(detail);
       console.log("NextMintPrice :" + detail);
     } catch (error) {
       console.log(error);
@@ -254,13 +262,15 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-
+    if (!account.address) {
+      alert("Connect your wallet first!");
+      throw new Error("Account is not defined");
+    }
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
     console.log("start-app");
     try {
-      if (!account.address) {
-        alert("Connect your wallet first!");
-        throw new Error("Account is not defined");
-      }
       const allowance = await reserveTokenWriteContract.allowance(
         account.address,
         contracts.MCV2_Bond,
@@ -298,14 +308,16 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-
+    if (!account.address) {
+      alert("Connect your wallet first!");
+      throw new Error("Account is not defined");
+    }
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
     console.log("start-app");
 
     try {
-      if (!account.address) {
-        alert("Connect your wallet first!");
-        throw new Error("Account is not defined");
-      }
       console.log("Approving token...");
       setTxState("Approving token...");
       const detail = await memeTokenWriteContract.approve(
@@ -506,8 +518,10 @@ export default function Detail() {
                       </div>
                     </div>
                     <h1 className="text-[#B8B8B8]">
-                      {curMemeTokenValue}&nbsp;
-                      {name}
+                      {/* {curMemeTokenValue}&nbsp; */}
+                      {/* {name} */}
+                      {ether(BigInt(inputValue) * BigInt(priceForNextMint))}
+                      &nbsp; WSEI
                     </h1>
                   </>
                 ) : (
@@ -531,7 +545,10 @@ export default function Detail() {
                         </div>
                       </div>
                       <h1 className="text-[#B8B8B8]">
-                        {curWSEIValue}&nbsp;WSEI
+                        {Number(
+                          wei(Number(inputValue)) / BigInt(priceForNextMint),
+                        )}
+                        &nbsp;{name}
                       </h1>
                     </>
                   </>

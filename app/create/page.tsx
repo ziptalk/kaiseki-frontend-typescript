@@ -9,13 +9,21 @@ import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useAccount, useConnect, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useConnect,
+  useSwitchChain,
+  useWriteContract,
+} from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Create/Modal";
 import styled from "styled-components";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
+  const { switchChain } = useSwitchChain();
+  const chainId = useChainId();
   const provider = useEthersProvider();
   const signer = useEthersSigner();
   const account = useAccount();
@@ -37,7 +45,6 @@ const Create: NextPage = () => {
   );
 
   // 이벤트 이거 가져와짐 개꿀
-  const [createdTokenAddress, setCreatedTokenAddress] = useState("");
 
   const fetchEvent = async () => {
     try {
@@ -71,7 +78,7 @@ const Create: NextPage = () => {
 
   const uploadFile = async (fileToUpload: File) => {
     try {
-      setUploading(true);
+      setIsLoading(true);
       const data = new FormData();
       data.set("file", fileToUpload);
       const res = await fetch("/api/pinata", {
@@ -80,10 +87,10 @@ const Create: NextPage = () => {
       });
       const resData = await res.json();
       setCid(resData.IpfsHash);
-      setUploading(false);
+      setIsLoading(false);
     } catch (e) {
       console.log(e);
-      setUploading(false);
+      setIsLoading(false);
       alert("Trouble uploading file");
     }
   };
@@ -102,6 +109,8 @@ const Create: NextPage = () => {
           },
           body: JSON.stringify({
             cid,
+            name: name,
+            ticker: ticker,
             tokenAddress: createdTokenAddress,
             description: desc,
             twitterUrl: tw,
@@ -126,6 +135,10 @@ const Create: NextPage = () => {
       const name = formData.get("name") as string;
       const ticker = formData.get("ticker") as string;
 
+      // Checking chain id valid and change chain if not
+      if (chainId != 713715) {
+        switchChain({ chainId: 713715 });
+      }
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
         return;
@@ -177,7 +190,7 @@ const Create: NextPage = () => {
 
       console.log(cid);
       console.log(createdTokenAddress);
-      await sendCidAndTokenAddressToServer(cid, createdTokenAddress);
+      await sendCidAndTokenAddressToServer(createdTokenAddress, cid);
       setIsLoading(false);
     } catch (error) {
       console.error("Error while minting:", error);

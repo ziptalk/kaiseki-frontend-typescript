@@ -13,15 +13,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+
 import { useAccount } from "wagmi";
 import styled from "styled-components";
+import { useAccount, useSwitchChain } from "wagmi";
+import { useChainId } from "wagmi";
+
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected, address } = useAccount();
   const pathname = usePathname();
-
+  const { chains, switchChain } = useSwitchChain();
+  const chainId = useChainId();
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("user");
@@ -31,12 +36,6 @@ const Header: FC = () => {
   const [curCreateTime, setCurCreateTime] = useState("Date");
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
-  const [addr, setAddr] = useRecoilState(walletAddress);
-
-  useEffect(() => {
-    if (address == undefined) return;
-    setAddr(String(address));
-  }, [address]);
 
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
@@ -263,12 +262,22 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  const MintEventCard: FC<EventCardTypes> = ({
-    index,
-    user,
-    value,
-    ticker,
-  }) => {
+
+  //const MintEventCard: FC<EventCardTypes> = ({
+   // index,
+   // user,
+   // value,
+   // ticker,
+ // }) => {
+
+  useEffect(() => {
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
+  }, [address]);
+
+  const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
+
     return (
       <EventWrapper $itemN={index}>
         <div className="flex h-[18px] w-full gap-[3px] ">
@@ -383,16 +392,43 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
+
                 <ImageTG alt="telegram icon" />
 
                 <ImageX
                   alt="x icon"
+
+                <Image
+                  src="/icons/telegram_logo.svg"
+                  alt=""
+                  width={50}
+                  height={50}
+                  className="h-[15px] w-[15px] cursor-pointer"
+                />
+
+                <Image
+                  src="/icons/X_logo.svg"
+                  alt=""
+                  width={50}
+                  height={50}
+                  className="h-[15px] w-[15px] cursor-pointer"
+
                   onClick={() =>
                     handleClick("https://twitter.com/memesinodotfun")
                   }
                 />
 
+
                 {/* <ImageInfo alt="info icon" /> */}
+
+                <Image
+                  src="/icons/info.svg"
+                  alt=""
+                  width={50}
+                  height={50}
+                  className="h-[15px] w-[15px] cursor-pointer"
+                />
+
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
