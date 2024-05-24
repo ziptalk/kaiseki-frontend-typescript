@@ -25,7 +25,7 @@ const TokenCard: FC<TokenCardTypes> = ({
     <>
       <Link
         href={tokenAddress ? tokenAddress : ""}
-        className={`flex h-[140px] max-h-[195px] justify-between gap-[10px] ${border && "border border-dashed border-[#F9FF00] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]"}  bg-black p-[10px] `}
+        className={`flex h-[140px] max-h-[195px] justify-between gap-[10px] ${border && "border border-dashed border-[#F9FF00] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]"}  bg-[#0E0E0E] p-[10px] `}
       >
         <div>
           <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
