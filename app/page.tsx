@@ -91,8 +91,8 @@ export default function Home() {
             );
             const currentSupply = detail.info.currentSupply;
             const price = detail.info.priceForNextMint;
-            console.log("cursup" + currentSupply);
-            console.log("price" + price);
+            // console.log("cursup" + currentSupply);
+            // console.log("price" + price);
             // Format the date as DD/MM/YY
             const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
@@ -131,10 +131,72 @@ export default function Home() {
     fetchCreateHomeEventsInBatches(19966627, 5000);
   }, []);
 
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo[] | null>(null);
+  const [detailedTokens, setDetailedTokens] = useState<
+    (TokenInfo & TokenDetail)[]
+  >([]);
+  type TokenInfo = {
+    cid: string;
+    description: string;
+    telegramUrl?: string;
+    tokenAddress: string;
+    twitterUrl?: string;
+    websiteUrl?: string;
+    _id?: string;
+  };
+
+  type TokenDetail = {
+    info: {
+      name: string;
+      symbol: string;
+    };
+    // Add other properties as needed
+  };
+  useEffect(() => {
+    const fetchTokenInfo = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/homeTokenInfo");
+        const data: TokenInfo[] = await response.json();
+        setTokenInfo(data);
+        fetchDetails(data);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching token info:", error);
+      }
+    };
+
+    fetchTokenInfo();
+  }, []);
+
+  const fetchFromDB = async (tokenAddress: string) => {
+    const detail = await contract.getDetail(tokenAddress);
+    return detail;
+  };
+
+  const fetchDetails = async (data: TokenInfo[]) => {
+    try {
+      const updatedTokens = await Promise.all(
+        data.map(async (token) => {
+          console.log("TA" + token.tokenAddress);
+          const detail = await fetchFromDB(token.tokenAddress);
+          console.log("det" + detail);
+          return {
+            ...token,
+            ...detail,
+          };
+        }),
+      );
+      console.log("UPT" + updatedTokens);
+      setDetailedTokens(updatedTokens);
+    } catch (error) {
+      console.error("Error fetching token details:", error);
+    }
+  };
+
   return (
     <>
       <main className="flex w-screen bg-[#0E0E0E]">
-        <div className="mx-auto h-full w-[70vw]  pt-10 ">
+        <div className="mx-auto h-full w-[70vw] pt-[50px] ">
           <div className="mx-auto flex h-[465px] w-[55vw] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
               <div className="flex h-full w-[500px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
@@ -233,17 +295,23 @@ export default function Home() {
           </div>
 
           <div className="mt-10 grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
-            {createDatas.slice(-12).map((card: any, index: any) => (
-              <TokenCard
-                key={index}
-                name={card.name}
-                ticker={card.tic}
-                tokenAddress={card.addr}
-                cap={card.cap}
-                createdBy="Me"
-                desc="desc"
-              />
-            ))}
+            {/* {tokenInfo ? (
+              tokenInfo
+                .slice(-12)
+                .map((card: any, index: any) => (
+                  <TokenCard
+                    key={index}
+                    name={card.name}
+                    ticker={card.tic}
+                    tokenAddress={card.tokenAddress}
+                    cap={card.cap}
+                    createdBy="Me"
+                    desc={card.description}
+                  />
+                ))
+            ) : (
+              <p>No token information available.</p>
+            )} */}
           </div>
         </div>
       </main>

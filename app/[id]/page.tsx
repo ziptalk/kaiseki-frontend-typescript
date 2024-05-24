@@ -15,7 +15,7 @@ import axios from "axios";
 import { formatEther } from "ethers";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
 const util = require("util");
 
 export default function Detail() {
@@ -98,6 +98,8 @@ export default function Detail() {
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [SEIPrice, setSEIPrice] = useState(0);
   const [InputState, setInputState] = useState(true);
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -254,13 +256,15 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-
+    if (!account.address) {
+      alert("Connect your wallet first!");
+      throw new Error("Account is not defined");
+    }
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
     console.log("start-app");
     try {
-      if (!account.address) {
-        alert("Connect your wallet first!");
-        throw new Error("Account is not defined");
-      }
       const allowance = await reserveTokenWriteContract.allowance(
         account.address,
         contracts.MCV2_Bond,
@@ -298,14 +302,16 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-
+    if (!account.address) {
+      alert("Connect your wallet first!");
+      throw new Error("Account is not defined");
+    }
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
     console.log("start-app");
 
     try {
-      if (!account.address) {
-        alert("Connect your wallet first!");
-        throw new Error("Account is not defined");
-      }
       console.log("Approving token...");
       setTxState("Approving token...");
       const detail = await memeTokenWriteContract.approve(

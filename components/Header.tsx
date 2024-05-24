@@ -13,14 +13,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
+import { useChainId } from "wagmi";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { isConnected, address } = useAccount();
   const pathname = usePathname();
-
+  const { chains, switchChain } = useSwitchChain();
+  const chainId = useChainId();
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("user");
@@ -30,12 +32,6 @@ const Header: FC = () => {
   const [curCreateTime, setCurCreateTime] = useState("Date");
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
-  const [addr, setAddr] = useRecoilState(walletAddress);
-
-  useEffect(() => {
-    if (address == undefined) return;
-    setAddr(String(address));
-  }, [address]);
 
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
@@ -262,6 +258,12 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
+  useEffect(() => {
+    if (chainId != 713715) {
+      switchChain({ chainId: 713715 });
+    }
+  }, [address]);
+
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <div className="mb-[20px] h-[55px] w-[182px] rounded-[8px] bg-white px-[15px] py-[8px]">
@@ -350,7 +352,7 @@ const Header: FC = () => {
                   alt=""
                   width={50}
                   height={50}
-                  className="h-[15px] w-[15px]"
+                  className="h-[15px] w-[15px] cursor-pointer"
                 />
 
                 <Image
@@ -358,7 +360,7 @@ const Header: FC = () => {
                   alt=""
                   width={50}
                   height={50}
-                  className="h-[15px] w-[15px]"
+                  className="h-[15px] w-[15px] cursor-pointer"
                   onClick={() =>
                     handleClick("https://twitter.com/memesinodotfun")
                   }
@@ -369,7 +371,7 @@ const Header: FC = () => {
                   alt=""
                   width={50}
                   height={50}
-                  className="h-[15px] w-[15px]"
+                  className="h-[15px] w-[15px] cursor-pointer"
                 />
               </div>
             </div>
