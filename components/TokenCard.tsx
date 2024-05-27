@@ -10,6 +10,7 @@ interface TokenCardTypes {
   desc: string;
   border?: boolean;
   tokenAddress?: string;
+  cid: string;
 }
 
 const TokenCard: FC<TokenCardTypes> = ({
@@ -20,6 +21,7 @@ const TokenCard: FC<TokenCardTypes> = ({
   desc,
   border,
   tokenAddress,
+  cid,
 }) => {
   return (
     <>
@@ -28,7 +30,12 @@ const TokenCard: FC<TokenCardTypes> = ({
         className={`flex h-[140px] max-h-[195px] justify-between gap-[10px] ${border && "border border-dashed border-[#F9FF00] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]"}  bg-[#0E0E0E] p-[10px] `}
       >
         <div>
-          <div className="h-[120px] w-[120px] border-black bg-[#D9D9D9]"></div>
+          <div className="max-h-[120px] max-w-[120px] border-black bg-[#D9D9D9]">
+            <img
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              alt="Image from IPFS"
+            />
+          </div>
         </div>
         <div className=" text w-[334px] overflow-hidden px-[10px]">
           <div className="">

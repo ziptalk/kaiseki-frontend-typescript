@@ -131,34 +131,15 @@ export default function Home() {
     fetchCreateHomeEventsInBatches(19966627, 5000);
   }, []);
 
-  const [tokenInfo, setTokenInfo] = useState<TokenInfo[] | null>(null);
-  const [detailedTokens, setDetailedTokens] = useState<
-    (TokenInfo & TokenDetail)[]
-  >([]);
-  type TokenInfo = {
-    cid: string;
-    description: string;
-    telegramUrl?: string;
-    tokenAddress: string;
-    twitterUrl?: string;
-    websiteUrl?: string;
-    _id?: string;
-  };
+  const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
 
-  type TokenDetail = {
-    info: {
-      name: string;
-      symbol: string;
-    };
-    // Add other properties as needed
-  };
   useEffect(() => {
     const fetchTokenInfo = async () => {
       try {
-        const response = await fetch("http://localhost:3000/homeTokenInfo");
-        const data: TokenInfo[] = await response.json();
+        const response = await fetch("http://localhost:3001/homeTokenInfo");
+        const data = await response.json();
         setTokenInfo(data);
-        fetchDetails(data);
+
         console.log(data);
       } catch (error) {
         console.error("Error fetching token info:", error);
@@ -168,30 +149,30 @@ export default function Home() {
     fetchTokenInfo();
   }, []);
 
-  const fetchFromDB = async (tokenAddress: string) => {
-    const detail = await contract.getDetail(tokenAddress);
-    return detail;
-  };
+  // const fetchFromDB = async (tokenAddress: string) => {
+  //   const detail = await contract.getDetail(tokenAddress);
+  //   return detail;
+  // };
 
-  const fetchDetails = async (data: TokenInfo[]) => {
-    try {
-      const updatedTokens = await Promise.all(
-        data.map(async (token) => {
-          console.log("TA" + token.tokenAddress);
-          const detail = await fetchFromDB(token.tokenAddress);
-          console.log("det" + detail);
-          return {
-            ...token,
-            ...detail,
-          };
-        }),
-      );
-      console.log("UPT" + updatedTokens);
-      setDetailedTokens(updatedTokens);
-    } catch (error) {
-      console.error("Error fetching token details:", error);
-    }
-  };
+  // const fetchDetails = async (data: TokenInfo[]) => {
+  //   try {
+  //     const updatedTokens = await Promise.all(
+  //       data.map(async (token) => {
+  //         console.log("TA" + token.tokenAddress);
+  //         const detail = await fetchFromDB(token.tokenAddress);
+  //         console.log("det" + detail);
+  //         return {
+  //           ...token,
+  //           ...detail,
+  //         };
+  //       }),
+  //     );
+  //     console.log("UPT" + updatedTokens);
+  //     setDetailedTokens(updatedTokens);
+  //   } catch (error) {
+  //     console.error("Error fetching token details:", error);
+  //   }
+  // };
 
   return (
     <>
@@ -317,11 +298,12 @@ export default function Home() {
                 .map((card: any, index: any) => (
                   <TokenCard
                     key={index}
+                    cid={card.cid}
                     name={card.name}
-                    ticker={card.tic}
+                    ticker={card.ticker}
                     tokenAddress={card.tokenAddress}
-                    cap={card.cap}
-                    createdBy="Me"
+                    cap={card.marketCap}
+                    createdBy={card.createdBy}
                     desc={card.description}
                   />
                 ))

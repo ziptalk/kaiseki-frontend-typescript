@@ -16,6 +16,7 @@ import { formatEther } from "ethers";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import TradingViewChart from "../test/TradingTest";
 const util = require("util");
 
 export default function Detail() {
@@ -350,7 +351,7 @@ export default function Detail() {
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/TxlogsMintBurn")
+    fetch("http://localhost:3001/TxlogsMintBurn")
       .then((response) => response.json())
       .then((data) => {
         setMintEventsFromDB(data.mintEvents);
@@ -398,6 +399,42 @@ export default function Detail() {
     return `${roundedValue.toFixed(2)}k`;
   };
 
+  const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
+  const [cid, setCid] = useState("");
+
+  useEffect(() => {
+    // const fetchTokenInfo = async () => {
+    //   try {
+    //     const response = await fetch("http://localhost:3001/homeTokenInfo");
+    //     const data = await response.json();
+    //     const filteredData = await data.burnEvents.filter(
+    //       (item: any) =>
+    //         item.token.toLowerCase() === tokenAddress.toLowerCase(),
+    //     );
+
+    //     await setTokenInfo(filteredData);
+    //     await setCid(filteredData.cid);
+    //     console.log(filteredData);
+    //   } catch (error) {
+    //     console.error("Error fetching token info:", error);
+    //   }
+    // };
+
+    fetch("http://localhost:3001/homeTokenInfo") // Add this block
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredData = data.filter(
+          (item: any) =>
+            item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase(),
+        );
+        console.log(filteredData);
+        setTokenInfo(filteredData);
+        setCid(filteredData[0].cid);
+      });
+
+    // fetchTokenInfo();
+  }, []);
+
   return (
     <>
       <main className="flex w-screen bg-[#0E0E0E]">
@@ -406,6 +443,7 @@ export default function Detail() {
             <div className="flex h-[245px] items-center justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
               <div className="h-full w-[40%]">
                 <TokenCard
+                  cid={cid}
                   name={name}
                   ticker={symbol}
                   cap={marketCap}
@@ -427,7 +465,7 @@ export default function Detail() {
               />
             </div>
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
-              <TradingViewWidget />
+              <TradingViewChart tokenAddress={tokenAddress} />
             </div>
             <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
             <div className="mb-20 mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A]  p-[30px]">
@@ -520,7 +558,10 @@ export default function Detail() {
                     <h1 className="text-[#B8B8B8]">
                       {/* {curMemeTokenValue}&nbsp; */}
                       {/* {name} */}
-                      {ether(BigInt(inputValue) * BigInt(priceForNextMint))}
+                      {ether(
+                        BigInt(Math.floor(Number(inputValue))) *
+                          BigInt(priceForNextMint),
+                      )}
                       &nbsp; WSEI
                     </h1>
                   </>
@@ -546,7 +587,8 @@ export default function Detail() {
                       </div>
                       <h1 className="text-[#B8B8B8]">
                         {Number(
-                          wei(Number(inputValue)) / BigInt(priceForNextMint),
+                          wei(Math.floor(Number(inputValue))) /
+                            BigInt(priceForNextMint),
                         )}
                         &nbsp;{name}
                       </h1>

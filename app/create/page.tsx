@@ -19,6 +19,8 @@ import {
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Create/Modal";
 import styled from "styled-components";
+import { useRouter } from "next/navigation";
+import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -31,6 +33,8 @@ const Create: NextPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [buyValue, setBuyValue] = useState("");
   const [modalToggle, setModalToggle] = useState(true);
+  const router = useRouter();
+  const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -87,6 +91,7 @@ const Create: NextPage = () => {
       });
       const resData = await res.json();
       setCid(resData.IpfsHash);
+      setIsModalVisible(true);
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -101,7 +106,7 @@ const Create: NextPage = () => {
   ) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/storeCidAndTokenAddress",
+        "http://localhost:3001/storeCidAndTokenAddress",
         {
           method: "POST",
           headers: {
@@ -116,6 +121,8 @@ const Create: NextPage = () => {
             twitterUrl: tw,
             telegramUrl: tg,
             websiteUrl: web,
+            marketCap: 0,
+            createdBy: account.address,
           }),
         },
       );
@@ -127,6 +134,8 @@ const Create: NextPage = () => {
   };
 
   const [isLoading, setIsLoading] = useState(false);
+
+  // MARK: - Submit
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     try {
@@ -187,16 +196,77 @@ const Create: NextPage = () => {
       console.log(receipt);
 
       const createdTokenAddress = await fetchEvent();
-
+      setcreatedTokenAddress(createdTokenAddress);
       console.log(cid);
       console.log(createdTokenAddress);
       await sendCidAndTokenAddressToServer(createdTokenAddress, cid);
       setIsLoading(false);
+
+      afterMint(createdTokenAddress);
     } catch (error) {
       console.error("Error while minting:", error);
       setIsLoading(false);
     }
   }
+
+  const [createdTokenAddress, setcreatedTokenAddress] = useState("");
+
+  const afterMint = async (createdTokenAddress: string) => {
+    // await getNextMintPrice(createdTokenAddress);
+    // setIsModalVisible(true);
+    router.push(`/${createdTokenAddress}`);
+  };
+
+  const reserveTokenWriteContract = new ethers.Contract(
+    contracts.ReserveToken,
+    reserveTokenABI,
+    signer,
+  );
+
+  //MARK:- Modal Buy
+
+  const [txState, setTxState] = useState("idle");
+
+  // async function modalBuy(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault();
+  //   if (!account.address) {
+  //     alert("Connect your wallet first!");
+  //     throw new Error("Account is not defined");
+  //   }
+  //   if (chainId != 713715) {
+  //     switchChain({ chainId: 713715 });
+  //   }
+  //   console.log("start-app");
+  //   try {
+  //     const allowance = await reserveTokenWriteContract.allowance(
+  //       account.address,
+  //       contracts.MCV2_Bond,
+  //     );
+  //     if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
+  //       console.log("Approving token...");
+  //       setTxState("Approving token...");
+  //       const detail = await reserveTokenWriteContract.approve(
+  //         contracts.MCV2_Bond,
+  //         BigInt(wei(Number(inputValue))),
+  //       );
+  //       console.log("Approval detail:", detail);
+  //     }
+
+  //     console.log("Minting token...");
+  //     setTxState("Minting token...");
+  //     const mintDetail = await bondWriteContract.mint(
+  //       createdTokenAddress,
+  //       BigInt(wei(Number(inputValue))),
+  //       MAX_INT_256,
+  //       account.address,
+  //     );
+  //     console.log("Mint detail:", mintDetail);
+  //     setTxState("Success");
+  //   } catch (error: any) {
+  //     console.error("Error:", error);
+  //     setTxState("ERR");
+  //   }
+  // }
 
   const [isToggle, setIsToggle] = useState(false);
   const [name, setName] = useState("");
@@ -226,79 +296,159 @@ const Create: NextPage = () => {
   const webHandler = (event: any) => {
     setWeb(event.target.value);
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
       uploadFile(e.target.files[0]);
     }
   };
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputValue(e.target.value);
+  // };
+  // const ether = (weiValue: bigint, decimals = 18): number => {
+  //   const factor = BigInt(10) ** BigInt(decimals);
+  //   const etherValue = Number(weiValue) / Number(factor);
+  //   return etherValue;
+  // };
 
-  const FirstBuyModal = () => {
-    return (
-      <ModalRootWrapper>
-        <ModalContentBox>
-          <div className="flex flex-col items-center justify-center gap-[15px]">
-            <h1 className="whitespace-pre text-[22px] font-bold text-white">{`Select the amount of [token ticker]\nyou wish to buy`}</h1>
-            <h1 className="text-[18px] text-[#8f8f8f]">(this is optional)</h1>
-          </div>
+  // const bondContract = new ethers.Contract(
+  //   contracts.MCV2_Bond,
+  //   MCV2_BondABI,
+  //   provider,
+  // );
+  // const [priceForNextMint, setPriceForNextMint] = useState(0);
+  // const getNextMintPrice = async (tokenAddress: string) => {
+  //   try {
+  //     if (!account.address) {
+  //       throw new Error("Account is not defined");
+  //     }
 
-          <div className="flex flex-col items-center justify-center gap-[15px]">
-            <div className="relative flex w-full items-center">
-              <input
-                className="my-[8px] h-[55px] w-[360px] rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
-                type="number"
-                placeholder="0.00"
-                step="0.01"
-                name="inputValue"
-                value={buyValue}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setBuyValue(e.target.value);
-                }}
-              ></input>
-              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                <Image
-                  width={24}
-                  height={24}
-                  src={"/icons/sei.svg"}
-                  alt="sei logo"
-                  className="rounded-full"
-                />
-                <h1 className="mt-1 text-[15px] font-bold text-white">SEI</h1>
-              </div>
-            </div>
+  //     const detail = await bondContract.priceForNextMint(tokenAddress);
+  //     setPriceForNextMint(detail);
+  //     console.log("NextMintPrice :" + detail);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-            <div className="my-[15px] flex h-[20px] w-[360px] items-center justify-between">
-              <h1 className="text-sm text-white">{`Insufficient balance : You have 0.02313 SEI`}</h1>
-              <div
-                onClick={() => setModalToggle(!modalToggle)}
-                className={`flex h-[12px] w-[46px] cursor-pointer ${modalToggle && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
-              >
-                <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
-                <div
-                  className={`h-[24px] w-[24px] rounded-full ${modalToggle ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
-                ></div>
-              </div>
-            </div>
-          </div>
+  // MARK: - Modal
+  const [inputValue, setInputValue] = useState("");
+  const [InputState, setInputState] = useState(true);
 
-          <div className="flex flex-col items-center justify-center gap-[15px]">
-            <button
-              className={`flex h-[60px] w-[400px] items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
-            >
-              create token
-            </button>
-            <h1 className="text-[15px] font-normal text-white">
-              cost to deploy : ~0.02 SEI
-            </h1>
-          </div>
-        </ModalContentBox>
-      </ModalRootWrapper>
-    );
-  };
+  // const FirstBuyModal = () => {
+  //   return (
+  //     <ModalRootWrapper>
+  //       <ModalContentBox>
+  //         <div className="flex flex-col items-center justify-center gap-[15px]">
+  //           <h1 className="whitespace-pre text-[22px] font-bold text-white">{`Select the amount of [token ticker]\nyou wish to buy`}</h1>
+  //           <h1 className="text-[18px] text-[#8f8f8f]">(this is optional)</h1>
+  //         </div>
+
+  //         <form
+  //           onSubmit={modalBuy}
+  //           className="flex flex-col items-center justify-center gap-[15px]"
+  //         >
+  //           <div className="relative flex w-full items-center">
+  //             {modalToggle ? (
+  //               <div className="w-full">
+  //                 <div className="relative flex w-full items-center">
+  //                   <input
+  //                     className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+  //                     type="number"
+  //                     placeholder="0.00"
+  //                     step="0.01"
+  //                     name="inputValue"
+  //                     value={inputValue}
+  //                     onChange={handleInputChange}
+  //                   ></input>
+  //                   <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+  //                     <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+  //                     <h1 className="mt-1 text-[15px] font-bold text-white">
+  //                       {name}
+  //                     </h1>
+  //                   </div>
+  //                 </div>
+  //                 <h1 className="text-[#B8B8B8]">
+  //                   {/* {curMemeTokenValue}&nbsp; */}
+  //                   {/* {name} */}
+  //                   {ether(BigInt(inputValue) * BigInt(priceForNextMint))}
+  //                   &nbsp; WSEI
+  //                 </h1>
+  //               </div>
+  //             ) : (
+  //               <>
+  //                 <>
+  //                   <div className="relative flex w-full items-center">
+  //                     <input
+  //                       className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+  //                       type="number"
+  //                       placeholder="0.00"
+  //                       step="0.01"
+  //                       name="inputValue"
+  //                       value={inputValue}
+  //                       onChange={handleInputChange}
+  //                     ></input>
+  //                     <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+  //                       <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+  //                       <h1 className="mt-1 text-[15px] font-bold text-white">
+  //                         WSEI
+  //                       </h1>
+  //                     </div>
+  //                   </div>
+  //                   <h1 className="text-[#B8B8B8]">
+  //                     {Number(
+  //                       wei(Number(inputValue)) / BigInt(priceForNextMint),
+  //                     )}
+  //                     &nbsp;{name}
+  //                   </h1>
+  //                 </>
+  //               </>
+  //             )}
+  //             {/* <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+  //               <Image
+  //                 width={24}
+  //                 height={24}
+  //                 src={"/icons/sei.svg"}
+  //                 alt="sei logo"
+  //                 className="rounded-full"
+  //               />
+  //               <h1 className="mt-1 text-[15px] font-bold text-white">SEI</h1>
+  //             </div> */}
+  //           </div>
+
+  //           <div className="my-[15px] flex h-[20px] w-[360px] items-center justify-between">
+  //             <h1 className="text-sm text-white">{`Insufficient balance : You have 0.02313 SEI`}</h1>
+  //             <div
+  //               onClick={() => setModalToggle(!modalToggle)}
+  //               className={`flex h-[12px] w-[46px] cursor-pointer ${modalToggle && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
+  //             >
+  //               <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
+  //               <div
+  //                 className={`h-[24px] w-[24px] rounded-full ${modalToggle ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
+  //               ></div>
+  //             </div>
+  //           </div>
+
+  //           <div className="flex flex-col items-center justify-center gap-[15px]">
+  //             <button
+  //               className={`flex h-[60px] w-[400px] items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
+  //             >
+  //               create token
+  //             </button>
+  //             <h1 className="text-[15px] font-normal text-white">
+  //               cost to deploy : ~0.02 SEI
+  //             </h1>
+  //           </div>
+  //         </form>
+  //       </ModalContentBox>
+  //     </ModalRootWrapper>
+  //   );
+  // };
 
   return (
     <>
-      {isModalVisible && <FirstBuyModal />}
+      {/* {isModalVisible && <FirstBuyModal />} */}
       <div className=" w-screen bg-[#0E0E0E] ">
         <div className="mx-auto h-full w-[500px] ">
           <div className="mx-auto h-full w-[484px] pt-[30px]">
@@ -314,7 +464,7 @@ const Create: NextPage = () => {
                 <div>
                   {cid ? (
                     <div className="h-[120px] w-[120px]">
-                      <Image
+                      <img
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                         alt="Image from IPFS"
                       />

@@ -143,6 +143,7 @@ const Header: FC = () => {
     }
     localStorage.setItem("isFetchingCreate", "false");
   }
+
   // MARK: - Mint Events
   async function fetchMintEventsInBatches(fromBlock: any, batchSize: any) {
     let currentBlock = await provider.getBlockNumber();
@@ -346,6 +347,26 @@ const Header: FC = () => {
     }
   };
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const [isHoveredTG, setIsHoveredTG] = useState(false);
+
+  const handleMouseEnterTG = () => {
+    setIsHoveredTG(true);
+  };
+
+  const handleMouseLeaveTG = () => {
+    setIsHoveredTG(false);
+  };
+
   return (
     <>
       <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
@@ -389,39 +410,62 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
-                <ImageTG alt="telegram icon" />
+                {/* <ImageTG alt="telegram icon" /> */}
 
-                <ImageX
+                {/* <ImageX
                   alt="x icon"
 
-                  // <Image
-                  //   src="/icons/telegram_logo.svg"
-                  //   alt=""
-                  //   width={50}
-                  //   height={50}
-                  //   className="h-[15px] w-[15px] cursor-pointer"
-                />
+                  <Image
+                    src="/icons/telegram_logo.svg"
+                    alt=""
+                    width={50}
+                    height={50}
+                    className="h-[15px] w-[15px] cursor-pointer"
+                     onClick={() =>
+                    handleClick("https://t.me/memesinodotfun")
+                  }
+                /> */}
 
                 <Image
-                  src="/icons/X_logo.svg"
+                  src={
+                    isHovered
+                      ? "/icons/telegram-hover.svg"
+                      : "/icons/telegram_logo.svg"
+                  }
                   alt=""
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleClick("https://t.me/memesinodotfun")}
+                />
+
+                <Image
+                  src={isHoveredTG ? "/icons/x-hover.svg" : "/icons/X_logo.svg"}
+                  alt=""
+                  width={50}
+                  height={50}
+                  className="h-[15px] w-[15px] cursor-pointer"
+                  onMouseEnter={handleMouseEnterTG}
+                  onMouseLeave={handleMouseLeaveTG}
                   onClick={() =>
                     handleClick("https://twitter.com/memesinodotfun")
                   }
                 />
 
-                {/* <ImageInfo alt="info icon" /> */}
+                {/* <ImageInfo alt="info icon" onClick={() =>
+                    handleClick("https://t.me/memesinodotfun")
+                  } /> */}
 
-                <Image
+                {/* <Image
                   src="/icons/info.svg"
                   alt=""
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                />
+                  
+                /> */}
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">

@@ -8,9 +8,9 @@ function App() {
   const [distribution, setDistribution] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
 
-  const targetToken = "0xfb4a803Eb8Ca7464AC5ad74ae4D08E9cF676d29c";
+  const targetToken = "0x776D15B613902456690F8966943Bc074c0ff4b0f";
   useEffect(() => {
-    fetch("http://localhost:3000/priceHistory")
+    fetch("http://memesino.fun/priceHistory")
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
@@ -19,7 +19,7 @@ function App() {
         setPriceHistory(filteredData);
       });
 
-    fetch("http://localhost:3000/TxlogsMintBurn")
+    fetch("http://memesino.fun/TxlogsMintBurn")
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.burnEvents.filter(
@@ -28,7 +28,7 @@ function App() {
         setEventsFromDB(filteredData);
       });
 
-    fetch("http://localhost:3000/HolderDistribution")
+    fetch("http://memesino.fun/HolderDistribution")
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
@@ -36,7 +36,7 @@ function App() {
         );
         setDistribution(filteredData);
       });
-    fetch("http://localhost:3000/homeTokenInfo") // Add this block
+    fetch("http://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => setTokenInfo(data));
     // const val = main();
