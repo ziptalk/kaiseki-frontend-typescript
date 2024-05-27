@@ -420,7 +420,7 @@ export default function Detail() {
     //   }
     // };
 
-    fetch("http://localhost:3001/homeTokenInfo") // Add this block
+    fetch("http://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(

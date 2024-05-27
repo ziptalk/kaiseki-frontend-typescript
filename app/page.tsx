@@ -136,7 +136,7 @@ export default function Home() {
   useEffect(() => {
     const fetchTokenInfo = async () => {
       try {
-        const response = await fetch("http://localhost:3001/homeTokenInfo");
+        const response = await fetch("http://memesino.fun/homeTokenInfo");
         const data = await response.json();
         setTokenInfo(data);
 

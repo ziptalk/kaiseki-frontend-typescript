@@ -106,7 +106,7 @@ const Create: NextPage = () => {
   ) => {
     try {
       const response = await fetch(
-        "http://localhost:3001/storeCidAndTokenAddress",
+        "http://memesino.fun/storeCidAndTokenAddress",
         {
           method: "POST",
           headers: {
