@@ -384,7 +384,7 @@ const Header: FC = () => {
           onClick={() => setInfoModal(!infoModal)}
           className="absolute z-[9999] flex h-screen w-screen items-center justify-between bg-black bg-opacity-70"
         >
-          <div className="absolute left-1/2 top-1/2 h-[540px] w-[575px] -translate-x-1/2 -translate-y-1/2 transform gap-[34px] rounded-[10px] bg-[#1E1E1E] px-[60px] py-[25px] text-center text-white">
+          <div className="absolute left-1/2 top-1/2 h-[540px] w-[575px] -translate-x-1/2 -translate-y-1/2 transform gap-[34px] rounded-[10px] border bg-[#1E1E1E] px-[60px] py-[25px] text-center text-white">
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
               <h1>
