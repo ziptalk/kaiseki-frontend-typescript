@@ -151,14 +151,24 @@ const Create: NextPage = () => {
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
         return;
-      } else if (name == "" || ticker == "") {
-        alert("Invalid input value!");
+      }
+      if (name == "") {
+        alert("Invalid name value!");
         return;
-      } else if (name.length > 30 || ticker.length > 10 || desc.length > 100) {
-        alert("Invalid input value!");
+      } else if (ticker == "") {
+        alert("Invalid ticker value!");
+        return;
+      } else if (name.length > 30) {
+        alert("Invalid name length!");
+        return;
+      } else if (ticker.length > 10) {
+        alert("Invalid ticker length!");
+        return;
+      } else if (desc.length > 100) {
+        alert("Invalid description length!");
         return;
       } else if (!cid) {
-        alert("Invalid input value!");
+        alert("Invalid image!!");
         return;
       } else if (isLoading) {
         return;

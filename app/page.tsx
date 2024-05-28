@@ -158,9 +158,55 @@ export default function Home() {
     // fetchTokenInfo();
   }, []);
 
+  const [infoModal, setInfoModal] = useState(false);
+
   return (
     <>
-      <main className="flex w-screen bg-[#0E0E0E]">
+      <main className="relative flex w-screen bg-[#0E0E0E]">
+        {infoModal && (
+          <div className="absolute z-[9999] flex h-screen w-screen items-center justify-between bg-black bg-opacity-70">
+            <div
+              onClick={() => setInfoModal(!infoModal)}
+              className="absolute left-1/2 top-1/2 h-[540px] w-[575px] -translate-x-1/2 -translate-y-1/2 transform gap-[34px] rounded-[10px] bg-[#1E1E1E] px-[60px] py-[25px] text-center text-white"
+            >
+              <div className="mb-[34px] h-[111px] gap-[20px]">
+                <h1 className="mb-[20px] text-2xl">How it works</h1>
+                <h1>
+                  Memesino prevents rugs by making sure that all created tokens
+                  are safe. Each coin on Memesino is a fair-launch with no
+                  presale and no team allocation.
+                </h1>
+              </div>
+
+              <div className=" mb-[34px] h-[247px] gap-[20px]">
+                <h1 className="mb-[20px]">
+                  step 1 : pick a coin that you like
+                </h1>
+                <h1 className="mb-[20px]">
+                  step 2 : buy the coin on the bonding curve
+                </h1>
+                <h1 className="mb-[20px]">
+                  step 3 : sell at any time to lock in your profits or losses
+                </h1>
+                <h1 className="mb-[20px]">
+                  step 4 : when enough people buy on the bonding curve it
+                  reaches a market cap of $69k
+                </h1>
+                <h1 className="mb-[20px]">
+                  step 5 : $12k of liquidity is then deposited in dragonswap and
+                  burned
+                </h1>
+              </div>
+
+              <button
+                onClick={() => setInfoModal(!infoModal)}
+                className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
+              >
+                Let's start
+              </button>
+            </div>
+          </div>
+        )}
         <div className="mx-auto h-full w-[70vw] pt-[50px] ">
           <div className="mx-auto flex h-[465px] w-[850px] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
