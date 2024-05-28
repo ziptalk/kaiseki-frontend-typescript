@@ -224,7 +224,7 @@ export default function Home() {
                         className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
                       />
                       <Image
-                        src="/images/seiyan.png"
+                        src="/images/Seiyan.png"
                         alt=""
                         width={40}
                         height={40}
@@ -234,7 +234,7 @@ export default function Home() {
                   <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
                     <div className="h-[150px]">
                       <Image
-                        src="/images/seiyan.png"
+                        src="/images/Seiyan.png"
                         alt=""
                         width={40}
                         height={40}
@@ -270,7 +270,7 @@ export default function Home() {
                         className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
                       />
                       <Image
-                        src="/images/seiyan.png"
+                        src="/images/Seiyan.png"
                         alt=""
                         width={40}
                         height={40}
