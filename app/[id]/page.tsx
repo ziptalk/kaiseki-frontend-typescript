@@ -17,6 +17,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import TradingViewChart from "../test/TradingTest";
+import Image from "next/image";
 const util = require("util");
 
 export default function Detail() {
@@ -551,7 +552,7 @@ export default function Detail() {
                         onChange={handleInputChange}
                       ></input>
                       <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                        <div className="h-[24px] w-[24px] rounded-full  bg-gray-100"></div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
                           {name}
                         </h1>
@@ -582,7 +583,15 @@ export default function Detail() {
                         onChange={handleInputChange}
                       ></input>
                       <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                        <div className="h-[24px] w-[24px] rounded-full">
+                          <Image
+                            src="/icons/SeiLogo.svg"
+                            alt=""
+                            height={24}
+                            width={24}
+                          />
+                        </div>
+
                         <h1 className="mt-1 text-[15px] font-bold text-white">
                           WSEI
                         </h1>
