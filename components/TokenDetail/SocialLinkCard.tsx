@@ -20,8 +20,15 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
     setHovered((prev) => ({ ...prev, [link]: false }));
   };
 
+  const isValidHttpsUrl = (url: string): boolean => {
+    return url.startsWith("https://");
+  };
+
   const handleClick = (url: string) => {
-    if (url) {
+    const isValid = isValidHttpsUrl(url);
+    if (!isValid) {
+      window.open(`https://${url}`);
+    } else {
       window.open(url);
     }
   };

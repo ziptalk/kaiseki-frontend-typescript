@@ -27,20 +27,31 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
   tokenAddress,
 }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  // const [chartData, setChartData] = useState<BarData[]>([
+  //   {
+  //     time: 1672531200 as UTCTimestamp,
+  //     open: 50,
+  //     high: 55,
+  //     low: 48,
+  //     close: 54,
+  //   },
+  //   {
+  //     time: 1672531260 as UTCTimestamp,
+  //     open: 54,
+  //     high: 57,
+  //     low: 52,
+  //     close: 56,
+  //   },
+  //   // additional data...
+  // ]);
+
   const [chartData, setChartData] = useState<BarData[]>([
     {
-      time: 1672531200 as UTCTimestamp,
-      open: 50,
-      high: 55,
-      low: 48,
-      close: 54,
-    },
-    {
-      time: 1672531260 as UTCTimestamp,
-      open: 54,
-      high: 57,
-      low: 52,
-      close: 56,
+      time: Math.floor(Date.now() / 1000) as UTCTimestamp,
+      open: 2000000000,
+      high: 2000000000,
+      low: 2000000000,
+      close: 2000000000,
     },
     // additional data...
   ]);
@@ -61,6 +72,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         timeScale: {
           timeVisible: true,
           secondsVisible: true,
+          // tickMarkFormatter: (time: UTCTimestamp) => {
+          //   const date = new Date(time * 1000);
+          //   return `${date.getUTCHours().toString().padStart(2, "0")}:${date.getUTCMinutes().toString().padStart(2, "0")}:${date.getUTCSeconds().toString().padStart(2, "0")}`;
+          // },
           tickMarkFormatter: (time: UTCTimestamp) => {
             const date = new Date(time * 1000);
             return `${date.getUTCHours().toString().padStart(2, "0")}:${date.getUTCMinutes().toString().padStart(2, "0")}:${date.getUTCSeconds().toString().padStart(2, "0")}`;

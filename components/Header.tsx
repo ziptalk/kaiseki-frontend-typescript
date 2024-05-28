@@ -370,7 +370,7 @@ const Header: FC = () => {
   return (
     <>
       <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
-        {pathname == "/" && (
+        {/* {pathname == "/" && (
           <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
             <div className="h-full overflow-hidden">
               {datas.map((card: any, index: any) => (
@@ -384,7 +384,7 @@ const Header: FC = () => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
 
         <div className="flex h-full w-full items-center justify-between px-[30px]">
           <div className="flex h-[40px] w-full items-center justify-between px-2 text-white">
@@ -470,14 +470,28 @@ const Header: FC = () => {
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
               <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF]">
-                <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
+                <div className="h-[18px] w-[18px] rounded-full ">
+                  <Image
+                    src="/images/memesinoGhost.png"
+                    alt=""
+                    height={18}
+                    width={18}
+                  />
+                </div>
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} SEI of {curMintTic}
                 </h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
               </div>
               <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
-                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
+                <div className="h-[18px] w-[18px] rounded-full ">
+                  <Image
+                    src="/images/memesinoGhost.png"
+                    alt=""
+                    height={18}
+                    width={18}
+                  />
+                </div>
                 <h1 className="text-sm">
                   {curCreateUser} Created {curCreateTic} on {curCreateTime}
                 </h1>
@@ -494,11 +508,10 @@ const Header: FC = () => {
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
                 >
                   <Image
-                    src="/images/Seiyan.png"
+                    src="/images/memesinoGhost.png"
                     alt=""
-                    width={18}
                     height={18}
-                    className="rounded-full"
+                    width={18}
                   />
                   {address?.substring(0, 7)}
                   <Image
@@ -519,7 +532,7 @@ const Header: FC = () => {
             </div>
           </div>
         </div>
-        {pathname == "/" && (
+        {/* {pathname == "/" && (
           <div className="absolute right-0 top-[130px] flex h-[80vh] w-[15vw] justify-center ">
             <div className="h-full overflow-hidden">
               {createDatas.map((card: any, index: any) => (
@@ -533,7 +546,7 @@ const Header: FC = () => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </header>
     </>
   );

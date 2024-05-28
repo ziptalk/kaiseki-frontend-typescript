@@ -13,12 +13,12 @@ import axios from "axios";
 import { digital } from "@/fonts/font";
 
 export default function Home() {
-  const [curCreateTic, setCurCreateTic] = useState("MEME");
-  const [curCreateUser, setCurCreateUser] = useState("0x7A2");
-  const [curCreateTime, setCurCreateTime] = useState("Date");
-  const [curCreateName, setCurCreateName] = useState("Name");
-  const [curCreateAddress, setCurCreateAddress] = useState("");
-  const [createDatas, setCreateDatas] = useState<any[]>([]);
+  // const [curCreateTic, setCurCreateTic] = useState("MEME");
+  // const [curCreateUser, setCurCreateUser] = useState("0x7A2");
+  // const [curCreateTime, setCurCreateTime] = useState("Date");
+  // const [curCreateName, setCurCreateName] = useState("Name");
+  // const [curCreateAddress, setCurCreateAddress] = useState("");
+  // const [createDatas, setCreateDatas] = useState<any[]>([]);
   const [isHovered, setIsHovered] = useState(false);
   const ether = (weiValue: bigint, decimals = 18): number => {
     const factor = BigInt(10) ** BigInt(decimals);
@@ -100,9 +100,10 @@ export default function Home() {
             // console.log(
             //   `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
             // );
-            setCurCreateTic(event.args.symbol.substring(0, 5));
-            setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-            setCurCreateTime(formattedDate);
+
+            // setCurCreateTic(event.args.symbol.substring(0, 5));
+            // setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
+            // setCurCreateTime(formattedDate);
 
             return {
               name: event.args.name,
@@ -115,7 +116,7 @@ export default function Home() {
           }),
       );
 
-      setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
+      // setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
 
       // Prepare for the next batch
       fromBlock = toBlock + 1;
@@ -134,51 +135,34 @@ export default function Home() {
   const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
 
   useEffect(() => {
-    const fetchTokenInfo = async () => {
-      try {
-        const response = await fetch("http://memesino.fun/homeTokenInfo");
-        const data = await response.json();
+    // const fetchTokenInfo = async () => {
+    //   try {
+    //     const response = await fetch("http://memesino.fun/homeTokenInfo");
+    //     const data = await response.json();
+    //     setTokenInfo(data);
+
+    //     console.log(data);
+    //   } catch (error) {
+    //     console.error("Error fetching token info:", error);
+    //   }
+    // };
+    fetch("http://memesino.fun/homeTokenInfo") // Add this block
+      .then((response) => response.json())
+      .then((data) => {
         setTokenInfo(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching token info:", error);
-      }
-    };
-
-    fetchTokenInfo();
+    // fetchTokenInfo();
   }, []);
-
-  // const fetchFromDB = async (tokenAddress: string) => {
-  //   const detail = await contract.getDetail(tokenAddress);
-  //   return detail;
-  // };
-
-  // const fetchDetails = async (data: TokenInfo[]) => {
-  //   try {
-  //     const updatedTokens = await Promise.all(
-  //       data.map(async (token) => {
-  //         console.log("TA" + token.tokenAddress);
-  //         const detail = await fetchFromDB(token.tokenAddress);
-  //         console.log("det" + detail);
-  //         return {
-  //           ...token,
-  //           ...detail,
-  //         };
-  //       }),
-  //     );
-  //     console.log("UPT" + updatedTokens);
-  //     setDetailedTokens(updatedTokens);
-  //   } catch (error) {
-  //     console.error("Error fetching token details:", error);
-  //   }
-  // };
 
   return (
     <>
       <main className="flex w-screen bg-[#0E0E0E]">
         <div className="mx-auto h-full w-[70vw] pt-[50px] ">
-          <div className="mx-auto flex h-[465px] w-[55vw] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
+          <div className="mx-auto flex h-[465px] w-[850px] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
               <div className="flex h-full w-[500px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[30px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
                 <Image
@@ -191,7 +175,7 @@ export default function Home() {
                 <div className="w-[390px]">
                   <Link
                     href="/0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
-                    className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]   shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
+                    className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
                   >
                     <div>
                       <div className="h-[100px] w-[100px] border-black bg-[#D9D9D9]"></div>

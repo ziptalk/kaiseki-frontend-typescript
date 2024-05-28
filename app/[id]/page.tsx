@@ -101,30 +101,30 @@ export default function Detail() {
   const [InputState, setInputState] = useState(true);
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const billion: number = 1_000_000_000;
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
       try {
         const detail = await bondContract.getDetail(tokenAddress);
+
         // TODO - Make this Value more easy to read
         // setLoading(true);
-        const response = await axios.get(
-          `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-        );
-        console.log("SEI PRICE" + response.data.price);
-        setSEIPrice(response.data.price);
+        // const response = await axios.get(
+        //   `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+        // );
+        // console.log("SEI PRICE" + response.data.price);
+        // setSEIPrice(response.data.price);
         // setLoading(false);
 
         // Log and set the state with the returned details
-        const currentSupply = detail.info.currentSupply;
+        // const currentSupply = detail.info.currentSupply;
         const price = detail.info.priceForNextMint;
         // console.log("currentSupply :" + detail.info.currentSupply);
         setName(detail.info.name);
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
-        setMarketCap(
-          String(ether(currentSupply) * (ether(price) * response.data.price)),
-        );
+        setMarketCap(String(ether(BigInt(Number(price) * billion)) / 1000));
       } catch (error) {
         console.log(error);
       }
@@ -168,7 +168,6 @@ export default function Detail() {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
-
       const balanceWei = await reserveTokenContract.balanceOf(account.address);
       // Convert the balance to Ether
       const balanceEther = ether(balanceWei);
@@ -258,6 +257,7 @@ export default function Detail() {
   };
 
   // MARK: - Buy
+  // TODO: - After contract changes payment to SEI, Change buying logic as SEI.
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -276,6 +276,7 @@ export default function Detail() {
         account.address,
         contracts.MCV2_Bond,
       );
+
       if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
         console.log("Approving token...");
         setTxState("Approving token...");
@@ -351,11 +352,14 @@ export default function Detail() {
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/TxlogsMintBurn")
+    fetch("http://memesino.fun/TxlogsMintBurn")
       .then((response) => response.json())
       .then((data) => {
         setMintEventsFromDB(data.mintEvents);
         setBurnEventsFromDB(data.burnEvents);
+      })
+      .catch((error) => {
+        console.log("fetching ERROR from tradesDB in [id]/page.tsx");
       });
   }, []);
 
@@ -399,27 +403,15 @@ export default function Detail() {
     return `${roundedValue.toFixed(2)}k`;
   };
 
-  const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
+  // MARK: - Set Token Infos
+
+  const [tokenInfo, setTokenInfo] = useState<null>(null);
   const [cid, setCid] = useState("");
+  const [tw, setTw] = useState("");
+  const [tg, setTg] = useState("");
+  const [web, setWeb] = useState("");
 
   useEffect(() => {
-    // const fetchTokenInfo = async () => {
-    //   try {
-    //     const response = await fetch("http://localhost:3001/homeTokenInfo");
-    //     const data = await response.json();
-    //     const filteredData = await data.burnEvents.filter(
-    //       (item: any) =>
-    //         item.token.toLowerCase() === tokenAddress.toLowerCase(),
-    //     );
-
-    //     await setTokenInfo(filteredData);
-    //     await setCid(filteredData.cid);
-    //     console.log(filteredData);
-    //   } catch (error) {
-    //     console.error("Error fetching token info:", error);
-    //   }
-    // };
-
     fetch("http://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
@@ -430,10 +422,21 @@ export default function Detail() {
         console.log(filteredData);
         setTokenInfo(filteredData);
         setCid(filteredData[0].cid);
+        setTw(filteredData[0].twitterUrl);
+        setTg(filteredData[0].telegramUrl);
+        setWeb(filteredData[0].websiteUrl);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-
-    // fetchTokenInfo();
   }, []);
+
+  interface TokenInfo {
+    tw?: string;
+    tg?: string;
+    web?: string;
+    // Add other properties as needed
+  }
 
   return (
     <>
@@ -454,10 +457,7 @@ export default function Detail() {
                 />
               </div>
 
-              <SocialLinkCard
-                tw="https://chatgpt.com/"
-                tg="https://chatgpt.com/"
-              />
+              <SocialLinkCard tw={tw} tg={tg} web={web} />
 
               <BondingCurveCard
                 prog={Math.floor(bondingCurveProgress)}
@@ -536,8 +536,10 @@ export default function Detail() {
                     Set max slippage
                   </div> */}
                 </div>
+
                 {InputState ? (
                   <>
+                    {/*input amount == memetoken*/}
                     <div className="relative flex w-full items-center">
                       <input
                         className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
@@ -558,6 +560,7 @@ export default function Detail() {
                     <h1 className="text-[#B8B8B8]">
                       {/* {curMemeTokenValue}&nbsp; */}
                       {/* {name} */}
+                      {/*memetoken value to SEI*/}
                       {ether(
                         BigInt(Math.floor(Number(inputValue))) *
                           BigInt(priceForNextMint),
@@ -567,35 +570,36 @@ export default function Detail() {
                   </>
                 ) : (
                   <>
-                    <>
-                      <div className="relative flex w-full items-center">
-                        <input
-                          className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
-                          type="number"
-                          placeholder="0.00"
-                          step="0.01"
-                          name="inputValue"
-                          value={inputValue}
-                          onChange={handleInputChange}
-                        ></input>
-                        <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                          <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
-                          <h1 className="mt-1 text-[15px] font-bold text-white">
-                            WSEI
-                          </h1>
-                        </div>
+                    {/*input amount == WSEI*/}
+                    <div className="relative flex w-full items-center">
+                      <input
+                        className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        type="number"
+                        placeholder="0.00"
+                        step="0.01"
+                        name="inputValue"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                      ></input>
+                      <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                        <div className="h-[24px] w-[24px] rounded-full bg-gray-100"></div>
+                        <h1 className="mt-1 text-[15px] font-bold text-white">
+                          WSEI
+                        </h1>
                       </div>
-                      <h1 className="text-[#B8B8B8]">
-                        {Number(
-                          wei(Math.floor(Number(inputValue))) /
-                            BigInt(priceForNextMint),
-                        )}
-                        &nbsp;{name}
-                      </h1>
-                    </>
+                    </div>
+                    <h1 className="text-[#B8B8B8]">
+                      {/*SEI value to memetoken*/}
+                      {Number(
+                        wei(Math.floor(Number(inputValue))) /
+                          BigInt(priceForNextMint),
+                      )}
+                      &nbsp;{name}
+                    </h1>
                   </>
                 )}
 
+                {/*true == toggle module, false == percent for sell*/}
                 {isBuy ? (
                   <div className="my-[15px] flex h-[20px] items-center justify-between">
                     <h1 className="text-sm text-white">{txState}</h1>
