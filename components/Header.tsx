@@ -416,7 +416,7 @@ const Header: FC = () => {
               onClick={() => setInfoModal(!infoModal)}
               className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
             >
-              Let's start
+              Let&apos;s start
             </button>
           </div>
         </div>
