@@ -177,9 +177,21 @@ export default function Home() {
                         </h1>
                       </div>
 
-                      <h1 className="neon-lime text-xs text-[#C5F900] ">
-                        Created by:&nbsp;0x7A2
-                      </h1>
+                      <div className="flex items-center gap-[5px]">
+                        <h1 className="neon-lime text-xs text-[#C5F900] ">
+                          Created by:
+                        </h1>
+                        <Image
+                          className="rounded-full"
+                          src="/images/Seiyan.png"
+                          alt=""
+                          width={12}
+                          height={12}
+                        />
+                        <h1 className="neon-lime text-xs text-[#C5F900] ">
+                          {"0x7A2"}
+                        </h1>
+                      </div>
 
                       <div className="flex">
                         <h1 className="neon-yellow text-xs text-[#FAFF00]">

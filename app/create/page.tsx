@@ -489,10 +489,17 @@ const Create: NextPage = () => {
                     </h1>
                   </div>
 
-                  <div className="flex">
+                  <div className="flex items-center gap-[5px]">
                     <h1 className="neon-lime text-xs text-[#C5F900] ">
-                      Created by:&nbsp;
+                      Created by:
                     </h1>
+                    <Image
+                      className="rounded-full"
+                      src="/images/Seiyan.png"
+                      alt=""
+                      width={12}
+                      height={12}
+                    />
                     <h1 className="neon-lime text-xs text-[#C5F900] ">
                       {account.address?.substring(0, 5)}
                     </h1>
