@@ -120,8 +120,10 @@ export default function Home() {
                   width={250}
                   height={300}
                 />
+
                 <ToTheMoonTokenCardSection />
                 <SlotSection />
+
               </div>
             </div>
             <Link href={"/create"}>

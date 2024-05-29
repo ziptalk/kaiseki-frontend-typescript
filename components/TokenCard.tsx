@@ -1,4 +1,5 @@
 import { digital } from "@/fonts/font";
+import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -47,9 +48,19 @@ const TokenCard: FC<TokenCardTypes> = ({
             </h1>
           </div>
 
-          <h1 className="neon-lime text-xs text-[#C5F900] ">
-            Created by:&nbsp;{createdBy.slice(0, 6)}
-          </h1>
+          <div className="flex items-center gap-[5px]">
+            <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
+            <Image
+              className="rounded-full"
+              src="/images/Seiyan.png"
+              alt=""
+              width={12}
+              height={12}
+            />
+            <h1 className="neon-lime text-xs text-[#C5F900] ">
+              {createdBy.slice(0, 6)}
+            </h1>
+          </div>
 
           <div className="flex">
             <h1 className="neon-yellow text-xs text-[#FAFF00]">
