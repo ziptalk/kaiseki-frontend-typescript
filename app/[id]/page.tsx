@@ -593,11 +593,10 @@ export default function Detail() {
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewChart tokenAddress={tokenAddress} />
             </div>
-
             <TradesSection />
           </div>
           <div>
-            <div className=" w-[420px] rounded-[15px] border border-yellow-400 bg-gradient-to-b from-[#A60600] to-[#880400] p-[30px]">
+            <div className=" w-[420px] rounded-[15px] border border-[#FAFF00]  bg-gradient-to-b  from-[#E00900] to-[#A60D07] p-[30px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FFF100]">
               <BuySellButtonSection />
               <form
                 onSubmit={isBuy ? submit : submitSell}
@@ -708,7 +707,7 @@ export default function Detail() {
 
                 <button
                   type="submit"
-                  className={`h-[50px] w-full rounded-2xl border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
+                  className={`h-[51px] w-full rounded-2xl border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
                 >
                   place trade
                 </button>
