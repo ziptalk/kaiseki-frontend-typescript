@@ -565,7 +565,12 @@ export default function Detail() {
                         onChange={handleInputChange}
                       ></input>
                       <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] rounded-full  bg-gray-100"></div>
+                        <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                            alt="img"
+                          />
+                        </div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
                           {name}
                         </h1>
