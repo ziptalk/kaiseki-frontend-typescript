@@ -7,17 +7,16 @@ import TokenCard from "@/components/TokenCard";
 import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
 import TradesCard from "@/components/TokenDetail/TradesCard";
-import TradingViewWidget from "@/components/TradingViewWidget";
+import TradingViewChart from "@/components/TradingViewWidget";
 import contracts from "@/contracts/contracts";
 import { impact } from "@/fonts/font";
 import { useEthersSigner } from "@/hooks/ethersSigner";
-import axios from "axios";
 import { formatEther } from "ethers";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import TradingViewChart from "../test/TradingTest";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { FC, useEffect, useState } from "react";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
+
 const util = require("util");
 
 export default function Detail() {
@@ -121,18 +120,6 @@ export default function Detail() {
     const fetchTokenDetail = async () => {
       try {
         const detail = await bondContract.getDetail(tokenAddress);
-
-        // TODO - Make this Value more easy to read
-        // setLoading(true);
-        // const response = await axios.get(
-        //   `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-        // );
-        // console.log("SEI PRICE" + response.data.price);
-        // setSEIPrice(response.data.price);
-        // setLoading(false);
-
-        // Log and set the state with the returned details
-        // const currentSupply = detail.info.currentSupply;
         const price = detail.info.priceForNextMint;
         // console.log("currentSupply :" + detail.info.currentSupply);
         setName(detail.info.name);
@@ -206,10 +193,6 @@ export default function Detail() {
       console.log(error);
     }
   };
-  interface BondStep {
-    price: bigint;
-    step: bigint;
-  }
 
   const [priceForNextMint, setPriceForNextMint] = useState(0);
 
@@ -445,12 +428,141 @@ export default function Detail() {
       });
   }, []);
 
-  interface TokenInfo {
-    tw?: string;
-    tg?: string;
-    web?: string;
-    // Add other properties as needed
-  }
+  const TradesSection: FC = () => {
+    return (
+      <>
+        <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
+        <div className="mb-20 mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A]  p-[30px]">
+          <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
+            <h1 className="w-1/6">account</h1>
+            <h1 className="w-1/6">buy / sell</h1>
+            <h1 className="w-1/6">SEI</h1>
+            <h1 className="w-1/6">{symbol}</h1>
+            <h1 className="w-1/6">date</h1>
+            <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
+          </div>
+          {filteredEvents?.length > 0 ? (
+            <ul>
+              {filteredEvents.map((event) => (
+                <li key={event.eventId}>
+                  <TradesCard
+                    isBuy={event.amountMinted ? true : false}
+                    seiAmount={
+                      event.amountMinted
+                        ? formatSeiAmount(event.amountMinted._hex)
+                        : formatSeiAmount(event.amountBurned._hex)
+                    }
+                    memeTokenAmount={
+                      event.reserveAmount
+                        ? formatMemeTokenAmount(event.reserveAmount._hex)
+                        : formatMemeTokenAmount(event.refundAmount._hex)
+                    }
+                    date={new Date(event.blockTimestamp).toLocaleString()}
+                    tx={event.transactionHash.slice(-6)}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p></p>
+          )}
+        </div>
+      </>
+    );
+  };
+
+  const BuySellButtonSection: FC = () => {
+    return (
+      <>
+        <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
+          <button
+            className={`h-[44px] w-full rounded-2xl ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
+            onClick={() => setIsBuy(true)}
+          >
+            Buy
+          </button>
+          <button
+            className={`h-[44px] w-full rounded-2xl border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
+            onClick={() => {
+              setIsBuy(false);
+              setInputState(true);
+            }}
+          >
+            Sell
+          </button>
+        </div>
+      </>
+    );
+  };
+
+  const SellPercentageButton: FC = () => {
+    return (
+      <>
+        <h1 className="mt-[15px] text-sm text-white">{txState}</h1>
+        <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
+          <button
+            type="button"
+            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+            onClick={handleReset}
+          >
+            reset
+          </button>
+          <button
+            type="button"
+            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+            onClick={() => handlePercentage(25)}
+          >
+            25%
+          </button>
+          <button
+            type="button"
+            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+            onClick={() => handlePercentage(50)}
+          >
+            50%
+          </button>
+          <button
+            type="button"
+            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+            onClick={() => handlePercentage(75)}
+          >
+            75%
+          </button>
+          <button
+            type="button"
+            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+            onClick={() => handlePercentage(100)}
+          >
+            100%
+          </button>
+        </div>
+      </>
+    );
+  };
+
+  const HolderDistributionSection: FC = () => {
+    return (
+      <>
+        <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
+          <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
+          <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
+            <div className=" flex justify-between font-bold">
+              <h1>1. C87gCy 💳 (bonding curve)</h1>
+              <h1>98.48%</h1>
+            </div>
+            <div className=" flex justify-between">
+              <h1>2. H41bQv 🛠️ (dev)</h1>
+              <h1>01.52%</h1>
+            </div>
+            <div className=" flex justify-between">
+              <h1>3. H41bQv</h1>
+              <h1>01.52%</h1>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -481,76 +593,26 @@ export default function Detail() {
             <div className="mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewChart tokenAddress={tokenAddress} />
             </div>
-            <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
-            <div className="mb-20 mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A]  p-[30px]">
-              <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
-                <h1 className="w-1/6">account</h1>
-                <h1 className="w-1/6">buy / sell</h1>
-                <h1 className="w-1/6">SEI</h1>
-                <h1 className="w-1/6">{symbol}</h1>
-                <h1 className="w-1/6">date</h1>
-                <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
-              </div>
-              {filteredEvents?.length > 0 ? (
-                <ul>
-                  {filteredEvents.map((event) => (
-                    <li key={event.eventId}>
-                      <TradesCard
-                        isBuy={event.amountMinted ? true : false}
-                        seiAmount={
-                          event.amountMinted
-                            ? formatSeiAmount(event.amountMinted._hex)
-                            : formatSeiAmount(event.amountBurned._hex)
-                        }
-                        memeTokenAmount={
-                          event.reserveAmount
-                            ? formatMemeTokenAmount(event.reserveAmount._hex)
-                            : formatMemeTokenAmount(event.refundAmount._hex)
-                        }
-                        date={new Date(event.blockTimestamp).toLocaleString()}
-                        tx={event.transactionHash.slice(-6)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p></p>
-              )}
-            </div>
+
+            <TradesSection />
           </div>
           <div>
             <div className=" w-[420px] rounded-[15px] border border-yellow-400 bg-gradient-to-b from-[#A60600] to-[#880400] p-[30px]">
-              <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
-                <button
-                  className={`h-[44px] w-full rounded-2xl ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
-                  onClick={() => setIsBuy(true)}
-                >
-                  Buy
-                </button>
-                <button
-                  className={`h-[44px] w-full rounded-2xl border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
-                  onClick={() => {
-                    setIsBuy(false);
-                    setInputState(true);
-                  }}
-                >
-                  Sell
-                </button>
-              </div>
+              <BuySellButtonSection />
               <form
                 onSubmit={isBuy ? submit : submitSell}
                 className="flex flex-col"
               >
-                <div className="flex justify-between">
-                  <div />
-                  {/* <div
+                {/*<div className="flex justify-between">
+                 <div />
+                   <div
                     className="mt-[15px]
                    flex h-[30px] w-[128px] cursor-pointer items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]"
                   >
                     Set max slippage
-                  </div> */}
+                  </div> 
                 </div>
-
+                */}
                 {InputState ? (
                   <>
                     {/*input amount == memetoken*/}
@@ -641,46 +703,7 @@ export default function Detail() {
                     </div>
                   </div>
                 ) : (
-                  <>
-                    <h1 className="mt-[15px] text-sm text-white">{txState}</h1>
-                    <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
-                      <button
-                        type="button"
-                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                        onClick={handleReset}
-                      >
-                        reset
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                        onClick={() => handlePercentage(25)}
-                      >
-                        25%
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                        onClick={() => handlePercentage(50)}
-                      >
-                        50%
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                        onClick={() => handlePercentage(75)}
-                      >
-                        75%
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-                        onClick={() => handlePercentage(100)}
-                      >
-                        100%
-                      </button>
-                    </div>
-                  </>
+                  <SellPercentageButton />
                 )}
 
                 <button
@@ -691,23 +714,7 @@ export default function Detail() {
                 </button>
               </form>
             </div>
-            <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
-              <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
-              <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
-                <div className=" flex justify-between font-bold">
-                  <h1>1. C87gCy 💳 (bonding curve)</h1>
-                  <h1>98.48%</h1>
-                </div>
-                <div className=" flex justify-between">
-                  <h1>2. H41bQv 🛠️ (dev)</h1>
-                  <h1>01.52%</h1>
-                </div>
-                <div className=" flex justify-between">
-                  <h1>3. H41bQv</h1>
-                  <h1>01.52%</h1>
-                </div>
-              </div>
-            </div>
+            <HolderDistributionSection />
           </div>
         </div>
       </main>

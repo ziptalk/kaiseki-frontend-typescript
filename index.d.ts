@@ -5,3 +5,7 @@ interface EventCardTypes {
   ticker: string;
   time?: string;
 }
+interface BondStep {
+  price: bigint;
+  step: bigint;
+}
