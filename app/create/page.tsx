@@ -495,7 +495,7 @@ const Create: NextPage = () => {
                     </h1>
                     <Image
                       className="rounded-full"
-                      src="/images/Seiyan.png"
+                      src="/images/memesinoGhost.png"
                       alt=""
                       width={12}
                       height={12}

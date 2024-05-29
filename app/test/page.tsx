@@ -46,12 +46,12 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
+    <div className="bg-white">
+      {/* <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
       <h1>REST API Example</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre>
       <h2>Price History</h2>
-      <pre>{JSON.stringify(priceHistory, null, 2)}</pre>
+      <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
       <h2>Events from DB</h2>
       <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
     </div>

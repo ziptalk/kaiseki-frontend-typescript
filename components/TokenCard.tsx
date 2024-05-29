@@ -52,7 +52,7 @@ const TokenCard: FC<TokenCardTypes> = ({
             <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
             <Image
               className="rounded-full"
-              src="/images/Seiyan.png"
+              src="/images/memesinoGhost.png"
               alt=""
               width={12}
               height={12}
