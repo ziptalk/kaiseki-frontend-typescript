@@ -16,7 +16,7 @@ import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
 
@@ -561,7 +561,7 @@ const Header: FC = () => {
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
-              <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF]">
+              <PinkAnimatedWrapper className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF]">
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
                     src="/images/memesinoGhost.png"
@@ -578,8 +578,8 @@ const Header: FC = () => {
                   {curMintTic}
                 </h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
-              </div>
-              <div className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
+              </PinkAnimatedWrapper>
+              <MintWrapper className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
                     src="/images/memesinoGhost.png"
@@ -594,7 +594,7 @@ const Header: FC = () => {
                 </h1>
                 <h1 className="text-sm">on {curCreateTime}</h1>
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
-              </div>
+              </MintWrapper>
             </div>
             <div className="flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
@@ -688,4 +688,62 @@ const EventWrapper = styled.div<{ $itemN?: number }>`
 
   background-color: ${({ $itemN }) =>
     $itemN ? `#${eventCardColors[$itemN % 3]}` : "#0FF"};
+`;
+
+const shake = keyframes`
+  0%, 100% {
+    transform: translateY(0) rotate(5deg);
+    animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
+  }
+  25%, 75% {
+    transform: translateY(-12px);
+    animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
+  }
+  50% {
+    transform: translateY(12px) rotate(-5deg);
+    animation-timing-function: cubic-bezier(0, 0.2, 0.8, 1);
+  }
+`;
+
+const colorReversePink = keyframes`
+  0%, 100% {
+    background:#0E0E0E;
+    box-shadow: 0px 0px 8px 0px #FA00FF;
+    color: #FA00FF;
+  }
+  15%, 85% {
+    background:#FA00FF;
+    box-shadow: 0px 0px 8px 0px #FA00FF;
+    color: white;
+  }
+`;
+const colorReverseMint = keyframes`
+  0%, 100% {
+    background:#0E0E0E;
+    box-shadow: 0px 0px 8px 0px #09ffd3;
+    color: #09ffd3;
+  }
+  15%, 85% {
+    background:#B3FFF6;
+    box-shadow: 0px 0px 8px 0px #FA00FF;
+    border: 1px solid #fa00ff;
+    color: #FA00FF;
+  }
+`;
+
+const PinkAnimatedWrapper = styled.div`
+  background: #0e0e0e;
+  box-shadow: 0px 0px 8px 0px #fa00ff;
+  color: #fa00ff;
+
+  animation:
+    ${shake} 250ms 0s 3,
+    ${colorReversePink} 1s 0s;
+`;
+
+const MintWrapper = styled.div`
+  box-shadow: 0px 0px 8px 0px #09ffd3;
+  color: #09ffd3;
+
+  animation: ${colorReverseMint} 1s 0s;
 `;
