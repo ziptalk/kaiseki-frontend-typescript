@@ -411,12 +411,12 @@ const Header: FC = () => {
                 step 3 : sell at any time to lock in your profits or losses
               </h1>
               <h1 className="mb-[20px]">
-                step 4 : when enough people buy on the bonding curve it reaches
-                a market cap of $69k
+                {`step 4 : when enough people buy on the bonding curve it reaches
+                a market cap of $${"69k"}`}
               </h1>
               <h1 className="mb-[20px]">
-                step 5 : $12k of liquidity is then deposited in dragonswap and
-                burned
+                {`step 5 : $${"12k"} of liquidity is then deposited in dragonswap and
+                burned`}
               </h1>
             </div>
 
