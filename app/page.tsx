@@ -149,7 +149,7 @@ export default function Home() {
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
-        setTokenInfo(data);
+        setTokenInfo(data.reverse());
       })
       .catch((error) => {
         console.log(error);
