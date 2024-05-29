@@ -13,6 +13,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 
 import styled from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
@@ -380,11 +381,8 @@ const Header: FC = () => {
   return (
     <>
       {infoModal && (
-        <div
-          onClick={() => setInfoModal(!infoModal)}
-          className="absolute z-[9999] flex h-screen w-screen items-center justify-between bg-black bg-opacity-70"
-        >
-          <div className="absolute left-1/2 top-1/2 h-[540px] w-[575px] -translate-x-1/2 -translate-y-1/2 transform gap-[34px] rounded-[10px] border bg-[#1E1E1E] px-[60px] py-[25px] text-center text-white">
+        <ModalRootWrapper onClick={() => setInfoModal(!infoModal)}>
+          <ModalContentBox onClick={(e) => e.stopPropagation()}>
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
               <h1>
@@ -413,13 +411,16 @@ const Header: FC = () => {
             </div>
 
             <button
-              onClick={() => setInfoModal(!infoModal)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setInfoModal(!infoModal);
+              }}
               className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
             >
               Let&apos;s start
             </button>
-          </div>
-        </div>
+          </ModalContentBox>
+        </ModalRootWrapper>
       )}
       <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
         {/* {pathname == "/" && (

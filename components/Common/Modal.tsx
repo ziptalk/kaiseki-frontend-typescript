@@ -8,20 +8,20 @@ export const ModalRootWrapper = styled.div`
   bottom: 0;
 
   width: 100vw;
-  background-color: rgba(8, 17, 29, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
 
   z-index: 1000;
 `;
 
 export const ModalContentBox = styled.div`
   width: 600px;
-  padding: 60px 100px;
+  padding: 25px 60px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 50px;
+  gap: 34px;
 
   position: absolute;
   left: 50%;
@@ -32,4 +32,6 @@ export const ModalContentBox = styled.div`
   border: 1.5px solid #b9b9b9;
   background: #1e1e1e;
   text-align: center;
+  color: white;
+  /* z-index: 1000; */
 `;
