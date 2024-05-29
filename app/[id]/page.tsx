@@ -474,15 +474,15 @@ export default function Detail() {
   const BuySellButtonSection: FC = () => {
     return (
       <>
-        <div className="flex gap-[10px] rounded-[15px] border-2 border-[#880400] bg-black p-[10px]">
+        <div className="flex gap-[10px] rounded-[10px] border-2 border-[#880400] bg-black p-[10px]">
           <button
-            className={`h-[44px] w-full rounded-2xl ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
+            className={`h-[44px] w-full rounded-[8px]  ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#43FF4B]" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
             onClick={() => setIsBuy(true)}
           >
             Buy
           </button>
           <button
-            className={`h-[44px] w-full rounded-2xl border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white"}`}
+            className={`h-[44px] w-full rounded-[8px] border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FB30FF]"}`}
             onClick={() => {
               setIsBuy(false);
               setInputState(true);
@@ -617,7 +617,7 @@ export default function Detail() {
                     {/*input amount == memetoken*/}
                     <div className="relative flex w-full items-center">
                       <input
-                        className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
                         type="number"
                         placeholder="0.00"
                         step="0.01"
@@ -653,7 +653,7 @@ export default function Detail() {
                     {/*input amount == WSEI*/}
                     <div className="relative flex w-full items-center">
                       <input
-                        className="my-[8px] h-[55px] w-full rounded-[5px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
                         type="number"
                         placeholder="0.00"
                         step="0.01"
@@ -707,7 +707,7 @@ export default function Detail() {
 
                 <button
                   type="submit"
-                  className={`h-[51px] w-full rounded-2xl border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
+                  className={`h-[51px] w-full rounded-[8px] border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
                 >
                   place trade
                 </button>
