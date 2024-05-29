@@ -1,137 +1,13 @@
 "use client";
 
-import Header from "@/components/Header";
-import { useEffect, useState } from "react";
-import { useAccount, useReadContract, useWatchContractEvent } from "wagmi";
-import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/contracts/contracts";
-import { type UseReadContractReturnType } from "wagmi";
-import Link from "next/link";
 import TokenCard from "@/components/TokenCard";
-import Image from "next/image";
-import axios from "axios";
 import { digital } from "@/fonts/font";
+import Image from "next/image";
+import Link from "next/link";
+import { FC, useEffect, useState } from "react";
 
 export default function Home() {
-  // const [curCreateTic, setCurCreateTic] = useState("MEME");
-  // const [curCreateUser, setCurCreateUser] = useState("0x7A2");
-  // const [curCreateTime, setCurCreateTime] = useState("Date");
-  // const [curCreateName, setCurCreateName] = useState("Name");
-  // const [curCreateAddress, setCurCreateAddress] = useState("");
-  // const [createDatas, setCreateDatas] = useState<any[]>([]);
   const [isHovered, setIsHovered] = useState(false);
-  const ether = (weiValue: bigint, decimals = 18): number => {
-    const factor = BigInt(10) ** BigInt(decimals);
-    const etherValue = Number(weiValue) / Number(factor);
-    return etherValue;
-  };
-
-  // Initialize ethers with a provider
-  const { ethers } = require("ethers");
-
-  // Load the ABI from the specified file
-  const contractABI = abi;
-
-  // Contract address
-  const contractAddress = contracts.MCV2_Bond;
-
-  // Initialize ethers with a provider
-  const provider = new ethers.JsonRpcProvider(
-    "https://evm-rpc-arctic-1.sei-apis.com",
-  );
-
-  // Create a contract instance
-  const contract = new ethers.Contract(contractAddress, contractABI, provider);
-
-  async function fetchCreateHomeEventsInBatches(
-    fromBlock: any,
-    batchSize: any,
-  ) {
-    let currentBlock = await provider.getBlockNumber();
-    let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
-
-    const isFetchingHomeCreate = localStorage.getItem("isFetchingHomeCreate");
-    if (isFetchingHomeCreate === "true") {
-      console.log(
-        "FetchingHomeCreate is already in progress. Aborting this instance.",
-      );
-      localStorage.setItem("isFetchingHomeCreate", "false");
-      return;
-    }
-
-    // Set the fetchingHomeCreate flag to true
-    localStorage.setItem("isFetchingHomeCreate", "true");
-
-    while (fromBlock <= currentBlock) {
-      // console.log(
-      //   `FetchingHomeCreate events from block ${fromBlock} to ${toBlock}`,
-      // );
-
-      // Adjust toBlock for the last batch if it exceeds currentBlock
-      if (toBlock > currentBlock) {
-        toBlock = currentBlock;
-      }
-
-      const events = await contract.queryFilter(
-        contract.filters.TokenCreated(),
-        fromBlock,
-        toBlock,
-      );
-      const newDatas = await Promise.all(
-        events
-          .slice(0)
-          .reverse()
-          .map(async (event: any) => {
-            const block = await provider.getBlock(event.blockNumber);
-            const timestamp = block.timestamp;
-            const date = new Date(timestamp * 1000);
-            const detail = await contract.getDetail(event.args.token);
-            const response = await axios.get(
-              `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-            );
-            const currentSupply = detail.info.currentSupply;
-            const price = detail.info.priceForNextMint;
-            // console.log("cursup" + currentSupply);
-            // console.log("price" + price);
-            // Format the date as DD/MM/YY
-            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
-
-            // Log the event details along with the block timestamp
-            // console.log(
-            //   `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
-            // );
-
-            // setCurCreateTic(event.args.symbol.substring(0, 5));
-            // setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-            // setCurCreateTime(formattedDate);
-
-            return {
-              name: event.args.name,
-              tic: event.args.symbol.substring(0, 5),
-              user: event.args.token.substring(0, 5), // Fake value!
-              time: formattedDate,
-              addr: event.args.token,
-              cap: ether(currentSupply) * (ether(price) * response.data.price),
-            };
-          }),
-      );
-
-      // setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
-
-      // Prepare for the next batch
-      fromBlock = toBlock + 1;
-      toBlock = fromBlock + batchSize - 1;
-
-      // Small delay to prevent rate limiting (optional, adjust as necessary)
-      // await new Promise((resolve) => setTimeout(resolve, 1));
-    }
-    localStorage.setItem("isFetchingHomeCreate", "false");
-  }
-
-  useEffect(() => {
-    fetchCreateHomeEventsInBatches(19966627, 5000);
-  }, []);
-
   const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
 
   useEffect(() => {
@@ -144,6 +20,92 @@ export default function Home() {
         console.log(error);
       });
   }, []);
+
+  const SlotSection: FC = () => {
+    return (
+      <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
+        <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
+          <div className="h-[150px]">
+            <Image src="/images/WIF.png" alt="" width={40} height={40} />
+            <Image
+              src="/images/catcat.png"
+              alt=""
+              width={40}
+              height={40}
+              className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
+            />
+            <Image src="/images/Seiyan.png" alt="" width={40} height={40} />
+          </div>
+        </div>
+        <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
+          <div className="h-[150px]">
+            <Image src="/images/Seiyan.png" alt="" width={40} height={40} />
+            <Image
+              src="/images/catcat.png"
+              alt=""
+              width={40}
+              height={40}
+              className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
+            />
+            <Image src="/images/WIF.png" alt="" width={40} height={40} />
+          </div>
+        </div>
+        <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
+          <div className="h-[150px]">
+            <Image src="/images/WIF.png" alt="" width={40} height={40} />
+            <Image
+              src="/images/catcat.png"
+              alt=""
+              width={40}
+              height={40}
+              className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
+            />
+            <Image src="/images/Seiyan.png" alt="" width={40} height={40} />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const ToTheMoonTokenCardSection: FC = () => {
+    return (
+      <div className="w-[390px]">
+        <Link
+          href="/0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
+          className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
+        >
+          <div>
+            <div className="h-[80px] w-[80px] border-black bg-[#D9D9D9]"></div>
+          </div>
+          <div className=" text w-[334px] overflow-hidden px-[10px]">
+            <div className="">
+              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                ez
+              </h1>
+              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+                [ticker: ez]
+              </h1>
+            </div>
+
+            <h1 className="neon-lime text-xs text-[#C5F900] ">
+              Created by:&nbsp;0x7A2
+            </h1>
+
+            <div className="flex">
+              <h1 className="neon-yellow text-xs text-[#FAFF00]">
+                Market cap:&nbsp;
+              </h1>
+              <h1
+                className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+              >
+                1.1K
+              </h1>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -158,113 +120,8 @@ export default function Home() {
                   width={250}
                   height={300}
                 />
-
-                <div className="w-[390px]">
-                  <Link
-                    href="/0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
-                    className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
-                  >
-                    <div>
-                      <div className="h-[80px] w-[80px] border-black bg-[#D9D9D9]"></div>
-                    </div>
-                    <div className=" text w-[334px] overflow-hidden px-[10px]">
-                      <div className="">
-                        <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                          ez
-                        </h1>
-                        <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                          [ticker: ez]
-                        </h1>
-                      </div>
-
-                      <h1 className="neon-lime text-xs text-[#C5F900] ">
-                        Created by:&nbsp;0x7A2
-                      </h1>
-
-                      <div className="flex">
-                        <h1 className="neon-yellow text-xs text-[#FAFF00]">
-                          Market cap:&nbsp;
-                        </h1>
-                        <h1
-                          className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
-                        >
-                          1.1K
-                        </h1>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-                <div className="flex h-[140px] w-[390px] gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px]">
-                  <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
-                    <div className="h-[150px]">
-                      <Image
-                        src="/images/WIF.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                      <Image
-                        src="/images/catcat.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
-                      />
-                      <Image
-                        src="/images/Seiyan.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
-                    <div className="h-[150px]">
-                      <Image
-                        src="/images/Seiyan.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                      <Image
-                        src="/images/catcat.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
-                      />
-                      <Image
-                        src="/images/WIF.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex h-full w-[120px] flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
-                    <div className="h-[150px]">
-                      <Image
-                        src="/images/WIF.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                      <Image
-                        src="/images/catcat.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                        className="my-[15px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] "
-                      />
-                      <Image
-                        src="/images/Seiyan.png"
-                        alt=""
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                  </div>
-                </div>
+                <ToTheMoonTokenCardSection />
+                <SlotSection />
               </div>
             </div>
             <Link href={"/create"}>
@@ -310,19 +167,6 @@ export default function Home() {
               </button>
             </form> */}
           </div>
-
-          {/* <!--           <div className="mb-[130px] mt-10 grid w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] p-8">
-            {createDatas.slice(-12).map((card: any, index: any) => (
-              <TokenCard
-                key={index}
-                name={card.name}
-                ticker={card.tic}
-                tokenAddress={card.addr}
-                cap={card.cap}
-                createdBy="Me"
-                desc="desc"
-              />
-            ))} --> */}
 
           <div className=" grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] px-8 py-[10px]">
             {tokenInfo ? (
