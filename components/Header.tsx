@@ -78,74 +78,77 @@ const Header: FC = () => {
     // Set the fetchingCreate flag to true
     localStorage.setItem("isFetchingCreate", "true");
 
-    while (fromBlock <= currentBlock) {
-      // console.log(
-      //   `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
-      // );
+    try {
+      while (fromBlock <= currentBlock) {
+        // console.log(
+        //   `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
+        // );
 
-      // Adjust toBlock for the last batch if it exceeds currentBlock
-      if (toBlock > currentBlock) {
-        toBlock = currentBlock;
+        // Adjust toBlock for the last batch if it exceeds currentBlock
+        if (toBlock > currentBlock) {
+          toBlock = currentBlock;
+        }
+
+        let events;
+        try {
+          events = await contract.queryFilter(
+            contract.filters.TokenCreated(),
+            fromBlock,
+            toBlock,
+          );
+        } catch (error) {
+          console.error("Error fetching events:", error);
+          break; // Exit the loop if there's an error fetching events
+        }
+
+        let newDatas;
+        try {
+          newDatas = await Promise.all(
+            events
+              .slice(0)
+              .reverse()
+              .map(async (event: any) => {
+                const block = await provider.getBlock(event.blockNumber);
+                const timestamp = block.timestamp;
+                const date = new Date(timestamp * 1000);
+
+                // Format the date as DD/MM/YY
+                const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+
+                // Log the event details along with the block timestamp
+                console.log(
+                  `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
+                );
+                setCurCreateTic(event.args.symbol.substring(0, 5));
+                setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
+                setCurCreateTime(formattedDate);
+
+                return {
+                  tic: event.args.symbol.substring(0, 5),
+                  user: event.args.token.substring(0, 5), // Fake value!
+                  time: formattedDate,
+                };
+              }),
+          );
+        } catch (error) {
+          console.error("Error processing events:", error);
+          break; // Exit the loop if there's an error processing events
+        }
+
+        setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
+
+        // Prepare for the next batch
+        fromBlock = toBlock + 1;
+        toBlock = fromBlock + batchSize - 1;
+
+        // Small delay to prevent rate limiting (optional, adjust as necessary)
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-
-      const events = await contract.queryFilter(
-        contract.filters.TokenCreated(),
-        fromBlock,
-        toBlock,
-      );
-      const newDatas = await Promise.all(
-        events
-          .slice(0)
-          .reverse()
-          .map(async (event: any) => {
-            const block = await provider.getBlock(event.blockNumber);
-            const timestamp = block.timestamp;
-            const date = new Date(timestamp * 1000);
-
-            // Format the date as DD/MM/YY
-            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
-
-            // Log the event details along with the block timestamp
-            console.log(
-              `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
-            );
-            setCurCreateTic(event.args.symbol.substring(0, 5));
-            setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-            setCurCreateTime(formattedDate);
-
-            return {
-              tic: event.args.symbol.substring(0, 5),
-              user: event.args.token.substring(0, 5), // Fake value!
-              time: formattedDate,
-            };
-          }),
-      );
-
-      setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
-
-      // const newDatas = events.map((event: any) => ({
-      //   tic: event.args.symbol.substring(0, 5),
-      //   user: event.args.token.substring(0, 5),
-      // }));
-
-      // setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
-
-      // events.forEach((event: any) => {
-      //   console.log(
-      //     `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken}`,
-      //   );
-      //   setCurCreateTic(event.args.symbol.substring(0, 5));
-      //   setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-      // });
-
-      // Prepare for the next batch
-      fromBlock = toBlock + 1;
-      toBlock = fromBlock + batchSize - 1;
-
-      // Small delay to prevent rate limiting (optional, adjust as necessary)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    } finally {
+      localStorage.setItem("isFetchingCreate", "false");
     }
-    localStorage.setItem("isFetchingCreate", "false");
   }
 
   // MARK: - Mint Events
