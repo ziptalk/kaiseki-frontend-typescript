@@ -53,6 +53,8 @@ const Header: FC = () => {
   // Create a contract instance
   const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
+  const MODAL_VISIBLE_STORAGE_KEY = "isFirstVisitToMemesino";
+
   // Function to fetch and display events in batches
   const ether = (weiValue: bigint, decimals = 18): number => {
     const factor = BigInt(10) ** BigInt(decimals);
@@ -255,6 +257,7 @@ const Header: FC = () => {
   useEffect(() => {
     fetchMintEventsInBatches(20587998, 5000);
     fetchCreateEventsInBatches(19966627, 5000);
+    setModalVisible();
   }, []);
 
   useEffect(() => {
@@ -341,6 +344,13 @@ const Header: FC = () => {
       </EventWrapper>
     );
   };
+
+  function setModalVisible() {
+    if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
+      setInfoModal(true);
+      window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
+    }
+  }
 
   const handleClick = (url: string) => {
     if (url) {
