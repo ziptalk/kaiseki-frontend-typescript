@@ -32,10 +32,10 @@ function App() {
     fetch("https://memesino.fun/HolderDistribution")
       .then((response) => response.json())
       .then((data) => {
-        // const filteredData = data.filter(
-        //   (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
-        // );
-        // setDistribution(filteredData);
+        const filteredData = data.filter(
+          (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
+        );
+        setDistribution(filteredData);
         setDistribution(data);
       });
     fetch("https://memesino.fun/homeTokenInfo") // Add this block

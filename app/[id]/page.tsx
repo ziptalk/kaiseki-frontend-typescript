@@ -98,11 +98,24 @@ export default function Detail() {
   const [marketCap, setMarketCap] = useState("");
   const [txState, setTxState] = useState("idle");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [SEIPrice, setSEIPrice] = useState(0);
+  const [SEIPrice, setSEIPrice] = useState(5);
   const [InputState, setInputState] = useState(true);
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
+
+  // useEffect(() => {
+  //   const getSeiPrice = async () => {
+  //     const response = await axios.get(
+  //       `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+  //     );
+  //     console.log("SEI PRICE" + response.data.price);
+  //     const sp = response.data.price;
+
+  //     setSEIPrice(Math.round(sp * 100) / 100);
+  //   };
+  //   getSeiPrice();
+  // }, []);
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -413,7 +426,7 @@ export default function Detail() {
   const [web, setWeb] = useState("");
 
   useEffect(() => {
-    fetch("http://memesino.fun/homeTokenInfo") // Add this block
+    fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
