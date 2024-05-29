@@ -146,7 +146,7 @@ export default function Home() {
     //     console.error("Error fetching token info:", error);
     //   }
     // };
-    fetch("http://memesino.fun/homeTokenInfo") // Add this block
+    fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);

@@ -353,7 +353,7 @@ export default function Detail() {
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("http://memesino.fun/TxlogsMintBurn")
+    fetch("https://memesino.fun/TxlogsMintBurn")
       .then((response) => response.json())
       .then((data) => {
         setMintEventsFromDB(data.mintEvents);
