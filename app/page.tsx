@@ -135,17 +135,6 @@ export default function Home() {
   const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
 
   useEffect(() => {
-    // const fetchTokenInfo = async () => {
-    //   try {
-    //     const response = await fetch("http://memesino.fun/homeTokenInfo");
-    //     const data = await response.json();
-    //     setTokenInfo(data);
-
-    //     console.log(data);
-    //   } catch (error) {
-    //     console.error("Error fetching token info:", error);
-    //   }
-    // };
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
@@ -154,8 +143,6 @@ export default function Home() {
       .catch((error) => {
         console.log(error);
       });
-
-    // fetchTokenInfo();
   }, []);
 
   return (

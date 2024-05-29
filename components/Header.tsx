@@ -8,6 +8,7 @@ import {
   useAccountModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -388,6 +389,23 @@ const Header: FC = () => {
     setIsHoveredIF(false);
   };
   const [infoModal, setInfoModal] = useState(false);
+  const [curSeiPrice, setCurSeiPrice] = useState(0.5423);
+
+  useEffect(() => {
+    const getSeiPrice = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+        );
+        console.log("SEI PRICE" + response.data.price);
+        setCurSeiPrice(response.data.price);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getSeiPrice();
+  }, []);
   return (
     <>
       {infoModal && (
@@ -411,12 +429,12 @@ const Header: FC = () => {
                 step 3 : sell at any time to lock in your profits or losses
               </h1>
               <h1 className="mb-[20px]">
-                {`step 4 : when enough people buy on the bonding curve it reaches
-                a market cap of $${"69k"}`}
+                step 4 : when enough people buy on the bonding curve it reaches
+                a market cap of ${Math.floor((60660 * curSeiPrice) / 1000)}k
               </h1>
               <h1 className="mb-[20px]">
-                {`step 5 : $${"12k"} of liquidity is then deposited in dragonswap and
-                burned`}
+                step 5 : ${Math.floor((9000 * curSeiPrice) / 1000)}k of
+                liquidity is then deposited in dragonswap and burned
               </h1>
             </div>
 

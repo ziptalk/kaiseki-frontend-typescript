@@ -98,11 +98,24 @@ export default function Detail() {
   const [marketCap, setMarketCap] = useState("");
   const [txState, setTxState] = useState("idle");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [SEIPrice, setSEIPrice] = useState(0);
+  const [SEIPrice, setSEIPrice] = useState(5);
   const [InputState, setInputState] = useState(true);
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
+
+  // useEffect(() => {
+  //   const getSeiPrice = async () => {
+  //     const response = await axios.get(
+  //       `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+  //     );
+  //     console.log("SEI PRICE" + response.data.price);
+  //     const sp = response.data.price;
+
+  //     setSEIPrice(Math.round(sp * 100) / 100);
+  //   };
+  //   getSeiPrice();
+  // }, []);
 
   useEffect(() => {
     const fetchTokenDetail = async () => {
@@ -413,7 +426,7 @@ export default function Detail() {
   const [web, setWeb] = useState("");
 
   useEffect(() => {
-    fetch("http://memesino.fun/homeTokenInfo") // Add this block
+    fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
@@ -552,7 +565,12 @@ export default function Detail() {
                         onChange={handleInputChange}
                       ></input>
                       <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] rounded-full  bg-gray-100"></div>
+                        <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                            alt="img"
+                          />
+                        </div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
                           {name}
                         </h1>
