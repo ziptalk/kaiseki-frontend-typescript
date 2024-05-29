@@ -48,7 +48,7 @@ const TokenCard: FC<TokenCardTypes> = ({
           </div>
 
           <h1 className="neon-lime text-xs text-[#C5F900] ">
-            Created by:&nbsp;{createdBy}
+            Created by:&nbsp;{createdBy.slice(0, 6)}
           </h1>
 
           <div className="flex">

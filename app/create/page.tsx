@@ -17,7 +17,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
-import { ModalContentBox, ModalRootWrapper } from "@/components/Create/Modal";
+import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";

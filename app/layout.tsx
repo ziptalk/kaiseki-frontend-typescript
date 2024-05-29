@@ -19,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${arial.variable} font-arial`}>
+      <body
+        className={`${inter.className} ${arial.variable} bg-[#0E0E0E] font-arial`}
+      >
         <Provider>
           <Header />
           {children}
