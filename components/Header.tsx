@@ -6,6 +6,7 @@ import contracts from "@/contracts/contracts";
 import {
   ConnectButton,
   useAccountModal,
+  useChainModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
 import axios from "axios";
@@ -23,6 +24,7 @@ import { useChainId } from "wagmi";
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
   const { isConnected, address } = useAccount();
   const pathname = usePathname();
   const { chains, switchChain } = useSwitchChain();
@@ -280,7 +282,7 @@ const Header: FC = () => {
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
     }
-  }, [address]);
+  }, [chainId]);
 
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
@@ -603,7 +605,7 @@ const Header: FC = () => {
               {/* <ConnectButton /> */}
               {address ? (
                 <button
-                  onClick={openAccountModal}
+                  onClick={openChainModal}
                   className="flex h-[40px] w-[180px]
                   cursor-pointer
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"

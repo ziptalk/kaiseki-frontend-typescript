@@ -41,7 +41,8 @@ const config = getDefaultConfig({
   ],
   appName: "My RainbowKit App",
   projectId: "YOUR_PROJECT_ID",
-  chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
+  // chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
+  chains: [seiDevnet],
   ssr: true,
 });
 
