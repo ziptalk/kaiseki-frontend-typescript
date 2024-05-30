@@ -36,7 +36,7 @@ const Header: FC = () => {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [curCreateTime, setCurCreateTime] = useState("Date");
-  const [accountButtonModal, setAccountButtonModal] = useState(true);
+  const [accountButtonModal, setAccountButtonModal] = useState(false);
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
 
