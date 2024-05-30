@@ -8,7 +8,7 @@ import contracts from "@/contracts/contracts";
 import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useAccount,
   useChainId,
@@ -39,6 +39,13 @@ const Create: NextPage = () => {
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
   };
+  const ether = (weiValue: bigint, decimals = 18): number => {
+    const factor = BigInt(10) ** BigInt(decimals);
+    const etherValue = Number(weiValue) / Number(factor);
+    return etherValue;
+  };
+
+  const [curWSEIValue, setCurWSEIValue] = useState("0");
 
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 
@@ -46,6 +53,12 @@ const Create: NextPage = () => {
     contracts.MCV2_Bond,
     MCV2_BondABI,
     signer,
+  );
+
+  const reserveTokenContract = new ethers.Contract(
+    contracts.ReserveToken,
+    reserveTokenABI,
+    provider,
   );
 
   // 이벤트 이거 가져와짐 개꿀
@@ -137,6 +150,25 @@ const Create: NextPage = () => {
 
   // MARK: - Submit
 
+  const getWSEIValue = async () => {
+    try {
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+      const balanceWei = await reserveTokenContract.balanceOf(account.address);
+      // Convert the balance to Ether
+      const balanceEther = ether(balanceWei);
+      console.log(balanceEther);
+      setCurWSEIValue(String(balanceEther));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getWSEIValue();
+  }, []);
+
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
@@ -169,6 +201,13 @@ const Create: NextPage = () => {
       } else if (isLoading) {
         return;
       }
+      if (Number(curWSEIValue) < 3500000000000000000) {
+        alert(
+          "insufficient balance (minimal cost to deploy) : 3.5 SEI + gas fee",
+        );
+        return;
+      }
+
       setIsLoading(true);
       const receipt = await bondWriteContract.createToken(
         { name: name, symbol: ticker },

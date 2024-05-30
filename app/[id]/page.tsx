@@ -95,7 +95,7 @@ export default function Detail() {
   const [curWSEIValue, setCurWSEIValue] = useState("0");
   const [inputValue, setInputValue] = useState("");
   const [marketCap, setMarketCap] = useState("");
-  const [txState, setTxState] = useState("idle");
+  const [txState, setTxState] = useState("");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [SEIPrice, setSEIPrice] = useState(5);
   const [InputState, setInputState] = useState(true);
@@ -262,10 +262,21 @@ export default function Detail() {
     const inputValue = formData.get("inputValue") as string;
     if (!account.address) {
       alert("Connect your wallet first!");
+      setTxState("Connect your wallet first!");
       throw new Error("Account is not defined");
     }
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
+      setTxState("Change your network first!");
+      return;
+    }
+
+    if (
+      ether(BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint)) >
+      Number(curWSEIValue)
+    ) {
+      setTxState(`Insufficient balance : You have ${curWSEIValue} WSEI`);
+      return;
     }
     console.log("start-app");
     try {
@@ -645,7 +656,7 @@ export default function Detail() {
                         BigInt(Math.floor(Number(inputValue))) *
                           BigInt(priceForNextMint),
                       )}
-                      &nbsp; WSEI
+                      &nbsp;WSEI
                     </h1>
                   </>
                 ) : (
