@@ -354,10 +354,29 @@ export default function Detail() {
   }
 
   // MARK: - TradesDB
+  function filterEventsByToken(data: any, token: any): Event[] {
+    const filteredMintEvents = data.mintEvents
+      .filter((event: any) => event.token === token)
+      .map((event: any) => ({ ...event, isMint: true }));
+
+    const filteredBurnEvents = data.burnEvents
+      .filter((event: any) => event.token === token)
+      .map((event: any) => ({ ...event, isMint: false }));
+
+    const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
+    combinedEvents.sort(
+      (a, b) =>
+        new Date(b.blockTimestamp).getTime() -
+        new Date(a.blockTimestamp).getTime(),
+    );
+
+    return combinedEvents;
+  }
 
   const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
   const [burnEventsFromDB, setBurnEventsFromDB] = useState<any[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
+  const [eventsFromDB, setEventsFromDB] = useState<Event[] | null>(null);
 
   useEffect(() => {
     fetch("https://memesino.fun/TxlogsMintBurn")
@@ -393,10 +412,20 @@ export default function Detail() {
       );
 
       setFilteredEvents(combinedEvents);
+      console.log(combinedEvents);
     };
 
     filterAndCombineEvents();
   }, [tokenAddress, mintEventsFromDB, burnEventsFromDB]);
+
+  useEffect(() => {
+    fetch("https://memesino.fun/TxlogsMintBurn")
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredData = filterEventsByToken(data, tokenAddress);
+        setEventsFromDB(filteredData);
+      });
+  }, []);
 
   const formatSeiAmount = (amount: string) => {
     const etherValue = parseFloat(formatEther(amount));
@@ -439,6 +468,21 @@ export default function Detail() {
       });
   }, []);
 
+  const transformToTradesCardType = (event: Event): TradesCardType => {
+    return {
+      user: event.user.substring(0, 6),
+      isBuy: event.isMint,
+      seiAmount: event.amountMinted
+        ? parseInt(event.amountMinted._hex, 16).toString()
+        : parseInt(event.amountBurned?._hex || "0", 16).toString(),
+      memeTokenAmount: event.reserveAmount
+        ? parseInt(event.reserveAmount._hex, 16).toString()
+        : parseInt(event.refundAmount?._hex || "0", 16).toString(),
+      date: new Date(event.blockTimestamp).toLocaleDateString(),
+      tx: event.transactionHash.slice(-6),
+    };
+  };
+
   const TradesSection: FC = () => {
     return (
       <>
@@ -452,12 +496,20 @@ export default function Detail() {
             <h1 className="w-1/6">date</h1>
             <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
           </div>
-          {filteredEvents?.length > 0 ? (
+          {eventsFromDB ? (
+            eventsFromDB.map((event) => {
+              const cardProps = transformToTradesCardType(event);
+              return <TradesCard key={event._id} {...cardProps} />;
+            })
+          ) : (
+            <p>Loading...</p>
+          )}
+          {/* {eventsFromDB?.length > 0 ? (
             <ul>
-              {filteredEvents.map((event) => (
+              {eventsFromDB.map((event) => (
                 <li key={event.eventId}>
                   <TradesCard
-                    isBuy={event.amountMinted ? true : false}
+                    isBuy={event.amountMinted != "" ? true : false}
                     seiAmount={
                       event.amountMinted
                         ? formatSeiAmount(event.amountMinted._hex)
@@ -476,7 +528,7 @@ export default function Detail() {
             </ul>
           ) : (
             <p></p>
-          )}
+          )} */}
         </div>
       </>
     );

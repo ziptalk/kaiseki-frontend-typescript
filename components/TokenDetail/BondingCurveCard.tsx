@@ -28,7 +28,7 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
         <h1 className="h-[75px] leading-tight text-[#6A6A6A]">
           Once the bonding curve progress hits 100%, all the liquidity from the
           bonding curve will be deposited into dragonswap and burned.
-          Progression increases as the price rices.
+          Progression increases as the price rises.
         </h1>
       </div>
     </>

@@ -9,13 +9,7 @@ import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {
-  useAccount,
-  useChainId,
-  useConnect,
-  useSwitchChain,
-  useWriteContract,
-} from "wagmi";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
