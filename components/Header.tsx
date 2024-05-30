@@ -36,6 +36,7 @@ const Header: FC = () => {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [curCreateTime, setCurCreateTime] = useState("Date");
+  const [accountButtonModal, setAccountButtonModal] = useState(true);
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
 
@@ -601,11 +602,12 @@ const Header: FC = () => {
                 <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
               </MintWrapper>
             </div>
-            <div className="flex w-[300px] flex-row-reverse items-center">
+            <div className="relative flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
+
               {address ? (
                 <button
-                  onClick={openChainModal}
+                  onClick={() => setAccountButtonModal(!accountButtonModal)}
                   className="flex h-[40px] w-[180px]
                   cursor-pointer
                   items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
@@ -631,6 +633,24 @@ const Header: FC = () => {
                 >
                   Connect Wallet
                 </button>
+              )}
+              {accountButtonModal && (
+                <>
+                  <div className="absolute right-[8px] top-[55px] h-[94px] w-[165px] rounded-[10px] border border-white bg-[#0E0E0E] px-[13px] py-[15px] text-center">
+                    <div
+                      onClick={openAccountModal}
+                      className="cursor-pointer border-b border-white pb-[10px] text-[15px]"
+                    >
+                      <h1>My account</h1>
+                    </div>
+                    <div
+                      onClick={openChainModal}
+                      className="cursor-pointer pt-[10px] text-[15px]"
+                    >
+                      <h1>Change network</h1>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
