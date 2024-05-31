@@ -130,6 +130,7 @@ const Create: NextPage = () => {
             websiteUrl: web,
             marketCap: 0,
             createdBy: account.address,
+            timestamp: new Date().toISOString(),
           }),
         },
       );
@@ -195,12 +196,12 @@ const Create: NextPage = () => {
       } else if (isLoading) {
         return;
       }
-      if (Number(curWSEIValue) < 3500000000000000000) {
-        alert(
-          "insufficient balance (minimal cost to deploy) : 3.5 SEI + gas fee",
-        );
-        return;
-      }
+      // if (Number(curWSEIValue) < 3500000000000000000) {
+      //   alert(
+      //     "insufficient balance (minimal cost to deploy) : 3.5 SEI + gas fee",
+      //   );
+      //   return;
+      // }
 
       setIsLoading(true);
       const receipt = await bondWriteContract.createToken(

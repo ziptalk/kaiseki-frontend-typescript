@@ -182,39 +182,6 @@ const Header: FC = () => {
         toBlock,
       );
 
-      // const newDatas = events.map((event: any) => ({
-      //   val: String(ether(event.args.amountMinted)),
-      //   tic: event.args.token.substring(0, 5),
-      //   user: event.args.receiver.substring(0, 5),
-      // }));
-
-      // setDatas((prevDatas) => [newDatas, ...prevDatas]);
-
-      // events.forEach((event: any) => {
-      //   console.log(
-      //     `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver} `,
-      //   );
-      //   setCurMintTic(event.args.token.substring(0, 5));
-      //   setCurMintValue(String(ether(event.args.amountMinted)));
-      //   setCurMintUser(event.args.receiver.substring(0, 5));
-      // });
-
-      // for (const event of events) {
-      //   const block = await provider.getBlock(event.blockNumber);
-      //   const timestamp = block.timestamp;
-      //   // Convert timestamp to a readable date format, if necessary
-      //   const date = new Date(timestamp * 1000).toLocaleString();
-
-      //   // Log the event details along with the block timestamp
-      //   console.log(
-      //     `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date}`,
-      //   );
-      //   setCurMintTic(event.args.token.substring(0, 5));
-      //   setCurMintValue(String(ether(event.args.amountMinted)));
-      //   setCurMintUser(event.args.receiver.substring(0, 5));
-      //   setCurMintTime(date);
-      // }
-
       const newDatas = await Promise.all(
         events
           .slice(0)
@@ -271,13 +238,16 @@ const Header: FC = () => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
+  const [tokenInfo, setTokenInfo] = useState(null);
 
-  //const MintEventCard: FC<EventCardTypes> = ({
-  // index,
-  // user,
-  // value,
-  // ticker,
-  // }) => {
+  useEffect(() => {
+    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+      .then((response) => response.json())
+      .then((data) => setTokenInfo(data))
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     if (chainId != 713715) {
