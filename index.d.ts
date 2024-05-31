@@ -35,3 +35,9 @@ interface TradesCardType {
   date: string;
   tx: string;
 }
+
+interface FilteredData {
+  [key: string]: {
+    [innerKey: string]: string;
+  };
+}

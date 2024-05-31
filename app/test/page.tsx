@@ -17,6 +17,9 @@ function App() {
           (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
         );
         setPriceHistory(filteredData);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
     fetch("https://memesino.fun/TxlogsMintBurn")
@@ -27,6 +30,9 @@ function App() {
         // );
         // setEventsFromDB(filteredData);
         setEventsFromDB(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
     fetch("https://memesino.fun/HolderDistribution")
@@ -37,23 +43,29 @@ function App() {
         );
         setDistribution(filteredData);
         setDistribution(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
-      .then((data) => setTokenInfo(data));
+      .then((data) => setTokenInfo(data))
+      .catch((error) => {
+        console.log(error);
+      });
     // const val = main();
     // console.log(val);
   }, []);
 
   return (
     <div className="bg-white">
-      {/* <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
-      <h1>REST API Example</h1>
+      {/* <pre>{JSON.stringify(tokenInfo, null, 2)}</pre> */}
+      <h1>distribution</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre>
-      <h2>Price History</h2>
+      {/* <h2>Price History</h2>
       <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
-      <h2>Events from DB</h2>
-      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
+      {/* <h2>Events from DB</h2>
+      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre> */}
     </div>
   );
 }

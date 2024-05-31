@@ -17,6 +17,9 @@ function App() {
           (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
         );
         setPriceHistory(filteredData);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
     fetch("https://memesino.fun/TxlogsMintBurn")
@@ -24,20 +27,29 @@ function App() {
       .then((data) => {
         const filteredData = filterEventsByToken(data, targetToken);
         setEventsFromDB(filteredData);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
-    // fetch("https://memesino.fun/HolderDistribution")
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     const filteredData = data.filter(
-    //       (item: any) => item.toLowerCase() === targetToken.toLowerCase(),
-    //     );
-    //     setDistribution(filteredData);
-    //     // setDistribution(data);
-    //   });
+    fetch("https://memesino.fun/HolderDistribution")
+      .then((response) => response.json())
+      .then((data) => {
+        // const filteredData = data.filter(
+        //   (item: any) => item.toLowerCase() === targetToken.toLowerCase(),
+        // );
+        // setDistribution(filteredData);
+        setDistribution(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
-      .then((data) => setTokenInfo(data));
+      .then((data) => setTokenInfo(data))
+      .catch((error) => {
+        console.log(error);
+      });
     // const val = main();
     // console.log(val);
   }, []);
@@ -64,13 +76,13 @@ function App() {
   return (
     <div className="bg-white">
       {/* <h1 className="text-[40px]">Token Info</h1>
-      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
+      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre> */}
       <h1 className="text-[40px]">Holder distribution</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre>
-      <h2 className="text-[40px]">Price History</h2>
+      {/* <h2 className="text-[40px]">Price History</h2>
       <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
-      <h2 className="text-[40px]">Events from DB</h2>
-      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
+      {/* <h2 className="text-[40px]">Events from DB</h2>
+      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre> */}
     </div>
   );
 }

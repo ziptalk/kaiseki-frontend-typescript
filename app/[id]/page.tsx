@@ -468,16 +468,42 @@ export default function Detail() {
       });
   }, []);
 
+  const [distribution, setDistribution] = useState<FilteredData | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    fetch("https://memesino.fun/HolderDistribution")
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredData = filterDataByOuterKey(data, tokenAddress);
+        setDistribution(filteredData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  function filterDataByOuterKey(data: any, targetOuterKey: string) {
+    if (targetOuterKey in data) {
+      return { [targetOuterKey]: data[targetOuterKey] };
+    }
+    return {};
+  }
+
   const transformToTradesCardType = (event: Event): TradesCardType => {
     return {
       user: event.user.substring(0, 6),
       isBuy: event.isMint,
-      seiAmount: event.amountMinted
-        ? parseInt(event.amountMinted._hex, 16).toString()
-        : parseInt(event.amountBurned?._hex || "0", 16).toString(),
-      memeTokenAmount: event.reserveAmount
+      seiAmount: event.reserveAmount
         ? parseInt(event.reserveAmount._hex, 16).toString()
         : parseInt(event.refundAmount?._hex || "0", 16).toString(),
+
+      memeTokenAmount: event.amountMinted
+        ? ether(BigInt(parseInt(event.amountMinted._hex, 16)))
+            .toFixed(2)
+            .toString()
+        : parseInt(event.amountBurned?._hex || "0", 16).toString(),
       date: new Date(event.blockTimestamp).toLocaleDateString(),
       tx: event.transactionHash.slice(-6),
     };
@@ -504,31 +530,6 @@ export default function Detail() {
           ) : (
             <p>Loading...</p>
           )}
-          {/* {eventsFromDB?.length > 0 ? (
-            <ul>
-              {eventsFromDB.map((event) => (
-                <li key={event.eventId}>
-                  <TradesCard
-                    isBuy={event.amountMinted != "" ? true : false}
-                    seiAmount={
-                      event.amountMinted
-                        ? formatSeiAmount(event.amountMinted._hex)
-                        : formatSeiAmount(event.amountBurned._hex)
-                    }
-                    memeTokenAmount={
-                      event.reserveAmount
-                        ? formatMemeTokenAmount(event.reserveAmount._hex)
-                        : formatMemeTokenAmount(event.refundAmount._hex)
-                    }
-                    date={new Date(event.blockTimestamp).toLocaleString()}
-                    tx={event.transactionHash.slice(-6)}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p></p>
-          )} */}
         </div>
       </>
     );
@@ -609,18 +610,31 @@ export default function Detail() {
         <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
           <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
           <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
-            <div className=" flex justify-between font-bold">
-              <h1>1. C87gCy 💳 (bonding curve)</h1>
-              <h1>98.48%</h1>
-            </div>
-            <div className=" flex justify-between">
-              <h1>2. H41bQv 🛠️ (dev)</h1>
-              <h1>01.52%</h1>
-            </div>
-            <div className=" flex justify-between">
-              <h1>3. H41bQv</h1>
-              <h1>01.52%</h1>
-            </div>
+            {distribution ? (
+              Object.entries(distribution).map(
+                ([outerKey, innerObj], index) => (
+                  <div key={outerKey}>
+                    {Object.entries(innerObj).map(
+                      ([innerKey, value], innerIndex) => (
+                        <div key={innerKey} className="flex justify-between">
+                          <div className="flex">
+                            <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
+                            {innerKey.toLowerCase() == contracts.MCV2_Bond && (
+                              <h1>&nbsp;💳 (bonding curve)</h1>
+                            )}
+                            {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
+                          </div>
+
+                          <h1>{`${parseFloat(value).toFixed(2)}%`}</h1>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                ),
+              )
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         </div>
       </>
@@ -639,7 +653,7 @@ export default function Detail() {
                   name={name}
                   ticker={symbol}
                   cap={marketCap}
-                  createdBy={creator.substring(0, 5)}
+                  createdBy={creator.substring(0, 6)}
                   desc="desc"
                   tokenAddress=""
                   border={true}
@@ -680,7 +694,7 @@ export default function Detail() {
                     {/*input amount == memetoken*/}
                     <div className="relative flex w-full items-center">
                       <input
-                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
                         type="number"
                         placeholder="0.00"
                         step="0.01"
