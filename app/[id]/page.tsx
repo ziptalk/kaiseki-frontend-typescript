@@ -496,15 +496,15 @@ export default function Detail() {
       user: event.user.substring(0, 6),
       isBuy: event.isMint,
       seiAmount: event.reserveAmount
-        ? parseInt(event.reserveAmount._hex, 16).toString()
+        ? ether(BigInt(parseInt(event.reserveAmount._hex, 16))).toString()
         : parseInt(event.refundAmount?._hex || "0", 16).toString(),
 
       memeTokenAmount: event.amountMinted
-        ? ether(BigInt(parseInt(event.amountMinted._hex, 16)))
-            .toFixed(2)
-            .toString()
+        ? ether(BigInt(parseInt(event.amountMinted._hex, 16) / 1000))
+            .toFixed(0)
+            .toString() + "k"
         : parseInt(event.amountBurned?._hex || "0", 16).toString(),
-      date: new Date(event.blockTimestamp).toLocaleDateString(),
+      date: event.blockTimestamp.toString(),
       tx: event.transactionHash.slice(-6),
     };
   };

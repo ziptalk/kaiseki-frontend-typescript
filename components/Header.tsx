@@ -22,6 +22,20 @@ import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
 
 const Header: FC = () => {
+  window.ethereum.on("chainChanged", (chainId: any) => {
+    if (chainId != 0xae3f3) {
+      setIsWrongChain(true);
+      console.log("changed wrong");
+    } else {
+      setIsWrongChain(false);
+    }
+  });
+  window.ethereum.on("connect", (chainId: any) => {
+    if (chainId != 0xae3f3) {
+      setIsWrongChain(true);
+      console.log("connect wrong");
+    }
+  });
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
@@ -228,22 +242,35 @@ const Header: FC = () => {
   // usage: Fetch events in batches of 5000 blocks starting from block 19966627
   // usage: Fetch events in batches of 5000 blocks starting from block 19966627
 
-  useEffect(() => {
-    fetchMintEventsInBatches(20587998, 5000);
-    fetchCreateEventsInBatches(19966627, 5000);
-    setModalVisible();
-  }, []);
+  // useEffect(() => {
+  //   fetchMintEventsInBatches(20587998, 5000);
+  //   fetchCreateEventsInBatches(19966627, 5000);
+  //   setModalVisible();
+  // }, []);
 
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
+
   const [tokenInfo, setTokenInfo] = useState(null);
+  const [isWrongChain, setIsWrongChain] = useState(true);
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+    fetch("https://memesino.fun/homeTokenInfo")
       .then((response) => response.json())
-      .then((data) => setTokenInfo(data))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          console.log(data);
+          setTokenInfo(data[data.length - 1]); // Set the last element of the array
+          setCurCreateTic(data[data.length - 1].ticker.substring(0, 5));
+          setCurCreateUser(data[data.length - 1].createdBy.substring(0, 5));
+          const formattedDate = `${String(data[data.length - 1].timestamp.getMonth() + 1).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getDate()).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getFullYear()).slice(-2)}`; // Fake value!
+          setCurCreateTime(formattedDate);
+        } else {
+          console.log("No data available");
+        }
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -251,7 +278,7 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (chainId != 713715) {
-      switchChain({ chainId: 713715 });
+      setIsWrongChain(true);
     }
   }, [chainId]);
 
@@ -384,6 +411,23 @@ const Header: FC = () => {
   }, []);
   return (
     <>
+      {isWrongChain && (
+        <div className="absolute z-[10000] h-screen w-screen bg-black bg-opacity-70">
+          <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
+            <div className="]">
+              <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
+              <h1>It seems you changed to wrong network..</h1>
+            </div>
+
+            <div
+              onClick={openChainModal}
+              className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
+            >
+              Change Network to SEI
+            </div>
+          </div>
+        </div>
+      )}
       {infoModal && (
         <ModalRootWrapper onClick={() => setInfoModal(!infoModal)}>
           <ModalContentBox onClick={(e) => e.stopPropagation()}>

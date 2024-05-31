@@ -13,10 +13,11 @@ function App() {
     fetch("https://memesino.fun/priceHistory")
       .then((response) => response.json())
       .then((data) => {
-        const filteredData = data.filter(
-          (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
-        );
-        setPriceHistory(filteredData);
+        // const filteredData = data.filter(
+        //   (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
+        // );
+        // setPriceHistory(filteredData);
+        setPriceHistory(data);
       })
       .catch((error) => {
         console.log(error);
@@ -75,14 +76,14 @@ function App() {
 
   return (
     <div className="bg-white">
-      <h1 className="text-[40px]">Token Info</h1>
-      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre>
+      {/* <h1 className="text-[40px]">Token Info</h1>
+      <pre>{JSON.stringify(tokenInfo, null, 2)}</pre> */}
       {/* <h1 className="text-[40px]">Holder distribution</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre> */}
       {/* <h2 className="text-[40px]">Price History</h2>
       <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
-      {/* <h2 className="text-[40px]">Events from DB</h2>
-      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre> */}
+      <h2 className="text-[40px]">Events from DB</h2>
+      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
     </div>
   );
 }

@@ -14,7 +14,7 @@ export default function Home() {
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
       .then((response) => response.json())
       .then((data) => {
-        setTokenInfo(data.reverse());
+        setTokenInfo(data);
       })
       .catch((error) => {
         console.log(error);
@@ -123,7 +123,6 @@ export default function Home() {
 
                 <ToTheMoonTokenCardSection />
                 <SlotSection />
-
               </div>
             </div>
             <Link href={"/create"}>
@@ -170,22 +169,20 @@ export default function Home() {
             </form> */}
           </div>
 
-          <div className=" grid h-[800px] w-full min-w-[1100px] grid-cols-3 grid-rows-4 gap-[60px] px-8 py-[10px]">
+          <div className=" grid  w-full min-w-[1100px] grid-cols-3 grid-rows-7 gap-[60px] px-8 py-[10px]">
             {tokenInfo ? (
-              tokenInfo
-                .slice(-12)
-                .map((card: any, index: any) => (
-                  <TokenCard
-                    key={index}
-                    cid={card.cid}
-                    name={card.name}
-                    ticker={card.ticker}
-                    tokenAddress={card.tokenAddress}
-                    cap={card.marketCap}
-                    createdBy={card.createdBy}
-                    desc={card.description}
-                  />
-                ))
+              tokenInfo.map((card: any, index: any) => (
+                <TokenCard
+                  key={index}
+                  cid={card.cid}
+                  name={card.name}
+                  ticker={card.ticker}
+                  tokenAddress={card.tokenAddress}
+                  cap={card.marketCap}
+                  createdBy={card.createdBy}
+                  desc={card.description}
+                />
+              ))
             ) : (
               <p>No token information available.</p>
             )}
