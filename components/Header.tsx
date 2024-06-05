@@ -47,13 +47,15 @@ const Header: FC = () => {
   const chainId = useChainId();
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
-  const [curMintUser, setCurMintUser] = useState("user");
+  const [curMintUser, setCurMintUser] = useState("0x7A2");
   const [curMintTime, setCurMintTime] = useState("Date");
+  const [curMintCid, setCurMintCid] = useState("cid");
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [curCreateTime, setCurCreateTime] = useState("Date");
   const [curCreateCid, setCurCreateCid] = useState("cid");
   const [curCreateTokenAddress, setCurCreateTokenAddress] = useState("");
+  const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
@@ -282,6 +284,48 @@ const Header: FC = () => {
         console.log(error);
       });
   }, []);
+  const [eventsFromDB, setEventsFromDB] = useState<Event[] | null>(null);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch("https://memesino.fun/TxlogsMintBurn")
+        .then((response) => response.json())
+        .then((data) => {
+          const evs = data.mintEvents.reverse()[0];
+
+          console.log(
+            ethers.formatEther(evs.amountMinted._hex, 16).toString() + "evs",
+          );
+
+          const newMintTic = evs.token.ticker.substring(0, 5);
+          const newMintUser = evs.user.substring(0, 5);
+          const newMintCid = evs.token.cid;
+          const newMintValue = ethers
+            .formatEther(evs.amountMinted._hex, 16)
+            .toString();
+          const newMintTokenAddress = evs.token.tokenAddress;
+
+          // Check if values have changed before updating state
+          if (
+            newMintTic !== curMintTic ||
+            newMintUser !== curMintUser ||
+            newMintCid !== curMintCid ||
+            newMintValue !== curMintValue ||
+            newMintTokenAddress !== curMintTokenAddress
+          ) {
+            setCurMintTic(newMintTic);
+            setCurMintUser(newMintUser);
+            setCurMintCid(newMintCid);
+            setCurMintValue(newMintValue);
+            setCurMintTokenAddress(newMintTokenAddress);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 5000); // Fetch every 5 seconds (adjust as needed)
+
+    return () => clearInterval(interval); // Clean up the interval on unmount
+  }, [curMintTic, curMintUser, curMintCid, curMintValue, curMintTokenAddress]);
 
   useEffect(() => {
     if (chainId != 713715) {
@@ -601,10 +645,17 @@ const Header: FC = () => {
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} SEI of
                 </h1>
-                <h1 className="cursor-pointer text-sm hover:underline">
-                  {curMintTic}
-                </h1>
-                <div className="h-[18px] w-[18px] rounded-full bg-[#FA00FF]" />
+                <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curMintTic}
+                  </h1>
+                </Link>
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#FA00FF]">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                    alt="img"
+                  />
+                </div>
               </PinkAnimatedWrapper>
               <MintWrapper className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
                 <div className="h-[18px] w-[18px] rounded-full ">

@@ -383,7 +383,7 @@ export default function Detail() {
   const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
   const [burnEventsFromDB, setBurnEventsFromDB] = useState<any[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
-  const [eventsFromDB, setEventsFromDB] = useState<Event[] | null>(null);
+  const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
 
   useEffect(() => {
     fetch("https://memesino.fun/TxlogsMintBurn")
@@ -404,8 +404,9 @@ export default function Detail() {
 
       if (tokenAddress) {
         filteredMintEvents =
-          mintEventsFromDB?.filter((event) => event.token === tokenAddress) ||
-          [];
+          mintEventsFromDB?.filter(
+            (event) => event.token.tokenAddress === tokenAddress,
+          ) || [];
         filteredBurnEvents =
           burnEventsFromDB?.filter((event) => event.token === tokenAddress) ||
           [];

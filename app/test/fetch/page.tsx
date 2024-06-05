@@ -17,7 +17,7 @@ function App() {
         //   (item: any) => item.token.toLowerCase() === targetToken.toLowerCase(),
         // );
         // setPriceHistory(filteredData);
-        setPriceHistory(data);
+        setPriceHistory(data.mintEvents);
       })
       .catch((error) => {
         console.log(error);
@@ -26,8 +26,9 @@ function App() {
     fetch("https://memesino.fun/TxlogsMintBurn")
       .then((response) => response.json())
       .then((data) => {
-        const filteredData = filterEventsByToken(data, targetToken);
-        setEventsFromDB(filteredData);
+        // const filteredData = filterEventsByToken(data, targetToken);
+        // setEventsFromDB(filteredData);
+        setEventsFromDB(data.mintEvents.reverse());
       })
       .catch((error) => {
         console.log(error);
