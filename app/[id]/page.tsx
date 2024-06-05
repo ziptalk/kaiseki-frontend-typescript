@@ -359,7 +359,7 @@ export default function Detail() {
   function filterEventsByToken(data: any, token: any): Event[] {
     try {
       const filteredMintEvents = data.mintEvents
-        .filter((event: any) => event.token === token)
+        .filter((event: any) => event.token.tokenAddress === token)
         .map((event: any) => ({ ...event, isMint: true }));
 
       const filteredBurnEvents = data.burnEvents

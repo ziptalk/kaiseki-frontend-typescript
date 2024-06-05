@@ -263,7 +263,7 @@ const Header: FC = () => {
   const [isWrongChain, setIsWrongChain] = useState(false);
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo")
+    fetch("https://memesino.fun/homeTokenInfo?page=1")
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {

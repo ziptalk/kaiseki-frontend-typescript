@@ -46,7 +46,7 @@ function App() {
       .catch((error) => {
         console.log(error);
       });
-    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+    fetch("https://memesino.fun/homeTokenInfo?page=1") // Add this block
       .then((response) => response.json())
       .then((data) => setTokenInfo(data))
       .catch((error) => {
