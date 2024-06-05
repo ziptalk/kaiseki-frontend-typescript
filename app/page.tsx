@@ -8,10 +8,19 @@ import { FC, useEffect, useState } from "react";
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
-  const [tokenInfo, setTokenInfo] = useState<[] | null>(null);
+  const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
+  const [pageNum, setPageNum] = useState<number>(1);
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+    getData();
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [pageNum]);
+
+  function getData() {
+    fetch(`https://memesino.fun/homeTokenInfo?page=${pageNum}`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
@@ -19,7 +28,7 @@ export default function Home() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }
 
   const SlotSection: FC = () => {
     return (
@@ -186,6 +195,33 @@ export default function Home() {
             ) : (
               <p>No token information available.</p>
             )}
+          </div>
+          <div className="mb-32 flex w-full justify-center">
+            <div className="flex gap-[20px]">
+              <Image
+                className={`${pageNum > 1 ? "cursor-pointer" : ""}`}
+                src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
+                alt=""
+                width={7}
+                height={11}
+                onClick={() => {
+                  if (pageNum > 1) {
+                    setPageNum(pageNum - 1);
+                  }
+                }}
+              />
+              <h1 className="text-white">{pageNum}</h1>
+              <Image
+                className={`${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
+                src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
+                alt=""
+                width={7}
+                height={11}
+                onClick={() => {
+                  setPageNum(pageNum + 1);
+                }}
+              />
+            </div>
           </div>
         </div>
       </main>
