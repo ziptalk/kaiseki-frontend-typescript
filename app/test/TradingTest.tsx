@@ -140,7 +140,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
           candlestickSeries.setData(newData); // This will replace the entire data set
           return newData;
         });
-      }, 5000); // Add new candle every 5 seconds
+      }, 30000); // Add new candle every 5 seconds
 
       return () => {
         clearInterval(intervalId);

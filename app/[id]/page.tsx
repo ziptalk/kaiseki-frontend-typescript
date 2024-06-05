@@ -380,51 +380,7 @@ export default function Detail() {
     }
   }
 
-  const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
-  const [burnEventsFromDB, setBurnEventsFromDB] = useState<any[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
-
-  useEffect(() => {
-    fetch("https://memesino.fun/TxlogsMintBurn")
-      .then((response) => response.json())
-      .then((data) => {
-        setMintEventsFromDB(data.mintEvents);
-        setBurnEventsFromDB(data.burnEvents);
-      })
-      .catch((error) => {
-        console.log("fetching ERROR from tradesDB in [id]/page.tsx");
-      });
-  }, []);
-
-  useEffect(() => {
-    const filterAndCombineEvents = () => {
-      let filteredMintEvents = mintEventsFromDB;
-      let filteredBurnEvents = burnEventsFromDB;
-
-      if (tokenAddress) {
-        filteredMintEvents =
-          mintEventsFromDB?.filter(
-            (event) => event.token.tokenAddress === tokenAddress,
-          ) || [];
-        filteredBurnEvents =
-          burnEventsFromDB?.filter((event) => event.token === tokenAddress) ||
-          [];
-      }
-
-      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
-      combinedEvents.sort(
-        (a, b) =>
-          new Date(b.blockTimestamp).getTime() -
-          new Date(a.blockTimestamp).getTime(),
-      );
-
-      setFilteredEvents(combinedEvents);
-      console.log(combinedEvents);
-    };
-
-    filterAndCombineEvents();
-  }, [tokenAddress, mintEventsFromDB, burnEventsFromDB]);
 
   useEffect(() => {
     fetch("https://memesino.fun/TxlogsMintBurn")
@@ -455,6 +411,7 @@ export default function Detail() {
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
+  const [desc, setDesc] = useState("");
 
   useEffect(() => {
     fetch("https://memesino.fun/homeTokenInfo") // Add this block
@@ -470,6 +427,7 @@ export default function Detail() {
         setTw(filteredData[0].twitterUrl);
         setTg(filteredData[0].telegramUrl);
         setWeb(filteredData[0].websiteUrl);
+        setDesc(filteredData[0].description);
       })
       .catch((error) => {
         console.log(error);
@@ -505,12 +463,12 @@ export default function Detail() {
       isBuy: event.isMint,
       seiAmount: event.reserveAmount
         ? ether(BigInt(parseInt(event.reserveAmount._hex, 16))).toString()
-        : parseInt(event.refundAmount?._hex || "0", 16).toString(),
+        : ether(BigInt(parseInt(event.refundAmount!._hex, 16))).toString(),
 
       memeTokenAmount: event.amountMinted
-        ? ether(BigInt(parseInt(event.amountMinted._hex, 16) / 1000))
+        ? ether(BigInt(parseInt(event.amountMinted._hex, 16)))
             .toFixed(0)
-            .toString() + "k"
+            .toString()
         : parseInt(event.amountBurned?._hex || "0", 16).toString(),
       date: event.blockTimestamp.toString(),
       tx: event.transactionHash.slice(-6),
@@ -662,7 +620,7 @@ export default function Detail() {
                   ticker={symbol}
                   cap={marketCap}
                   createdBy={creator.substring(0, 6)}
-                  desc="desc"
+                  desc={desc}
                   tokenAddress=""
                   border={true}
                 />

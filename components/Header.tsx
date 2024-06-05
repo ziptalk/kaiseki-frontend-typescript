@@ -1,10 +1,10 @@
 "use client";
 
-import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import { walletAddress } from "@/atoms/atoms";
+import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+
+import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import contracts from "@/contracts/contracts";
 import {
-  ConnectButton,
   useAccountModal,
   useChainModal,
   useConnectModal,
@@ -14,13 +14,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 
 import styled, { keyframes } from "styled-components";
-import { useAccount, useSwitchChain } from "wagmi";
-import { useChainId } from "wagmi";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
 
 const Header: FC = () => {
+  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   useEffect(() => {
     window.ethereum?.on("chainChanged", (chainId: any) => {
       if (chainId != 0xae3f3) {
@@ -64,7 +63,7 @@ const Header: FC = () => {
   const { ethers } = require("ethers");
 
   // Load the ABI from the specified file
-  const contractABI = abi;
+  const contractABI = MCV2_BondABI;
 
   // Contract address
   const contractAddress = contracts.MCV2_Bond;

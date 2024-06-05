@@ -10,7 +10,9 @@ function App() {
 
   const targetToken = "0x39E364F94D55D6b94eb2007226fB9BAC64326E56";
   useEffect(() => {
-    fetch("https://memesino.fun/priceHistory")
+    fetch(
+      "https://memesino.fun/priceHistory?tokenAddress=0x538Fed837e8ee03F66d6745b5D5fC32cd67b69cc",
+    )
       .then((response) => response.json())
       .then((data) => {
         // const filteredData = data.filter(
@@ -81,10 +83,10 @@ function App() {
       <pre>{JSON.stringify(tokenInfo, null, 2)}</pre> */}
       {/* <h1 className="text-[40px]">Holder distribution</h1>
       <pre>{JSON.stringify(distribution, null, 2)}</pre> */}
-      {/* <h2 className="text-[40px]">Price History</h2>
-      <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
-      <h2 className="text-[40px]">Events from DB</h2>
-      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
+      <h2 className="text-[40px]">Price History</h2>
+      <pre>{JSON.stringify(priceHistory, null, 2)}</pre>
+      {/* <h2 className="text-[40px]">Events from DB</h2>
+      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre> */}
     </div>
   );
 }
