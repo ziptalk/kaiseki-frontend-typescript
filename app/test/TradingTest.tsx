@@ -26,6 +26,33 @@ type TradingViewChartProps = {
 const TradingViewChart: React.FC<TradingViewChartProps> = ({
   tokenAddress,
 }) => {
+  // const [priceHistory, setPriceHistory] = useState(null);
+
+  // useEffect(() => {
+  //   fetch(`https://memesino.fun/priceHistory?tokenAddress=${tokenAddress}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (Array.isArray(data)) {
+  //         const transformedData: BarData[] = data.map((item: any) => ({
+  //           time: Math.floor(
+  //             new Date(item.changeTime).getTime() / 1000,
+  //           ) as UTCTimestamp,
+  //           open: parseInt(item.oldPrice, 10),
+  //           high: parseInt(item.newPrice, 10),
+  //           low: parseInt(item.newPrice, 10),
+  //           close: parseInt(item.newPrice, 10),
+  //         }));
+  //         setChartData(transformedData);
+  //       } else {
+  //         console.log("Data is not an array:", data);
+  //         setChartData([]);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [tokenAddress]);
+
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   const [chartData, setChartData] = useState<BarData[]>([

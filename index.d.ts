@@ -41,3 +41,9 @@ interface FilteredData {
     [innerKey: string]: string;
   };
 }
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}

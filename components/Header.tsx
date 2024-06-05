@@ -14,35 +14,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 
 import styled, { keyframes } from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
-import { MetaMaskInpageProvider } from "@metamask/providers";
-
-declare global {
-  interface Window {
-    ethereum?: MetaMaskInpageProvider;
-  }
-}
 
 const Header: FC = () => {
-  window.ethereum?.on("chainChanged", (chainId: any) => {
-    if (chainId != 0xae3f3) {
-      setIsWrongChain(true);
-      console.log("changed wrong");
-    } else {
-      setIsWrongChain(false);
-    }
-  });
-  window.ethereum?.on("connect", (chainId: any) => {
-    if (chainId != 0xae3f3) {
-      setIsWrongChain(true);
-      console.log("connect wrong");
-    }
-  });
+  useEffect(() => {
+    window.ethereum?.on("chainChanged", (chainId: any) => {
+      if (chainId != 0xae3f3) {
+        setIsWrongChain(true);
+        console.log("changed wrong");
+      } else {
+        setIsWrongChain(false);
+      }
+    });
+    window.ethereum?.on("connect", (chainId: any) => {
+      if (chainId != 0xae3f3) {
+        setIsWrongChain(true);
+        console.log("connect wrong");
+      }
+    });
+  }, []);
+
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
@@ -86,166 +81,166 @@ const Header: FC = () => {
     const etherValue = Number(weiValue) / Number(factor);
     return Math.ceil(etherValue * 1000) / 1000;
   };
-  // MARK: - Create Events
-  async function fetchCreateEventsInBatches(fromBlock: any, batchSize: any) {
-    let currentBlock = await provider.getBlockNumber();
-    let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
+  // // MARK: - Create Events
+  // async function fetchCreateEventsInBatches(fromBlock: any, batchSize: any) {
+  //   let currentBlock = await provider.getBlockNumber();
+  //   let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
 
-    const isFetchingCreate = localStorage.getItem("isFetchingCreate");
-    if (isFetchingCreate === "true") {
-      console.log(
-        "FetchingCreate is already in progress. Aborting this instance.",
-      );
-      return;
-    }
+  //   const isFetchingCreate = localStorage.getItem("isFetchingCreate");
+  //   if (isFetchingCreate === "true") {
+  //     console.log(
+  //       "FetchingCreate is already in progress. Aborting this instance.",
+  //     );
+  //     return;
+  //   }
 
-    // Set the fetchingCreate flag to true
-    localStorage.setItem("isFetchingCreate", "true");
+  //   // Set the fetchingCreate flag to true
+  //   localStorage.setItem("isFetchingCreate", "true");
 
-    try {
-      while (fromBlock <= currentBlock) {
-        // console.log(
-        //   `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
-        // );
+  //   try {
+  //     while (fromBlock <= currentBlock) {
+  //       // console.log(
+  //       //   `FetchingCreate events from block ${fromBlock} to ${toBlock}`,
+  //       // );
 
-        // Adjust toBlock for the last batch if it exceeds currentBlock
-        if (toBlock > currentBlock) {
-          toBlock = currentBlock;
-        }
+  //       // Adjust toBlock for the last batch if it exceeds currentBlock
+  //       if (toBlock > currentBlock) {
+  //         toBlock = currentBlock;
+  //       }
 
-        let events;
-        try {
-          events = await contract.queryFilter(
-            contract.filters.TokenCreated(),
-            fromBlock,
-            toBlock,
-          );
-        } catch (error) {
-          console.error("Error fetching events:", error);
-          break; // Exit the loop if there's an error fetching events
-        }
+  //       let events;
+  //       try {
+  //         events = await contract.queryFilter(
+  //           contract.filters.TokenCreated(),
+  //           fromBlock,
+  //           toBlock,
+  //         );
+  //       } catch (error) {
+  //         console.error("Error fetching events:", error);
+  //         break; // Exit the loop if there's an error fetching events
+  //       }
 
-        let newDatas;
-        try {
-          newDatas = await Promise.all(
-            events
-              .slice(0)
-              .reverse()
-              .map(async (event: any) => {
-                const block = await provider.getBlock(event.blockNumber);
-                const timestamp = block.timestamp;
-                const date = new Date(timestamp * 1000);
+  //       let newDatas;
+  //       try {
+  //         newDatas = await Promise.all(
+  //           events
+  //             .slice(0)
+  //             .reverse()
+  //             .map(async (event: any) => {
+  //               const block = await provider.getBlock(event.blockNumber);
+  //               const timestamp = block.timestamp;
+  //               const date = new Date(timestamp * 1000);
 
-                // Format the date as DD/MM/YY
-                const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+  //               // Format the date as DD/MM/YY
+  //               const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
-                // Log the event details along with the block timestamp
-                console.log(
-                  `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
-                );
-                setCurCreateTic(event.args.symbol.substring(0, 5));
-                setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
-                setCurCreateTime(formattedDate);
+  //               // Log the event details along with the block timestamp
+  //               console.log(
+  //                 `Token Created: ${event.args.name} (${event.args.symbol}), Token Address: ${event.args.token}, Reserve Token: ${event.args.reserveToken} Block Timestamp: ${date}`,
+  //               );
+  //               setCurCreateTic(event.args.symbol.substring(0, 5));
+  //               setCurCreateUser(event.args.token.substring(0, 5)); // Fake value!
+  //               setCurCreateTime(formattedDate);
 
-                return {
-                  tic: event.args.symbol.substring(0, 5),
-                  user: event.args.token.substring(0, 5), // Fake value!
-                  time: formattedDate,
-                };
-              }),
-          );
-        } catch (error) {
-          console.error("Error processing events:", error);
-          break; // Exit the loop if there's an error processing events
-        }
+  //               return {
+  //                 tic: event.args.symbol.substring(0, 5),
+  //                 user: event.args.token.substring(0, 5), // Fake value!
+  //                 time: formattedDate,
+  //               };
+  //             }),
+  //         );
+  //       } catch (error) {
+  //         console.error("Error processing events:", error);
+  //         break; // Exit the loop if there's an error processing events
+  //       }
 
-        setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
+  //       setCreateDatas((prevDatas) => [...newDatas, ...prevDatas]);
 
-        // Prepare for the next batch
-        fromBlock = toBlock + 1;
-        toBlock = fromBlock + batchSize - 1;
+  //       // Prepare for the next batch
+  //       fromBlock = toBlock + 1;
+  //       toBlock = fromBlock + batchSize - 1;
 
-        // Small delay to prevent rate limiting (optional, adjust as necessary)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    } catch (error) {
-      console.error("Unexpected error:", error);
-    } finally {
-      localStorage.setItem("isFetchingCreate", "false");
-    }
-  }
+  //       // Small delay to prevent rate limiting (optional, adjust as necessary)
+  //       await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     }
+  //   } catch (error) {
+  //     console.error("Unexpected error:", error);
+  //   } finally {
+  //     localStorage.setItem("isFetchingCreate", "false");
+  //   }
+  // }
 
-  // MARK: - Mint Events
-  async function fetchMintEventsInBatches(fromBlock: any, batchSize: any) {
-    let currentBlock = await provider.getBlockNumber();
-    let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
+  // // MARK: - Mint Events
+  // async function fetchMintEventsInBatches(fromBlock: any, batchSize: any) {
+  //   let currentBlock = await provider.getBlockNumber();
+  //   let toBlock = fromBlock + batchSize - 1; // Adjust to ensure the batch size is as specified
 
-    const isFetching = localStorage.getItem("isFetching");
-    if (isFetching === "true") {
-      console.log("Fetching is already in progress. Aborting this instance.");
-      return;
-    }
+  //   const isFetching = localStorage.getItem("isFetching");
+  //   if (isFetching === "true") {
+  //     console.log("Fetching is already in progress. Aborting this instance.");
+  //     return;
+  //   }
 
-    // Set the fetching flag to true
-    localStorage.setItem("isFetching", "true");
+  //   // Set the fetching flag to true
+  //   localStorage.setItem("isFetching", "true");
 
-    while (fromBlock <= currentBlock) {
-      // console.log(`Fetching events from block ${fromBlock} to ${toBlock}`);
+  //   while (fromBlock <= currentBlock) {
+  //     // console.log(`Fetching events from block ${fromBlock} to ${toBlock}`);
 
-      // Adjust toBlock for the last batch if it exceeds currentBlock
-      if (toBlock > currentBlock) {
-        toBlock = currentBlock;
-      }
+  //     // Adjust toBlock for the last batch if it exceeds currentBlock
+  //     if (toBlock > currentBlock) {
+  //       toBlock = currentBlock;
+  //     }
 
-      const events = await contract.queryFilter(
-        contract.filters.Mint(),
-        fromBlock,
-        toBlock,
-      );
+  //     const events = await contract.queryFilter(
+  //       contract.filters.Mint(),
+  //       fromBlock,
+  //       toBlock,
+  //     );
 
-      const newDatas = await Promise.all(
-        events
-          .slice(0)
-          .reverse()
-          .map(async (event: any) => {
-            const block = await provider.getBlock(event.blockNumber);
-            const timestamp = block.timestamp;
-            const date = new Date(timestamp * 1000);
+  //     const newDatas = await Promise.all(
+  //       events
+  //         .slice(0)
+  //         .reverse()
+  //         .map(async (event: any) => {
+  //           const block = await provider.getBlock(event.blockNumber);
+  //           const timestamp = block.timestamp;
+  //           const date = new Date(timestamp * 1000);
 
-            // Format the date as DD/MM/YY
-            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+  //           // Format the date as DD/MM/YY
+  //           const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 
-            // Log the event details along with the block timestamp
-            console.log(
-              `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date.toLocaleString()}`,
-            );
-            setCurMintTic(event.args.token.substring(0, 5));
-            setCurMintValue(String(ether(event.args.amountMinted)));
-            setCurMintUser(event.args.receiver.substring(0, 5));
-            setCurMintTime(formattedDate);
+  //           // Log the event details along with the block timestamp
+  //           console.log(
+  //             `Token Minted: ${event.args.token}, Amount: ${event.args.amountMinted}, Buyer: ${event.args.receiver}, Block Timestamp: ${date.toLocaleString()}`,
+  //           );
+  //           setCurMintTic(event.args.token.substring(0, 5));
+  //           setCurMintValue(String(ether(event.args.amountMinted)));
+  //           setCurMintUser(event.args.receiver.substring(0, 5));
+  //           setCurMintTime(formattedDate);
 
-            return {
-              val: String(ether(event.args.amountMinted)),
-              tic: event.args.token.substring(0, 5),
-              user: event.args.receiver.substring(0, 5),
-              time: formattedDate,
-            };
-          }),
-      );
+  //           return {
+  //             val: String(ether(event.args.amountMinted)),
+  //             tic: event.args.token.substring(0, 5),
+  //             user: event.args.receiver.substring(0, 5),
+  //             time: formattedDate,
+  //           };
+  //         }),
+  //     );
 
-      setDatas((prevDatas) => [...newDatas, ...prevDatas]);
+  //     setDatas((prevDatas) => [...newDatas, ...prevDatas]);
 
-      // Prepare for the next batch
-      fromBlock = toBlock + 1;
-      toBlock = fromBlock + batchSize - 1;
+  //     // Prepare for the next batch
+  //     fromBlock = toBlock + 1;
+  //     toBlock = fromBlock + batchSize - 1;
 
-      // Small delay to prevent rate limiting (optional, adjust as necessary)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+  //     // Small delay to prevent rate limiting (optional, adjust as necessary)
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //   }
 
-    // Reset the fetching flag
-    localStorage.setItem("isFetching", "false");
-  }
+  //   // Reset the fetching flag
+  //   localStorage.setItem("isFetching", "false");
+  // }
   // usage: Fetch events in batches of 5000 blocks starting from block 19966627
   // usage: Fetch events in batches of 5000 blocks starting from block 19966627
 
@@ -269,10 +264,10 @@ const Header: FC = () => {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           console.log(data);
-          setTokenInfo(data[data.length - 1]); // Set the last element of the array
-          setCurCreateTic(data[data.length - 1].ticker.substring(0, 5));
-          setCurCreateUser(data[data.length - 1].createdBy.substring(0, 5));
-          const formattedDate = `${String(data[data.length - 1].timestamp.getMonth() + 1).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getDate()).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getFullYear()).slice(-2)}`; // Fake value!
+          setTokenInfo(data[0]); // Set the last element of the array
+          setCurCreateTic(data[0].ticker.substring(0, 5));
+          setCurCreateUser(data[0].createdBy.substring(0, 5));
+          const formattedDate = `${String(data[0].timestamp.getMonth() + 1).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getDate()).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getFullYear()).slice(-2)}`; // Fake value!
           setCurCreateTime(formattedDate);
         } else {
           console.log("No data available");
@@ -419,7 +414,7 @@ const Header: FC = () => {
   return (
     <>
       {isWrongChain && (
-        <div className="absolute z-[10000] h-screen w-screen bg-black bg-opacity-70">
+        <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
           <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
             <div className="]">
               <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>

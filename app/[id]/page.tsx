@@ -7,7 +7,7 @@ import TokenCard from "@/components/TokenCard";
 import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
 import TradesCard from "@/components/TokenDetail/TradesCard";
-import TradingViewChart from "@/components/TradingViewWidget";
+
 import contracts from "@/contracts/contracts";
 import { impact } from "@/fonts/font";
 import { useEthersSigner } from "@/hooks/ethersSigner";
@@ -16,6 +16,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import TradingViewChart from "../test/TradingTest";
 
 const util = require("util");
 
@@ -355,22 +356,27 @@ export default function Detail() {
 
   // MARK: - TradesDB
   function filterEventsByToken(data: any, token: any): Event[] {
-    const filteredMintEvents = data.mintEvents
-      .filter((event: any) => event.token === token)
-      .map((event: any) => ({ ...event, isMint: true }));
+    try {
+      const filteredMintEvents = data.mintEvents
+        .filter((event: any) => event.token === token)
+        .map((event: any) => ({ ...event, isMint: true }));
 
-    const filteredBurnEvents = data.burnEvents
-      .filter((event: any) => event.token === token)
-      .map((event: any) => ({ ...event, isMint: false }));
+      const filteredBurnEvents = data.burnEvents
+        .filter((event: any) => event.token === token)
+        .map((event: any) => ({ ...event, isMint: false }));
 
-    const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
-    combinedEvents.sort(
-      (a, b) =>
-        new Date(b.blockTimestamp).getTime() -
-        new Date(a.blockTimestamp).getTime(),
-    );
+      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
+      combinedEvents.sort(
+        (a, b) =>
+          new Date(b.blockTimestamp).getTime() -
+          new Date(a.blockTimestamp).getTime(),
+      );
 
-    return combinedEvents;
+      return combinedEvents;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
   }
 
   const [mintEventsFromDB, setMintEventsFromDB] = useState<any[]>([]);
