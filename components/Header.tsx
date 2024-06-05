@@ -20,9 +20,16 @@ import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled, { keyframes } from "styled-components";
 import { useAccount, useSwitchChain } from "wagmi";
 import { useChainId } from "wagmi";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+
+declare global {
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
+  }
+}
 
 const Header: FC = () => {
-  window.ethereum.on("chainChanged", (chainId: any) => {
+  window.ethereum?.on("chainChanged", (chainId: any) => {
     if (chainId != 0xae3f3) {
       setIsWrongChain(true);
       console.log("changed wrong");
@@ -30,7 +37,7 @@ const Header: FC = () => {
       setIsWrongChain(false);
     }
   });
-  window.ethereum.on("connect", (chainId: any) => {
+  window.ethereum?.on("connect", (chainId: any) => {
     if (chainId != 0xae3f3) {
       setIsWrongChain(true);
       console.log("connect wrong");
@@ -254,7 +261,7 @@ const Header: FC = () => {
   }, []);
 
   const [tokenInfo, setTokenInfo] = useState(null);
-  const [isWrongChain, setIsWrongChain] = useState(true);
+  const [isWrongChain, setIsWrongChain] = useState(false);
 
   useEffect(() => {
     fetch("https://memesino.fun/homeTokenInfo")
