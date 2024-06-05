@@ -128,21 +128,6 @@ export default function Detail() {
         setCreator(detail.info.creator);
         const mcap = String(ether(BigInt(Number(price) * billion)) / 1000);
         setMarketCap(mcap);
-
-        const { MongoClient } = require("mongodb");
-        require("dotenv").config();
-        const mongoUri = process.env.MONGODB_URI;
-        const client = new MongoClient(mongoUri);
-        const dbName = "MemCluster0";
-        const db = client.db(dbName);
-        const Collection = db.collection("storeCidAndTokenAddress");
-        const query = { tokenAddress: tokenAddress }; //change it accordingly what is the unique value
-        const update = {
-          $set: {
-            marketcap: mcap,
-          },
-        };
-        const result = await Collection.updateOne(query, update);
       } catch (error) {
         console.log(error);
       }

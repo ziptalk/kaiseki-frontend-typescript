@@ -52,6 +52,8 @@ const Header: FC = () => {
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [curCreateTime, setCurCreateTime] = useState("Date");
+  const [curCreateCid, setCurCreateCid] = useState("cid");
+  const [curCreateTokenAddress, setCurCreateTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
   const [datas, setDatas] = useState<any[]>([]);
   const [createDatas, setCreateDatas] = useState<any[]>([]);
@@ -267,6 +269,9 @@ const Header: FC = () => {
           setTokenInfo(data[0]); // Set the last element of the array
           setCurCreateTic(data[0].ticker.substring(0, 5));
           setCurCreateUser(data[0].createdBy.substring(0, 5));
+          setCurCreateCid(data[0].cid);
+          setCurCreateTokenAddress(data[0].tokenAddress);
+
           const formattedDate = `${String(data[0].timestamp.getMonth() + 1).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getDate()).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getFullYear()).slice(-2)}`; // Fake value!
           setCurCreateTime(formattedDate);
         } else {
@@ -611,11 +616,19 @@ const Header: FC = () => {
                   />
                 </div>
                 <h1 className="text-sm">{curCreateUser} Created</h1>
-                <h1 className="cursor-pointer text-sm hover:underline">
-                  {curCreateTic}
-                </h1>
+                <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curCreateTic}
+                  </h1>
+                </Link>
+
                 <h1 className="text-sm">on {curCreateTime}</h1>
-                <div className="h-[18px] w-[18px] rounded-full bg-[#09FFD3]" />
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#09FFD3]">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                    alt="img"
+                  />
+                </div>
               </MintWrapper>
             </div>
             <div className="relative flex w-[300px] flex-row-reverse items-center">

@@ -108,39 +108,39 @@ const Create: NextPage = () => {
     }
   };
 
-  // const sendCidAndTokenAddressToServer = async (
-  //   createdTokenAddress: any,
-  //   cid: any,
-  // ) => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://memesino.fun/storeCidAndTokenAddress",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           cid,
-  //           name: name,
-  //           ticker: ticker,
-  //           tokenAddress: createdTokenAddress,
-  //           description: desc,
-  //           twitterUrl: tw,
-  //           telegramUrl: tg,
-  //           websiteUrl: web,
-  //           marketCap: 0,
-  //           createdBy: account.address,
-  //           timestamp: new Date().toISOString(),
-  //         }),
-  //       },
-  //     );
-  //     const data = await response.json();
-  //     console.log(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const sendCidAndTokenAddressToServer = async (
+    createdTokenAddress: any,
+    cid: any,
+  ) => {
+    try {
+      const response = await fetch(
+        "https://memesino.fun/storeCidAndTokenAddress",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cid,
+            name: name,
+            ticker: ticker,
+            tokenAddress: createdTokenAddress,
+            description: desc,
+            twitterUrl: tw,
+            telegramUrl: tg,
+            websiteUrl: web,
+            marketCap: 0,
+            createdBy: account.address,
+            timestamp: new Date().toISOString(),
+          }),
+        },
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -205,6 +205,7 @@ const Create: NextPage = () => {
       // }
 
       setIsLoading(true);
+      const valueInWei = ethers.parseEther("3.5");
       const receipt = await bondWriteContract.createToken(
         { name: name, symbol: ticker },
         {
@@ -215,6 +216,7 @@ const Create: NextPage = () => {
           stepRanges: stepRanges,
           stepPrices: stepPrices,
         },
+        { value: valueInWei.toString() },
       );
       console.log(receipt);
 
