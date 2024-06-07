@@ -149,6 +149,7 @@ export default function Detail() {
       getNextMintPrice();
       getWSEIValue();
       getSEIValue();
+      console.log(`💥 symbol: ${symbol}`);
     } catch {}
   }, [account.address]);
 
@@ -347,6 +348,16 @@ export default function Detail() {
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
     }
+
+    if (
+      ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
+    ) {
+      setTxState(
+        `Insufficient balance : You have ${curMemeTokenValue} ${name}`,
+      );
+      return;
+    }
+
     console.log("start-app");
 
     try {
