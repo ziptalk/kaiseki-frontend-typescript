@@ -17,6 +17,8 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import TradingViewChart from "../test/TradingTest";
+import { getBalance } from "wagmi/actions";
+import { wagmiSeiDevConfig } from "@/config";
 
 const util = require("util");
 
@@ -146,25 +148,43 @@ export default function Detail() {
       getCurSteps();
       getNextMintPrice();
       getWSEIValue();
+      getSEIValue();
     } catch {}
   }, [account.address]);
 
-  const getSEIValue = async () => {
+  // const getSEIValue = async () => {
+  //   try {
+  //     if (!window.ethereum) {
+  //       throw new Error("MetaMask is not installed!");
+  //     }
+  //     const Eprovider = new ethers.BrowserProvider(window.ethereum);
+  //     // setMarketCap(detail.info.marketCap);
+  //     const balanceWei = await Eprovider.getBalance(account.address);
+  //     // Convert the balance to Ether
+  //     const balanceEther = ether(balanceWei);
+  //     console.log(balanceEther);
+  //     setCurSEIValue(String(balanceEther));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  async function getSEIValue() {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
-      const Eprovider = new ethers.BrowserProvider(window.ethereum);
-      // setMarketCap(detail.info.marketCap);
-      const balanceWei = await Eprovider.getBalance(account.address);
-      // Convert the balance to Ether
-      const balanceEther = ether(balanceWei);
-      console.log(balanceEther);
-      setCurSEIValue(String(balanceEther));
+      if (account.address) {
+        const balanceWei = await getBalance(wagmiSeiDevConfig, {
+          address: account.address,
+        });
+        const balanceEther = ether(balanceWei.value);
+        setCurSEIValue(String(balanceEther));
+      }
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   const getWSEIValue = async () => {
     try {
@@ -275,9 +295,9 @@ export default function Detail() {
 
     if (
       ether(BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint)) >
-      Number(curWSEIValue)
+      Number(curSEIValue)
     ) {
-      setTxState(`Insufficient balance : You have ${curWSEIValue} WSEI`);
+      setTxState(`Insufficient balance : You have ${curSEIValue} SEI`);
       return;
     }
     console.log("start-app");
@@ -327,6 +347,16 @@ export default function Detail() {
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
     }
+
+    if (
+      ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
+    ) {
+      setTxState(
+        `Insufficient balance : You have ${curMemeTokenValue} ${name}`,
+      );
+      return;
+    }
+
     console.log("start-app");
 
     try {

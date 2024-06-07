@@ -3,18 +3,26 @@
 import { NextPage } from "next";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import { useEthersProvider } from "@/config";
+import { useEthersProvider, wagmiSeiDevConfig } from "@/config";
 import contracts from "@/contracts/contracts";
 import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import {
+  createConfig,
+  http,
+  useAccount,
+  useChainId,
+  useSwitchChain,
+} from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
+import { getBalance } from "wagmi/actions";
+import { seiDevnet } from "viem/chains";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -29,6 +37,8 @@ const Create: NextPage = () => {
   const [modalToggle, setModalToggle] = useState(true);
   const router = useRouter();
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
+  const [curSEIValue, setCurSEIValue] = useState("0");
+  const [isSubmitDisable, setIsSubmitDisable] = useState(true);
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -145,6 +155,23 @@ const Create: NextPage = () => {
 
   // MARK: - Submit
 
+  async function getSEIValue() {
+    try {
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+      if (account.address) {
+        const balanceWei = await getBalance(wagmiSeiDevConfig, {
+          address: account.address,
+        });
+        const balanceEther = ether(balanceWei.value);
+        setCurSEIValue(String(balanceEther));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const getWSEIValue = async () => {
     try {
       if (!window.ethereum) {
@@ -159,6 +186,15 @@ const Create: NextPage = () => {
       console.log(error);
     }
   };
+
+  async function validationBalance() {
+    await getSEIValue();
+    if (parseFloat(curSEIValue) >= 3.5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   useEffect(() => {
     getWSEIValue();
@@ -177,6 +213,9 @@ const Create: NextPage = () => {
       }
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
+        return;
+      } else if (!(await validationBalance())) {
+        alert("You must have at least 3.5 SEI to create a token.");
         return;
       } else if (name == "" || ticker == "") {
         alert("Invalid input value!");
