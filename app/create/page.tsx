@@ -38,6 +38,7 @@ const Create: NextPage = () => {
   const router = useRouter();
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
   const [curSEIValue, setCurSEIValue] = useState("0");
+  const [isSubmitDisable, setIsSubmitDisable] = useState(true);
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -155,19 +156,25 @@ const Create: NextPage = () => {
   // MARK: - Submit
 
   async function getSEIValue() {
-    const wagmiConfig = createConfig({
-      chains: [seiDevnet],
-      transports: {
-        [seiDevnet.id]: http(),
-      },
-    });
     try {
-      const balanceWei = await getBalance(wagmiConfig, {
-        address: account.address!,
-      });
-      const balanceEther = ether(balanceWei.value);
-      console.log(`💥 balance: ${balanceEther}`);
-      setCurSEIValue(String(balanceEther));
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not installed!");
+      }
+      console.dir(account);
+      if (account.address) {
+        const wagmiConfig = createConfig({
+          chains: [seiDevnet],
+          transports: {
+            [seiDevnet.id]: http(),
+          },
+        });
+        const balanceWei = await getBalance(wagmiConfig, {
+          address: account.address,
+        });
+        const balanceEther = ether(balanceWei.value);
+        setCurSEIValue(String(balanceEther));
+        console.log(`💥 SEI: ${curSEIValue}`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -188,10 +195,22 @@ const Create: NextPage = () => {
     }
   };
 
+  async function validationBalance() {
+    await getSEIValue();
+    if (parseFloat(curSEIValue) >= 3.5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   useEffect(() => {
     getWSEIValue();
-    getSEIValue();
   }, []);
+
+  useEffect(() => {
+    getSEIValue();
+  }, [curSEIValue, account]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     try {
@@ -206,6 +225,9 @@ const Create: NextPage = () => {
       }
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
+        return;
+      } else if (!(await validationBalance())) {
+        alert("You must have at least 3.5 SEI to create a token.");
         return;
       } else if (name == "" || ticker == "") {
         alert("Invalid input value!");
