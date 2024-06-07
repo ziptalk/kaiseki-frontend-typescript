@@ -149,7 +149,6 @@ export default function Detail() {
       getNextMintPrice();
       getWSEIValue();
       getSEIValue();
-      console.log(`💥 symbol: ${symbol}`);
     } catch {}
   }, [account.address]);
 
