@@ -3,7 +3,7 @@
 import { NextPage } from "next";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import { useEthersProvider } from "@/config";
+import { useEthersProvider, wagmiSeiDevConfig } from "@/config";
 import contracts from "@/contracts/contracts";
 import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
@@ -161,13 +161,7 @@ const Create: NextPage = () => {
         throw new Error("MetaMask is not installed!");
       }
       if (account.address) {
-        const wagmiConfig = createConfig({
-          chains: [seiDevnet],
-          transports: {
-            [seiDevnet.id]: http(),
-          },
-        });
-        const balanceWei = await getBalance(wagmiConfig, {
+        const balanceWei = await getBalance(wagmiSeiDevConfig, {
           address: account.address,
         });
         const balanceEther = ether(balanceWei.value);

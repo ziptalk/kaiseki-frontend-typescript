@@ -1,7 +1,8 @@
 import { FallbackProvider, JsonRpcProvider } from "ethers";
 import { useMemo } from "react";
 import type { Chain, Client, Transport } from "viem";
-import { type Config, useClient } from "wagmi";
+import { seiDevnet } from "viem/chains";
+import { type Config, useClient, createConfig, http } from "wagmi";
 
 export function clientToProvider(client: Client<Transport, Chain>) {
   const { chain, transport } = client;
@@ -25,3 +26,10 @@ export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
   const client = useClient<Config>({ chainId });
   return useMemo(() => clientToProvider(client!), [client]);
 }
+
+export const wagmiSeiDevConfig = createConfig({
+  chains: [seiDevnet],
+  transports: {
+    [seiDevnet.id]: http(),
+  },
+});
