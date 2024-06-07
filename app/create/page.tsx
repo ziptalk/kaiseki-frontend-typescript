@@ -9,12 +9,20 @@ import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import {
+  createConfig,
+  http,
+  useAccount,
+  useChainId,
+  useSwitchChain,
+} from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
+import { getBalance } from "wagmi/actions";
+import { seiDevnet } from "viem/chains";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -29,6 +37,7 @@ const Create: NextPage = () => {
   const [modalToggle, setModalToggle] = useState(true);
   const router = useRouter();
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
+  const [curSEIValue, setCurSEIValue] = useState("0");
 
   const wei = (num: number, decimals = 18): bigint => {
     return BigInt(num) * BigInt(10) ** BigInt(decimals);
@@ -145,6 +154,25 @@ const Create: NextPage = () => {
 
   // MARK: - Submit
 
+  async function getSEIValue() {
+    const wagmiConfig = createConfig({
+      chains: [seiDevnet],
+      transports: {
+        [seiDevnet.id]: http(),
+      },
+    });
+    try {
+      const balanceWei = await getBalance(wagmiConfig, {
+        address: account.address!,
+      });
+      const balanceEther = ether(balanceWei.value);
+      console.log(`💥 balance: ${balanceEther}`);
+      setCurSEIValue(String(balanceEther));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const getWSEIValue = async () => {
     try {
       if (!window.ethereum) {
@@ -162,6 +190,7 @@ const Create: NextPage = () => {
 
   useEffect(() => {
     getWSEIValue();
+    getSEIValue();
   }, []);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
