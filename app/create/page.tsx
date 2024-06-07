@@ -160,7 +160,6 @@ const Create: NextPage = () => {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
-      console.dir(account);
       if (account.address) {
         const wagmiConfig = createConfig({
           chains: [seiDevnet],
@@ -173,7 +172,6 @@ const Create: NextPage = () => {
         });
         const balanceEther = ether(balanceWei.value);
         setCurSEIValue(String(balanceEther));
-        console.log(`💥 SEI: ${curSEIValue}`);
       }
     } catch (error) {
       console.log(error);
@@ -207,10 +205,6 @@ const Create: NextPage = () => {
   useEffect(() => {
     getWSEIValue();
   }, []);
-
-  useEffect(() => {
-    getSEIValue();
-  }, [curSEIValue, account]);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     try {
