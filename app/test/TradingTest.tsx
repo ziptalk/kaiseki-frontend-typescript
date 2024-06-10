@@ -26,34 +26,10 @@ type TradingViewChartProps = {
 const TradingViewChart: React.FC<TradingViewChartProps> = ({
   tokenAddress,
 }) => {
-  // const [priceHistory, setPriceHistory] = useState(null);
-
-  // useEffect(() => {
-  //   fetch(`https://memesino.fun/priceHistory?tokenAddress=${tokenAddress}`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (Array.isArray(data)) {
-  //         const transformedData: BarData[] = data.map((item: any) => ({
-  //           time: Math.floor(
-  //             new Date(item.changeTime).getTime() / 1000,
-  //           ) as UTCTimestamp,
-  //           open: parseInt(item.oldPrice, 10),
-  //           high: parseInt(item.newPrice, 10),
-  //           low: parseInt(item.newPrice, 10),
-  //           close: parseInt(item.newPrice, 10),
-  //         }));
-  //         setChartData(transformedData);
-  //       } else {
-  //         console.log("Data is not an array:", data);
-  //         setChartData([]);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, [tokenAddress]);
-
+  const [priceHistory, setPriceHistory] = useState<BarData[]>([]);
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<any>(null); // Ref for the chart
+  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null); // Ref for the series
 
   const [chartData, setChartData] = useState<BarData[]>([
     {
@@ -89,9 +65,12 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         },
       });
 
-      const candlestickSeries: ISeriesApi<"Candlestick"> =
-        chart.addCandlestickSeries();
+      const candlestickSeries = chart.addCandlestickSeries();
       candlestickSeries.setData(chartData);
+
+      // Store the chart and series references
+      chartRef.current = chart;
+      seriesRef.current = candlestickSeries;
 
       const fetchPrice = async () => {
         try {
@@ -114,7 +93,9 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
               low: Math.min(lastDataPoint.low, nextPrice),
               close: nextPrice,
             };
-            candlestickSeries.update(updatedDataPoint);
+            if (seriesRef.current) {
+              seriesRef.current.update(updatedDataPoint);
+            }
             const newData = [...prevData.slice(0, -1), updatedDataPoint];
             return newData;
           });
@@ -137,15 +118,21 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             close: lastDataPoint.close,
           };
           const newData = [...prevData, newDataPoint];
-          candlestickSeries.setData(newData); // This will replace the entire data set
+          if (seriesRef.current) {
+            seriesRef.current.setData(newData); // This will replace the entire data set
+          }
           return newData;
         });
-      }, 30000); // Add new candle every 5 seconds
+      }, 5000);
 
       return () => {
         clearInterval(intervalId);
         clearInterval(fiveSecondIntervalId);
-        chart.remove();
+        if (chartRef.current) {
+          chartRef.current.remove();
+        }
+        seriesRef.current = null;
+        chartRef.current = null;
       };
     }
   }, []);

@@ -117,6 +117,25 @@ export default function Detail() {
   //   getSeiPrice();
   // }, []);
 
+  const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
+    try {
+      const response = await fetch("https://memesino.fun/changeMcap", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tokenAddress: tokenAddress,
+          marketCap: marketCap,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     const fetchTokenDetail = async () => {
       try {
@@ -127,6 +146,8 @@ export default function Detail() {
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
         const mcap = String(ether(BigInt(Number(price) * billion)) / 1000);
+        console.log("this is mcap" + mcap);
+        await updateMarketCapToServer(tokenAddress, mcap);
         setMarketCap(mcap);
       } catch (error) {
         console.log(error);
@@ -282,28 +303,35 @@ export default function Detail() {
     }
     console.log("start-app");
     try {
-      const allowance = await reserveTokenWriteContract.allowance(
-        account.address,
-        contracts.MCV2_Bond,
-      );
+      // const allowance = await reserveTokenWriteContract.allowance(
+      //   account.address,
+      //   contracts.MCV2_Bond,
+      // );
 
-      if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
-        console.log("Approving token...");
-        setTxState("Approving token...");
-        const detail = await reserveTokenWriteContract.approve(
-          contracts.MCV2_Bond,
-          BigInt(wei(Number(inputValue))),
-        );
-        console.log("Approval detail:", detail);
-      }
+      // if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
+      //   console.log("Approving token...");
+      //   setTxState("Approving token...");
+      //   const detail = await reserveTokenWriteContract.approve(
+      //     contracts.MCV2_Bond,
+      //     BigInt(wei(Number(inputValue))),
+      //   );
+      //   console.log("Approval detail:", detail);
+      // }
 
       console.log("Minting token...");
       setTxState("Minting token...");
+      const amountETH = await bondWriteContract.getReserveForToken(
+        tokenAddress,
+        BigInt(wei(Number(inputValue))),
+      );
+      const valueInEth = ethers.formatEther(amountETH[0].toString());
+      const valueInWei = ethers.parseEther(valueInEth);
       const mintDetail = await bondWriteContract.mint(
         tokenAddress,
         BigInt(wei(Number(inputValue))),
         MAX_INT_256,
         account.address,
+        { value: valueInWei.toString() },
       );
       console.log("Mint detail:", mintDetail);
       setTxState("Success");
@@ -330,20 +358,26 @@ export default function Detail() {
     console.log("start-app");
 
     try {
-      console.log("Approving token...");
-      setTxState("Approving token...");
-      const detail = await memeTokenWriteContract.approve(
-        contracts.MCV2_Bond,
-        BigInt(wei(Number(inputValue))),
-      );
-      console.log("Approval detail:", detail);
+      // console.log("Approving token...");
+      // setTxState("Approving token...");
+      // const detail = await memeTokenWriteContract.approve(
+      //   contracts.MCV2_Bond,
+      //   BigInt(wei(Number(inputValue))),
+      // );
+      // console.log("Approval detail:", detail);
 
       console.log("Burning token...");
       setTxState("Burning token...");
+      const amountETH = await bondWriteContract.getRefundForTokens(
+        tokenAddress,
+        BigInt(wei(Number(inputValue))),
+      );
+      const valueInEth = ethers.formatEther(amountETH[0].toString());
+      const valueInWei = ethers.parseEther(valueInEth);
       const burnDetail = await bondWriteContract.burn(
         tokenAddress,
         BigInt(wei(Number(inputValue))),
-        0,
+        1000000000000,
         account.address,
       );
       console.log("Burn detail:", burnDetail);
@@ -388,7 +422,8 @@ export default function Detail() {
       .then((data) => {
         const filteredData = filterEventsByToken(data, tokenAddress);
         setEventsFromDB(filteredData);
-      });
+      })
+      .catch((error) => console.log(error));
   }, []);
 
   const formatSeiAmount = (amount: string) => {
@@ -462,8 +497,12 @@ export default function Detail() {
       user: event.user.substring(0, 6),
       isBuy: event.isMint,
       seiAmount: event.reserveAmount
-        ? ether(BigInt(parseInt(event.reserveAmount._hex, 16))).toString()
-        : ether(BigInt(parseInt(event.refundAmount!._hex, 16))).toString(),
+        ? ether(BigInt(parseInt(event.reserveAmount._hex, 16)))
+            .toFixed(4)
+            .toString()
+        : ether(BigInt(parseInt(event.refundAmount!._hex, 16)))
+            .toFixed(4)
+            .toString(),
 
       memeTokenAmount: event.amountMinted
         ? ether(BigInt(parseInt(event.amountMinted._hex, 16)))
@@ -585,7 +624,7 @@ export default function Detail() {
                         <div key={innerKey} className="flex justify-between">
                           <div className="flex">
                             <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
-                            {innerKey.toLowerCase() == contracts.MCV2_Bond && (
+                            {innerKey === contracts.MCV2_Bond && (
                               <h1>&nbsp;💳 (bonding curve)</h1>
                             )}
                             {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
