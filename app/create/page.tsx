@@ -21,8 +21,11 @@ import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
+
+import { stepPrices, stepRanges } from "../test/testCreate/createValue";
 import { getBalance } from "wagmi/actions";
 import { seiDevnet } from "viem/chains";
+
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -116,6 +119,9 @@ const Create: NextPage = () => {
       alert("Trouble uploading file");
     }
   };
+  useEffect(() => {
+    console.log(ethers.parseUnits("1", "ether"));
+  }, []);
 
   const sendCidAndTokenAddressToServer = async (
     createdTokenAddress: any,
@@ -243,34 +249,19 @@ const Create: NextPage = () => {
       // }
 
       setIsLoading(true);
+      const valueInWei = ethers.parseEther("3.5");
+      console.log(stepRanges);
       const receipt = await bondWriteContract.createToken(
         { name: name, symbol: ticker },
         {
           mintRoyalty: 10,
           burnRoyalty: 10,
           reserveToken: contracts.ReserveToken,
-          maxSupply: wei(10000000), // supply: 10M
-          stepRanges: [
-            wei(10000),
-            wei(100000),
-            wei(200000),
-            wei(500000),
-            wei(1000000),
-            wei(2000000),
-            wei(5000000),
-            wei(10000000),
-          ],
-          stepPrices: [
-            wei(0, 9),
-            wei(2, 9),
-            wei(3, 9),
-            wei(4, 9),
-            wei(5, 9),
-            wei(7, 9),
-            wei(10, 9),
-            wei(15, 9),
-          ],
+          maxSupply: ethers.parseUnits("1000000000", "ether"),
+          stepRanges: stepRanges,
+          stepPrices: stepPrices,
         },
+        { value: valueInWei.toString() },
       );
       console.log(receipt);
 

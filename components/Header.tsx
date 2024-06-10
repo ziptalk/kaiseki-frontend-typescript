@@ -272,8 +272,8 @@ const Header: FC = () => {
           setCurCreateUser(data[0].createdBy.substring(0, 5));
           setCurCreateCid(data[0].cid);
           setCurCreateTokenAddress(data[0].tokenAddress);
-
-          const formattedDate = `${String(data[0].timestamp.getMonth() + 1).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getDate()).padStart(2, "0")}/${String(data[data.length - 1].timestamp.getFullYear()).slice(-2)}`; // Fake value!
+          const date = new Date(data[0].timestamp);
+          const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`; // Fake value!
           setCurCreateTime(formattedDate);
         } else {
           console.log("No data available");
@@ -283,7 +283,7 @@ const Header: FC = () => {
         console.log(error);
       });
   }, []);
-  const [eventsFromDB, setEventsFromDB] = useState<Event[] | null>(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       fetch("https://memesino.fun/TxlogsMintBurn")
@@ -291,9 +291,9 @@ const Header: FC = () => {
         .then((data) => {
           const evs = data.mintEvents.reverse()[0];
 
-          console.log(
-            ethers.formatEther(evs.amountMinted._hex, 16).toString() + "evs",
-          );
+          // console.log(
+          //   ethers.formatEther(evs.amountMinted._hex, 16).toString() + "evs",
+          // );
 
           const newMintTic = evs.token.ticker.substring(0, 5);
           const newMintUser = evs.user.substring(0, 5);
@@ -311,6 +311,7 @@ const Header: FC = () => {
             newMintValue !== curMintValue ||
             newMintTokenAddress !== curMintTokenAddress
           ) {
+            console.log("value changed!");
             setCurMintTic(newMintTic);
             setCurMintUser(newMintUser);
             setCurMintCid(newMintCid);
