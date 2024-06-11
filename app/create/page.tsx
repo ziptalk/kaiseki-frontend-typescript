@@ -1,21 +1,15 @@
 "use client";
 
 import { NextPage } from "next";
+
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { useEthersProvider, wagmiSeiDevConfig } from "@/config";
 import contracts from "@/contracts/contracts";
-import { digital, impact } from "@/fonts/font";
+import { digital } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {
-  createConfig,
-  http,
-  useAccount,
-  useChainId,
-  useSwitchChain,
-} from "wagmi";
+import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
@@ -24,8 +18,6 @@ import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 
 import { stepPrices, stepRanges } from "../test/testCreate/createValue";
 import { getBalance } from "wagmi/actions";
-import { seiDevnet } from "viem/chains";
-
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -34,7 +26,7 @@ const Create: NextPage = () => {
   const provider = useEthersProvider();
   const signer = useEthersSigner();
   const account = useAccount();
-  const contract = new Contract(contracts.MCV2_Bond, abi, provider);
+
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [buyValue, setBuyValue] = useState("");
   const [modalToggle, setModalToggle] = useState(true);
@@ -69,7 +61,7 @@ const Create: NextPage = () => {
   );
 
   // 이벤트 이거 가져와짐 개꿀
-
+  const contract = new Contract(contracts.MCV2_Bond, MCV2_BondABI, provider);
   const fetchEvent = async () => {
     try {
       const filter = contract.filters.TokenCreated();
@@ -96,7 +88,6 @@ const Create: NextPage = () => {
     return null;
   };
 
-  const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [cid, setCid] = useState("");
 
@@ -123,6 +114,7 @@ const Create: NextPage = () => {
     console.log(ethers.parseUnits("1", "ether"));
   }, []);
 
+  //MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (
     createdTokenAddress: any,
     cid: any,
@@ -160,7 +152,6 @@ const Create: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // MARK: - Submit
-
   async function getSEIValue() {
     try {
       if (!window.ethereum) {
@@ -241,12 +232,6 @@ const Create: NextPage = () => {
       } else if (isLoading) {
         return;
       }
-      // if (Number(curWSEIValue) < 3500000000000000000) {
-      //   alert(
-      //     "insufficient balance (minimal cost to deploy) : 3.5 SEI + gas fee",
-      //   );
-      //   return;
-      // }
 
       setIsLoading(true);
       const valueInWei = ethers.parseEther("3.5");

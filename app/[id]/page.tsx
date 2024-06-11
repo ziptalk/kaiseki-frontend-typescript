@@ -11,7 +11,6 @@ import TradesCard from "@/components/TokenDetail/TradesCard";
 import contracts from "@/contracts/contracts";
 import { impact } from "@/fonts/font";
 import { useEthersSigner } from "@/hooks/ethersSigner";
-import { formatEther } from "ethers";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -19,8 +18,6 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import TradingViewChart from "../test/TradingTest";
 import { getBalance } from "wagmi/actions";
 import { wagmiSeiDevConfig } from "@/config";
-
-const util = require("util");
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -118,6 +115,8 @@ export default function Detail() {
   //   };
   //   getSeiPrice();
   // }, []);
+
+  // MARK: - UploadMCap
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
@@ -442,63 +441,7 @@ export default function Detail() {
     await getMemeTokenValue();
   }
 
-  // MARK: - TradesDB
-  function filterEventsByToken(data: any, token: any): Event[] {
-    try {
-      const filteredMintEvents = data.mintEvents
-        .filter((event: any) => event.token.tokenAddress === token)
-        .map((event: any) => ({ ...event, isMint: true }));
-
-      const filteredBurnEvents = data.burnEvents
-        .filter((event: any) => event.token === token)
-        .map((event: any) => ({ ...event, isMint: false }));
-
-      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
-      combinedEvents.sort(
-        (a, b) =>
-          new Date(b.blockTimestamp).getTime() -
-          new Date(a.blockTimestamp).getTime(),
-      );
-
-      return combinedEvents;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }
-
-  const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch("https://memesino.fun/TxlogsMintBurn")
-        .then((response) => response.json())
-        .then((data) => {
-          const filteredData = filterEventsByToken(data, tokenAddress);
-          if (filteredData.length != eventsFromDB?.length) {
-            setEventsFromDB(filteredData);
-          }
-        })
-        .catch((error) => console.log(error));
-    }, 5000); // Fetch every 5 seconds (adjust as needed)
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatSeiAmount = (amount: string) => {
-    const etherValue = parseFloat(formatEther(amount));
-    const roundedValue = Math.ceil(etherValue * 1000) / 1000;
-    return roundedValue.toFixed(3);
-  };
-
-  const formatMemeTokenAmount = (amount: string) => {
-    const etherValue = parseFloat(formatEther(amount));
-    const kValue = etherValue / 1000;
-    const roundedValue = Math.ceil(kValue * 10) / 10;
-    return `${roundedValue.toFixed(2)}k`;
-  };
-
-  // MARK: - Set Token Infos
-
+  //MARK: - Fetch Token Info
   const [tokenInfo, setTokenInfo] = useState<null>(null);
   const [cid, setCid] = useState("");
   const [tw, setTw] = useState("");
@@ -527,32 +470,45 @@ export default function Detail() {
       });
   }, []);
 
-  const [distribution, setDistribution] = useState<FilteredData | undefined>(
-    undefined,
-  );
-
+  //MARK: - Fetch Trades
+  const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/HolderDistribution")
+      fetch("https://memesino.fun/TxlogsMintBurn")
         .then((response) => response.json())
         .then((data) => {
-          const filteredData = filterDataByOuterKey(data, tokenAddress);
-          if (filteredData.length != distribution?.length) {
-            setDistribution(filteredData);
+          const filteredData = filterEventsByToken(data, tokenAddress);
+          if (filteredData.length != eventsFromDB?.length) {
+            setEventsFromDB(filteredData);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => console.log(error));
     }, 5000); // Fetch every 5 seconds (adjust as needed)
     return () => clearInterval(interval);
   }, []);
 
-  function filterDataByOuterKey(data: any, targetOuterKey: string) {
-    if (targetOuterKey in data) {
-      return { [targetOuterKey]: data[targetOuterKey] };
+  function filterEventsByToken(data: any, token: any): Event[] {
+    try {
+      const filteredMintEvents = data.mintEvents
+        .filter((event: any) => event.token.tokenAddress === token)
+        .map((event: any) => ({ ...event, isMint: true }));
+
+      const filteredBurnEvents = data.burnEvents
+        .filter((event: any) => event.token === token)
+        .map((event: any) => ({ ...event, isMint: false }));
+
+      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
+      combinedEvents.sort(
+        (a, b) =>
+          new Date(b.blockTimestamp).getTime() -
+          new Date(a.blockTimestamp).getTime(),
+      );
+
+      return combinedEvents;
+    } catch (error) {
+      console.log(error);
+      return [];
     }
-    return {};
   }
 
   const transformToTradesCardType = (event: Event): TradesCardType => {
@@ -627,6 +583,73 @@ export default function Detail() {
     );
   };
 
+  //MARK: - Set Distribution
+
+  const [distribution, setDistribution] = useState<FilteredData | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch("https://memesino.fun/HolderDistribution")
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredData = filterDataByOuterKey(data, tokenAddress);
+          if (filteredData.length != distribution?.length) {
+            setDistribution(filteredData);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 5000); // Fetch every 5 seconds (adjust as needed)
+    return () => clearInterval(interval);
+  }, []);
+
+  function filterDataByOuterKey(data: any, targetOuterKey: string) {
+    if (targetOuterKey in data) {
+      return { [targetOuterKey]: data[targetOuterKey] };
+    }
+    return {};
+  }
+
+  const HolderDistributionSection: FC = () => {
+    return (
+      <>
+        <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
+          <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
+          <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
+            {distribution ? (
+              Object.entries(distribution).map(
+                ([outerKey, innerObj], index) => (
+                  <div key={outerKey}>
+                    {Object.entries(innerObj).map(
+                      ([innerKey, value], innerIndex) => (
+                        <div key={innerKey} className="flex justify-between">
+                          <div className="flex">
+                            <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
+                            {innerKey === contracts.MCV2_Bond && (
+                              <h1>&nbsp;💳 (bonding curve)</h1>
+                            )}
+                            {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
+                          </div>
+
+                          <h1>{`${parseFloat(value).toFixed(2)}%`}</h1>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                ),
+              )
+            ) : (
+              <p>Loading...</p>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  };
+
   const SellPercentageButton: FC = () => {
     return (
       <>
@@ -667,43 +690,6 @@ export default function Detail() {
           >
             100%
           </button>
-        </div>
-      </>
-    );
-  };
-
-  const HolderDistributionSection: FC = () => {
-    return (
-      <>
-        <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
-          <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
-          <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
-            {distribution ? (
-              Object.entries(distribution).map(
-                ([outerKey, innerObj], index) => (
-                  <div key={outerKey}>
-                    {Object.entries(innerObj).map(
-                      ([innerKey, value], innerIndex) => (
-                        <div key={innerKey} className="flex justify-between">
-                          <div className="flex">
-                            <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
-                            {innerKey === contracts.MCV2_Bond && (
-                              <h1>&nbsp;💳 (bonding curve)</h1>
-                            )}
-                            {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
-                          </div>
-
-                          <h1>{`${parseFloat(value).toFixed(2)}%`}</h1>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                ),
-              )
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
         </div>
       </>
     );
