@@ -567,10 +567,10 @@ export default function Detail() {
       fetch(`${endpoint}/HolderDistribution`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           const filteredData = filterDataByOuterKey(data, tokenAddress);
-          if (filteredData.length != distribution?.length) {
-            setDistribution(filteredData);
-          }
+
+          setDistribution(filteredData);
         })
         .catch((error) => {
           console.log(error);
@@ -607,7 +607,7 @@ export default function Detail() {
                             {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
                           </div>
 
-                          <h1>{`${parseFloat(value).toFixed(2)}%`}</h1>
+                          <h1>{`${parseFloat(value)}%`}</h1>
                         </div>
                       ),
                     )}
