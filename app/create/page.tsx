@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useEthersSigner } from "@/global/ethersSigner";
-import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
+import { ModalContentBox, ModalRootWrapper } from "@/components/shared/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
