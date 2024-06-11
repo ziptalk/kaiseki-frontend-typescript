@@ -20,6 +20,7 @@ import TradingViewChart from "@/components/shared/TradingViewWidget";
 import { wagmiSeiDevConfig } from "@/config";
 import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
+import rpcProvider from "@/global/rpcProvider";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -47,9 +48,7 @@ export default function Detail() {
 
   // MARK: - init ethers.js
   const { ethers } = require("ethers");
-  const provider = new ethers.JsonRpcProvider(
-    "https://evm-rpc-arctic-1.sei-apis.com",
-  );
+  const provider = new ethers.JsonRpcProvider(rpcProvider);
   const reserveTokenContract = new ethers.Contract(
     contracts.ReserveToken,
     reserveTokenABI,
@@ -104,6 +103,7 @@ export default function Detail() {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
+  const [priceForNextMint, setPriceForNextMint] = useState(0);
 
   // useEffect(() => {
   //   const getSeiPrice = async () => {
@@ -176,24 +176,9 @@ export default function Detail() {
     } catch {}
   }, [account.address]);
 
-  // const getSEIValue = async () => {
-  //   try {
-  //     if (!window.ethereum) {
-  //       throw new Error("MetaMask is not installed!");
-  //     }
-  //     const Eprovider = new ethers.BrowserProvider(window.ethereum);
-  //     // setMarketCap(detail.info.marketCap);
-  //     const balanceWei = await Eprovider.getBalance(account.address);
-  //     // Convert the balance to Ether
-  //     const balanceEther = ether(balanceWei);
-  //     console.log(balanceEther);
-  //     setCurSEIValue(String(balanceEther));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  // MARK: - Get values
 
-  async function getSEIValue() {
+  const getSEIValue = async () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
@@ -210,7 +195,7 @@ export default function Detail() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getWSEIValue = async () => {
     try {
@@ -245,8 +230,6 @@ export default function Detail() {
       console.log(error);
     }
   };
-
-  const [priceForNextMint, setPriceForNextMint] = useState(0);
 
   const getCurSteps = async () => {
     try {
@@ -307,7 +290,6 @@ export default function Detail() {
   };
 
   // MARK: - Buy
-  // TODO: - After contract changes payment to SEI, Change buying logic as SEI.
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -333,20 +315,6 @@ export default function Detail() {
     }
     console.log("start-app");
     try {
-      // const allowance = await reserveTokenWriteContract.allowance(
-      //   account.address,
-      //   contracts.MCV2_Bond,
-      // );
-
-      // if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
-      //   console.log("Approving token...");
-      //   setTxState("Approving token...");
-      //   const detail = await reserveTokenWriteContract.approve(
-      //     contracts.MCV2_Bond,
-      //     BigInt(wei(Number(inputValue))),
-      //   );
-      //   console.log("Approval detail:", detail);
-      // }
       const inputInToken = BigInt(wei(Number(inputValue)));
       const inputInSEI = BigInt(
         wei(
@@ -419,14 +387,6 @@ export default function Detail() {
     console.log("start-app");
 
     try {
-      // console.log("Approving token...");
-      // setTxState("Approving token...");
-      // const detail = await memeTokenWriteContract.approve(
-      //   contracts.MCV2_Bond,
-      //   BigInt(wei(Number(inputValue))),
-      // );
-      // console.log("Approval detail:", detail);
-
       console.log("Burning token...");
       setTxState("Burning token...");
       const amountETH = await bondWriteContract.getRefundForTokens(
