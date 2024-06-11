@@ -10,13 +10,13 @@ import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import { useEthersSigner } from "@/hooks/ethersSigner";
+import { useEthersSigner } from "@/global/ethersSigner";
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 
-import { stepPrices, stepRanges } from "../test/testCreate/createValue";
+import { stepPrices, stepRanges } from "./createValue";
 import { getBalance } from "wagmi/actions";
 import endpoint from "@/global/endpoint";
 
