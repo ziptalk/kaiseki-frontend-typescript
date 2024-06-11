@@ -3,10 +3,10 @@
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
-import BondingCurveCard from "@/app/[id]/components/BondingCurveCard";
-import SocialLinkCard from "@/app/[id]/components/SocialLinkCard";
-import TradesCard from "@/app/[id]/components/TradesCard";
-import TokenCard from "@/components/TokenCard";
+import BondingCurveCard from "@/components/detail/BondingCurveCard";
+import SocialLinkCard from "@/components/detail/SocialLinkCard";
+import TradesCard from "@/components/detail/TradesCard";
+import TokenCard from "@/components/shared/TokenCard";
 
 import { impact } from "@/fonts/font";
 import contracts from "@/global/contracts";
@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 
-import TradingViewChart from "@/components/TradingViewWidget";
+import TradingViewChart from "@/components/shared/TradingViewWidget";
 import { wagmiSeiDevConfig } from "@/config";
 import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";

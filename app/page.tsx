@@ -1,6 +1,6 @@
 "use client";
 
-import TokenCard from "@/components/TokenCard";
+import TokenCard from "@/components/shared/TokenCard";
 import { digital } from "@/fonts/font";
 import endpoint from "@/global/endpoint";
 import Image from "next/image";

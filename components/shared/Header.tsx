@@ -1,8 +1,6 @@
 "use client";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-
-import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
 import contracts from "@/global/contracts";
 import endpoint from "@/global/endpoint";
 import {
@@ -15,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
+import { ModalContentBox, ModalRootWrapper } from "./Modal";
 
 import styled, { keyframes } from "styled-components";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
