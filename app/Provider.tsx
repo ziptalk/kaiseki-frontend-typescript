@@ -109,7 +109,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
         connected: false,
         accounts: [],
       };
-      console.log(announcedProvider);
+      // console.log(announcedProvider);
     });
   }, []);
 

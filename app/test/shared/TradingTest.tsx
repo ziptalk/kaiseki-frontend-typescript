@@ -6,12 +6,11 @@ import {
   BarData,
 } from "lightweight-charts";
 import { ethers } from "ethers";
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import rpcProvider from "@/global/rpcProvider";
 
-const provider = new ethers.JsonRpcProvider(
-  "https://evm-rpc-arctic-1.sei-apis.com",
-);
+const provider = new ethers.JsonRpcProvider(rpcProvider);
 const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 const bondContract = new ethers.Contract(
   contracts.MCV2_Bond,

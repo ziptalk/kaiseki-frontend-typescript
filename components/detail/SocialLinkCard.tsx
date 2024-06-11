@@ -44,6 +44,7 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
                 : "/images/twitter_active_Default.svg"
             }
             alt="Twitter"
+            style={{ width: 100, height: 100 }}
             width={100}
             height={100}
             className={`${tw && "fill-[#43FF4B]"}`}
@@ -55,6 +56,7 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
           <Image
             src="/images/twitter_deactivated_Default.svg"
             alt="Twitter"
+            style={{ width: 100, height: 100 }}
             width={100}
             height={100}
             className={`${tw && "fill-[#43FF4B]"}`}
@@ -63,6 +65,7 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
 
         {tg ? (
           <Image
+            style={{ width: 120, height: 120 }}
             src={
               hovered.tg
                 ? "/images/tg_active_hovered.svg"
@@ -71,13 +74,13 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
             alt="Telegram"
             width={120}
             height={120}
-            className={``}
             onMouseEnter={() => handleMouseEnter("tg")}
             onMouseLeave={() => handleMouseLeave("tg")}
             onClick={() => handleClick(tg)}
           />
         ) : (
           <Image
+            style={{ width: 120, height: 120 }}
             src="/images/tg_deactivated_Default.svg"
             alt="Telegram"
             width={120}
@@ -94,9 +97,9 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
                 : "/images/web_active_Default.svg"
             }
             alt="Website"
+            style={{ width: 110, height: 110 }}
             width={110}
             height={110}
-            className={``}
             onMouseEnter={() => handleMouseEnter("web")}
             onMouseLeave={() => handleMouseLeave("web")}
             onClick={() => handleClick(web)}
@@ -105,9 +108,9 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
           <Image
             src="/images/web_deactivated_Default.svg"
             alt="Website"
+            style={{ width: 110, height: 110 }}
             width={110}
             height={110}
-            className={``}
           />
         )}
       </div>

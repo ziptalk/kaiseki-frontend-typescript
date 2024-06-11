@@ -6,12 +6,11 @@ import {
   BarData,
 } from "lightweight-charts";
 import { ethers } from "ethers";
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import rpcProvider from "@/global/rpcProvider";
 
-const provider = new ethers.JsonRpcProvider(
-  "https://evm-rpc-arctic-1.sei-apis.com",
-);
+const provider = new ethers.JsonRpcProvider(rpcProvider);
 const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 const bondContract = new ethers.Contract(
   contracts.MCV2_Bond,
@@ -26,7 +25,10 @@ type TradingViewChartProps = {
 const TradingViewChart: React.FC<TradingViewChartProps> = ({
   tokenAddress,
 }) => {
+  const [priceHistory, setPriceHistory] = useState<BarData[]>([]);
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<any>(null); // Ref for the chart
+  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null); // Ref for the series
 
   const [chartData, setChartData] = useState<BarData[]>([
     {
@@ -62,9 +64,12 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         },
       });
 
-      const candlestickSeries: ISeriesApi<"Candlestick"> =
-        chart.addCandlestickSeries();
+      const candlestickSeries = chart.addCandlestickSeries();
       candlestickSeries.setData(chartData);
+
+      // Store the chart and series references
+      chartRef.current = chart;
+      seriesRef.current = candlestickSeries;
 
       const fetchPrice = async () => {
         try {
@@ -87,7 +92,9 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
               low: Math.min(lastDataPoint.low, nextPrice),
               close: nextPrice,
             };
-            candlestickSeries.update(updatedDataPoint);
+            if (seriesRef.current) {
+              seriesRef.current.update(updatedDataPoint);
+            }
             const newData = [...prevData.slice(0, -1), updatedDataPoint];
             return newData;
           });
@@ -110,15 +117,21 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             close: lastDataPoint.close,
           };
           const newData = [...prevData, newDataPoint];
-          candlestickSeries.setData(newData); // This will replace the entire data set
+          if (seriesRef.current) {
+            seriesRef.current.setData(newData); // This will replace the entire data set
+          }
           return newData;
         });
-      }, 5000); // Add new candle every 5 seconds
+      }, 5000);
 
       return () => {
         clearInterval(intervalId);
         clearInterval(fiveSecondIntervalId);
-        chart.remove();
+        if (chartRef.current) {
+          chartRef.current.remove();
+        }
+        seriesRef.current = null;
+        chartRef.current = null;
       };
     }
   }, []);

@@ -3,21 +3,24 @@
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
-import TokenCard from "@/components/TokenCard";
-import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
-import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
-import TradesCard from "@/components/TokenDetail/TradesCard";
+import BondingCurveCard from "@/components/detail/BondingCurveCard";
+import SocialLinkCard from "@/components/detail/SocialLinkCard";
+import TradesCard from "@/components/detail/TradesCard";
+import TokenCard from "@/components/shared/TokenCard";
 
-import contracts from "@/contracts/contracts";
 import { impact } from "@/fonts/font";
-import { useEthersSigner } from "@/hooks/ethersSigner";
+import contracts from "@/global/contracts";
+import { useEthersSigner } from "@/global/ethersSigner";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import TradingViewChart from "../test/TradingTest";
-import { getBalance } from "wagmi/actions";
+
+import TradingViewChart from "@/components/shared/TradingViewWidget";
 import { wagmiSeiDevConfig } from "@/config";
+import endpoint from "@/global/endpoint";
+import { getBalance } from "wagmi/actions";
+import rpcProvider from "@/global/rpcProvider";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -45,9 +48,7 @@ export default function Detail() {
 
   // MARK: - init ethers.js
   const { ethers } = require("ethers");
-  const provider = new ethers.JsonRpcProvider(
-    "https://evm-rpc-arctic-1.sei-apis.com",
-  );
+  const provider = new ethers.JsonRpcProvider(rpcProvider);
   const reserveTokenContract = new ethers.Contract(
     contracts.ReserveToken,
     reserveTokenABI,
@@ -102,6 +103,7 @@ export default function Detail() {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
+  const [priceForNextMint, setPriceForNextMint] = useState(0);
 
   // useEffect(() => {
   //   const getSeiPrice = async () => {
@@ -120,7 +122,7 @@ export default function Detail() {
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
-      const response = await fetch("https://memesino.fun/changeMcap", {
+      const response = await fetch(`${endpoint}/changeMcap`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +133,7 @@ export default function Detail() {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -147,7 +149,7 @@ export default function Detail() {
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
         const mcap = String(ether(BigInt(Number(price) * billion)) / 1000);
-        console.log("this is mcap" + mcap);
+        // console.log("this is mcap" + mcap);
         await updateMarketCapToServer(tokenAddress, mcap);
         setMarketCap(mcap);
       } catch (error) {
@@ -163,6 +165,8 @@ export default function Detail() {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       getMemeTokenValue();
       getCurSteps();
@@ -172,27 +176,14 @@ export default function Detail() {
     } catch {}
   }, [account.address]);
 
-  // const getSEIValue = async () => {
-  //   try {
-  //     if (!window.ethereum) {
-  //       throw new Error("MetaMask is not installed!");
-  //     }
-  //     const Eprovider = new ethers.BrowserProvider(window.ethereum);
-  //     // setMarketCap(detail.info.marketCap);
-  //     const balanceWei = await Eprovider.getBalance(account.address);
-  //     // Convert the balance to Ether
-  //     const balanceEther = ether(balanceWei);
-  //     console.log(balanceEther);
-  //     setCurSEIValue(String(balanceEther));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  // MARK: - Get values
 
-  async function getSEIValue() {
+  const getSEIValue = async () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       if (account.address) {
         const balanceWei = await getBalance(wagmiSeiDevConfig, {
@@ -204,17 +195,21 @@ export default function Detail() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getWSEIValue = async () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
+      if (account.address == null) {
+        setCurMemeTokenValue("0");
+        return;
+      }
       const balanceWei = await reserveTokenContract.balanceOf(account.address);
       // Convert the balance to Ether
       const balanceEther = ether(balanceWei);
-      console.log(balanceEther);
+      // console.log(balanceEther);
       setCurWSEIValue(String(balanceEther));
     } catch (error) {
       console.log(error);
@@ -223,12 +218,12 @@ export default function Detail() {
 
   const getMemeTokenValue = async () => {
     try {
-      if (!account.address) {
+      if (account.address == null) {
         setCurMemeTokenValue("0");
-        throw new Error("Account is not defined");
+        return;
       }
       const detail = await memeTokenContract.balanceOf(account.address);
-      console.log(detail);
+      // console.log(detail);
 
       setCurMemeTokenValue(String(ether(detail)));
     } catch (error) {
@@ -236,12 +231,10 @@ export default function Detail() {
     }
   };
 
-  const [priceForNextMint, setPriceForNextMint] = useState(0);
-
   const getCurSteps = async () => {
     try {
-      if (!account.address) {
-        throw new Error("Account is not defined");
+      if (account.address == null) {
+        return;
       }
 
       // Fetch the steps using the getSteps function from the contract
@@ -270,13 +263,14 @@ export default function Detail() {
 
   const getNextMintPrice = async () => {
     try {
-      if (!account.address) {
-        throw new Error("Account is not defined");
+      if (account.address == null) {
+        setCurMemeTokenValue("0");
+        return;
       }
 
       const detail = await bondContract.priceForNextMint(tokenAddress);
       setPriceForNextMint(detail);
-      console.log("NextMintPrice :" + detail);
+      // console.log("NextMintPrice :" + detail);
     } catch (error) {
       console.log(error);
     }
@@ -296,16 +290,15 @@ export default function Detail() {
   };
 
   // MARK: - Buy
-  // TODO: - After contract changes payment to SEI, Change buying logic as SEI.
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-    if (!account.address) {
+    if (account.address == null) {
       alert("Connect your wallet first!");
       setTxState("Connect your wallet first!");
-      throw new Error("Account is not defined");
+      return;
     }
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
@@ -322,20 +315,6 @@ export default function Detail() {
     }
     console.log("start-app");
     try {
-      // const allowance = await reserveTokenWriteContract.allowance(
-      //   account.address,
-      //   contracts.MCV2_Bond,
-      // );
-
-      // if (BigInt(allowance) < BigInt(wei(Number(inputValue)))) {
-      //   console.log("Approving token...");
-      //   setTxState("Approving token...");
-      //   const detail = await reserveTokenWriteContract.approve(
-      //     contracts.MCV2_Bond,
-      //     BigInt(wei(Number(inputValue))),
-      //   );
-      //   console.log("Approval detail:", detail);
-      // }
       const inputInToken = BigInt(wei(Number(inputValue)));
       const inputInSEI = BigInt(
         wei(
@@ -388,9 +367,9 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-    if (!account.address) {
+    if (account.address == null) {
       alert("Connect your wallet first!");
-      throw new Error("Account is not defined");
+      return;
     }
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
@@ -408,14 +387,6 @@ export default function Detail() {
     console.log("start-app");
 
     try {
-      // console.log("Approving token...");
-      // setTxState("Approving token...");
-      // const detail = await memeTokenWriteContract.approve(
-      //   contracts.MCV2_Bond,
-      //   BigInt(wei(Number(inputValue))),
-      // );
-      // console.log("Approval detail:", detail);
-
       console.log("Burning token...");
       setTxState("Burning token...");
       const amountETH = await bondWriteContract.getRefundForTokens(
@@ -443,21 +414,23 @@ export default function Detail() {
 
   //MARK: - Fetch Token Info
   const [tokenInfo, setTokenInfo] = useState<null>(null);
-  const [cid, setCid] = useState("");
+  const [cid, setCid] = useState(
+    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
+  );
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
   const [desc, setDesc] = useState("");
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+    fetch(`${endpoint}/homeTokenInfo`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
           (item: any) =>
             item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase(),
         );
-        console.log(filteredData);
+        // console.log(filteredData);
         setTokenInfo(filteredData);
         setCid(filteredData[0].cid);
         setTw(filteredData[0].twitterUrl);
@@ -474,7 +447,7 @@ export default function Detail() {
   const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/TxlogsMintBurn")
+      fetch(`${endpoint}/TxlogsMintBurn`)
         .then((response) => response.json())
         .then((data) => {
           const filteredData = filterEventsByToken(data, tokenAddress);
@@ -591,13 +564,13 @@ export default function Detail() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/HolderDistribution")
+      fetch(`${endpoint}/HolderDistribution`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           const filteredData = filterDataByOuterKey(data, tokenAddress);
-          if (filteredData.length != distribution?.length) {
-            setDistribution(filteredData);
-          }
+
+          setDistribution(filteredData);
         })
         .catch((error) => {
           console.log(error);
@@ -634,7 +607,7 @@ export default function Detail() {
                             {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
                           </div>
 
-                          <h1>{`${parseFloat(value).toFixed(2)}%`}</h1>
+                          <h1>{`${parseFloat(value)}%`}</h1>
                         </div>
                       ),
                     )}
@@ -764,7 +737,7 @@ export default function Detail() {
                           />
                         </div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
-                          {name}
+                          {symbol}
                         </h1>
                       </div>
                     </div>
@@ -813,7 +786,7 @@ export default function Detail() {
                         wei(Math.floor(Number(inputValue))) /
                           BigInt(priceForNextMint),
                       )}
-                      &nbsp;{name}
+                      &nbsp;{symbol}
                     </h1>
                   </>
                 )}

@@ -4,20 +4,21 @@ import { NextPage } from "next";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { useEthersProvider, wagmiSeiDevConfig } from "@/config";
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
 import { digital } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import { useEthersSigner } from "@/hooks/ethersSigner";
-import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
+import { useEthersSigner } from "@/global/ethersSigner";
+import { ModalContentBox, ModalRootWrapper } from "@/components/shared/Modal";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 
-import { stepPrices, stepRanges } from "../test/testCreate/createValue";
+import { stepPrices, stepRanges } from "./createValue";
 import { getBalance } from "wagmi/actions";
+import endpoint from "@/global/endpoint";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -110,9 +111,6 @@ const Create: NextPage = () => {
       alert("Trouble uploading file");
     }
   };
-  useEffect(() => {
-    console.log(ethers.parseUnits("1", "ether"));
-  }, []);
 
   //MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (
@@ -120,28 +118,25 @@ const Create: NextPage = () => {
     cid: any,
   ) => {
     try {
-      const response = await fetch(
-        "https://memesino.fun/storeCidAndTokenAddress",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cid,
-            name: name,
-            ticker: ticker,
-            tokenAddress: createdTokenAddress,
-            description: desc,
-            twitterUrl: tw,
-            telegramUrl: tg,
-            websiteUrl: web,
-            marketCap: 0,
-            createdBy: account.address,
-            timestamp: new Date().toISOString(),
-          }),
+      const response = await fetch(`${endpoint}/storeCidAndTokenAddress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          cid,
+          name: name,
+          ticker: ticker,
+          tokenAddress: createdTokenAddress,
+          description: desc,
+          twitterUrl: tw,
+          telegramUrl: tg,
+          websiteUrl: web,
+          marketCap: 0,
+          createdBy: account.address,
+          timestamp: new Date().toISOString(),
+        }),
+      });
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -173,11 +168,13 @@ const Create: NextPage = () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       const balanceWei = await reserveTokenContract.balanceOf(account.address);
       // Convert the balance to Ether
       const balanceEther = ether(balanceWei);
-      console.log(balanceEther);
+      // console.log(balanceEther);
       setCurWSEIValue(String(balanceEther));
     } catch (error) {
       console.log(error);
@@ -548,6 +545,7 @@ const Create: NextPage = () => {
                       alt=""
                       width={12}
                       height={12}
+                      style={{ width: 12, height: 12 }}
                     />
                     <h1 className="neon-lime text-xs text-[#C5F900] ">
                       {account.address?.substring(0, 5)}

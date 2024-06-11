@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
 };
 import { arial, digital } from "@/fonts/font";
-import Header from "@/components/Header";
+import Header from "@/components/shared/Header";
 
 export default function RootLayout({
   children,

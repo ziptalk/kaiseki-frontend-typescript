@@ -45,7 +45,7 @@
 
 // // Initialize ethers with a provider
 // const provider = new ethers.JsonRpcProvider(
-//   "https://evm-rpc-arctic-1.sei-apis.com",
+//   rpcProvider,
 // );
 
 // // Create a contract instance
