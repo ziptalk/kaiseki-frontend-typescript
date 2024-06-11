@@ -8,7 +8,7 @@ import BondingCurveCard from "@/components/TokenDetail/BondingCurveCard";
 import SocialLinkCard from "@/components/TokenDetail/SocialLinkCard";
 import TradesCard from "@/components/TokenDetail/TradesCard";
 
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
 import { impact } from "@/fonts/font";
 import { useEthersSigner } from "@/hooks/ethersSigner";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import TradingViewChart from "../test/TradingTest";
 import { getBalance } from "wagmi/actions";
 import { wagmiSeiDevConfig } from "@/config";
+import endpoint from "@/global/endpoint";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -120,7 +121,7 @@ export default function Detail() {
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
-      const response = await fetch("https://memesino.fun/changeMcap", {
+      const response = await fetch(`${endpoint}/changeMcap`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -461,7 +462,7 @@ export default function Detail() {
   const [desc, setDesc] = useState("");
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo") // Add this block
+    fetch(`${endpoint}/homeTokenInfo`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
@@ -485,7 +486,7 @@ export default function Detail() {
   const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/TxlogsMintBurn")
+      fetch(`${endpoint}/TxlogsMintBurn`)
         .then((response) => response.json())
         .then((data) => {
           const filteredData = filterEventsByToken(data, tokenAddress);
@@ -602,7 +603,7 @@ export default function Detail() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/HolderDistribution")
+      fetch(`${endpoint}/HolderDistribution`)
         .then((response) => response.json())
         .then((data) => {
           const filteredData = filterDataByOuterKey(data, tokenAddress);

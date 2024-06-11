@@ -2,6 +2,7 @@
 
 import TokenCard from "@/components/TokenCard";
 import { digital } from "@/fonts/font";
+import endpoint from "@/global/endpoint";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export default function Home() {
   }, [pageNum]);
 
   function getData() {
-    fetch(`https://memesino.fun/homeTokenInfo?page=${pageNum}`) // Add this block
+    fetch(`${endpoint}/homeTokenInfo?page=${pageNum}`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);

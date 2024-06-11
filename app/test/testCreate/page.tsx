@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { abi } from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { useEthersProvider } from "@/config";
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
 import { digital, impact } from "@/fonts/font";
 import { Contract } from "ethers";
 import Image from "next/image";
@@ -16,6 +16,7 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 import { stepPrices, stepRanges } from "./createValue";
+import endpoint from "@/global/endpoint";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -113,28 +114,25 @@ const Create: NextPage = () => {
     cid: any,
   ) => {
     try {
-      const response = await fetch(
-        "https://memesino.fun/storeCidAndTokenAddress",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cid,
-            name: name,
-            ticker: ticker,
-            tokenAddress: createdTokenAddress,
-            description: desc,
-            twitterUrl: tw,
-            telegramUrl: tg,
-            websiteUrl: web,
-            marketCap: 0,
-            createdBy: account.address,
-            timestamp: new Date().toISOString(),
-          }),
+      const response = await fetch(`${endpoint}/storeCidAndTokenAddress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          cid,
+          name: name,
+          ticker: ticker,
+          tokenAddress: createdTokenAddress,
+          description: desc,
+          twitterUrl: tw,
+          telegramUrl: tg,
+          websiteUrl: web,
+          marketCap: 0,
+          createdBy: account.address,
+          timestamp: new Date().toISOString(),
+        }),
+      });
       const data = await response.json();
       console.log(data);
     } catch (error) {

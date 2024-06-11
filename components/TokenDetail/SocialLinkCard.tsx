@@ -100,7 +100,6 @@ const SocialLinkCard: FC<SocialLinkCardTypes> = ({ tw, tg, web }) => {
             style={{ width: 110, height: 110 }}
             width={110}
             height={110}
-            className={``}
             onMouseEnter={() => handleMouseEnter("web")}
             onMouseLeave={() => handleMouseLeave("web")}
             onClick={() => handleClick(web)}

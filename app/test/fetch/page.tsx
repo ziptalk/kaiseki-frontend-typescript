@@ -1,5 +1,6 @@
 "use client";
 
+import endpoint from "@/global/endpoint";
 import React, { useEffect, useState } from "react";
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
   const targetToken = "0x39E364F94D55D6b94eb2007226fB9BAC64326E56";
   useEffect(() => {
     fetch(
-      "https://memesino.fun/priceHistory?tokenAddress=0xB62139cCfE65CE9699735932C94ee39396373D41",
+      `${endpoint}/priceHistory?tokenAddress=0xB62139cCfE65CE9699735932C94ee39396373D41`,
     )
       .then((response) => response.json())
       .then((data) => {
@@ -25,7 +26,7 @@ function App() {
         console.log(error);
       });
 
-    fetch("https://memesino.fun/TxlogsMintBurn")
+    fetch(`${endpoint}/TxlogsMintBurn`)
       .then((response) => response.json())
       .then((data) => {
         // const filteredData = filterEventsByToken(data, targetToken);
@@ -36,7 +37,7 @@ function App() {
         console.log(error);
       });
 
-    fetch("https://memesino.fun/HolderDistribution")
+    fetch(`${endpoint}/HolderDistribution`)
       .then((response) => response.json())
       .then((data) => {
         // const filteredData = data.filter(
@@ -48,7 +49,7 @@ function App() {
       .catch((error) => {
         console.log(error);
       });
-    fetch("https://memesino.fun/homeTokenInfo?page=1") // Add this block
+    fetch(`${endpoint}/homeTokenInfo?page=1`) // Add this block
       .then((response) => response.json())
       .then((data) => setTokenInfo(data))
       .catch((error) => {

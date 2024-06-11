@@ -3,7 +3,8 @@
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 
 import { ModalContentBox, ModalRootWrapper } from "@/components/Common/Modal";
-import contracts from "@/contracts/contracts";
+import contracts from "@/global/contracts";
+import endpoint from "@/global/endpoint";
 import {
   useAccountModal,
   useChainModal,
@@ -266,7 +267,7 @@ const Header: FC = () => {
   const [isWrongChain, setIsWrongChain] = useState(false);
 
   useEffect(() => {
-    fetch("https://memesino.fun/homeTokenInfo?page=1")
+    fetch(`${endpoint}/homeTokenInfo?page=1`)
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -290,7 +291,7 @@ const Header: FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("https://memesino.fun/TxlogsMintBurn")
+      fetch(`${endpoint}/TxlogsMintBurn`)
         .then((response) => response.json())
         .then((data) => {
           const evs = data.mintEvents.reverse()[0];
