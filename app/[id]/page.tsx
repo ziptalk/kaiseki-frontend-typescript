@@ -337,23 +337,44 @@ export default function Detail() {
       //   );
       //   console.log("Approval detail:", detail);
       // }
+      const inputInToken = BigInt(wei(Number(inputValue)));
+      const inputInSEI = BigInt(
+        wei(
+          Math.floor(
+            Number(
+              wei(Math.floor(Number(inputValue))) / BigInt(priceForNextMint),
+            ) *
+              (99 / 100),
+          ),
+        ),
+      );
+
+      console.log("inputInToken :" + inputInToken);
+      console.log("inputInSEI :" + inputInSEI);
 
       console.log("Minting token...");
       setTxState("Minting token...");
+
       const amountETH = await bondWriteContract.getReserveForToken(
         tokenAddress,
-        BigInt(wei(Number(inputValue))),
+        InputState ? inputInToken : inputInSEI,
       );
+
       const valueInEth = ethers.formatEther(amountETH[0].toString());
       const valueInWei = ethers.parseEther(valueInEth);
+
       const mintDetail = await bondWriteContract.mint(
         tokenAddress,
-        BigInt(wei(Number(inputValue))),
+        InputState ? inputInToken : inputInSEI,
         MAX_INT_256,
         account.address,
-        { value: valueInWei.toString() },
+        {
+          value: valueInWei.toString(),
+        },
       );
+
       console.log("Mint detail:", mintDetail);
+      await getCurSteps();
       setTxState("Success");
     } catch (error: any) {
       console.error("Error:", error);
@@ -404,6 +425,7 @@ export default function Detail() {
       );
       const valueInEth = ethers.formatEther(amountETH[0].toString());
       const valueInWei = ethers.parseEther(valueInEth);
+
       const burnDetail = await bondWriteContract.burn(
         tokenAddress,
         BigInt(wei(Number(inputValue))),
@@ -411,6 +433,7 @@ export default function Detail() {
         account.address,
       );
       console.log("Burn detail:", burnDetail);
+      await getCurSteps();
       setTxState("Success");
     } catch (error) {
       console.error("Error:", error);
@@ -447,13 +470,18 @@ export default function Detail() {
   const [eventsFromDB, setEventsFromDB] = useState<any[] | null>(null);
 
   useEffect(() => {
-    fetch("https://memesino.fun/TxlogsMintBurn")
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredData = filterEventsByToken(data, tokenAddress);
-        setEventsFromDB(filteredData);
-      })
-      .catch((error) => console.log(error));
+    const interval = setInterval(() => {
+      fetch("https://memesino.fun/TxlogsMintBurn")
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredData = filterEventsByToken(data, tokenAddress);
+          if (filteredData.length != eventsFromDB?.length) {
+            setEventsFromDB(filteredData);
+          }
+        })
+        .catch((error) => console.log(error));
+    }, 5000); // Fetch every 5 seconds (adjust as needed)
+    return () => clearInterval(interval);
   }, []);
 
   const formatSeiAmount = (amount: string) => {
@@ -504,15 +532,20 @@ export default function Detail() {
   );
 
   useEffect(() => {
-    fetch("https://memesino.fun/HolderDistribution")
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredData = filterDataByOuterKey(data, tokenAddress);
-        setDistribution(filteredData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const interval = setInterval(() => {
+      fetch("https://memesino.fun/HolderDistribution")
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredData = filterDataByOuterKey(data, tokenAddress);
+          if (filteredData.length != distribution?.length) {
+            setDistribution(filteredData);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 5000); // Fetch every 5 seconds (adjust as needed)
+    return () => clearInterval(interval);
   }, []);
 
   function filterDataByOuterKey(data: any, targetOuterKey: string) {
@@ -757,15 +790,15 @@ export default function Detail() {
                         BigInt(Math.floor(Number(inputValue))) *
                           BigInt(priceForNextMint),
                       )}
-                      &nbsp;WSEI
+                      &nbsp;SEI
                     </h1>
                   </>
                 ) : (
                   <>
-                    {/*input amount == WSEI*/}
+                    {/*input amount == SEI*/}
                     <div className="relative flex w-full items-center">
                       <input
-                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#5C5C5C]"
+                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
                         type="number"
                         placeholder="0.00"
                         step="0.01"
@@ -784,12 +817,12 @@ export default function Detail() {
                         </div>
 
                         <h1 className="mt-1 text-[15px] font-bold text-white">
-                          WSEI
+                          SEI
                         </h1>
                       </div>
                     </div>
                     <h1 className="text-[#B8B8B8]">
-                      {/*SEI value to memetoken*/}
+                      {/*SEI value to memetoken*/}~
                       {Number(
                         wei(Math.floor(Number(inputValue))) /
                           BigInt(priceForNextMint),
