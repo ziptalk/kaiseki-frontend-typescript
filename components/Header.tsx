@@ -48,11 +48,15 @@ const Header: FC = () => {
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("0x7A2");
   const [curMintTime, setCurMintTime] = useState("Date");
-  const [curMintCid, setCurMintCid] = useState("cid");
+  const [curMintCid, setCurMintCid] = useState(
+    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
+  );
   const [curCreateTic, setCurCreateTic] = useState("MEME");
   const [curCreateUser, setCurCreateUser] = useState("0x7A2");
   const [curCreateTime, setCurCreateTime] = useState("Date");
-  const [curCreateCid, setCurCreateCid] = useState("cid");
+  const [curCreateCid, setCurCreateCid] = useState(
+    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
+  );
   const [curCreateTokenAddress, setCurCreateTokenAddress] = useState("");
   const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
@@ -266,7 +270,7 @@ const Header: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          console.log(data);
+          // console.log(data);
           setTokenInfo(data[0]); // Set the last element of the array
           setCurCreateTic(data[0].ticker.substring(0, 5));
           setCurCreateUser(data[0].createdBy.substring(0, 5));
@@ -451,7 +455,7 @@ const Header: FC = () => {
         const response = await axios.get(
           `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
         );
-        console.log("SEI PRICE" + response.data.price);
+        // console.log("SEI PRICE" + response.data.price);
         setCurSeiPrice(response.data.price);
       } catch (error) {
         console.log(error);
@@ -639,6 +643,7 @@ const Header: FC = () => {
                     alt=""
                     height={18}
                     width={18}
+                    style={{ width: 18, height: 18 }}
                   />
                 </div>
 
@@ -704,6 +709,7 @@ const Header: FC = () => {
                     alt=""
                     width={18}
                     height={18}
+                    style={{ width: 18, height: 18 }}
                   />
                 </button>
               ) : (

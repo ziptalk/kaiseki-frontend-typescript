@@ -131,7 +131,7 @@ export default function Detail() {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -147,7 +147,7 @@ export default function Detail() {
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
         const mcap = String(ether(BigInt(Number(price) * billion)) / 1000);
-        console.log("this is mcap" + mcap);
+        // console.log("this is mcap" + mcap);
         await updateMarketCapToServer(tokenAddress, mcap);
         setMarketCap(mcap);
       } catch (error) {
@@ -163,6 +163,8 @@ export default function Detail() {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       getMemeTokenValue();
       getCurSteps();
@@ -193,6 +195,8 @@ export default function Detail() {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       if (account.address) {
         const balanceWei = await getBalance(wagmiSeiDevConfig, {
@@ -211,10 +215,14 @@ export default function Detail() {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
+      if (account.address == null) {
+        setCurMemeTokenValue("0");
+        return;
+      }
       const balanceWei = await reserveTokenContract.balanceOf(account.address);
       // Convert the balance to Ether
       const balanceEther = ether(balanceWei);
-      console.log(balanceEther);
+      // console.log(balanceEther);
       setCurWSEIValue(String(balanceEther));
     } catch (error) {
       console.log(error);
@@ -223,12 +231,12 @@ export default function Detail() {
 
   const getMemeTokenValue = async () => {
     try {
-      if (!account.address) {
+      if (account.address == null) {
         setCurMemeTokenValue("0");
-        throw new Error("Account is not defined");
+        return;
       }
       const detail = await memeTokenContract.balanceOf(account.address);
-      console.log(detail);
+      // console.log(detail);
 
       setCurMemeTokenValue(String(ether(detail)));
     } catch (error) {
@@ -240,8 +248,8 @@ export default function Detail() {
 
   const getCurSteps = async () => {
     try {
-      if (!account.address) {
-        throw new Error("Account is not defined");
+      if (account.address == null) {
+        return;
       }
 
       // Fetch the steps using the getSteps function from the contract
@@ -270,13 +278,14 @@ export default function Detail() {
 
   const getNextMintPrice = async () => {
     try {
-      if (!account.address) {
-        throw new Error("Account is not defined");
+      if (account.address == null) {
+        setCurMemeTokenValue("0");
+        return;
       }
 
       const detail = await bondContract.priceForNextMint(tokenAddress);
       setPriceForNextMint(detail);
-      console.log("NextMintPrice :" + detail);
+      // console.log("NextMintPrice :" + detail);
     } catch (error) {
       console.log(error);
     }
@@ -302,10 +311,10 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-    if (!account.address) {
+    if (account.address == null) {
       alert("Connect your wallet first!");
       setTxState("Connect your wallet first!");
-      throw new Error("Account is not defined");
+      return;
     }
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
@@ -388,9 +397,9 @@ export default function Detail() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-    if (!account.address) {
+    if (account.address == null) {
       alert("Connect your wallet first!");
-      throw new Error("Account is not defined");
+      return;
     }
     if (chainId != 713715) {
       switchChain({ chainId: 713715 });
@@ -443,7 +452,9 @@ export default function Detail() {
 
   //MARK: - Fetch Token Info
   const [tokenInfo, setTokenInfo] = useState<null>(null);
-  const [cid, setCid] = useState("");
+  const [cid, setCid] = useState(
+    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
+  );
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
@@ -457,7 +468,7 @@ export default function Detail() {
           (item: any) =>
             item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase(),
         );
-        console.log(filteredData);
+        // console.log(filteredData);
         setTokenInfo(filteredData);
         setCid(filteredData[0].cid);
         setTw(filteredData[0].twitterUrl);
@@ -764,7 +775,7 @@ export default function Detail() {
                           />
                         </div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
-                          {name}
+                          {symbol}
                         </h1>
                       </div>
                     </div>
@@ -813,7 +824,7 @@ export default function Detail() {
                         wei(Math.floor(Number(inputValue))) /
                           BigInt(priceForNextMint),
                       )}
-                      &nbsp;{name}
+                      &nbsp;{symbol}
                     </h1>
                   </>
                 )}

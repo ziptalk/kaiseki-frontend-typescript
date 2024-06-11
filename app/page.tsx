@@ -128,8 +128,8 @@ export default function Home() {
                   alt=""
                   width={250}
                   height={300}
+                  className="h-auto w-auto"
                 />
-
                 <ToTheMoonTokenCardSection />
                 <SlotSection />
               </div>
@@ -199,9 +199,10 @@ export default function Home() {
           <div className="mb-32 flex w-full justify-center">
             <div className="flex gap-[20px]">
               <Image
-                className={`${pageNum > 1 ? "cursor-pointer" : ""}`}
+                className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
                 alt=""
+                style={{ width: 7, height: 11 }}
                 width={7}
                 height={11}
                 onClick={() => {
@@ -212,10 +213,11 @@ export default function Home() {
               />
               <h1 className="text-white">{pageNum}</h1>
               <Image
-                className={`${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
+                className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
                 alt=""
                 width={7}
+                style={{ width: 7, height: 11 }}
                 height={11}
                 onClick={() => {
                   setPageNum(pageNum + 1);

@@ -56,6 +56,7 @@ const TokenCard: FC<TokenCardTypes> = ({
               alt=""
               width={12}
               height={12}
+              style={{ width: 12, height: 12 }}
             />
             <h1 className="neon-lime text-xs text-[#C5F900] ">
               {createdBy.slice(0, 6)}

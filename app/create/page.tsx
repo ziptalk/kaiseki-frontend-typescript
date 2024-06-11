@@ -110,9 +110,6 @@ const Create: NextPage = () => {
       alert("Trouble uploading file");
     }
   };
-  useEffect(() => {
-    console.log(ethers.parseUnits("1", "ether"));
-  }, []);
 
   //MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (
@@ -173,11 +170,13 @@ const Create: NextPage = () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
+      } else if (account.address == null) {
+        return;
       }
       const balanceWei = await reserveTokenContract.balanceOf(account.address);
       // Convert the balance to Ether
       const balanceEther = ether(balanceWei);
-      console.log(balanceEther);
+      // console.log(balanceEther);
       setCurWSEIValue(String(balanceEther));
     } catch (error) {
       console.log(error);
@@ -548,6 +547,7 @@ const Create: NextPage = () => {
                       alt=""
                       width={12}
                       height={12}
+                      style={{ width: 12, height: 12 }}
                     />
                     <h1 className="neon-lime text-xs text-[#C5F900] ">
                       {account.address?.substring(0, 5)}

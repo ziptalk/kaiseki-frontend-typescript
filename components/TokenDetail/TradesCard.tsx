@@ -26,6 +26,7 @@ const TradesCard: FC<TradesCardType> = ({
               alt=""
               height={18}
               width={18}
+              style={{ width: 18, height: 18 }}
             />
           </div>
           <h1 className="text-[#9AFFC2]">{user}</h1>
