@@ -21,27 +21,20 @@ import { wagmiSeiDevConfig } from "@/config";
 import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
 import rpcProvider from "@/global/rpcProvider";
+import { ether, wei } from "@/global/weiAndEther";
 
 export default function Detail() {
   const signer = useEthersSigner();
+  const pathname = usePathname();
+  const account = useAccount();
+
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const wei = (num: number, decimals = 18): bigint => {
-    return BigInt(num) * BigInt(10) ** BigInt(decimals);
-  };
 
-  const ether = (weiValue: bigint, decimals = 18): number => {
-    const factor = BigInt(10) ** BigInt(decimals);
-    const etherValue = Number(weiValue) / Number(factor);
-    return etherValue;
-  };
   const cleanPathname = (path: string) => {
     return path.startsWith("/") ? path.slice(1) : path;
   };
 
-  const pathname = usePathname();
-
-  const account = useAccount();
   const cleanedPathname = cleanPathname(pathname);
   const tokenAddress: any = cleanedPathname;
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
@@ -93,7 +86,7 @@ export default function Detail() {
   const [isBuy, setIsBuy] = useState(true);
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [curSEIValue, setCurSEIValue] = useState("0");
-  const [curWSEIValue, setCurWSEIValue] = useState("0");
+  // const [curWSEIValue, setCurWSEIValue] = useState("0");
   const [inputValue, setInputValue] = useState("");
   const [marketCap, setMarketCap] = useState("");
   const [txState, setTxState] = useState("");
@@ -104,19 +97,6 @@ export default function Detail() {
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
   const [priceForNextMint, setPriceForNextMint] = useState(0);
-
-  // useEffect(() => {
-  //   const getSeiPrice = async () => {
-  //     const response = await axios.get(
-  //       `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-  //     );
-  //     console.log("SEI PRICE" + response.data.price);
-  //     const sp = response.data.price;
-
-  //     setSEIPrice(Math.round(sp * 100) / 100);
-  //   };
-  //   getSeiPrice();
-  // }, []);
 
   // MARK: - UploadMCap
 
@@ -171,7 +151,6 @@ export default function Detail() {
       getMemeTokenValue();
       getCurSteps();
       getNextMintPrice();
-      getWSEIValue();
       getSEIValue();
     } catch {}
   }, [account.address]);
@@ -192,25 +171,6 @@ export default function Detail() {
         const balanceEther = ether(balanceWei.value);
         setCurSEIValue(String(balanceEther));
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getWSEIValue = async () => {
-    try {
-      if (!window.ethereum) {
-        throw new Error("MetaMask is not installed!");
-      }
-      if (account.address == null) {
-        setCurMemeTokenValue("0");
-        return;
-      }
-      const balanceWei = await reserveTokenContract.balanceOf(account.address);
-      // Convert the balance to Ether
-      const balanceEther = ether(balanceWei);
-      // console.log(balanceEther);
-      setCurWSEIValue(String(balanceEther));
     } catch (error) {
       console.log(error);
     }
@@ -413,7 +373,6 @@ export default function Detail() {
   }
 
   //MARK: - Fetch Token Info
-  const [tokenInfo, setTokenInfo] = useState<null>(null);
   const [cid, setCid] = useState(
     "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
   );
@@ -431,7 +390,6 @@ export default function Detail() {
             item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase(),
         );
         // console.log(filteredData);
-        setTokenInfo(filteredData);
         setCid(filteredData[0].cid);
         setTw(filteredData[0].twitterUrl);
         setTg(filteredData[0].telegramUrl);
@@ -567,7 +525,7 @@ export default function Detail() {
       fetch(`${endpoint}/HolderDistribution`)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           const filteredData = filterDataByOuterKey(data, tokenAddress);
 
           setDistribution(filteredData);
@@ -627,7 +585,7 @@ export default function Detail() {
     return (
       <>
         <h1 className="mt-[15px] text-sm text-white">{txState}</h1>
-        <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px] ">
+        <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px]">
           <button
             type="button"
             className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
@@ -700,7 +658,7 @@ export default function Detail() {
             <TradesSection />
           </div>
           <div>
-            <div className=" w-[420px] rounded-[15px] border border-[#FAFF00]  bg-gradient-to-b  from-[#E00900] to-[#A60D07] p-[30px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FFF100]">
+            <div className=" w-[420px] rounded-[15px] border border-[#FAFF00] bg-gradient-to-b from-[#E00900] to-[#A60D07] p-[30px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FFF100]">
               <BuySellButtonSection />
               <form
                 onSubmit={isBuy ? submit : submitSell}
