@@ -19,6 +19,7 @@ import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 import { stepPrices, stepRanges } from "./createValue";
 import { getBalance } from "wagmi/actions";
 import endpoint from "@/global/endpoint";
+import { ether } from "@/global/weiAndEther";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -35,15 +36,6 @@ const Create: NextPage = () => {
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
   const [curSEIValue, setCurSEIValue] = useState("0");
   const [isSubmitDisable, setIsSubmitDisable] = useState(true);
-
-  const wei = (num: number, decimals = 18): bigint => {
-    return BigInt(num) * BigInt(10) ** BigInt(decimals);
-  };
-  const ether = (weiValue: bigint, decimals = 18): number => {
-    const factor = BigInt(10) ** BigInt(decimals);
-    const etherValue = Number(weiValue) / Number(factor);
-    return etherValue;
-  };
 
   const [curWSEIValue, setCurWSEIValue] = useState("0");
 
