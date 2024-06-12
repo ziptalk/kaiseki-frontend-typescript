@@ -168,8 +168,9 @@ export default function Detail() {
         const balanceWei = await getBalance(wagmiSeiDevConfig, {
           address: account.address,
         });
-        const balanceEther = ether(balanceWei.value);
-        setCurSEIValue(String(balanceEther));
+        const balanceEther = String(balanceWei.value);
+        console.log(balanceEther);
+        setCurSEIValue(balanceEther);
       }
     } catch (error) {
       console.log(error);
@@ -267,7 +268,7 @@ export default function Detail() {
     }
 
     if (
-      ether(BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint)) >
+      BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
       Number(curSEIValue)
     ) {
       setTxState(`Insufficient balance : You have ${curSEIValue} SEI`);
@@ -275,16 +276,17 @@ export default function Detail() {
     }
     console.log("start-app");
     try {
-      const inputInToken = BigInt(wei(Number(inputValue)));
-      const inputInSEI = BigInt(
-        wei(
+      const inputInToken = BigInt(ethers.parseUnits(inputValue, "ether"));
+      const inputInSEI = ethers.parseUnits(
+        String(
           Math.floor(
             Number(
-              wei(Math.floor(Number(inputValue))) / BigInt(priceForNextMint),
+              ethers.parseUnits(inputValue, "ether") / BigInt(priceForNextMint),
             ) *
               (99 / 100),
           ),
         ),
+        "ether",
       );
 
       console.log("inputInToken :" + inputInToken);
@@ -299,7 +301,7 @@ export default function Detail() {
       );
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
-      const valueInWei = ethers.parseEther(valueInEth);
+      const valueInWei = ethers.parseUnits(valueInEth);
 
       const mintDetail = await bondWriteContract.mint(
         tokenAddress,
