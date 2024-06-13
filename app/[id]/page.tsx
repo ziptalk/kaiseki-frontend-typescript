@@ -325,8 +325,8 @@ export default function Detail() {
       await getCurSteps();
       setTxState("Success");
     } catch (error: any) {
-      console.error("Error:", error);
-      setTxState("ERR");
+      console.error(error);
+      setTxState(error.code);
     }
     await getMemeTokenValue();
   }
@@ -396,8 +396,7 @@ export default function Detail() {
       .then((response) => response.json())
       .then((data) => {
         const filteredData = data.filter(
-          (item: any) =>
-            item.tokenAddress.toLowerCase() === tokenAddress.toLowerCase(),
+          (item: any) => item.tokenAddress == tokenAddress,
         );
         // console.log(filteredData);
         setCid(filteredData[0].cid);
