@@ -22,6 +22,7 @@ const Header: FC = () => {
   useEffect(() => {
     window.ethereum?.on("chainChanged", (chainId: any) => {
       if (chainId != 0xae3f3) {
+        console.log("chainId from changed" + chainId);
         setIsWrongChain(true);
         console.log("changed wrong");
       } else {
@@ -32,6 +33,7 @@ const Header: FC = () => {
       if (chainId != 0xae3f3) {
         setIsWrongChain(true);
         console.log("connect wrong");
+        console.log("chainId from connect" + chainId);
       }
     });
   }, []);
