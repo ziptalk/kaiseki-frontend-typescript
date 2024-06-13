@@ -33,7 +33,7 @@ const Header: FC = () => {
       if (chainId != 0xae3f3) {
         setIsWrongChain(true);
         console.log("connect wrong");
-        console.log("chainId from connect" + chainId);
+        console.log("chainId from connect" + JSON.stringify(chainId));
       }
     });
   }, []);
