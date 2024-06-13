@@ -20,12 +20,13 @@ import { stepPrices, stepRanges } from "./createValue";
 import { getBalance } from "wagmi/actions";
 import endpoint from "@/global/endpoint";
 import { ether } from "@/global/weiAndEther";
+import rpcProvider from "@/global/rpcProvider";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
   const { switchChain } = useSwitchChain();
   const chainId = useChainId();
-  const provider = useEthersProvider();
+  const provider = new ethers.JsonRpcProvider(rpcProvider);
   const signer = useEthersSigner();
   const account = useAccount();
 
@@ -138,18 +139,18 @@ const Create: NextPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // MARK: - Submit
   async function getSEIValue() {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
       }
       if (account.address) {
-        const balanceWei = await getBalance(wagmiSeiDevConfig, {
-          address: account.address,
-        });
-        const balanceEther = ether(balanceWei.value);
+        const balanceWei = await provider.getBalance(account.address);
+        console.log(balanceWei);
+        const balanceEther = ethers.formatEther(balanceWei);
+        console.log(balanceEther);
         setCurSEIValue(String(balanceEther));
+        return balanceEther;
       }
     } catch (error) {
       console.log(error);
@@ -174,24 +175,41 @@ const Create: NextPage = () => {
   };
 
   async function validationBalance() {
-    await getSEIValue();
-    if (parseFloat(curSEIValue) >= 3.5) {
-      return true;
-    } else {
+    const value = await getSEIValue();
+    if (parseFloat(value) >= 3.5) {
       return false;
+    } else {
+      return true;
     }
   }
 
   useEffect(() => {
     getWSEIValue();
+    getSEIValue();
+  }, []);
+  const [tickers, setTickers] = useState([]);
+
+  useEffect(() => {
+    fetch(`${endpoint}/homeTokenInfo`)
+      .then((response) => response.json())
+      .then((data) => {
+        // ticker 값만 추출하여 새로운 배열 생성
+        const tickerValues = data.map((item: any) => item.ticker);
+        setTickers(tickerValues);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
+  // MARK: - Submit
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
       const formData = new FormData(e.target as HTMLFormElement);
       const name = formData.get("name") as string;
       const ticker = formData.get("ticker") as string;
+      const matchingTicker = tickers.find((t) => t === ticker);
 
       // Checking chain id valid and change chain if not
       if (chainId != 713715) {
@@ -200,8 +218,11 @@ const Create: NextPage = () => {
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
         return;
-      } else if (!(await validationBalance())) {
+      } else if (await validationBalance()) {
         alert("You must have at least 3.5 SEI to create a token.");
+        return;
+      } else if (matchingTicker) {
+        alert("Ticker already exists!");
         return;
       } else if (name == "" || ticker == "") {
         alert("Invalid input value!");

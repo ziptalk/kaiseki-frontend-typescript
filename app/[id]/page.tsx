@@ -42,17 +42,17 @@ export default function Detail() {
   // MARK: - init ethers.js
   const { ethers } = require("ethers");
   const provider = new ethers.JsonRpcProvider(rpcProvider);
-  const reserveTokenContract = new ethers.Contract(
-    contracts.ReserveToken,
-    reserveTokenABI,
-    provider,
-  );
+  // const reserveTokenContract = new ethers.Contract(
+  //   contracts.ReserveToken,
+  //   reserveTokenABI,
+  //   provider,
+  // );
 
-  const reserveTokenWriteContract = new ethers.Contract(
-    contracts.ReserveToken,
-    reserveTokenABI,
-    signer,
-  );
+  // const reserveTokenWriteContract = new ethers.Contract(
+  //   contracts.ReserveToken,
+  //   reserveTokenABI,
+  //   signer,
+  // );
 
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,
@@ -72,11 +72,11 @@ export default function Detail() {
     provider,
   );
 
-  const memeTokenWriteContract = new ethers.Contract(
-    tokenAddress,
-    MCV2_TokenABI,
-    signer,
-  );
+  // const memeTokenWriteContract = new ethers.Contract(
+  //   tokenAddress,
+  //   MCV2_TokenABI,
+  //   signer,
+  // );
 
   // Call the getSteps function
   // MARK: - useState
@@ -250,6 +250,12 @@ export default function Detail() {
     setInputValue(value.toString());
   };
 
+  function subtractTenPercent(value: any) {
+    const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
+    const result = BigInt(value) - tenPercent; // 10% 뺀 값 계산
+    return result;
+  }
+
   // MARK: - Buy
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -277,16 +283,18 @@ export default function Detail() {
     console.log("start-app");
     try {
       const inputInToken = BigInt(ethers.parseUnits(inputValue, "ether"));
-      const inputInSEI = ethers.parseUnits(
-        String(
-          Math.floor(
-            Number(
-              ethers.parseUnits(inputValue, "ether") / BigInt(priceForNextMint),
-            ) *
-              (99 / 100),
+      const inputInSEI = subtractTenPercent(
+        ethers.parseUnits(
+          String(
+            Math.floor(
+              Number(
+                ethers.parseUnits(inputValue, "ether") /
+                  BigInt(priceForNextMint),
+              ),
+            ),
           ),
+          "ether",
         ),
-        "ether",
       );
 
       console.log("inputInToken :" + inputInToken);
