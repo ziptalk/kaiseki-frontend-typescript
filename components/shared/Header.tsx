@@ -105,9 +105,12 @@ const Header: FC = () => {
           const newMintTic = evs.token.ticker.substring(0, 5);
           const newMintUser = evs.user.substring(0, 5);
           const newMintCid = evs.token.cid;
-          const newMintValue = ethers
-            .formatEther(evs.amountMinted._hex, 16)
+          const newMintValue = Number(
+            ethers.formatEther(evs.reserveAmount._hex, 16),
+          )
+            .toFixed(4)
             .toString();
+
           const newMintTokenAddress = evs.token.tokenAddress;
 
           // Check if values have changed before updating state
