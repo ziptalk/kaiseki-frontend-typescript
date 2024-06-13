@@ -325,8 +325,8 @@ export default function Detail() {
       await getCurSteps();
       setTxState("Success");
     } catch (error: any) {
-      console.error("Error:", error);
-      setTxState("ERR");
+      console.error(error);
+      setTxState(error.code);
     }
     await getMemeTokenValue();
   }
