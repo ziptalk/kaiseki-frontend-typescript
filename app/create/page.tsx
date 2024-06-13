@@ -244,6 +244,9 @@ const Create: NextPage = () => {
       }
 
       setIsLoading(true);
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
       const valueInWei = ethers.parseEther("3.5");
       console.log(stepRanges);
       const receipt = await bondWriteContract.createToken(
