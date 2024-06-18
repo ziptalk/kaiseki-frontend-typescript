@@ -749,10 +749,17 @@ export default function Detail() {
                     </div>
                     <h1 className="text-[#B8B8B8]">
                       {/*SEI value to memetoken*/}~
-                      {Number(
-                        wei(Math.floor(Number(inputValue))) /
-                          BigInt(priceForNextMint),
-                      )}
+                      {inputValue &&
+                        Number(
+                          String(
+                            Math.floor(
+                              Number(
+                                ethers.parseUnits(inputValue, "ether") /
+                                  BigInt(priceForNextMint),
+                              ),
+                            ),
+                          ),
+                        )}
                       &nbsp;{symbol}
                     </h1>
                   </>
