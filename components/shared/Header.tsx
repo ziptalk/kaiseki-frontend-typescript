@@ -139,12 +139,6 @@ const Header: FC = () => {
     return () => clearInterval(interval); // Clean up the interval on unmount
   }, [curMintTic, curMintUser, curMintCid, curMintValue, curMintTokenAddress]);
 
-  useEffect(() => {
-    if (chainId != 713715) {
-      setIsWrongChain(true);
-    }
-  }, [chainId]);
-
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <EventWrapper>
