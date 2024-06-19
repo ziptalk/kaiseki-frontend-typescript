@@ -16,12 +16,12 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 
-import TradingViewChart from "@/components/shared/TradingViewWidget";
 import { wagmiSeiDevConfig } from "@/config";
 import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
 import rpcProvider from "@/global/rpcProvider";
 import { ether, wei } from "@/global/weiAndEther";
+import TradingViewChart from "@/components/shared/TradingViewWidget";
 
 export default function Detail() {
   const signer = useEthersSigner();
