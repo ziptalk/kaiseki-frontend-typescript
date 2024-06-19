@@ -4,6 +4,8 @@ import {
   ISeriesApi,
   UTCTimestamp,
   BarData,
+  DeepPartial,
+  ChartOptions,
 } from "lightweight-charts";
 import { ethers } from "ethers";
 import contracts from "@/global/contracts";
@@ -33,17 +35,17 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
   const [chartData, setChartData] = useState<BarData[]>([
     {
       time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-      open: 2000000000,
-      high: 2000000000,
-      low: 2000000000,
-      close: 2000000000,
+      open: 0.0,
+      high: 0.0,
+      low: 0.0,
+      close: 0.0,
     },
     // additional data...
   ]);
 
   useEffect(() => {
     if (chartContainerRef.current) {
-      const chart = createChart(chartContainerRef.current, {
+      const chartOptions: DeepPartial<ChartOptions> = {
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
         layout: {
@@ -62,7 +64,12 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             return `${date.getUTCHours().toString().padStart(2, "0")}:${date.getUTCMinutes().toString().padStart(2, "0")}:${date.getUTCSeconds().toString().padStart(2, "0")}`;
           },
         },
-      });
+        localization: {
+          priceFormatter: (price: number) => price.toFixed(10), // 소수점 이하 10자리 설정
+        },
+      };
+
+      const chart = createChart(chartContainerRef.current, chartOptions);
 
       const candlestickSeries = chart.addCandlestickSeries();
       candlestickSeries.setData(chartData);
@@ -71,10 +78,35 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       chartRef.current = chart;
       seriesRef.current = candlestickSeries;
 
+      function bigIntToNumber(
+        bigIntValue: bigint,
+        decimalPlaces: number,
+      ): number {
+        // 정수 부분과 소수 부분을 분리할 위치 계산
+        let strValue = bigIntValue.toString();
+        let length = strValue.length;
+
+        // 소수점 이하 자릿수가 필요한 자리수보다 적을 경우 0을 채움
+        if (length <= decimalPlaces) {
+          strValue = "0".repeat(decimalPlaces - length + 1) + strValue;
+          length = strValue.length;
+        }
+
+        // 소수점 위치 계산
+        let integerPart = strValue.slice(0, length - decimalPlaces);
+        let fractionalPart = strValue.slice(length - decimalPlaces);
+
+        // 정수 부분과 소수 부분을 결합하여 숫자로 변환
+        let formattedString = integerPart + "." + fractionalPart;
+        let numberValue = parseFloat(formattedString);
+
+        return numberValue;
+      }
+
       const fetchPrice = async () => {
         try {
           const nextPrice = await bondContract.priceForNextMint(tokenAddress);
-          return Number(nextPrice);
+          return bigIntToNumber(BigInt(nextPrice.toString()), 18);
         } catch (error) {
           console.error("Error fetching price for next mint:", error);
           return null;
