@@ -250,8 +250,8 @@ const Create: NextPage = () => {
       const receipt = await bondWriteContract.createToken(
         { name: name, symbol: ticker },
         {
-          mintRoyalty: 10,
-          burnRoyalty: 10,
+          mintRoyalty: 100,
+          burnRoyalty: 100,
           reserveToken: contracts.ReserveToken,
           maxSupply: ethers.parseUnits("800000000", "ether"),
           stepRanges: stepRanges,
