@@ -72,25 +72,28 @@ const Header: FC = () => {
   const [isWrongChain, setIsWrongChain] = useState(false);
 
   useEffect(() => {
-    fetch(`${endpoint}/homeTokenInfo?page=1`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          // console.log(data);
-          setCurCreateTic(data[0].ticker.substring(0, 5));
-          setCurCreateUser(data[0].createdBy.substring(0, 5));
-          setCurCreateCid(data[0].cid);
-          setCurCreateTokenAddress(data[0].tokenAddress);
-          const date = new Date(data[0].timestamp);
-          const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`; // Fake value!
-          setCurCreateTime(formattedDate);
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const interval = setInterval(() => {
+      fetch(`${endpoint}/homeTokenInfo?page=1`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            // console.log(data);
+            setCurCreateTic(data[0].ticker.substring(0, 5));
+            setCurCreateUser(data[0].createdBy.substring(0, 5));
+            setCurCreateCid(data[0].cid);
+            setCurCreateTokenAddress(data[0].tokenAddress);
+            const date = new Date(data[0].timestamp);
+            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`; // Fake value!
+            setCurCreateTime(formattedDate);
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, 5000);
+    return () => clearInterval(interval); // Fetch every 5 seconds (adjust as needed)
   }, []);
 
   useEffect(() => {
