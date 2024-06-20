@@ -101,7 +101,18 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         setEventsFromDB(filteredData);
         let curMintedToken = BigInt(0);
         if (getOnce) return;
-        filteredData.reverse().forEach((data) => {
+        if (filteredData.length == 0) {
+          setChartData([
+            {
+              time: Math.floor(Date.now() / 1000) as UTCTimestamp,
+              open: 0.000002125,
+              high: 0.000002125,
+              low: 0.000002125,
+              close: 0.000002125,
+            },
+          ]);
+        }
+        filteredData.reverse().forEach((data, index) => {
           const date = new Date(data.blockTimestamp);
           console.log("date :" + date);
           const timestamp = (Math.floor(date.getTime() / 1000) -
@@ -122,7 +133,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             Number(curMintedToken / BigInt(8000000000000000000000000)),
           );
           console.log("divValue :" + divValue);
-          if (divValue >= 1) {
+          if (divValue >= 0) {
             console.log("im in if! :" + stepPrices[divValue]);
             setChartData((prevChartData) => {
               const exists = prevChartData.some(
@@ -135,27 +146,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
                     prevChartData.length > 0
                       ? prevChartData[prevChartData.length - 1].close
                       : 0.000002125,
-                  high: Number(stepPrices[divValue]),
-                  low: Number(stepPrices[divValue]),
-                  close: Number(stepPrices[divValue]),
-                };
-                return [...prevChartData, newDataPoint];
-              }
-              return prevChartData;
-            });
-          } else if (divValue == 0) {
-            console.log("im in if! :" + stepPrices[divValue]);
-            setChartData((prevChartData) => {
-              const exists = prevChartData.some(
-                (entry) => entry.time === timestamp,
-              );
-              if (!exists) {
-                const newDataPoint = {
-                  time: timestamp,
-                  open:
-                    prevChartData.length > 0
-                      ? prevChartData[prevChartData.length - 1].close
-                      : Number(stepPrices[divValue]),
                   high: Number(stepPrices[divValue]),
                   low: Number(stepPrices[divValue]),
                   close: Number(stepPrices[divValue]),
