@@ -60,6 +60,9 @@ const Header: FC = () => {
   const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
 
+  const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
+  const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
+
   // Initialize ethers with a provider
   const { ethers } = require("ethers");
   const MODAL_VISIBLE_STORAGE_KEY = "isFirstVisitToMemesino";
@@ -78,13 +81,33 @@ const Header: FC = () => {
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
             // console.log(data);
-            setCurCreateTic(data[0].ticker.substring(0, 5));
-            setCurCreateUser(data[0].createdBy.substring(0, 5));
-            setCurCreateCid(data[0].cid);
-            setCurCreateTokenAddress(data[0].tokenAddress);
+            const newCreateTic = data[0].ticker.substring(0, 5);
+            const newCreateUser = data[0].createdBy.substring(0, 5);
+            const newCreateCid = data[0].cid;
+            const newCreateTokenAddress = data[0].tokenAddress;
             const date = new Date(data[0].timestamp);
-            const formattedDate = `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`; // Fake value!
-            setCurCreateTime(formattedDate);
+            const formattedDate = `${String(date.getMonth() + 1).padStart(
+              2,
+              "0",
+            )}/${String(date.getDate()).padStart(
+              2,
+              "0",
+            )}/${String(date.getFullYear()).slice(-2)}`;
+
+            if (
+              newCreateTic !== curCreateTic ||
+              newCreateUser !== curCreateUser ||
+              newCreateCid !== curCreateCid ||
+              formattedDate !== curCreateTime ||
+              newCreateTokenAddress !== curCreateTokenAddress
+            ) {
+              setCurCreateTic(newCreateTic);
+              setCurCreateUser(newCreateUser);
+              setCurCreateCid(newCreateCid);
+              setCurCreateTime(formattedDate);
+              setCurCreateTokenAddress(newCreateTokenAddress);
+              setCreateAnimationTrigger(true); // Trigger animation
+            }
           } else {
             console.log("No data available");
           }
@@ -94,7 +117,13 @@ const Header: FC = () => {
         });
     }, 5000);
     return () => clearInterval(interval); // Fetch every 5 seconds (adjust as needed)
-  }, []);
+  }, [
+    curCreateTic,
+    curCreateUser,
+    curCreateCid,
+    curCreateTime,
+    curCreateTokenAddress,
+  ]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -132,6 +161,7 @@ const Header: FC = () => {
             setCurMintCid(newMintCid);
             setCurMintValue(newMintValue);
             setCurMintTokenAddress(newMintTokenAddress);
+            setMintAnimationTrigger(true);
           }
         })
         .catch((error) => {
@@ -141,6 +171,21 @@ const Header: FC = () => {
 
     return () => clearInterval(interval); // Clean up the interval on unmount
   }, [curMintTic, curMintUser, curMintCid, curMintValue, curMintTokenAddress]);
+
+  // for animation
+  useEffect(() => {
+    if (mintAnimationTrigger) {
+      const timeout = setTimeout(() => setMintAnimationTrigger(false), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [mintAnimationTrigger]);
+
+  useEffect(() => {
+    if (createAnimationTrigger) {
+      const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [createAnimationTrigger]);
 
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
@@ -414,7 +459,9 @@ const Header: FC = () => {
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
-              <PinkAnimatedWrapper className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF]">
+              <MintAnimateWrapper
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger ? "animate" : ""}`}
+              >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
                     src="/images/memesinoGhost.png"
@@ -439,8 +486,10 @@ const Header: FC = () => {
                     alt="img"
                   />
                 </div>
-              </PinkAnimatedWrapper>
-              <MintWrapper className="flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3]">
+              </MintAnimateWrapper>
+              <CreateAnimateWrapper
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger ? "animate" : ""}`}
+              >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
                     src="/images/memesinoGhost.png"
@@ -463,7 +512,7 @@ const Header: FC = () => {
                     alt="img"
                   />
                 </div>
-              </MintWrapper>
+              </CreateAnimateWrapper>
             </div>
             <div className="relative flex w-[300px] flex-row-reverse items-center">
               {/* <ConnectButton /> */}
@@ -620,19 +669,23 @@ const colorReverseMint = keyframes`
   }
 `;
 
-const PinkAnimatedWrapper = styled.div`
+const MintAnimateWrapper = styled.div`
   background: #0e0e0e;
   box-shadow: 0px 0px 8px 0px #fa00ff;
   color: #fa00ff;
 
-  animation:
-    ${shake} 250ms 0s 3,
-    ${colorReversePink} 1s 0s;
+  &.animate {
+    animation:
+      ${shake} 250ms 0s 3,
+      ${colorReversePink} 1s 0s;
+  }
 `;
 
-const MintWrapper = styled.div`
+const CreateAnimateWrapper = styled.div`
   box-shadow: 0px 0px 8px 0px #09ffd3;
   color: #09ffd3;
 
-  animation: ${colorReverseMint} 1s 0s;
+  &.animate {
+    animation: ${colorReverseMint} 1s 0s;
+  }
 `;
