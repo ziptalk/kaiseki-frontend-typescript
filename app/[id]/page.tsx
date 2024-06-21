@@ -21,7 +21,7 @@ import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
 import rpcProvider from "@/global/rpcProvider";
 import { ether, wei } from "@/global/weiAndEther";
-import TradingViewChart from "@/components/shared/TradingViewWidget";
+import TradingViewChart from "../test/shared/TradingTest";
 
 export default function Detail() {
   const signer = useEthersSigner();

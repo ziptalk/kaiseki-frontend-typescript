@@ -9,7 +9,7 @@ function App() {
   const [distribution, setDistribution] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
 
-  const targetToken = "0x39E364F94D55D6b94eb2007226fB9BAC64326E56";
+  const targetToken = "0x475C93661262F8c087313bA94D5a01EBc59f1E4d";
   useEffect(() => {
     fetch(
       `${endpoint}/priceHistory?tokenAddress=0xB62139cCfE65CE9699735932C94ee39396373D41`,
@@ -29,9 +29,10 @@ function App() {
     fetch(`${endpoint}/TxlogsMintBurn`)
       .then((response) => response.json())
       .then((data) => {
-        // const filteredData = filterEventsByToken(data, targetToken);
-        // setEventsFromDB(filteredData);
-        setEventsFromDB(data.mintEvents.reverse());
+        const filteredData = filterEventsByToken(data, targetToken);
+        setEventsFromDB(filteredData);
+        // setEventsFromDB(data.mintEvents.reverse());
+        // setEventsFromDB(data);
       })
       .catch((error) => {
         console.log(error);
@@ -61,7 +62,7 @@ function App() {
 
   function filterEventsByToken(data: any, token: any): Event[] {
     const filteredMintEvents = data.mintEvents
-      .filter((event: any) => event.token === token)
+      .filter((event: any) => event.token.tokenAddress === token)
       .map((event: any) => ({ ...event, isMint: true }));
 
     const filteredBurnEvents = data.burnEvents
