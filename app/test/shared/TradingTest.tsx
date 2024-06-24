@@ -119,10 +119,11 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             9 * 60 * 60) as UTCTimestamp;
           // 한국 표준시 UTC로 변환하기 위해 마이너스
 
-          console.log("minted amount!" + BigInt(data.amountMinted!._hex));
           if (data.isMint) {
+            console.log("minted amount :" + BigInt(data.amountMinted!._hex));
             curMintedToken += BigInt(data.amountMinted!._hex);
           } else {
+            console.log("burned amount :" + BigInt(data.amountMinted!._hex));
             curMintedToken -= BigInt(data.amountMinted!._hex);
           }
           console.log("curMintedToken :" + curMintedToken);
