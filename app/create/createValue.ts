@@ -205,3 +205,20 @@ export const stepPrices = [
   ethers.parseUnits("0.000052609848484848", "ether"),
   ethers.parseUnits("0.000053125000000000", "ether"),
 ];
+
+export const stepRanges800 = () => {
+  let list = [];
+  for (let i = 1000000; i <= 800000000; i += 1000000) {
+    list.push(i);
+  }
+  console.log(list);
+};
+
+export const stepPrices800 = () => {
+  let increment = (0.000053125 - 0.000002125) / (800 - 1);
+  let list = [];
+  for (let i = 0; i < 800; i++) {
+    list.push(ethers.parseUnits(String(0.000002125 + i * increment), "ether"));
+  }
+  console.log(list);
+};
