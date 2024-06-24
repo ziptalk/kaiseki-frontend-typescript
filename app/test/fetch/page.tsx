@@ -1,5 +1,6 @@
 "use client";
 
+import { stepPrices800, stepRanges800 } from "@/app/create/createValue";
 import endpoint from "@/global/endpoint";
 import React, { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ function App() {
   const [distribution, setDistribution] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
 
-  const targetToken = "0x475C93661262F8c087313bA94D5a01EBc59f1E4d";
+  const targetToken = "0x5df72eF74B7A1C8a17155c263896009DE3FA5808";
   useEffect(() => {
     fetch(
       `${endpoint}/priceHistory?tokenAddress=0xB62139cCfE65CE9699735932C94ee39396373D41`,
