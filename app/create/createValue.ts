@@ -211,7 +211,7 @@ export const stepRanges800 = () => {
   for (let i = BigInt(1000000); i <= 800000000; i += BigInt(1000000)) {
     list.push(ethers.parseUnits(i.toString(), "ether"));
   }
-  console.log(list);
+  // console.log(list);
   return list;
 };
 
@@ -223,6 +223,6 @@ export const stepPrices800 = () => {
       ethers.parseUnits((0.000002125 + i * increment).toFixed(9), "ether"),
     );
   }
-  console.log(list);
+  // console.log(list);
   return list;
 };

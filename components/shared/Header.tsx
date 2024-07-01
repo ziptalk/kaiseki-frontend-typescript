@@ -407,7 +407,7 @@ const Header: FC = () => {
                   className="h-[29px] w-[26px]"
                 />
                 <Image
-                  src="/images/Memesino.png"
+                  src="/images/Memeslot.png"
                   alt=""
                   width={400}
                   height={400}
