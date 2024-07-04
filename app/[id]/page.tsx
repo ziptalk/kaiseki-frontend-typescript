@@ -14,7 +14,7 @@ import { useEthersSigner } from "@/global/ethersSigner";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 
 import { wagmiSeiDevConfig } from "@/config";
 import endpoint from "@/global/endpoint";
@@ -97,7 +97,6 @@ export default function Detail() {
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [SEIPrice, setSEIPrice] = useState(5);
   const [InputState, setInputState] = useState(true);
-  const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const billion: number = 1_000_000_000;
   const [priceForNextMint, setPriceForNextMint] = useState(0);
@@ -272,11 +271,6 @@ export default function Detail() {
       setTxState("Connect your wallet first!");
       return;
     }
-    if (chainId != 713715) {
-      switchChain({ chainId: 713715 });
-      setTxState("Change your network first!");
-      return;
-    }
 
     if (
       BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
@@ -364,9 +358,6 @@ export default function Detail() {
     if (account.address == null) {
       alert("Connect your wallet first!");
       return;
-    }
-    if (chainId != 713715) {
-      switchChain({ chainId: 713715 });
     }
 
     if (

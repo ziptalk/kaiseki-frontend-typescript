@@ -31,7 +31,6 @@ import { ErrorDecoder } from "ethers-decode-error";
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
   const { switchChain } = useSwitchChain();
-  const chainId = useChainId();
   const provider = new ethers.JsonRpcProvider(rpcProvider);
   const signer = useEthersSigner();
   const account = useAccount();
@@ -217,10 +216,6 @@ const Create: NextPage = () => {
       const ticker = formData.get("ticker") as string;
       const matchingTicker = tickers.find((t) => t === ticker);
 
-      // Checking chain id valid and change chain if not
-      // if (chainId != 713715) {
-      //   switchChain({ chainId: 713715 });
-      // }
       if (account.status === "disconnected") {
         alert("Connect your wallet first!");
         return;
@@ -312,9 +307,6 @@ const Create: NextPage = () => {
   //   if (!account.address) {
   //     alert("Connect your wallet first!");
   //     throw new Error("Account is not defined");
-  //   }
-  //   if (chainId != 713715) {
-  //     switchChain({ chainId: 713715 });
   //   }
   //   console.log("start-app");
   //   try {

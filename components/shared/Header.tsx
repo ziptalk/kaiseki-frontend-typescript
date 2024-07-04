@@ -16,12 +16,13 @@ import { ModalContentBox, ModalRootWrapper } from "./Modal";
 import rpcProvider from "@/global/rpcProvider";
 import styled, { keyframes } from "styled-components";
 import { useAccount, useChainId } from "wagmi";
+import projectChainId from "@/global/chainId";
 
 const Header: FC = () => {
   //MARK: - Detect chain
   useEffect(() => {
     window.ethereum?.on("chainChanged", (chainId: any) => {
-      if (chainId != 0xae3f3) {
+      if (chainId != projectChainId) {
         console.log("chainId from changed" + chainId);
         setIsWrongChain(true);
         console.log("changed wrong");
@@ -43,7 +44,6 @@ const Header: FC = () => {
   const { openChainModal } = useChainModal();
   const { address } = useAccount();
 
-  const chainId = useChainId();
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("0x7A2");
