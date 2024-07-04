@@ -21,9 +21,10 @@ import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
 import rpcProvider from "@/global/rpcProvider";
 import { ether, wei } from "@/global/weiAndEther";
-import TradingViewChart from "../test/shared/TradingTest";
+
 import { ErrorDecoder } from "ethers-decode-error";
 import { stepPrices800 } from "../create/createValue";
+import TradingViewChart from "../test/shared/TradingTest";
 
 export default function Detail() {
   const signer = useEthersSigner();

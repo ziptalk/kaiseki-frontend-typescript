@@ -1,3 +1,3 @@
-const endpoint = "https://api.memesino.fun";
+const endpoint = "https://api.memeslot.me";
 
 export default endpoint;
