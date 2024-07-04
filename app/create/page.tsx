@@ -16,11 +16,17 @@ import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import reserveTokenABI from "@/abis/ReserveToken/ReserveToken.json";
 
-import { stepPrices, stepRanges } from "./createValue";
+import {
+  stepPrices,
+  stepPrices800,
+  stepRanges,
+  stepRanges800,
+} from "./createValue";
 import { getBalance } from "wagmi/actions";
 import endpoint from "@/global/endpoint";
 import { ether } from "@/global/weiAndEther";
 import rpcProvider from "@/global/rpcProvider";
+import { ErrorDecoder } from "ethers-decode-error";
 
 const Create: NextPage = () => {
   const { ethers } = require("ethers");
@@ -41,7 +47,7 @@ const Create: NextPage = () => {
   const [curWSEIValue, setCurWSEIValue] = useState("0");
 
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-
+  const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
     contracts.MCV2_Bond,
     MCV2_BondABI,
@@ -244,6 +250,8 @@ const Create: NextPage = () => {
       }
 
       setIsLoading(true);
+      // const st8 = stepPrices800();
+      // const sr8 = stepRanges800();
 
       const valueInWei = ethers.parseEther("3.5");
       console.log(stepRanges);
@@ -257,7 +265,9 @@ const Create: NextPage = () => {
           stepRanges: stepRanges,
           stepPrices: stepPrices,
         },
-        { value: valueInWei.toString() },
+        {
+          value: valueInWei.toString(),
+        },
       );
       console.log(receipt);
 
@@ -270,6 +280,10 @@ const Create: NextPage = () => {
 
       afterMint(createdTokenAddress);
     } catch (error) {
+      const decodedError = await errorDecoder.decode(error);
+
+      // Prints "Invalid swap with token contract address 0xabcd."
+      console.log("Custom error reason:", decodedError);
       console.error("Error while minting:", error);
       setIsLoading(false);
     }

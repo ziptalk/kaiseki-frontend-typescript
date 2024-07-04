@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "memesino.fun",
   description:
-    "Create your coin with near-zero fee. Trade instantly. Win Big. Each coin on Memesino is a fair-launch with no presale and no team allocation. ",
+    "Create your coin with near-zero fee. Trade instantly. Win Big. Each coin on Memeslot is a fair-launch with no presale and no team allocation. ",
   icons: {
     icon: "/memeLogo.png",
   },

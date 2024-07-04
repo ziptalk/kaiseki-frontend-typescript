@@ -10,7 +10,7 @@ function App() {
   const [distribution, setDistribution] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
 
-  const targetToken = "0x5df72eF74B7A1C8a17155c263896009DE3FA5808";
+  const targetToken = "0xF0454347226818b5f8D68e2C8c9B090C666BE1e9";
   useEffect(() => {
     fetch(
       `${endpoint}/priceHistory?tokenAddress=0xB62139cCfE65CE9699735932C94ee39396373D41`,

@@ -21,6 +21,9 @@ import endpoint from "@/global/endpoint";
 import { getBalance } from "wagmi/actions";
 import rpcProvider from "@/global/rpcProvider";
 import { ether, wei } from "@/global/weiAndEther";
+
+import { ErrorDecoder } from "ethers-decode-error";
+import { stepPrices800 } from "../create/createValue";
 import TradingViewChart from "../test/shared/TradingTest";
 
 export default function Detail() {
@@ -38,7 +41,7 @@ export default function Detail() {
   const cleanedPathname = cleanPathname(pathname);
   const tokenAddress: any = cleanedPathname;
   const MAX_INT_256: BigInt = BigInt(2) ** BigInt(256) - BigInt(2);
-
+  const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   // MARK: - init ethers.js
   const { ethers } = require("ethers");
   const provider = new ethers.JsonRpcProvider(rpcProvider);
@@ -83,6 +86,7 @@ export default function Detail() {
   const [name, setName] = useState("Name");
   const [symbol, setSymbol] = useState("ticker");
   const [creator, setCreator] = useState("Me");
+  const [totalMintAmount, setTotalMintAmount] = useState(BigInt(0));
   const [isBuy, setIsBuy] = useState(true);
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [curSEIValue, setCurSEIValue] = useState("0");
@@ -128,6 +132,7 @@ export default function Detail() {
         setName(detail.info.name);
         setSymbol(detail.info.symbol);
         setCreator(detail.info.creator);
+        setTotalMintAmount(detail.info.currentSupply);
         const mcap = String(ether(BigInt(Number(price) * billion)) / 1000);
         // console.log("this is mcap" + mcap);
         await updateMarketCapToServer(tokenAddress, mcap);
@@ -303,6 +308,17 @@ export default function Detail() {
       console.log("Minting token...");
       setTxState("Minting token...");
 
+      // const sp = stepPrices800();
+      // const divValue = Math.floor(
+      //   Number(totalMintAmount / BigInt(1000000000000000000000000)),
+      // );
+      // console.log("TMA" + totalMintAmount);
+      // const additionalStep = InputState
+      //   ? (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInToken
+      //   : (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInSEI;
+
+      // console.log("ADS" + additionalStep);
+
       const amountETH = await bondWriteContract.getReserveForToken(
         tokenAddress,
         InputState ? inputInToken : inputInSEI,
@@ -310,6 +326,9 @@ export default function Detail() {
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
       const valueInWei = ethers.parseUnits(valueInEth);
+      // const valueInWei = ethers.parseUnits(valueInEth) + additionalStep;
+      // console.log("VIW BF" + ethers.parseUnits(valueInEth));
+      // console.log("VIW AF" + valueInWei);
 
       const mintDetail = await bondWriteContract.mint(
         tokenAddress,
@@ -325,6 +344,11 @@ export default function Detail() {
       await getCurSteps();
       setTxState("Success");
     } catch (error: any) {
+      const decodedError = await errorDecoder.decode(error);
+
+      // Prints "Invalid swap with token contract address 0xabcd."
+      console.log("Custom error reason:", decodedError);
+      console.error("Error while minting:", error);
       console.error(error);
       setTxState(error.code);
     }
@@ -376,7 +400,12 @@ export default function Detail() {
       await getCurSteps();
       setTxState("Success");
     } catch (error) {
-      console.error("Error:", error);
+      const decodedError = await errorDecoder.decode(error);
+
+      // Prints "Invalid swap with token contract address 0xabcd."
+      console.log("Custom error reason:", decodedError);
+      console.error("Error while burning:", error);
+
       setTxState("ERR");
     }
     await getMemeTokenValue();
