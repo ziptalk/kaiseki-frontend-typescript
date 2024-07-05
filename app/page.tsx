@@ -120,7 +120,7 @@ export default function Home() {
   return (
     <>
       <main className="relative flex w-screen bg-[#0E0E0E]">
-        <div className="mx-auto h-full w-[70vw] pt-[20px] ">
+        <div className="mx-auto h-full pt-[20px] ">
           <div className="mx-auto flex h-[420px] w-[850px] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
               <div className="flex h-full w-[500px] flex-col items-center gap-[20px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
@@ -156,7 +156,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className=" mt-10 flex w-full items-end justify-between px-10">
+          <div className="mt-10 flex w-full items-end justify-between px-10">
             <div className="h-full">
               <div className="mb-[10px] text-xl text-white underline">
                 Tokens
@@ -179,7 +179,7 @@ export default function Home() {
             </form> */}
           </div>
 
-          <div className=" grid  w-full min-w-[1100px] grid-cols-3 grid-rows-7 gap-[60px] px-8 py-[10px]">
+          <div className="grid w-full min-w-[1100px] grid-cols-3 grid-rows-7 gap-[60px] px-8 py-[10px]">
             {tokenInfo ? (
               tokenInfo.map((card: any, index: any) => (
                 <TokenCard
