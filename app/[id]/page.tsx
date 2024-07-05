@@ -660,7 +660,7 @@ export default function Detail() {
       <main className="flex w-screen bg-[#0E0E0E]">
         <div className="mx-auto flex h-full w-full justify-between px-[5vw] pt-[60px]">
           <div className="w-[60vw]">
-            <div className="flex h-[245px] items-center justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
+            <div className="mr-10 flex h-[245px] items-center justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
               <div className="h-full w-[40%]">
                 <TokenCard
                   cid={cid}
@@ -681,10 +681,12 @@ export default function Detail() {
                 desc="desc"
               />
             </div>
-            <div className="mt-[20px] flex h-[420px] gap-[20px]">
+            <div className="mr-10 mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewChart tokenAddress={tokenAddress} />
             </div>
-            <TradesSection />
+            <div className="mr-10">
+              <TradesSection />
+            </div>
           </div>
           <div>
             <div className=" w-[420px] rounded-[15px] border border-[#FAFF00] bg-gradient-to-b from-[#E00900] to-[#A60D07] p-[30px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FFF100]">
