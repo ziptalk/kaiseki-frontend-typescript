@@ -85,21 +85,37 @@ export default function Home() {
           className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
         >
           <div>
-            <div className="h-[80px] w-[80px] border-black bg-[#D9D9D9]"></div>
+            <div className="h-[80px] w-[80px] overflow-hidden border-black ">
+              <Image
+                src="/images/catcat.png"
+                alt=""
+                width={80}
+                height={80}
+                className=""
+              />
+            </div>
           </div>
           <div className=" text w-[334px] overflow-hidden px-[10px]">
             <div className="">
               <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                ez
+                ToTheMoon
               </h1>
               <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                [ticker: ez]
+                [ticker: MOON]
               </h1>
             </div>
-
-            <h1 className="neon-lime text-xs text-[#C5F900] ">
-              Created by:&nbsp;0x7A2
-            </h1>
+            <div className="flex items-center gap-[5px]">
+              <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
+              <Image
+                className="rounded-full"
+                src="/images/memesinoGhost.png"
+                alt=""
+                width={12}
+                height={12}
+                style={{ width: 12, height: 12 }}
+              />
+              <h1 className="neon-lime text-xs text-[#C5F900] ">0x7A21</h1>
+            </div>
 
             <div className="flex">
               <h1 className="neon-yellow text-xs text-[#FAFF00]">
@@ -108,7 +124,7 @@ export default function Home() {
               <h1
                 className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
               >
-                1.1K
+                999.1K
               </h1>
             </div>
           </div>
