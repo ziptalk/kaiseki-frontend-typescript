@@ -198,7 +198,7 @@ export default function Home() {
             )}
           </div>
           <div className="mb-32 flex w-full justify-center">
-            <div className="flex gap-[20px]">
+            <div className="flex items-center gap-[20px] ">
               <Image
                 className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
@@ -212,7 +212,7 @@ export default function Home() {
                   }
                 }}
               />
-              <h1 className="text-white">{pageNum}</h1>
+              <h1 className=" text-white">{pageNum}</h1>
               <Image
                 className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
