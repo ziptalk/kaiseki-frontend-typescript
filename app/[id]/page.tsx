@@ -611,6 +611,8 @@ export default function Detail() {
   };
 
   const SellPercentageButton: FC = () => {
+    const percentages = [25, 50, 75, 100];
+
     return (
       <>
         <h1 className="mt-[15px] text-sm text-white">{txState}</h1>
@@ -622,34 +624,16 @@ export default function Detail() {
           >
             reset
           </button>
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={() => handlePercentage(25)}
-          >
-            25%
-          </button>
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={() => handlePercentage(50)}
-          >
-            50%
-          </button>
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={() => handlePercentage(75)}
-          >
-            75%
-          </button>
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={() => handlePercentage(100)}
-          >
-            100%
-          </button>
+          {percentages.map((percentage) => (
+            <button
+              key={percentage}
+              type="button"
+              className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
+              onClick={() => handlePercentage(percentage)}
+            >
+              {percentage}%
+            </button>
+          ))}
         </div>
       </>
     );
