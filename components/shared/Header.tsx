@@ -1,48 +1,27 @@
 "use client";
-
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/global/contracts";
-import endpoint from "@/global/endpoint";
+import { FC, useEffect, useState } from "react";
 import {
   useAccountModal,
   useChainModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
+import styled, { keyframes } from "styled-components";
+import { useAccount, useChainId } from "wagmi";
+import { ethers } from "ethers";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+
 import { ModalContentBox, ModalRootWrapper } from "./Modal";
-import rpcProvider from "@/global/rpcProvider";
-import styled, { keyframes } from "styled-components";
-import { useAccount, useChainId } from "wagmi";
+import { MODAL_VISIBLE_STORAGE_KEY } from "@/global/constants";
 import projectChainId from "@/global/chainId";
+import endpoint from "@/global/endpoint";
 
 const Header: FC = () => {
-  //MARK: - Detect chain
-  useEffect(() => {
-    window.ethereum?.on("chainChanged", (chainId: any) => {
-      if (chainId != projectChainId) {
-        console.log("chainId from changed" + chainId);
-        setIsWrongChain(true);
-        console.log("changed wrong");
-      } else {
-        setIsWrongChain(false);
-      }
-    });
-    // window.ethereum?.on("connect", (chainId: any) => {
-    //   if (chainId.chainId != 0xae3f3) {
-    //     setIsWrongChain(true);
-    //     console.log("connect wrong");
-    //     console.log("chainId from connect" + JSON.stringify(chainId));
-    //   }
-    // });
-  }, []);
-
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
-  const { address } = useAccount();
+  const { address, chainId, isConnected } = useAccount();
 
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
@@ -62,17 +41,39 @@ const Header: FC = () => {
 
   const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
   const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
-
-  // Initialize ethers with a provider
-  const { ethers } = require("ethers");
-  const MODAL_VISIBLE_STORAGE_KEY = "isFirstVisitToMemesino";
+  const [isWrongChain, setIsWrongChain] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  const [isWrongChain, setIsWrongChain] = useState(false);
+  // MARK: - Detect chain change
+  // TODO: Make this work.....
+  // useEffect(() => {
+  //   window.ethereum.on("chainChanged", (chainId: any) => {
+  //     console.log(chainId);
+  //     if (chainId != projectChainId) {
+  //       console.log("chainId from changed" + chainId);
+  //       setIsWrongChain(true);
+  //       console.log("changed wrong");
+  //     } else {
+  //       setIsWrongChain(false);
+  //     }
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (chainId !== projectChainId) {
+        // console.log("chainId from changed" + chainId);
+        setIsWrongChain(true);
+      } else {
+        setIsWrongChain(false);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [chainId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -140,7 +141,7 @@ const Header: FC = () => {
           const newMintUser = evs.user.substring(0, 5);
           const newMintCid = evs.token.cid;
           const newMintValue = Number(
-            ethers.formatEther(evs.reserveAmount._hex, 16),
+            ethers.formatEther(evs.reserveAmount._hex),
           )
             .toFixed(4)
             .toString();
@@ -314,25 +315,29 @@ const Header: FC = () => {
 
     getSeiPrice();
   }, []);
-  return (
-    <>
-      {isWrongChain && (
-        <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
-          <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
-            <div className="]">
-              <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
-              <h1>It seems you changed to wrong network..</h1>
-            </div>
 
-            <div
-              onClick={openChainModal}
-              className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
-            >
-              Change Network to SEI
-            </div>
+  const WrongChainPopUpModal: FC = () => {
+    return (
+      <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
+        <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
+          <div className="]">
+            <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
+            <h1>It seems you changed to wrong network..</h1>
+          </div>
+
+          <div
+            onClick={openChainModal}
+            className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
+          >
+            Change Network to SEI
           </div>
         </div>
-      )}
+      </div>
+    );
+  };
+  return (
+    <>
+      {isWrongChain && <WrongChainPopUpModal />}
       {infoModal && (
         <ModalRootWrapper onClick={() => setInfoModal(!infoModal)}>
           <ModalContentBox onClick={(e) => e.stopPropagation()}>

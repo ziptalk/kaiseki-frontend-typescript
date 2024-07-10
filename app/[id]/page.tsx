@@ -326,7 +326,7 @@ export default function Detail() {
 
     if (
       BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
-      Number(curUserSEIBalance)
+      Number(ethers.parseEther(curUserSEIBalance))
     ) {
       setTradeModuleErrorMsg(
         `Insufficient balance : You have ${curUserSEIBalance} SEI`,
