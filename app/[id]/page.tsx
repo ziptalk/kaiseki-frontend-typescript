@@ -647,10 +647,7 @@ export default function Detail() {
 
               <SocialLinkCard tw={tw} tg={tg} web={web} />
 
-              <BondingCurveCard
-                prog={Math.floor(bondingCurveProgress)}
-                desc="desc"
-              />
+              <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
             </div>
             <div className="mr-10 mt-[20px] flex h-[420px] gap-[20px]">
               <TradingViewChart tokenAddress={tokenAddress} />

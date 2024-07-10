@@ -3,9 +3,8 @@ import { FC } from "react";
 
 interface BondingCurveCardTypes {
   prog: number;
-  desc?: string;
 }
-const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
+const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
   return (
     <>
       <div className="flex h-full w-[40%] flex-col gap-[20px]  ">
