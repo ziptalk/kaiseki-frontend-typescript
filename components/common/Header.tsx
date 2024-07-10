@@ -6,7 +6,7 @@ import {
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
 import styled, { keyframes } from "styled-components";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import axios from "axios";
 import Image from "next/image";
@@ -42,6 +42,13 @@ const Header: FC = () => {
   const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
   const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
   const [isWrongChain, setIsWrongChain] = useState(false);
+
+  const [isHoveredX, setIsHoveredX] = useState(false);
+  const [isHoveredTG, setIsHoveredTG] = useState(false);
+  const [isHoveredIF, setIsHoveredIF] = useState(false);
+
+  const [isInfoModalActive, setIsInfoModalActive] = useState(false);
+  const [curSeiPrice, setCurSeiPrice] = useState(0.5423);
 
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
@@ -191,6 +198,22 @@ const Header: FC = () => {
     }
   }, [createAnimationTrigger]);
 
+  useEffect(() => {
+    setSEIPriceIntoState();
+  }, []);
+
+  const setSEIPriceIntoState = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+      );
+      // console.log("SEI PRICE" + response.data.price);
+      setCurSeiPrice(response.data.price);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <EventWrapper>
@@ -258,66 +281,18 @@ const Header: FC = () => {
     );
   };
 
-  function setModalVisible() {
+  const setModalVisible = () => {
     if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
-      setInfoModal(true);
+      setIsInfoModalActive(true);
       window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
     }
-  }
+  };
 
-  const handleClick = (url: string) => {
+  const handleUrlClick = (url: string) => {
     if (url) {
       window.open(url);
     }
   };
-
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const [isHoveredTG, setIsHoveredTG] = useState(false);
-
-  const handleMouseEnterTG = () => {
-    setIsHoveredTG(true);
-  };
-
-  const handleMouseLeaveTG = () => {
-    setIsHoveredTG(false);
-  };
-
-  const [isHoveredIF, setIsHoveredIF] = useState(false);
-
-  const handleMouseEnterIF = () => {
-    setIsHoveredIF(true);
-  };
-
-  const handleMouseLeaveIF = () => {
-    setIsHoveredIF(false);
-  };
-  const [infoModal, setInfoModal] = useState(false);
-  const [curSeiPrice, setCurSeiPrice] = useState(0.5423);
-
-  useEffect(() => {
-    const getSeiPrice = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-        );
-        // console.log("SEI PRICE" + response.data.price);
-        setCurSeiPrice(response.data.price);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getSeiPrice();
-  }, []);
 
   const WrongChainPopUpModal: FC = () => {
     return (
@@ -341,8 +316,10 @@ const Header: FC = () => {
   return (
     <>
       {isWrongChain && <WrongChainPopUpModal />}
-      {infoModal && (
-        <ModalRootWrapper onClick={() => setInfoModal(!infoModal)}>
+      {isInfoModalActive && (
+        <ModalRootWrapper
+          onClick={() => setIsInfoModalActive(!isInfoModalActive)}
+        >
           <ModalContentBox onClick={(e) => e.stopPropagation()}>
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
@@ -374,7 +351,7 @@ const Header: FC = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setInfoModal(!infoModal);
+                setIsInfoModalActive(!isInfoModalActive);
               }}
               className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
             >
@@ -426,7 +403,7 @@ const Header: FC = () => {
               <div className="flex gap-[30px]">
                 <Image
                   src={
-                    isHovered
+                    isHoveredX
                       ? "/icons/telegram-hover.svg"
                       : "/icons/telegram_logo.svg"
                   }
@@ -434,9 +411,9 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={() => handleClick("https://t.me/memesinodotfun")}
+                  onMouseEnter={() => setIsHoveredX(true)}
+                  onMouseLeave={() => setIsHoveredX(false)}
+                  onClick={() => handleUrlClick("https://t.me/memesinodotfun")}
                 />
 
                 <Image
@@ -445,10 +422,10 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnterTG}
-                  onMouseLeave={handleMouseLeaveTG}
+                  onMouseEnter={() => setIsHoveredTG(true)}
+                  onMouseLeave={() => setIsHoveredTG(false)}
                   onClick={() =>
-                    handleClick("https://twitter.com/memesinodotfun")
+                    handleUrlClick("https://twitter.com/memesinodotfun")
                   }
                 />
 
@@ -460,15 +437,15 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnterIF}
-                  onMouseLeave={handleMouseLeaveIF}
-                  onClick={() => setInfoModal(!infoModal)}
+                  onMouseEnter={() => setIsHoveredIF(true)}
+                  onMouseLeave={() => setIsHoveredIF(false)}
+                  onClick={() => setIsInfoModalActive(!isInfoModalActive)}
                 />
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
               <MintAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger ? "animate" : ""}`}
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
               >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
@@ -488,7 +465,7 @@ const Header: FC = () => {
                     {curMintTic}
                   </h1>
                 </Link>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#FA00FF]">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
@@ -496,7 +473,7 @@ const Header: FC = () => {
                 </div>
               </MintAnimateWrapper>
               <CreateAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger ? "animate" : ""}`}
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
               >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
@@ -504,6 +481,7 @@ const Header: FC = () => {
                     alt=""
                     height={18}
                     width={18}
+                    style={{ width: 18, height: 18 }}
                   />
                 </div>
                 <h1 className="text-sm">{curCreateUser} Created</h1>
@@ -514,7 +492,7 @@ const Header: FC = () => {
                 </Link>
 
                 <h1 className="text-sm">on {curCreateTime}</h1>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#09FFD3]">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
                     alt="img"
@@ -523,8 +501,6 @@ const Header: FC = () => {
               </CreateAnimateWrapper>
             </div>
             <div className="relative flex w-[300px] flex-row-reverse items-center">
-              {/* <ConnectButton /> */}
-
               {address ? (
                 <button
                   onClick={() => setAccountButtonModal(!accountButtonModal)}
@@ -597,31 +573,6 @@ const Header: FC = () => {
 };
 
 export default Header;
-
-const ImageSNS = styled.img`
-  height: 15px;
-`;
-
-const ImageX = styled(ImageSNS)`
-  content: url("/icons/X_logo.svg");
-  &:hover {
-    content: url("/icons/x-hover.svg");
-  }
-`;
-
-const ImageTG = styled(ImageSNS)`
-  content: url("/icons/telegram_logo.svg");
-  &:hover {
-    content: url("/icons/telegram-hover.svg");
-  }
-`;
-
-// const ImageInfo = styled(ImageSNS)`
-//   content: url("/icons/info.svg");
-//   &:hover {
-//     content: url("/icons/info-hover.svg");
-//   }
-// `;
 
 const eventCardColors: string[] = ["9EFF00", "00FFFF", "FF20F6"];
 
