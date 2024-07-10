@@ -213,6 +213,7 @@ export default function Detail() {
     }
     return true;
   };
+
   const checkAccountAddressInitialized = (address: any) => {
     if (!address) {
       return false;

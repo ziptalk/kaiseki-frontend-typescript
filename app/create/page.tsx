@@ -310,7 +310,7 @@ const Create: NextPage = () => {
                 style={{ width: 12, height: 12 }}
               />
               <h1 className="neon-lime text-xs text-[#C5F900] ">
-                {account.address?.substring(0, 5)}
+                {account.address?.substring(0, 6)}
               </h1>
             </div>
 
