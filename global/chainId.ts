@@ -1,4 +1,3 @@
-// in hex
-const projectChainId = 0xae3f3;
+const projectChainId = 713715;
 
 export default projectChainId;

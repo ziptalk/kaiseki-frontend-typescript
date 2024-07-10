@@ -9,7 +9,7 @@ import Image from "next/image";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/global/ethersSigner";
-import { stepPrices, stepRanges } from "./createValue";
+import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import endpoint from "@/global/endpoint";

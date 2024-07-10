@@ -63,6 +63,7 @@ const Header: FC = () => {
   //   });
   // }, []);
 
+  // this works
   useEffect(() => {
     const interval = setInterval(() => {
       if (chainId !== projectChainId) {
@@ -75,6 +76,7 @@ const Header: FC = () => {
     return () => clearInterval(interval);
   }, [chainId]);
 
+  // Detect created token from server
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(`${endpoint}/homeTokenInfo?page=1`)
@@ -126,6 +128,7 @@ const Header: FC = () => {
     curCreateTokenAddress,
   ]);
 
+  // Detect minted token from server
   useEffect(() => {
     const interval = setInterval(() => {
       fetch(`${endpoint}/TxlogsMintBurn`)

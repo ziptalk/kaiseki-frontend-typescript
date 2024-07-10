@@ -3,17 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
-interface TokenCardTypes {
-  name: string;
-  ticker: string;
-  createdBy: string;
-  cap: string;
-  desc: string;
-  border?: boolean;
-  tokenAddress?: string;
-  cid: string;
-}
-
 const TokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,

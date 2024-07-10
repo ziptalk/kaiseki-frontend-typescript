@@ -11,8 +11,8 @@ import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import SocialLinkCard from "@/components/detail/SocialLinkCard";
 import TradesCard from "@/components/detail/TradesCard";
-import TokenCard from "@/components/shared/TokenCard";
-import TradingViewChart from "../test/shared/TradingTest";
+import TokenCard from "@/components/common/TokenCard";
+import TradingViewChart from "../test/common/TradingTest";
 
 import { impact } from "@/fonts/font";
 import { ether, wei } from "@/global/weiAndEther";
