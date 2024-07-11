@@ -339,18 +339,14 @@ export default function Detail() {
     }
     console.log("start-app");
     try {
-      const inputInToken = BigInt(ethers.parseUnits(inputValue, "ether"));
+      const inputInToken = BigInt(ethers.parseEther(inputValue));
       const inputInReserve = subtractTenPercent(
-        ethers.parseUnits(
+        ethers.parseEther(
           String(
             Math.floor(
-              Number(
-                ethers.parseUnits(inputValue, "ether") /
-                  BigInt(priceForNextMint),
-              ),
+              Number(ethers.parseEther(inputValue) / BigInt(priceForNextMint)),
             ),
           ),
-          "ether",
         ),
       );
 
@@ -377,9 +373,9 @@ export default function Detail() {
       );
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
-      const valueInWei = ethers.parseUnits(valueInEth);
-      // const valueInWei = ethers.parseUnits(valueInEth) + additionalStep;
-      // console.log("VIW BF" + ethers.parseUnits(valueInEth));
+      const valueInWei = ethers.parseEther(valueInEth);
+      // const valueInWei = ethers.parseEther(valueInEth) + additionalStep;
+      // console.log("VIW BF" + ethers.parseEther(valueInEth));
       // console.log("VIW AF" + valueInWei);
 
       const mintDetail = await bondWriteContract.mint(
@@ -744,7 +740,7 @@ export default function Detail() {
                           String(
                             Math.floor(
                               Number(
-                                ethers.parseUnits(inputValue, "ether") /
+                                ethers.parseEther(inputValue) /
                                   BigInt(priceForNextMint),
                               ),
                             ),

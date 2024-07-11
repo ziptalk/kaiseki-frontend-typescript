@@ -242,7 +242,7 @@ const Create: NextPage = () => {
           mintRoyalty: 100,
           burnRoyalty: 100,
           reserveToken: contracts.ReserveToken,
-          maxSupply: ethers.parseUnits("800000000", "ether"),
+          maxSupply: ethers.parseEther("800000000"),
           stepRanges: stepRanges,
           stepPrices: stepPrices,
         },
