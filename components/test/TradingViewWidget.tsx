@@ -8,11 +8,9 @@ import {
   ChartOptions,
 } from "lightweight-charts";
 import { ethers } from "ethers";
-import contracts from "@/global/contracts";
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import rpcProvider from "@/global/rpcProvider";
-import endpoint from "@/global/endpoint";
+
 import { stepPrices800, stepRanges800 } from "@/global/createValue";
+import { SERVER_ENDPOINT } from "@/global/projectConfig";
 
 type TradingViewChartProps = {
   tokenAddress: string;
@@ -65,7 +63,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
   const fetchAndUpdateData = async () => {
     try {
-      const response = await fetch(`${endpoint}/TxlogsMintBurn`);
+      const response = await fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`);
       const data = await response.json();
       const filteredData = filterEventsByToken(data, tokenAddress);
       console.log(filteredData);

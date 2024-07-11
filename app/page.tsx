@@ -2,7 +2,7 @@
 
 import TokenCard from "@/components/common/TokenCard";
 import { digital } from "@/fonts/font";
-import endpoint from "@/global/endpoint";
+import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export default function Home() {
   }, [pageNum]);
 
   function getData() {
-    fetch(`${endpoint}/homeTokenInfo?page=${pageNum}`) // Add this block
+    fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=${pageNum}`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);

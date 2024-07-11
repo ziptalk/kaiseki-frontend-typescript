@@ -8,12 +8,16 @@ import { useAccount } from "wagmi";
 import Image from "next/image";
 
 import { digital } from "@/fonts/font";
-import { useEthersSigner } from "@/global/ethersSigner";
+import { useEthersSigner } from "@/utils/ethersSigner";
 import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
-import endpoint from "@/global/endpoint";
-import rpcProvider from "@/global/rpcProvider";
+
+import {
+  RESERVE_SYMBOL,
+  RPC_PROVIDER_URL,
+  SERVER_ENDPOINT,
+} from "@/global/projectConfig";
 
 const Create: NextPage = () => {
   const signer = useEthersSigner();
@@ -21,7 +25,7 @@ const Create: NextPage = () => {
   const router = useRouter();
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(rpcProvider);
+  const provider = new ethers.JsonRpcProvider(RPC_PROVIDER_URL);
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
@@ -52,7 +56,7 @@ const Create: NextPage = () => {
 
   // Get data from server for check dup
   useEffect(() => {
-    fetch(`${endpoint}/homeTokenInfo`)
+    fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
       .then((response) => response.json())
       .then((data) => {
         // ticker 값만 추출하여 새로운 배열 생성
@@ -70,25 +74,28 @@ const Create: NextPage = () => {
     cid: any,
   ) => {
     try {
-      const response = await fetch(`${endpoint}/storeCidAndTokenAddress`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/storeCidAndTokenAddress`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cid,
+            name: inputName,
+            ticker: inputTicker,
+            tokenAddress: createdTokenAddress,
+            description: inputDesc,
+            twitterUrl: inputXURL,
+            telegramUrl: inputTGURL,
+            websiteUrl: inputWebURL,
+            marketCap: 0,
+            createdBy: account.address,
+            timestamp: new Date().toISOString(),
+          }),
         },
-        body: JSON.stringify({
-          cid,
-          name: inputName,
-          ticker: inputTicker,
-          tokenAddress: createdTokenAddress,
-          description: inputDesc,
-          twitterUrl: inputXURL,
-          telegramUrl: inputTGURL,
-          websiteUrl: inputWebURL,
-          marketCap: 0,
-          createdBy: account.address,
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      );
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -122,7 +129,7 @@ const Create: NextPage = () => {
   };
 
   // MARK: - Validation
-  const getUserSEIBalance = async () => {
+  const getUserReserveBalance = async () => {
     try {
       if (!window.ethereum) {
         throw new Error("MetaMask is not installed!");
@@ -140,7 +147,7 @@ const Create: NextPage = () => {
   };
 
   const isUserGotMoreThanCreationFee = async () => {
-    const value = await getUserSEIBalance();
+    const value = await getUserReserveBalance();
     if (parseFloat(value!) >= 3.5) {
       return false;
     } else {
@@ -159,7 +166,7 @@ const Create: NextPage = () => {
       return true;
     }
     if (await isUserGotMoreThanCreationFee()) {
-      alert("You must have at least 3.5 SEI to create a token.");
+      alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
       return true;
     }
     if (matchingTicker) {

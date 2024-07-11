@@ -40,7 +40,7 @@ interface TokenCardTypes {
 interface TradesCardType {
   user: string;
   isBuy: boolean;
-  seiAmount: string;
+  reserveAmount: string;
   memeTokenAmount: string;
   date: string;
   tx: string;

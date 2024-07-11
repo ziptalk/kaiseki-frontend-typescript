@@ -12,15 +12,19 @@ import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import SocialLinkCard from "@/components/detail/SocialLinkCard";
 import TradesCard from "@/components/detail/TradesCard";
 import TokenCard from "@/components/common/TokenCard";
-import TradingViewChart from "../test/common/TradingTest";
 
 import { impact } from "@/fonts/font";
-import { ether, wei } from "@/global/weiAndEther";
-import { useEthersSigner } from "@/global/ethersSigner";
+import { ether, wei } from "@/utils/weiAndEther";
+import { useEthersSigner } from "@/utils/ethersSigner";
 import { MAX_INT_256, BILLION } from "@/global/constants";
 import contracts from "@/global/contracts";
-import endpoint from "@/global/endpoint";
-import rpcProvider from "@/global/rpcProvider";
+
+import TradingViewChart from "@/components/common/TradingViewWidget";
+import {
+  RESERVE_SYMBOL,
+  RPC_PROVIDER_URL,
+  SERVER_ENDPOINT,
+} from "@/global/projectConfig";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -35,7 +39,7 @@ export default function Detail() {
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
-  const provider = new ethers.JsonRpcProvider(rpcProvider);
+  const provider = new ethers.JsonRpcProvider(RPC_PROVIDER_URL);
 
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,
@@ -55,8 +59,8 @@ export default function Detail() {
     provider,
   );
 
-  const [name, setName] = useState("Name");
-  const [symbol, setSymbol] = useState("ticker");
+  const [memeTokenName, setMemeTokenName] = useState("Name");
+  const [memeTokenSymbol, setMemeTokenSymbol] = useState("ticker");
   const [creator, setCreator] = useState("Me");
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
@@ -71,7 +75,7 @@ export default function Detail() {
   );
 
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
-  const [curUserSEIBalance, setCurUsetSEIBalance] = useState("0");
+  const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [marketCap, setMarketCap] = useState("");
@@ -117,14 +121,14 @@ export default function Detail() {
         setUserMemeTokenBalanceIntoState();
         setCurStepsIntoState();
         setPriceForNextMintIntoState();
-        setUserSEIBalanceIntoState();
+        setUserReserveBalanceIntoState();
       }
     } catch {}
   }, [account?.address]);
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
-      const response = await fetch(`${endpoint}/changeMcap`, {
+      const response = await fetch(`${SERVER_ENDPOINT}/changeMcap`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +146,7 @@ export default function Detail() {
   };
   const fetchHolderDistributionFromServer = async () => {
     try {
-      const response = await fetch(`${endpoint}/HolderDistribution`);
+      const response = await fetch(`${SERVER_ENDPOINT}/HolderDistribution`);
       const data = await response.json();
       const filteredData = filterDataByOuterKey(data, tokenAddress);
       setDistribution(filteredData);
@@ -155,8 +159,8 @@ export default function Detail() {
       const detail = await bondContract.getDetail(tokenAddress);
       const price = detail.info.priceForNextMint;
       // console.log("currentSupply :" + detail.info.currentSupply);
-      setName(detail.info.name);
-      setSymbol(detail.info.symbol);
+      setMemeTokenName(detail.info.name);
+      setMemeTokenSymbol(detail.info.symbol);
       setCreator(detail.info.creator);
       const mcap = String(ether(BigInt(Number(price) * BILLION)) / 1000);
       // console.log("this is mcap" + mcap);
@@ -175,7 +179,7 @@ export default function Detail() {
     setDesc: any,
   ) => {
     try {
-      const response = await fetch(`${endpoint}/homeTokenInfo`);
+      const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
       const data = await response.json();
       const filteredData = data.filter(
         (item: any) => item.tokenAddress === tokenAddress,
@@ -197,7 +201,7 @@ export default function Detail() {
     eventsFromDB: any,
   ) => {
     try {
-      const response = await fetch(`${endpoint}/TxlogsMintBurn`);
+      const response = await fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`);
       const data = await response.json();
       const filteredData = filterEventsByToken(data, tokenAddress);
       if (filteredData.length !== eventsFromDB?.length) {
@@ -213,7 +217,6 @@ export default function Detail() {
     }
     return true;
   };
-
   const checkAccountAddressInitialized = (address: any) => {
     if (!address) {
       return false;
@@ -222,14 +225,14 @@ export default function Detail() {
   };
 
   // MARK: - Get values
-  const setUserSEIBalanceIntoState = async () => {
+  const setUserReserveBalanceIntoState = async () => {
     try {
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
         console.log(balanceWei);
         const balanceEther = ethers.formatEther(balanceWei);
         console.log(balanceEther);
-        setCurUsetSEIBalance(balanceEther);
+        setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {
       console.log(error);
@@ -327,17 +330,17 @@ export default function Detail() {
 
     if (
       BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
-      Number(ethers.parseEther(curUserSEIBalance))
+      Number(ethers.parseEther(curUserReserveBalance))
     ) {
       setTradeModuleErrorMsg(
-        `Insufficient balance : You have ${curUserSEIBalance} SEI`,
+        `Insufficient balance : You have ${curUserReserveBalance} ${RESERVE_SYMBOL}`,
       );
       return;
     }
     console.log("start-app");
     try {
       const inputInToken = BigInt(ethers.parseUnits(inputValue, "ether"));
-      const inputInSEI = subtractTenPercent(
+      const inputInReserve = subtractTenPercent(
         ethers.parseUnits(
           String(
             Math.floor(
@@ -352,7 +355,7 @@ export default function Detail() {
       );
 
       console.log("inputInToken :" + inputInToken);
-      console.log("inputInSEI :" + inputInSEI);
+      console.log("inputInReserve :" + inputInReserve);
 
       console.log("Minting token...");
       setTradeModuleErrorMsg("Minting token...");
@@ -364,13 +367,13 @@ export default function Detail() {
       // console.log("TMA" + totalMintAmount);
       // const additionalStep = InputState
       //   ? (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInToken
-      //   : (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInSEI;
+      //   : (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInReserve;
 
       // console.log("ADS" + additionalStep);
 
       const amountETH = await bondWriteContract.getReserveForToken(
         tokenAddress,
-        isInputInTokenAmount ? inputInToken : inputInSEI,
+        isInputInTokenAmount ? inputInToken : inputInReserve,
       );
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
@@ -381,7 +384,7 @@ export default function Detail() {
 
       const mintDetail = await bondWriteContract.mint(
         tokenAddress,
-        isInputInTokenAmount ? inputInToken : inputInSEI,
+        isInputInTokenAmount ? inputInToken : inputInReserve,
         MAX_INT_256,
         account.address,
         {
@@ -418,7 +421,7 @@ export default function Detail() {
       ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
     ) {
       setTradeModuleErrorMsg(
-        `Insufficient balance : You have ${curMemeTokenValue} ${name}`,
+        `Insufficient balance : You have ${curMemeTokenValue} ${memeTokenName}`,
       );
       return;
     }
@@ -484,7 +487,7 @@ export default function Detail() {
     return {
       user: event.user.substring(0, 6),
       isBuy: event.isMint,
-      seiAmount: event.reserveAmount
+      reserveAmount: event.reserveAmount
         ? ether(BigInt(parseInt(event.reserveAmount._hex, 16)))
             .toFixed(4)
             .toString()
@@ -518,8 +521,8 @@ export default function Detail() {
           <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
             <h1 className="w-1/6">account</h1>
             <h1 className="w-1/6">buy / sell</h1>
-            <h1 className="w-1/6">SEI</h1>
-            <h1 className="w-1/6">{symbol}</h1>
+            <h1 className="w-1/6">{RESERVE_SYMBOL}</h1>
+            <h1 className="w-1/6">{memeTokenSymbol}</h1>
             <h1 className="w-1/6">date</h1>
             <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
           </div>
@@ -635,8 +638,8 @@ export default function Detail() {
               <div className="h-full w-[40%]">
                 <TokenCard
                   cid={cid}
-                  name={name}
-                  ticker={symbol}
+                  name={memeTokenName}
+                  ticker={memeTokenSymbol}
                   cap={marketCap}
                   createdBy={creator.substring(0, 6)}
                   desc={desc}
@@ -691,24 +694,24 @@ export default function Detail() {
                           />
                         </div>
                         <h1 className="mt-1 text-[15px] font-bold text-white">
-                          {symbol}
+                          {memeTokenSymbol}
                         </h1>
                       </div>
                     </div>
                     <h1 className="text-[#B8B8B8]">
                       {/* {curMemeTokenValue}&nbsp; */}
                       {/* {name} */}
-                      {/*memetoken value to SEI*/}
+                      {/*memetoken value to RESERVE_SYMBOL*/}
                       {ether(
                         BigInt(Math.floor(Number(inputValue))) *
                           BigInt(priceForNextMint),
                       )}
-                      &nbsp;SEI
+                      &nbsp;{RESERVE_SYMBOL}
                     </h1>
                   </>
                 ) : (
                   <>
-                    {/*input amount == SEI*/}
+                    {/*input amount == RESERVE_SYMBOL*/}
                     <div className="relative flex w-full items-center">
                       <input
                         className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
@@ -730,12 +733,12 @@ export default function Detail() {
                         </div>
 
                         <h1 className="mt-1 text-[15px] font-bold text-white">
-                          SEI
+                          {RESERVE_SYMBOL}
                         </h1>
                       </div>
                     </div>
                     <h1 className="text-[#B8B8B8]">
-                      {/*SEI value to memetoken*/}~
+                      {/*RESERVE_SYMBOL value to memetoken*/}~
                       {inputValue &&
                         Number(
                           String(
@@ -747,7 +750,7 @@ export default function Detail() {
                             ),
                           ),
                         )}
-                      &nbsp;{symbol}
+                      &nbsp;{memeTokenSymbol}
                     </h1>
                   </>
                 )}

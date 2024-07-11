@@ -1,4 +1,4 @@
-const { ethers } = require("ethers");
+import { ethers } from "ethers";
 
 export const stepRanges = [
   ethers.parseUnits("8000000", "ether"),

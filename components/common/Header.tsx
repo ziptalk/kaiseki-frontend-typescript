@@ -14,8 +14,12 @@ import Link from "next/link";
 
 import { ModalContentBox, ModalRootWrapper } from "./Modal";
 import { MODAL_VISIBLE_STORAGE_KEY } from "@/global/constants";
-import projectChainId from "@/global/chainId";
-import endpoint from "@/global/endpoint";
+
+import {
+  PROJECT_CHAIN_ID,
+  RESERVE_SYMBOL,
+  SERVER_ENDPOINT,
+} from "@/global/projectConfig";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -48,7 +52,7 @@ const Header: FC = () => {
   const [isHoveredIF, setIsHoveredIF] = useState(false);
 
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
-  const [curSeiPrice, setCurSeiPrice] = useState(0.5423);
+  const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
@@ -73,7 +77,7 @@ const Header: FC = () => {
   // this works
   useEffect(() => {
     const interval = setInterval(() => {
-      if (chainId !== projectChainId) {
+      if (chainId !== PROJECT_CHAIN_ID) {
         // console.log("chainId from changed" + chainId);
         setIsWrongChain(true);
       } else {
@@ -86,7 +90,7 @@ const Header: FC = () => {
   // Detect created token from server
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${endpoint}/homeTokenInfo?page=1`)
+      fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=1`)
         .then((response) => response.json())
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
@@ -138,7 +142,7 @@ const Header: FC = () => {
   // Detect minted token from server
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${endpoint}/TxlogsMintBurn`)
+      fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`)
         .then((response) => response.json())
         .then((data) => {
           const evs = data.mintEvents.reverse()[0];
@@ -199,16 +203,16 @@ const Header: FC = () => {
   }, [createAnimationTrigger]);
 
   useEffect(() => {
-    setSEIPriceIntoState();
+    setReserveMarketPriceIntoState();
   }, []);
 
-  const setSEIPriceIntoState = async () => {
+  const setReserveMarketPriceIntoState = async () => {
     try {
       const response = await axios.get(
-        `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
+        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
       );
-      // console.log("SEI PRICE" + response.data.price);
-      setCurSeiPrice(response.data.price);
+      // console.log("Reserve PRICE" + response.data.price);
+      setCurReserveMarketPrice(response.data.price);
     } catch (error) {
       console.log(error);
     }
@@ -232,7 +236,7 @@ const Header: FC = () => {
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
           <h1 className="text-sm">
             {" "}
-            {value} SEI of {ticker}
+            {value} {RESERVE_SYMBOL} of {ticker}
           </h1>
           <Image
             width={18}
@@ -307,7 +311,7 @@ const Header: FC = () => {
             onClick={openChainModal}
             className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
           >
-            Change Network to SEI
+            Change Network to {RESERVE_SYMBOL}
           </div>
         </div>
       </div>
@@ -340,11 +344,12 @@ const Header: FC = () => {
               </h1>
               <h1 className="mb-[20px]">
                 step 4 : when enough people buy on the bonding curve it reaches
-                a market cap of ${Math.floor((60660 * curSeiPrice) / 1000)}k
+                a market cap of $
+                {Math.floor((60660 * curReserveMarketPrice) / 1000)}k
               </h1>
               <h1 className="mb-[20px]">
-                step 5 : ${Math.floor((9000 * curSeiPrice) / 1000)}k of
-                liquidity is then deposited in dragonswap and burned
+                step 5 : ${Math.floor((9000 * curReserveMarketPrice) / 1000)}k
+                of liquidity is then deposited in dragonswap and burned
               </h1>
             </div>
 

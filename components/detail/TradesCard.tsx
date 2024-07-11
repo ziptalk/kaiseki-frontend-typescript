@@ -3,7 +3,7 @@ import { FC } from "react";
 
 const TradesCard: FC<TradesCardType> = ({
   isBuy,
-  seiAmount,
+  reserveAmount,
   memeTokenAmount,
   date,
   tx,
@@ -34,7 +34,7 @@ const TradesCard: FC<TradesCardType> = ({
         <h1 className={`${isBuy ? "text-[#6AD64F]" : "text-[#D64F4F]"} w-1/6`}>
           {isBuy ? "buy" : "sell"}
         </h1>
-        <h1 className="w-1/6">{seiAmount}</h1>
+        <h1 className="w-1/6">{reserveAmount}</h1>
         <h1 className="w-1/6">{legitK ? SMA + "k" : SMA}</h1>
         <h1 className="w-1/6">{date}</h1>
         <h1 className=" flex w-1/6 flex-row-reverse">{tx}</h1>
