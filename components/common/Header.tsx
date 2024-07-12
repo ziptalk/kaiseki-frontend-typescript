@@ -77,7 +77,7 @@ const Header: FC = () => {
   // this works
   useEffect(() => {
     const interval = setInterval(() => {
-      if (chainId !== PROJECT_CHAIN_ID) {
+      if (isConnected && chainId !== PROJECT_CHAIN_ID) {
         // console.log("chainId from changed" + chainId);
         setIsWrongChain(true);
       } else {
