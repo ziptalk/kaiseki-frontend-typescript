@@ -9,7 +9,7 @@ import {
 } from "lightweight-charts";
 import { ethers } from "ethers";
 
-import { stepPrices800, stepRanges800 } from "@/global/createValue";
+import { stepPrices800 } from "@/global/createValue";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 
 type TradingViewChartProps = {
@@ -70,7 +70,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
       let curMintedToken = BigInt(0);
       const sp = stepPrices800();
-      const sr = stepRanges800();
+
       const newChartData: BarData[] = [];
 
       if (filteredData.length == 0) {
