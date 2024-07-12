@@ -26,11 +26,21 @@ interface Event {
   refundAmount?: { _hex: string; _isBigNumber: boolean };
   isMint: boolean;
 }
+interface TokenCardTypes {
+  name: string;
+  ticker: string;
+  createdBy: string;
+  cap: string;
+  desc: string;
+  border?: boolean;
+  tokenAddress?: string;
+  cid: string;
+}
 
 interface TradesCardType {
   user: string;
   isBuy: boolean;
-  seiAmount: string;
+  reserveAmount: string;
   memeTokenAmount: string;
   date: string;
   tx: string;

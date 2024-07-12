@@ -24,7 +24,8 @@
     "styled-components": "^6.1.11",
     "viem": "^2.9.31",
     "wagmi": "^2.8.0",
-    "web3": "^4.8.0"
+    "web3": "^4.8.0",
+    "web3modal": "^1.9.12"
   },
   "devDependencies": {
     "@types/node": "^20",

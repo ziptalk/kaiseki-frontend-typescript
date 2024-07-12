@@ -1,8 +1,8 @@
 "use client";
 
-import TokenCard from "@/components/shared/TokenCard";
+import TokenCard from "@/components/common/TokenCard";
 import { digital } from "@/fonts/font";
-import endpoint from "@/global/endpoint";
+import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export default function Home() {
   }, [pageNum]);
 
   function getData() {
-    fetch(`${endpoint}/homeTokenInfo?page=${pageNum}`) // Add this block
+    fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=${pageNum}`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
@@ -85,21 +85,37 @@ export default function Home() {
           className={`"border flex justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525] `}
         >
           <div>
-            <div className="h-[80px] w-[80px] border-black bg-[#D9D9D9]"></div>
+            <div className="h-[80px] w-[80px] overflow-hidden border-black ">
+              <Image
+                src="/images/catcat.png"
+                alt=""
+                width={80}
+                height={80}
+                className=""
+              />
+            </div>
           </div>
           <div className=" text w-[334px] overflow-hidden px-[10px]">
             <div className="">
               <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                ez
+                ToTheMoon
               </h1>
               <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                [ticker: ez]
+                [ticker: MOON]
               </h1>
             </div>
-
-            <h1 className="neon-lime text-xs text-[#C5F900] ">
-              Created by:&nbsp;0x7A2
-            </h1>
+            <div className="flex items-center gap-[5px]">
+              <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
+              <Image
+                className="rounded-full"
+                src="/images/memesinoGhost.png"
+                alt=""
+                width={12}
+                height={12}
+                style={{ width: 12, height: 12 }}
+              />
+              <h1 className="neon-lime text-xs text-[#C5F900] ">0x7A21</h1>
+            </div>
 
             <div className="flex">
               <h1 className="neon-yellow text-xs text-[#FAFF00]">
@@ -108,7 +124,7 @@ export default function Home() {
               <h1
                 className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
               >
-                1.1K
+                999.1K
               </h1>
             </div>
           </div>
@@ -120,7 +136,7 @@ export default function Home() {
   return (
     <>
       <main className="relative flex w-screen bg-[#0E0E0E]">
-        <div className="mx-auto h-full w-[70vw] pt-[20px] ">
+        <div className="mx-auto h-full pt-[20px] ">
           <div className="mx-auto flex h-[420px] w-[850px] max-w-[970px] items-center justify-evenly rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)]  shadow-[#FAFF00]">
             <div className="flex h-full flex-col justify-between">
               <div className="flex h-full w-[500px] flex-col items-center gap-[20px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
@@ -156,7 +172,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className=" mt-10 flex w-full items-end justify-between px-10">
+          <div className="mt-10 flex w-full items-end justify-between px-10">
             <div className="h-full">
               <div className="mb-[10px] text-xl text-white underline">
                 Tokens
@@ -179,7 +195,7 @@ export default function Home() {
             </form> */}
           </div>
 
-          <div className=" grid  w-full min-w-[1100px] grid-cols-3 grid-rows-7 gap-[60px] px-8 py-[10px]">
+          <div className="grid w-full min-w-[1100px] grid-cols-3 grid-rows-7 gap-[60px] px-8 py-[10px]">
             {tokenInfo ? (
               tokenInfo.map((card: any, index: any) => (
                 <TokenCard
@@ -198,7 +214,7 @@ export default function Home() {
             )}
           </div>
           <div className="mb-32 flex w-full justify-center">
-            <div className="flex gap-[20px]">
+            <div className="flex items-center gap-[20px] ">
               <Image
                 className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
@@ -212,7 +228,7 @@ export default function Home() {
                   }
                 }}
               />
-              <h1 className="text-white">{pageNum}</h1>
+              <h1 className=" text-white">{pageNum}</h1>
               <Image
                 className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
                 src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}

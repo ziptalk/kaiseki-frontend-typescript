@@ -1,49 +1,32 @@
 "use client";
-
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/global/contracts";
-import endpoint from "@/global/endpoint";
+import { FC, useEffect, useState } from "react";
 import {
   useAccountModal,
   useChainModal,
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
+import styled, { keyframes } from "styled-components";
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+
 import { ModalContentBox, ModalRootWrapper } from "./Modal";
-import rpcProvider from "@/global/rpcProvider";
-import styled, { keyframes } from "styled-components";
-import { useAccount, useChainId } from "wagmi";
+import { MODAL_VISIBLE_STORAGE_KEY } from "@/global/constants";
+
+import {
+  PROJECT_CHAIN_ID,
+  RESERVE_SYMBOL,
+  SERVER_ENDPOINT,
+} from "@/global/projectConfig";
 
 const Header: FC = () => {
-  //MARK: - Detect chain
-  useEffect(() => {
-    window.ethereum?.on("chainChanged", (chainId: any) => {
-      if (chainId != 0xae3f3) {
-        console.log("chainId from changed" + chainId);
-        setIsWrongChain(true);
-        console.log("changed wrong");
-      } else {
-        setIsWrongChain(false);
-      }
-    });
-    // window.ethereum?.on("connect", (chainId: any) => {
-    //   if (chainId.chainId != 0xae3f3) {
-    //     setIsWrongChain(true);
-    //     console.log("connect wrong");
-    //     console.log("chainId from connect" + JSON.stringify(chainId));
-    //   }
-    // });
-  }, []);
-
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
-  const { address } = useAccount();
+  const { address, chainId, isConnected } = useAccount();
 
-  const chainId = useChainId();
   const [curMintValue, setCurMintValue] = useState("0.1043");
   const [curMintTic, setCurMintTic] = useState("MEME");
   const [curMintUser, setCurMintUser] = useState("0x7A2");
@@ -62,21 +45,52 @@ const Header: FC = () => {
 
   const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
   const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
+  const [isWrongChain, setIsWrongChain] = useState(false);
 
-  // Initialize ethers with a provider
-  const { ethers } = require("ethers");
-  const MODAL_VISIBLE_STORAGE_KEY = "isFirstVisitToMemesino";
+  const [isHoveredX, setIsHoveredX] = useState(false);
+  const [isHoveredTG, setIsHoveredTG] = useState(false);
+  const [isHoveredIF, setIsHoveredIF] = useState(false);
+
+  const [isInfoModalActive, setIsInfoModalActive] = useState(false);
+  const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
-  const [isWrongChain, setIsWrongChain] = useState(false);
+  // MARK: - Detect chain change
+  // TODO: Make this work.....
+  // useEffect(() => {
+  //   window.ethereum.on("chainChanged", (chainId: any) => {
+  //     console.log(chainId);
+  //     if (chainId != projectChainId) {
+  //       console.log("chainId from changed" + chainId);
+  //       setIsWrongChain(true);
+  //       console.log("changed wrong");
+  //     } else {
+  //       setIsWrongChain(false);
+  //     }
+  //   });
+  // }, []);
 
+  // this works
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${endpoint}/homeTokenInfo?page=1`)
+      if (chainId !== PROJECT_CHAIN_ID) {
+        // console.log("chainId from changed" + chainId);
+        setIsWrongChain(true);
+      } else {
+        setIsWrongChain(false);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [chainId]);
+
+  // Detect created token from server
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=1`)
         .then((response) => response.json())
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
@@ -125,9 +139,10 @@ const Header: FC = () => {
     curCreateTokenAddress,
   ]);
 
+  // Detect minted token from server
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${endpoint}/TxlogsMintBurn`)
+      fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`)
         .then((response) => response.json())
         .then((data) => {
           const evs = data.mintEvents.reverse()[0];
@@ -140,7 +155,7 @@ const Header: FC = () => {
           const newMintUser = evs.user.substring(0, 5);
           const newMintCid = evs.token.cid;
           const newMintValue = Number(
-            ethers.formatEther(evs.reserveAmount._hex, 16),
+            ethers.formatEther(evs.reserveAmount._hex),
           )
             .toFixed(4)
             .toString();
@@ -187,6 +202,22 @@ const Header: FC = () => {
     }
   }, [createAnimationTrigger]);
 
+  useEffect(() => {
+    setReserveMarketPriceIntoState();
+  }, []);
+
+  const setReserveMarketPriceIntoState = async () => {
+    try {
+      const response = await axios.get(
+        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+      );
+      // console.log("Reserve PRICE" + response.data.price);
+      setCurReserveMarketPrice(response.data.price);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
     return (
       <EventWrapper>
@@ -205,7 +236,7 @@ const Header: FC = () => {
         <div className="flex h-[18px] w-full justify-end gap-[3px]">
           <h1 className="text-sm">
             {" "}
-            {value} SEI of {ticker}
+            {value} {RESERVE_SYMBOL} of {ticker}
           </h1>
           <Image
             width={18}
@@ -254,87 +285,45 @@ const Header: FC = () => {
     );
   };
 
-  function setModalVisible() {
+  const setModalVisible = () => {
     if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
-      setInfoModal(true);
+      setIsInfoModalActive(true);
       window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
     }
-  }
+  };
 
-  const handleClick = (url: string) => {
+  const handleUrlClick = (url: string) => {
     if (url) {
       window.open(url);
     }
   };
 
-  const [isHovered, setIsHovered] = useState(false);
+  const WrongChainPopUpModal: FC = () => {
+    return (
+      <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
+        <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
+          <div className="]">
+            <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
+            <h1>It seems you changed to wrong network..</h1>
+          </div>
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const [isHoveredTG, setIsHoveredTG] = useState(false);
-
-  const handleMouseEnterTG = () => {
-    setIsHoveredTG(true);
-  };
-
-  const handleMouseLeaveTG = () => {
-    setIsHoveredTG(false);
-  };
-
-  const [isHoveredIF, setIsHoveredIF] = useState(false);
-
-  const handleMouseEnterIF = () => {
-    setIsHoveredIF(true);
-  };
-
-  const handleMouseLeaveIF = () => {
-    setIsHoveredIF(false);
-  };
-  const [infoModal, setInfoModal] = useState(false);
-  const [curSeiPrice, setCurSeiPrice] = useState(0.5423);
-
-  useEffect(() => {
-    const getSeiPrice = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.binance.com/api/v3/ticker/price?symbol=SEIUSDT`,
-        );
-        // console.log("SEI PRICE" + response.data.price);
-        setCurSeiPrice(response.data.price);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getSeiPrice();
-  }, []);
-  return (
-    <>
-      {isWrongChain && (
-        <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
-          <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
-            <div className="]">
-              <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
-              <h1>It seems you changed to wrong network..</h1>
-            </div>
-
-            <div
-              onClick={openChainModal}
-              className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
-            >
-              Change Network to SEI
-            </div>
+          <div
+            onClick={openChainModal}
+            className=" cursor-pointer rounded-[10px] border py-[15px] text-center text-xl"
+          >
+            Change Network to {RESERVE_SYMBOL}
           </div>
         </div>
-      )}
-      {infoModal && (
-        <ModalRootWrapper onClick={() => setInfoModal(!infoModal)}>
+      </div>
+    );
+  };
+  return (
+    <>
+      {isWrongChain && <WrongChainPopUpModal />}
+      {isInfoModalActive && (
+        <ModalRootWrapper
+          onClick={() => setIsInfoModalActive(!isInfoModalActive)}
+        >
           <ModalContentBox onClick={(e) => e.stopPropagation()}>
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
@@ -355,18 +344,19 @@ const Header: FC = () => {
               </h1>
               <h1 className="mb-[20px]">
                 step 4 : when enough people buy on the bonding curve it reaches
-                a market cap of ${Math.floor((60660 * curSeiPrice) / 1000)}k
+                a market cap of $
+                {Math.floor((60660 * curReserveMarketPrice) / 1000)}k
               </h1>
               <h1 className="mb-[20px]">
-                step 5 : ${Math.floor((9000 * curSeiPrice) / 1000)}k of
-                liquidity is then deposited in dragonswap and burned
+                step 5 : ${Math.floor((9000 * curReserveMarketPrice) / 1000)}k
+                of liquidity is then deposited in dragonswap and burned
               </h1>
             </div>
 
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setInfoModal(!infoModal);
+                setIsInfoModalActive(!isInfoModalActive);
               }}
               className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
             >
@@ -418,7 +408,7 @@ const Header: FC = () => {
               <div className="flex gap-[30px]">
                 <Image
                   src={
-                    isHovered
+                    isHoveredX
                       ? "/icons/telegram-hover.svg"
                       : "/icons/telegram_logo.svg"
                   }
@@ -426,9 +416,9 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={() => handleClick("https://t.me/memesinodotfun")}
+                  onMouseEnter={() => setIsHoveredX(true)}
+                  onMouseLeave={() => setIsHoveredX(false)}
+                  onClick={() => handleUrlClick("https://t.me/memesinodotfun")}
                 />
 
                 <Image
@@ -437,10 +427,10 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnterTG}
-                  onMouseLeave={handleMouseLeaveTG}
+                  onMouseEnter={() => setIsHoveredTG(true)}
+                  onMouseLeave={() => setIsHoveredTG(false)}
                   onClick={() =>
-                    handleClick("https://twitter.com/memesinodotfun")
+                    handleUrlClick("https://twitter.com/memesinodotfun")
                   }
                 />
 
@@ -452,15 +442,15 @@ const Header: FC = () => {
                   width={50}
                   height={50}
                   className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={handleMouseEnterIF}
-                  onMouseLeave={handleMouseLeaveIF}
-                  onClick={() => setInfoModal(!infoModal)}
+                  onMouseEnter={() => setIsHoveredIF(true)}
+                  onMouseLeave={() => setIsHoveredIF(false)}
+                  onClick={() => setIsInfoModalActive(!isInfoModalActive)}
                 />
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
               <MintAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger ? "animate" : ""}`}
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
               >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
@@ -480,7 +470,7 @@ const Header: FC = () => {
                     {curMintTic}
                   </h1>
                 </Link>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#FA00FF]">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
@@ -488,7 +478,7 @@ const Header: FC = () => {
                 </div>
               </MintAnimateWrapper>
               <CreateAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger ? "animate" : ""}`}
+                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
               >
                 <div className="h-[18px] w-[18px] rounded-full ">
                   <Image
@@ -496,6 +486,7 @@ const Header: FC = () => {
                     alt=""
                     height={18}
                     width={18}
+                    style={{ width: 18, height: 18 }}
                   />
                 </div>
                 <h1 className="text-sm">{curCreateUser} Created</h1>
@@ -506,7 +497,7 @@ const Header: FC = () => {
                 </Link>
 
                 <h1 className="text-sm">on {curCreateTime}</h1>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full bg-[#09FFD3]">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
                     alt="img"
@@ -515,8 +506,6 @@ const Header: FC = () => {
               </CreateAnimateWrapper>
             </div>
             <div className="relative flex w-[300px] flex-row-reverse items-center">
-              {/* <ConnectButton /> */}
-
               {address ? (
                 <button
                   onClick={() => setAccountButtonModal(!accountButtonModal)}
@@ -589,31 +578,6 @@ const Header: FC = () => {
 };
 
 export default Header;
-
-const ImageSNS = styled.img`
-  height: 15px;
-`;
-
-const ImageX = styled(ImageSNS)`
-  content: url("/icons/X_logo.svg");
-  &:hover {
-    content: url("/icons/x-hover.svg");
-  }
-`;
-
-const ImageTG = styled(ImageSNS)`
-  content: url("/icons/telegram_logo.svg");
-  &:hover {
-    content: url("/icons/telegram-hover.svg");
-  }
-`;
-
-// const ImageInfo = styled(ImageSNS)`
-//   content: url("/icons/info.svg");
-//   &:hover {
-//     content: url("/icons/info-hover.svg");
-//   }
-// `;
 
 const eventCardColors: string[] = ["9EFF00", "00FFFF", "FF20F6"];
 
