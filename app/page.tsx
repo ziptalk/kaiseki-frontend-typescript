@@ -9,11 +9,13 @@ import { FC, useEffect, useState } from "react";
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false);
+  const [toTheMoonInfo, setToTheMoonInfo] = useState(null);
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
 
   useEffect(() => {
     getData();
+    getToTheMoonFromServer();
   }, []);
 
   useEffect(() => {
@@ -30,6 +32,17 @@ export default function Home() {
         console.log(error);
       });
   }
+
+  const getToTheMoonFromServer = () => {
+    fetch(`${SERVER_ENDPOINT}/ToTheMoon`)
+      .then((response) => response.json())
+      .then((data) => {
+        setToTheMoonInfo(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const SlotSection: FC = () => {
     return (

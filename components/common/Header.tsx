@@ -317,6 +317,7 @@ const Header: FC = () => {
       </div>
     );
   };
+
   return (
     <>
       {isWrongChain && <WrongChainPopUpModal />}
