@@ -38,7 +38,9 @@ export default function Detail() {
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const { abi: MCV2_ZapABI } = MCV2_ZapArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_ZapABI]);
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_SEPOLIA);
+  const provider = new ethers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
+  );
 
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,

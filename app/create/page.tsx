@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, use, useEffect, useRef, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
@@ -21,7 +21,9 @@ const Create: NextPage = () => {
   const router = useRouter();
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(process.env.RPC_SEPOLIA);
+  const provider = new ethers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
+  );
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
@@ -37,9 +39,8 @@ const Create: NextPage = () => {
 
   // TODO - Change creation fee later
   // const creationFeeInWei = ethers.parseEther("3.5");
-  const creationFeeInWei = ethers.parseEther("0.0015");
+  const creationFeeInWei = ethers.parseEther("0.0007");
   const inputFile = useRef(null);
-
   const [cid, setCid] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tickers, setTickers] = useState([]);
