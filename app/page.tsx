@@ -12,6 +12,17 @@ export default function Home() {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
 
+  const [kingName, setKingName] = useState("KingCat");
+  const [kingTicker, setKingTicker] = useState("KING");
+  const [kingCreator, setKingCreator] = useState("Me");
+  const [kingMarketCap, setKingMarketCap] = useState("0");
+  const [kingDesc, setKingDesc] = useState(
+    "Figma ipsum component variant main layer. Stroke opacity blur style bullet group library pencil content. Pencil effect underline pencil pixel follower.",
+  );
+  const [kingCid, setKingCid] = useState(
+    "QmeSwf4GCPw1TBpimcB5zoreCbgGL5fEo7kTfMjrNAXb3U",
+  );
+
   useEffect(() => {
     getData();
   }, []);
@@ -21,7 +32,7 @@ export default function Home() {
   }, [pageNum]);
 
   function getData() {
-    fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=${pageNum}`) // Add this block
+    fetch(`${SERVER_ENDPOINT}/search?page=${pageNum}`) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
@@ -30,6 +41,24 @@ export default function Home() {
         console.log(error);
       });
   }
+
+  const getToTheMoonFromServer = () => {
+    fetch(`${SERVER_ENDPOINT}/ToTheMoon`) // Add this block
+      .then((response) => response.json())
+      .then((data) => {
+        if (data[0]) {
+          setKingName(data[0].name);
+          setKingTicker(data[0].symbol);
+          setKingCid(data[0].cid);
+          setKingCreator(data[0].creator);
+          setKingDesc(data[0].description);
+          setKingMarketCap(data[0].marketCap);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const SlotSection: FC = () => {
     return (

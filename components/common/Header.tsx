@@ -87,82 +87,33 @@ const Header: FC = () => {
     return () => clearInterval(interval);
   }, [chainId]);
 
-  // Detect created token from server
+  // GNB data update
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${SERVER_ENDPOINT}/homeTokenInfo?page=1`)
+      fetch(`${SERVER_ENDPOINT}/tokens/latest`)
         .then((response) => response.json())
         .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            // console.log(data);
-            const newCreateTic = data[0].ticker.substring(0, 5);
-            const newCreateUser = data[0].createdBy.substring(0, 5);
-            const newCreateCid = data[0].cid;
-            const newCreateTokenAddress = data[0].tokenAddress;
-            const date = new Date(data[0].timestamp);
-            const formattedDate = `${String(date.getMonth() + 1).padStart(
-              2,
-              "0",
-            )}/${String(date.getDate()).padStart(
-              2,
-              "0",
-            )}/${String(date.getFullYear()).slice(-2)}`;
-
-            if (
-              newCreateTic !== curCreateTic ||
-              newCreateUser !== curCreateUser ||
-              newCreateCid !== curCreateCid ||
-              formattedDate !== curCreateTime ||
-              newCreateTokenAddress !== curCreateTokenAddress
-            ) {
-              setCurCreateTic(newCreateTic);
-              setCurCreateUser(newCreateUser);
-              setCurCreateCid(newCreateCid);
-              setCurCreateTime(formattedDate);
-              setCurCreateTokenAddress(newCreateTokenAddress);
-              setCreateAnimationTrigger(true); // Trigger animation
-            }
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }, 5000);
-    return () => clearInterval(interval); // Fetch every 5 seconds (adjust as needed)
-  }, [
-    curCreateTic,
-    curCreateUser,
-    curCreateCid,
-    curCreateTime,
-    curCreateTokenAddress,
-  ]);
-
-  // Detect minted token from server
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`)
-        .then((response) => response.json())
-        .then((data) => {
-          const evs = data.mintEvents.reverse()[0];
-
-          // console.log(
-          //   ethers.formatEther(evs.amountMinted._hex, 16).toString() + "evs",
-          // );
-
-          const newMintTic = evs.token.ticker.substring(0, 5);
-          const newMintUser = evs.user.substring(0, 5);
-          const newMintCid = evs.token.cid;
+          const newCreateTic = data.latestCreatedToken.ticker.substring(0, 5);
+          const newCreateUser = data.latestCreatedToken.creator.substring(0, 5);
+          const newCreateCid = data.latestCreatedToken.cid;
+          const newCreateTokenAddress = data.latestCreatedToken.tokenAddress;
+          const date = new Date(data.latestCreatedToken.createdAt);
+          const formattedDate = `${String(date.getMonth() + 1).padStart(
+            2,
+            "0",
+          )}/${String(date.getDate()).padStart(
+            2,
+            "0",
+          )}/${String(date.getFullYear()).slice(-2)}`;
+          const newMintTic = data.latestMintedToken.ticker.substring(0, 5);
+          const newMintUser = data.latestMintedToken.user.substring(0, 5);
+          const newMintCid = data.latestMintedToken.cid;
           const newMintValue = Number(
-            ethers.formatEther(evs.reserveAmount._hex),
+            ethers.formatEther(data.latestMintedToken.reserveAmount),
           )
             .toFixed(4)
             .toString();
-
-          const newMintTokenAddress = evs.token.tokenAddress;
-
-          // Check if values have changed before updating state
+          const newMintTokenAddress = data.latestMintedToken.tokenAddress;
           if (
             newMintTic !== curMintTic ||
             newMintUser !== curMintUser ||
@@ -178,9 +129,23 @@ const Header: FC = () => {
             setCurMintTokenAddress(newMintTokenAddress);
             setMintAnimationTrigger(true);
           }
+          if (
+            newCreateTic !== curCreateTic ||
+            newCreateUser !== curCreateUser ||
+            newCreateCid !== curCreateCid ||
+            formattedDate !== curCreateTime ||
+            newCreateTokenAddress !== curCreateTokenAddress
+          ) {
+            setCurCreateTic(newCreateTic);
+            setCurCreateUser(newCreateUser);
+            setCurCreateCid(newCreateCid);
+            setCurCreateTime(formattedDate);
+            setCurCreateTokenAddress(newCreateTokenAddress);
+            setCreateAnimationTrigger(true); // Trigger animation
+          }
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
@@ -499,7 +464,7 @@ const Header: FC = () => {
                 <h1 className="text-sm">on {curCreateTime}</h1>
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
                   />
                 </div>
