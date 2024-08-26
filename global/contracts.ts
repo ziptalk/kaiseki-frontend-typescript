@@ -7,7 +7,7 @@ const contracts: any = {
   MerkleDistributor: "0x9C79411279F81827FFFA138C76B32471a4AFb15e",
   Exchange: "0x2057e6a37b52AFa820f2f0cC21bfb8DeA79495C3",
 
-  ReserveToken: "0xA7e5677652A3E558A8727e4D94a3654eF5EB2406",
+  ReserveToken: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14", // WETH address
 };
 
 export default contracts;

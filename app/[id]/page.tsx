@@ -8,6 +8,7 @@ import Image from "next/image";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
+import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import SocialLinkCard from "@/components/detail/SocialLinkCard";
 import TradesCard from "@/components/detail/TradesCard";
@@ -21,6 +22,7 @@ import contracts from "@/global/contracts";
 
 import TradingViewChart from "@/components/common/TradingViewWidget";
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
+import axios from "axios";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -34,7 +36,8 @@ export default function Detail() {
   // MARK: - init ethers.js
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
+  const { abi: MCV2_ZapABI } = MCV2_ZapArtifact;
+  const errorDecoder = ErrorDecoder.create([MCV2_ZapABI]);
   const provider = new ethers.JsonRpcProvider(process.env.RPC_SEPOLIA);
 
   const bondContract = new ethers.Contract(
@@ -49,10 +52,22 @@ export default function Detail() {
     signer,
   );
 
+  const zapWriteContract = new ethers.Contract(
+    contracts.MCV2_ZapV1,
+    MCV2_ZapABI,
+    signer,
+  );
+
   const memeTokenContract = new ethers.Contract(
     tokenAddress,
     MCV2_TokenABI,
     provider,
+  );
+
+  const memeTokenWriteContract = new ethers.Contract(
+    tokenAddress,
+    MCV2_TokenABI,
+    signer,
   );
 
   const [memeTokenName, setMemeTokenName] = useState("Name");
@@ -69,6 +84,9 @@ export default function Detail() {
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
   );
+  const [TXLogs20FromServer, setTXLogs20FromServer] = useState<any[] | null>(
+    null,
+  );
 
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
@@ -80,6 +98,7 @@ export default function Detail() {
   const [inputValue, setInputValue] = useState("");
   const [tradeModuleErrorMsg, setTradeModuleErrorMsg] = useState("");
   const [isInputInTokenAmount, setIsInputInTokenAmount] = useState(true);
+  const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -87,6 +106,11 @@ export default function Detail() {
       fetchTXLogsFromServer(
         tokenAddress,
         setTXLogsFromServer,
+        TXLogsFromServer,
+      );
+      fetch20TXLogsFromServer(
+        tokenAddress,
+        setTXLogs20FromServer,
         TXLogsFromServer,
       );
     }, 5000); // Fetch every 5 seconds (adjust as needed)
@@ -140,6 +164,7 @@ export default function Detail() {
       console.error(error);
     }
   };
+
   const fetchHolderDistributionFromServer = async () => {
     try {
       const response = await fetch(`${SERVER_ENDPOINT}/HolderDistribution`);
@@ -150,6 +175,7 @@ export default function Detail() {
       console.log(error);
     }
   };
+
   const fetchTokenDetailFromContract = async () => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
@@ -158,10 +184,17 @@ export default function Detail() {
       setMemeTokenName(detail.info.name);
       setMemeTokenSymbol(detail.info.symbol);
       setCreator(detail.info.creator);
-      const mcap = String(ether(BigInt(Number(price) * BILLION)) / 1000);
+      const mcap = (
+        Number(ethers.formatEther(price.toString())) * BILLION
+      ).toFixed(2);
       // console.log("this is mcap" + mcap);
-      await updateMarketCapToServer(tokenAddress, mcap);
-      setMarketCap(mcap);
+      const response = await axios.get(
+        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+      );
+      const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
+
+      await updateMarketCapToServer(tokenAddress, marketCapInUSD);
+      setMarketCap(marketCapInUSD);
     } catch (error) {
       console.log(error);
     }
@@ -191,15 +224,18 @@ export default function Detail() {
       console.log(error);
     }
   };
+
   const fetchTXLogsFromServer = async (
     tokenAddress: any,
     setEventsFromDB: any,
     eventsFromDB: any,
   ) => {
     try {
-      const response = await fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`);
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}`,
+      );
       const data = await response.json();
-      const filteredData = filterEventsByToken(data, tokenAddress);
+      const filteredData = filterEventsByToken(data);
       if (filteredData.length !== eventsFromDB?.length) {
         setEventsFromDB(filteredData);
       }
@@ -207,19 +243,39 @@ export default function Detail() {
       console.log(error);
     }
   };
+
+  const fetch20TXLogsFromServer = async (
+    tokenAddress: any,
+    setEventsFromDB: any,
+    eventsFromDB: any,
+  ) => {
+    try {
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}?itemCount=20`,
+      );
+      const data = await response.json();
+      const filteredData = filterEventsByToken(data);
+      if (filteredData.length !== eventsFromDB?.length) {
+        setEventsFromDB(filteredData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const checkMetaMaskInstalled = () => {
     if (!window.ethereum) {
       return false;
     }
     return true;
   };
+
   const checkAccountAddressInitialized = (address: any) => {
     if (!address) {
       return false;
     }
     return true;
   };
-
   // MARK: - Get values
   const setUserReserveBalanceIntoState = async () => {
     try {
@@ -252,10 +308,6 @@ export default function Detail() {
 
   const setCurStepsIntoState = async () => {
     try {
-      if (account.address == null) {
-        return;
-      }
-
       // Fetch the steps using the getSteps function from the contract
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       // console.log("Fetched steps:", steps);
@@ -307,6 +359,24 @@ export default function Detail() {
     setInputValue(value.toString());
   };
 
+  const handleBuyMaxInReserve = () => {
+    setInputValue(curUserReserveBalance.substring(0, 5));
+  };
+
+  const handleBuyMaxinMeme = async () => {
+    await setPriceForNextMintIntoState();
+    await setUserMemeTokenBalanceIntoState();
+    const userMaxAmountInMeme = String(
+      Math.floor(
+        Number(
+          ethers.parseEther(curUserReserveBalance) / BigInt(priceForNextMint),
+        ),
+      ),
+    );
+
+    setInputValue(userMaxAmountInMeme);
+  };
+
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
     const result = BigInt(value) - tenPercent; // 10% 뺀 값 계산
@@ -324,6 +394,8 @@ export default function Detail() {
       return;
     }
 
+    if (isPending) return;
+
     if (
       BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
       Number(ethers.parseEther(curUserReserveBalance))
@@ -333,8 +405,9 @@ export default function Detail() {
       );
       return;
     }
-    console.log("start-app");
+
     try {
+      setIsPending(true);
       const inputInToken = BigInt(ethers.parseEther(inputValue));
       const inputInReserve = subtractTenPercent(
         ethers.parseEther(
@@ -374,10 +447,19 @@ export default function Detail() {
       // console.log("VIW BF" + ethers.parseEther(valueInEth));
       // console.log("VIW AF" + valueInWei);
 
-      const mintDetail = await bondWriteContract.mint(
+      // const mintDetail = await bondWriteContract.mint(
+      //   tokenAddress,
+      //   isInputInTokenAmount ? inputInToken : inputInReserve,
+      //   MAX_INT_256,
+      //   account.address,
+      //   {
+      //     value: valueInWei.toString(),
+      //   },
+      // );
+
+      const mintDetail = await zapWriteContract.mintWithEth(
         tokenAddress,
         isInputInTokenAmount ? inputInToken : inputInReserve,
-        MAX_INT_256,
         account.address,
         {
           value: valueInWei.toString(),
@@ -387,7 +469,9 @@ export default function Detail() {
       console.log("Mint detail:", mintDetail);
       await setCurStepsIntoState();
       setTradeModuleErrorMsg("Success");
+      setIsPending(false);
     } catch (error: any) {
+      setIsPending(false);
       const decodedError = await errorDecoder.decode(error);
 
       // Prints "Invalid swap with token contract address 0xabcd."
@@ -408,7 +492,8 @@ export default function Detail() {
       alert("Connect your wallet first!");
       return;
     }
-
+    if (isPending) return;
+    await setUserMemeTokenBalanceIntoState();
     if (
       ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
     ) {
@@ -421,6 +506,24 @@ export default function Detail() {
     console.log("start-app");
 
     try {
+      setIsPending(true);
+      const approveAmount = await memeTokenContract.allowance(
+        account.address,
+        contracts.MCV2_ZapV1,
+      );
+      console.log(approveAmount, BigInt(wei(Number(inputValue))));
+      if (approveAmount < BigInt(wei(Number(inputValue)))) {
+        console.log("Approving token...");
+        setTradeModuleErrorMsg("Approving token...");
+
+        const approveDetail = await memeTokenWriteContract.approve(
+          contracts.MCV2_ZapV1,
+          BigInt(wei(Number(inputValue))),
+        );
+        const approveReceipt = await approveDetail.wait();
+        console.log("Approval detail:", approveReceipt);
+      }
+
       console.log("Burning token...");
       setTradeModuleErrorMsg("Burning token...");
       const amountETH = await bondWriteContract.getRefundForTokens(
@@ -430,16 +533,18 @@ export default function Detail() {
       const valueInEth = ethers.formatEther(amountETH[0].toString());
       const valueInWei = ethers.parseEther(valueInEth);
 
-      const burnDetail = await bondWriteContract.burn(
+      const burnDetail = await zapWriteContract.burnToEth(
         tokenAddress,
         BigInt(wei(Number(inputValue))),
-        1000000000000,
+        0,
         account.address,
       );
       console.log("Burn detail:", burnDetail);
       await setCurStepsIntoState();
       setTradeModuleErrorMsg("Success");
+      setIsPending(false);
     } catch (error) {
+      setIsPending(false);
       const decodedError = await errorDecoder.decode(error);
 
       // Prints "Invalid swap with token contract address 0xabcd."
@@ -451,15 +556,17 @@ export default function Detail() {
     await setUserMemeTokenBalanceIntoState();
   };
 
-  const filterEventsByToken = (data: any, token: any): Event[] => {
+  const filterEventsByToken = (data: any): Event[] => {
     try {
-      const filteredMintEvents = data.mintEvents
-        .filter((event: any) => event.token.tokenAddress === token)
-        .map((event: any) => ({ ...event, isMint: true }));
+      const filteredMintEvents = data.mintEvents.map((event: any) => ({
+        ...event,
+        isMint: true,
+      }));
 
-      const filteredBurnEvents = data.burnEvents
-        .filter((event: any) => event.token === token)
-        .map((event: any) => ({ ...event, isMint: false }));
+      const filteredBurnEvents = data.burnEvents.map((event: any) => ({
+        ...event,
+        isMint: false,
+      }));
 
       const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
       combinedEvents.sort(
@@ -475,25 +582,29 @@ export default function Detail() {
     }
   };
 
-  const transformToTradesCardType = (event: Event): TradesCardType => {
+  const transformToTradesCardType = (event: any): TradesCardType => {
     return {
       user: event.user.substring(0, 6),
       isBuy: event.isMint,
       reserveAmount: event.reserveAmount
-        ? ether(BigInt(parseInt(event.reserveAmount._hex, 16)))
+        ? (
+            Math.ceil(Number(ethers.formatEther(event.reserveAmount)) * 10000) /
+            10000
+          )
             .toFixed(4)
             .toString()
-        : ether(BigInt(parseInt(event.refundAmount!._hex, 16)))
+        : (
+            Math.ceil(Number(ethers.formatEther(event.refundAmount)) * 10000) /
+            10000
+          )
             .toFixed(4)
             .toString(),
 
       memeTokenAmount: event.amountMinted
-        ? ether(BigInt(parseInt(event.amountMinted._hex, 16)))
-            .toFixed(0)
-            .toString()
-        : parseInt(event.amountBurned?._hex || "0", 16).toString(),
+        ? Number(ethers.formatEther(event.amountMinted)).toFixed(0).toString()
+        : ethers.formatEther(event.amountBurned),
       date: event.blockTimestamp.toString(),
-      tx: event.transactionHash.slice(-6),
+      tx: event.transactionHash,
     };
   };
 
@@ -518,8 +629,8 @@ export default function Detail() {
             <h1 className="w-1/6">date</h1>
             <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
           </div>
-          {TXLogsFromServer ? (
-            TXLogsFromServer.map((event) => {
+          {TXLogs20FromServer ? (
+            TXLogs20FromServer.map((event) => {
               const cardProps = transformToTradesCardType(event);
               return <TradesCard key={event._id} {...cardProps} />;
             })

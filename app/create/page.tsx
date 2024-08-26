@@ -35,7 +35,9 @@ const Create: NextPage = () => {
     provider,
   );
 
-  const creationFeeInWei = ethers.parseEther("3.5");
+  // TODO - Change creation fee later
+  // const creationFeeInWei = ethers.parseEther("3.5");
+  const creationFeeInWei = ethers.parseEther("0.0015");
   const inputFile = useRef(null);
 
   const [cid, setCid] = useState("");
@@ -161,10 +163,11 @@ const Create: NextPage = () => {
       alert("Connect your wallet first!");
       return true;
     }
-    if (await isUserGotMoreThanCreationFee()) {
-      alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
-      return true;
-    }
+    // TODO - Make this able later
+    // if (await isUserGotMoreThanCreationFee()) {
+    //   alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
+    //   return true;
+    // }
     if (matchingTicker) {
       alert("Ticker already exists!");
       return true;
