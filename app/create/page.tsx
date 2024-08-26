@@ -13,11 +13,7 @@ import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 
-import {
-  RESERVE_SYMBOL,
-  RPC_PROVIDER_URL,
-  SERVER_ENDPOINT,
-} from "@/global/projectConfig";
+import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 
 const Create: NextPage = () => {
   const signer = useEthersSigner();
@@ -25,7 +21,7 @@ const Create: NextPage = () => {
   const router = useRouter();
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(RPC_PROVIDER_URL);
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_SEPOLIA);
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(

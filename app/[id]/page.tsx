@@ -20,11 +20,7 @@ import { MAX_INT_256, BILLION } from "@/global/constants";
 import contracts from "@/global/contracts";
 
 import TradingViewChart from "@/components/common/TradingViewWidget";
-import {
-  RESERVE_SYMBOL,
-  RPC_PROVIDER_URL,
-  SERVER_ENDPOINT,
-} from "@/global/projectConfig";
+import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -39,7 +35,7 @@ export default function Detail() {
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
-  const provider = new ethers.JsonRpcProvider(RPC_PROVIDER_URL);
+  const provider = new ethers.JsonRpcProvider(process.env.RPC_SEPOLIA);
 
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,
