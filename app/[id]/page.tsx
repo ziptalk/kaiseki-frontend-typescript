@@ -282,9 +282,9 @@ export default function Detail() {
     try {
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
-        console.log(balanceWei);
+        // console.log(balanceWei);
         const balanceEther = ethers.formatEther(balanceWei);
-        console.log(balanceEther);
+        // console.log(balanceEther);
         setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {
@@ -360,23 +360,23 @@ export default function Detail() {
     setInputValue(value.toString());
   };
 
-  const handleBuyMaxInReserve = () => {
-    setInputValue(curUserReserveBalance.substring(0, 5));
-  };
+  // const handleBuyMaxInReserve = () => {
+  //   setInputValue(curUserReserveBalance.substring(0, 5));
+  // };
 
-  const handleBuyMaxinMeme = async () => {
-    await setPriceForNextMintIntoState();
-    await setUserMemeTokenBalanceIntoState();
-    const userMaxAmountInMeme = String(
-      Math.floor(
-        Number(
-          ethers.parseEther(curUserReserveBalance) / BigInt(priceForNextMint),
-        ),
-      ),
-    );
+  // const handleBuyMaxinMeme = async () => {
+  //   await setPriceForNextMintIntoState();
+  //   await setUserMemeTokenBalanceIntoState();
+  //   const userMaxAmountInMeme = String(
+  //     Math.floor(
+  //       Number(
+  //         ethers.parseEther(curUserReserveBalance) / BigInt(priceForNextMint),
+  //       ),
+  //     ),
+  //   );
 
-    setInputValue(userMaxAmountInMeme);
-  };
+  //   setInputValue(userMaxAmountInMeme);
+  // };
 
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
@@ -426,17 +426,6 @@ export default function Detail() {
       console.log("Minting token...");
       setTradeModuleErrorMsg("Minting token...");
 
-      // const sp = stepPrices800();
-      // const divValue = Math.floor(
-      //   Number(totalMintAmount / BigInt(1000000000000000000000000)),
-      // );
-      // console.log("TMA" + totalMintAmount);
-      // const additionalStep = InputState
-      //   ? (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInToken
-      //   : (BigInt(sp[divValue]) - BigInt(priceForNextMint)) * inputInReserve;
-
-      // console.log("ADS" + additionalStep);
-
       const amountETH = await bondWriteContract.getReserveForToken(
         tokenAddress,
         isInputInTokenAmount ? inputInToken : inputInReserve,
@@ -444,20 +433,6 @@ export default function Detail() {
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
       const valueInWei = ethers.parseEther(valueInEth);
-      // const valueInWei = ethers.parseEther(valueInEth) + additionalStep;
-      // console.log("VIW BF" + ethers.parseEther(valueInEth));
-      // console.log("VIW AF" + valueInWei);
-
-      // const mintDetail = await bondWriteContract.mint(
-      //   tokenAddress,
-      //   isInputInTokenAmount ? inputInToken : inputInReserve,
-      //   MAX_INT_256,
-      //   account.address,
-      //   {
-      //     value: valueInWei.toString(),
-      //   },
-      // );
-
       const mintDetail = await zapWriteContract.mintWithEth(
         tokenAddress,
         isInputInTokenAmount ? inputInToken : inputInReserve,
