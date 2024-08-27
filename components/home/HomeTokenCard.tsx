@@ -14,7 +14,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   return (
     <Link
       href={tokenAddress ? tokenAddress : ""}
-      className={`hover:card-gradient flex h-[215px] w-[420px] justify-between gap-[10px] bg-[#252525] p-[10px]`}
+      className={`hover:card-gradient flex h-[215px] w-[420px] justify-between gap-[10px] bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] hover:bg-gradient-to-t`}
       // style={{
       //   background:
       //     "linear-gradient(180deg, rgba(224, 9, 0, 0.60) 2.23%, rgba(166, 13, 7, 0.60) 97.87%)",
