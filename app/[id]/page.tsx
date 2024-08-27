@@ -283,9 +283,9 @@ export default function Detail() {
     try {
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
-        console.log(balanceWei);
+        // console.log(balanceWei);
         const balanceEther = ethers.formatEther(balanceWei);
-        console.log(balanceEther);
+        // console.log(balanceEther);
         setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {
@@ -342,9 +342,9 @@ export default function Detail() {
 
       const detail = await bondContract.priceForNextMint(tokenAddress);
       setPriceForNextMint(detail);
-      // console.log("NextMintPrice :" + detail);
+      console.log("NextMintPrice :" + detail);
     } catch (error) {
-      console.log(error);
+      console.log({ setPriceForNextMintIntoState: error });
     }
   };
 

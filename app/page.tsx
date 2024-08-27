@@ -25,6 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     getData();
+    getToTheMoonFromServer();
   }, []);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function Home() {
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
+        // console.log({ homeData: data });
       })
       .catch((error) => {
         console.log(error);
@@ -54,6 +56,7 @@ export default function Home() {
           setKingDesc(data[0].description);
           setKingMarketCap(data[0].marketCap);
         }
+        // console.log({ tothemoon: data });
       })
       .catch((error) => {
         console.log(error);
