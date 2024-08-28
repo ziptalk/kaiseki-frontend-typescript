@@ -18,3 +18,104 @@ input::-webkit-inner-spin-button {
   -moz-appearance: none;
   -webkit-appearance: none;
 }
+.animate-skillCardSlide {
+  opacity: 0;
+  animation: 1.5s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.1s;
+}
+.wrapper {
+  /* margin-bottom: 5%; */
+  overflow: hidden;
+}
+.wrapper .slide_container {
+  width: 520%;
+}
+.wrapper .slide_container .slide_wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.wrapper .slide_container .slide {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+.wrapper .slide_container .slide.original {
+  animation: 25s linear infinite normal none running infiniteAnimation1;
+}
+
+.wrapper .slide_container .slide.clone {
+  animation: 25s linear infinite infiniteAnimation2;
+}
+
+.wrapper .slide_container .slide.stop {
+  animation-play-state: paused;
+}
+
+.wrapper .slide_container .slide li {
+  cursor: pointer;
+  z-index: 2;
+  transition: 0.3s;
+  transform: scale(1);
+  margin-left: 0.4%;
+  margin-right: 0.4%;
+}
+.slide li .item img {
+  width: 100%;
+}
+
+.wrapper .slide_container .slide li:hover {
+  transform: scale(0.98);
+}
+
+.wrapper .slide_container .slide li:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+@keyframes infiniteAnimation1 {
+  0% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(-100%);
+  }
+  50.1% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes infiniteAnimation2 {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+.raffle-typo {
+  font-family: var(--font-anton);
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #ffd600;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  background: linear-gradient(0deg, #fff 0%, #faff00 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

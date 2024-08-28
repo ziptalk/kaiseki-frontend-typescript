@@ -9,7 +9,7 @@ import {
 } from "lightweight-charts";
 import { ethers } from "ethers";
 
-import { stepPrices800, stepRanges800 } from "@/global/createValue";
+import { stepPrices, stepPrices800 } from "@/global/createValue";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 
 type TradingViewChartProps = {
@@ -26,14 +26,16 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
   const [ready, setReady] = useState(false);
   const [getOnce, setGetOnce] = useState(false);
 
-  function filterEventsByToken(data: any, token: any): Event[] {
-    const filteredMintEvents = data.mintEvents
-      .filter((event: any) => event.token.tokenAddress === token)
-      .map((event: any) => ({ ...event, isMint: true }));
+  function filterEventsByToken(data: any, token: any) {
+    const filteredMintEvents = data.mintEvents.map((event: any) => ({
+      ...event,
+      isMint: true,
+    }));
 
-    const filteredBurnEvents = data.burnEvents
-      .filter((event: any) => event.token === token)
-      .map((event: any) => ({ ...event, isMint: false }));
+    const filteredBurnEvents = data.burnEvents.map((event: any) => ({
+      ...event,
+      isMint: false,
+    }));
 
     const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
 
@@ -63,24 +65,25 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
   const fetchAndUpdateData = async () => {
     try {
-      const response = await fetch(`${SERVER_ENDPOINT}/TxlogsMintBurn`);
+      const response = await fetch(
+        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}`,
+      );
       const data = await response.json();
       const filteredData = filterEventsByToken(data, tokenAddress);
-      console.log(filteredData);
 
       let curMintedToken = BigInt(0);
-      const sp = stepPrices800();
-      const sr = stepRanges800();
+      const sp = stepPrices;
+
       const newChartData: BarData[] = [];
 
       if (filteredData.length == 0) {
         // 거래 내역이 없을 경우 기본 데이터 추가
         newChartData.push({
           time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-          open: 0.000002125,
-          high: 0.000002125,
-          low: 0.000002125,
-          close: 0.000002125,
+          open: 0.0000000003,
+          high: 0.0000000003,
+          low: 0.0000000003,
+          close: 0.0000000003,
         });
       }
       for (const event of filteredData) {
@@ -92,11 +95,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         while (newChartData.some((entry) => entry.time === timestamp)) {
           timestamp = (timestamp + 1) as UTCTimestamp;
         }
-
         if (event.isMint) {
-          curMintedToken += BigInt(event.amountMinted!._hex);
+          curMintedToken += BigInt(event.amountMinted);
         } else {
-          curMintedToken -= BigInt(event.amountMinted!._hex);
+          curMintedToken -= BigInt(event.amountBurned);
         }
 
         const divValue = Math.floor(
@@ -109,7 +111,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
-                : 0.000002125,
+                : 0.0000000003,
             high: Number(ethers.formatEther(sp[divValue])),
             low: Number(ethers.formatEther(sp[divValue])),
             close: Number(ethers.formatEther(sp[divValue])),
@@ -144,7 +146,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
   }, [getOnce, tokenAddress]);
 
   useEffect(() => {
-    console.log(JSON.stringify(chartData, null, 2) + "chartdata");
+    // console.log(JSON.stringify(chartData, null, 2) + "chartdata");
     if (chartData.length === 0) return;
     if (chartContainerRef.current) {
       const chartOptions: DeepPartial<ChartOptions> = {
