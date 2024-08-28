@@ -202,7 +202,7 @@ export default function Raffle() {
               height={17}
               style={{ width: 17, height: 17 }}
             />
-            Raffle has been successfully completed!
+            Raffle did not run properly. Please try again.
           </div>
         ))}
     </>
