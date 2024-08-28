@@ -106,10 +106,9 @@ input::-webkit-inner-spin-button {
 }
 
 .raffle-typo {
-  text-shadow: 1px 3px 0px rgba(0, 0, 0, 0.25);
+  font-family: var(--font-anton);
   -webkit-text-stroke-width: 1;
-  -webkit-text-stroke-color: #000;
-  font-family: Anton;
+  -webkit-text-stroke-color: #ffd600;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;

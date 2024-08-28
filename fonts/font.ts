@@ -14,3 +14,8 @@ export const impact = localFont({
   src: "./Impact/impact.ttf",
   variable: "--font-impact",
 });
+
+export const anton = localFont({
+  src: "./Anton/Anton-Regular.ttf",
+  variable: "--font-anton",
+});

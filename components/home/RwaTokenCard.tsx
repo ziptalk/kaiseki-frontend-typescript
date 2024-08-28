@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
+import { anton } from "@/fonts/font";
 
 export const RWATokenCard: FC = () => {
   const [kingName, setKingName] = useState("KingCat");
@@ -73,7 +74,9 @@ export const RWATokenCard: FC = () => {
             {kingMarketCap}K
           </h1>
         </div>
-        <div className="raffle-typo">1 Day 00:12 left!</div>
+        <div className={`raffle-typo ${anton.variable} font-anton`}>
+          1 Day 00:12 left!
+        </div>
       </div>
     </div>
   );
