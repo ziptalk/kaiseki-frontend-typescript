@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import Image from "next/image";
+import { BuySellLayout } from "./BuySellLayout";
 
 interface TokensLayoutProps {
   clickedToken: string;
@@ -56,36 +57,43 @@ export const TokensLayout = ({
               className="h-[50px] w-[170px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
               placeholder="search for token"
             ></input>
-            <button className="h-[50px] w-[160px] rounded-[10px] bg-[#FF00C6]">
+            <button className="h-[50px] w-[160px] rounded-[10px] bg-[#FF00C6] font-bold text-white">
               search
             </button>
           </form>
         </div>
-        <div
-          className={`mt-[20px] grid ${clickedToken || hoveredToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[30px]`}
-        >
-          {tokenInfo ? (
-            tokenInfo.map((card: any, index: any) => (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredToken(card.tokenAddress)}
-                onMouseDown={() => setClickedToken(card.tokenAddress)}
-                onMouseLeave={() => setHoveredToken("")}
-              >
-                <HomeTokenCard
-                  cid={card.cid}
-                  name={card.name}
-                  ticker={card.ticker}
-                  tokenAddress={card.tokenAddress}
-                  cap={card.marketCap}
-                  createdBy={card.createdBy}
-                  desc={card.description}
-                  hoveredToken={clickedToken}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No token information available.</p>
+        <div className="mt-[20px] flex w-full">
+          <div
+            className={`grid ${clickedToken || hoveredToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[20px]`}
+          >
+            {tokenInfo ? (
+              tokenInfo.map((card: any, index: any) => (
+                <div
+                  key={index}
+                  onMouseEnter={() => setHoveredToken(card.tokenAddress)}
+                  onMouseDown={() => setClickedToken(card.tokenAddress)}
+                  onMouseLeave={() => setHoveredToken("")}
+                >
+                  <HomeTokenCard
+                    cid={card.cid}
+                    name={card.name}
+                    ticker={card.ticker}
+                    tokenAddress={card.tokenAddress}
+                    cap={card.marketCap}
+                    createdBy={card.createdBy}
+                    desc={card.description}
+                    hoveredToken={clickedToken}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No token information available.</p>
+            )}
+          </div>
+          {(hoveredToken || clickedToken) && (
+            <div className="ml-[20px] h-[950px] w-[420px] bg-[#252525] p-[20px] pt-[10px]">
+              <BuySellLayout tokenAddress={hoveredToken || clickedToken} />
+            </div>
           )}
         </div>
         <div className="mb-32 mt-[40px] flex w-full justify-center">
