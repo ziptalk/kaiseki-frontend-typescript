@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 
 function App() {
   const [priceHistory, setPriceHistory] = useState(null);
+  const [ttm, setTtm] = useState(null);
   const [eventsFromDB, setEventsFromDB] = useState<Event[] | null>(null);
   const [distribution, setDistribution] = useState(null);
   const [tokenInfo, setTokenInfo] = useState(null);
@@ -33,6 +34,15 @@ function App() {
         setEventsFromDB(filteredData);
         // setEventsFromDB(data.mintEvents.reverse());
         // setEventsFromDB(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    fetch(`${SERVER_ENDPOINT}/ToTheMoon`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTtm(data);
       })
       .catch((error) => {
         console.log(error);
@@ -87,8 +97,10 @@ function App() {
       <pre>{JSON.stringify(distribution, null, 2)}</pre> */}
       {/* <h2 className="text-[40px]">Price History</h2>
       <pre>{JSON.stringify(priceHistory, null, 2)}</pre> */}
-      <h2 className="text-[40px]">Events from DB</h2>
-      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre>
+      {/* <h2 className="text-[40px]">Events from DB</h2>
+      <pre>{JSON.stringify(eventsFromDB, null, 2)}</pre> */}
+      <h2 className="text-[40px]">To the moon</h2>
+      <pre>{JSON.stringify(ttm, null, 2)}</pre>
     </div>
   );
 }

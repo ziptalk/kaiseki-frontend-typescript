@@ -13,7 +13,7 @@ export default function Home() {
   //   console.log({ hoveredToken });
   //   console.log({ clickedToken });
   // }, [hoveredToken, clickedToken]);
-
+  
   return (
     <>
       <main className="relative flex w-screen bg-[#0E0E0E]">
