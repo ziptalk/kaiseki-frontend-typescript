@@ -1,4 +1,3 @@
-import { digital } from "@/fonts/font";
 import { FC } from "react";
 
 interface BondingCurveCardTypes {
@@ -7,20 +6,13 @@ interface BondingCurveCardTypes {
 const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
   return (
     <>
-      <div className="flex w-full flex-col gap-[20px]  ">
-        <div className="flex items-center">
-          <h1 className="text-lg font-bold text-[#ADADAD]">
-            bonding curve progress:&nbsp;
-          </h1>
-          <h1
-            className={`text-[#FAFF00] ${digital.variable} neon-yellow font-digital text-xl`}
-          >
-            {prog}%
-          </h1>
-        </div>
-        <div className="h-[12px] w-full rounded-full bg-[#343434] text-[13px]">
+      <div className="flex w-full flex-col gap-[10px]  ">
+        <h1 className="text-[18px] font-bold text-white">
+          bonding curve progress:&nbsp;{prog}%
+        </h1>
+        <div className="h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
           <div
-            className="h-full rounded-full bg-[#FF2626] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2626]"
+            className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
             style={{ width: `${prog}%` }}
           ></div>
         </div>

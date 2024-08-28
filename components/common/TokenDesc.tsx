@@ -19,10 +19,8 @@ export const TokenDesc = ({
 }: TokenDescProps) => {
   return (
     <div className="w-full overflow-scroll">
-      <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-        {name}
-      </h1>
-      <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
+      <h1 className="text-[15px] font-bold leading-none text-white">{name}</h1>
+      <h1 className="text-[15px] font-bold leading-none text-white">
         [ticker: {ticker}]
       </h1>
       <div className="mt-[5px] flex items-center gap-[5px]">
@@ -37,16 +35,9 @@ export const TokenDesc = ({
           {creator.length < 20 ? creator : `${creator.slice(0, 20)}...`}
         </h1>
       </div>
-
-      <div className="flex gap-[5px]">
-        <h1 className="neon-yellow text-xs text-[#FAFF00]">market cap :</h1>
-        <h1
-          className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
-        >
-          {marketCap}K
-        </h1>
+      <div className="mt-[5px] overflow-scroll text-[13px] text-[#808080]">
+        {desc}
       </div>
-      <div className="overflow-scroll text-[13px] text-[#808080]">{desc}</div>
     </div>
   );
 };

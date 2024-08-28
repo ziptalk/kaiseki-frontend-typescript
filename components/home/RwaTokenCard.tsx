@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import Link from "next/link";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { TokenDesc } from "../common/TokenDesc";
+import { digital } from "@/fonts/font";
 
 export const RWATokenCard: FC = () => {
   const [kingName, setKingName] = useState("KingCat");
@@ -38,24 +38,43 @@ export const RWATokenCard: FC = () => {
       });
   };
   return (
-    <Link
-      className="flex h-[120px] w-[400px] justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]"
-      href="/0x2Ed6C164217E3EC792655A866EF3493D2AAfBFb3"
-    >
+    <div className="flex h-[120px] w-[390px] justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
         alt="Image from IPFS"
         className="h-[100px] w-[100px] border-black"
       />
-      <TokenDesc
-        {...{
-          name: kingName,
-          ticker: kingTicker,
-          creator: kingCreator,
-          marketCap: kingMarketCap,
-          desc: kingDesc,
-        }}
-      />
-    </Link>
+      <div className="flex w-full flex-col">
+        <h1 className="h-[17px] text-[15px] font-bold text-white">
+          {kingName}
+        </h1>
+        <h2 className="mt-[4px] h-[17px] text-[15px] font-bold text-white">
+          [ticker: {kingTicker}]
+        </h2>
+        <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
+          <h1 className="neon-lime text-[12px] text-[#C5F900]">created by: </h1>
+          <img
+            className="rounded-full"
+            src="/images/memesinoGhost.png"
+            alt=""
+            style={{ width: 12, height: 12 }}
+          />
+          <h1 className="neon-lime mt-[5px] text-[12px] text-[#C5F900]">
+            {kingCreator.length < 20
+              ? kingCreator
+              : `${kingCreator.slice(0, 20)}...`}
+          </h1>
+        </div>
+        <div className="flex h-[14px]  gap-[5px]">
+          <h1 className="neon-yellow text-xs text-[#FAFF00]">market cap :</h1>
+          <h1
+            className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+          >
+            {kingMarketCap}K
+          </h1>
+        </div>
+        <div className="raffle-typo">1 Day 00:12 left!</div>
+      </div>
+    </div>
   );
 };

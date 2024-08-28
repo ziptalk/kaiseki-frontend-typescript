@@ -34,7 +34,7 @@ interface TokenCardTypes {
   desc: string;
   border?: boolean;
   tokenAddress?: string;
-  hoveredToken: string;
+  hoveredToken?: string;
   cid: string;
 }
 

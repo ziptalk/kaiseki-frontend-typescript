@@ -24,6 +24,7 @@ import axios from "axios";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
+import Link from "next/link";
 interface BuySellLayoutProps {
   tokenAddress: string;
 }
@@ -592,25 +593,23 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   };
   const BuySellButtonSection: FC = () => {
     return (
-      <>
-        <div className="flex gap-[10px] rounded-[10px] border-2 border-[#880400] bg-black p-[10px]">
-          <button
-            className={`h-[44px] w-full rounded-[8px]  ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#43FF4B]" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
-            onClick={() => setIsBuy(true)}
-          >
-            Buy
-          </button>
-          <button
-            className={`h-[44px] w-full rounded-[8px] border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FB30FF]"}`}
-            onClick={() => {
-              setIsBuy(false);
-              setIsInputInTokenAmount(true);
-            }}
-          >
-            Sell
-          </button>
-        </div>
-      </>
+      <div className="flex h-[50px] justify-between gap-[5px]">
+        <button
+          className={`h-full w-[210px] ${isBuy && "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
+          onClick={() => setIsBuy(true)}
+        >
+          Buy
+        </button>
+        <button
+          className={`h-full w-[210px] ${isBuy || "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
+          onClick={() => {
+            setIsBuy(false);
+            setIsInputInTokenAmount(true);
+          }}
+        >
+          Sell
+        </button>
+      </div>
     );
   };
 
@@ -656,8 +655,8 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
 
     return (
       <>
-        <h1 className="mt-[15px] text-sm text-white">{tradeModuleErrorMsg}</h1>
-        <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px]">
+        <h1 className="text-sm text-white">{tradeModuleErrorMsg}</h1>
+        <div className="flex h-[20px] gap-[7px] text-[13px]">
           <button
             type="button"
             className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
@@ -745,60 +744,62 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
         </div>
       </div>
       <BuySellButtonSection />
-
-      <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
-        {/*<div className="flex justify-between">
-     <div />
-       <div
-        className="mt-[15px]
-       flex h-[30px] w-[128px] cursor-pointer items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]"
-      >
-        Set max slippage
-      </div> 
-    </div>
-    */}
+      <form onSubmit={isBuy ? buy : sell} className="flex flex-col gap-[10px]">
+        {isBuy ? (
+          <div
+            onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
+            className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
+          >
+            Switch to F1T
+          </div>
+        ) : (
+          <SellPercentageButton />
+        )}
         {isInputInTokenAmount ? (
           <>
-            {/*input amount == memetoken*/}
             <div className="relative flex w-full items-center">
               <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
+                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
                 type="number"
-                placeholder="0.00"
+                placeholder="Enter the amount"
                 step="0.01"
                 name="inputValue"
                 value={inputValue}
                 onChange={handleInputChange}
               />
               <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                    alt="img"
-                  />
-                </div>
-                <h1 className="mt-1 text-[15px] font-bold text-white">
-                  {memeTokenSymbol}
-                </h1>
+                {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                      alt="img"
+                    />
+                  </div>
+                  <h1 className="mt-1 text-[15px] font-bold text-white">
+                    {memeTokenSymbol}
+                  </h1> */}
+                <button
+                  type="button"
+                  onClick={() => handlePercentage(100)}
+                  className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
+                >
+                  MAX
+                </button>
               </div>
             </div>
-            <h1 className="text-[#B8B8B8]">
-              {/* {curMemeTokenValue}&nbsp; */}
-              {/* {name} */}
-              {/*memetoken value to RESERVE_SYMBOL*/}
-              {ether(
-                BigInt(Math.floor(Number(inputValue))) *
-                  BigInt(priceForNextMint),
-              )}
-              &nbsp;{RESERVE_SYMBOL}
-            </h1>
+            {/* <h1 className="text-[#B8B8B8]">
+                {ether(
+                  BigInt(Math.floor(Number(inputValue))) *
+                    BigInt(priceForNextMint),
+                )}
+                &nbsp;{RESERVE_SYMBOL}
+              </h1> */}
           </>
         ) : (
           <>
             {/*input amount == RESERVE_SYMBOL*/}
             <div className="relative flex w-full items-center">
               <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
+                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
                 type="number"
                 placeholder="0.00"
                 step="0.01"
@@ -840,28 +841,17 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
         )}
 
         {/*true == toggle module, false == percent for sell*/}
-        {isBuy ? (
-          <div className="my-[15px] flex h-[20px] items-center justify-between">
-            <h1 className="text-sm text-white">{tradeModuleErrorMsg}</h1>
-            <div
-              onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-              className={`flex h-[12px] w-[46px] cursor-pointer ${isInputInTokenAmount && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
-            >
-              <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
-              <div
-                className={`h-[24px] w-[24px] rounded-full ${isInputInTokenAmount ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
-              ></div>
-            </div>
-          </div>
-        ) : (
-          <SellPercentageButton />
-        )}
-
+        <div className="text-[14px] text-white">
+          {"Raffle has already progressed! -> "}
+          <Link href={"#"} className="underline">
+            Join the Raffle!
+          </Link>
+        </div>
         <button
           type="submit"
-          className={`h-[51px] w-full rounded-[8px] border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
+          className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
         >
-          place trade
+          Connect Wallet
         </button>
       </form>
       {/* <SellPercentageButton /> */}

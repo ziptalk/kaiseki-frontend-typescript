@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import Image from "next/image";
-import { BuySellLayout } from "./BuySellLayout";
 
 interface TokensLayoutProps {
-  setHoveredToken: (value: string) => void;
+  clickedToken: string;
+  setClickedToken: (value: string) => void;
   hoveredToken: string;
+  setHoveredToken: (value: string) => void;
 }
 
 export const TokensLayout = ({
+  clickedToken,
+  setClickedToken,
   hoveredToken,
   setHoveredToken,
 }: TokensLayoutProps) => {
@@ -26,6 +29,7 @@ export const TokensLayout = ({
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -33,7 +37,7 @@ export const TokensLayout = ({
   }
   return (
     <>
-      <div className="w-[860px]">
+      <div className="w-full">
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-[20px] flex w-full gap-[20px]">
           <Dropdown
@@ -57,13 +61,16 @@ export const TokensLayout = ({
             </button>
           </form>
         </div>
-        <div className="mt-[20px] grid grid-cols-2 grid-rows-4 gap-[30px]">
+        <div
+          className={`mt-[20px] grid ${clickedToken || hoveredToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[30px]`}
+        >
           {tokenInfo ? (
             tokenInfo.map((card: any, index: any) => (
               <div
                 key={index}
-                onMouseDown={() => setHoveredToken(card.tokenAddress)}
-                // onMouseLeave={() => setHoveredToken("")}
+                onMouseEnter={() => setHoveredToken(card.tokenAddress)}
+                onMouseDown={() => setClickedToken(card.tokenAddress)}
+                onMouseLeave={() => setHoveredToken("")}
               >
                 <HomeTokenCard
                   cid={card.cid}
@@ -73,7 +80,7 @@ export const TokensLayout = ({
                   cap={card.marketCap}
                   createdBy={card.createdBy}
                   desc={card.description}
-                  hoveredToken={hoveredToken}
+                  hoveredToken={clickedToken}
                 />
               </div>
             ))
@@ -81,14 +88,14 @@ export const TokensLayout = ({
             <p>No token information available.</p>
           )}
         </div>
-        <div className="mb-32 flex w-full justify-center">
+        <div className="mb-32 mt-[40px] flex w-full justify-center">
           <div className="flex items-center gap-[20px] ">
             <Image
               className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
               src={`/icons/move_first_arr.svg`}
-              alt=""
-              style={{ width: 14, height: 10.5 }}
+              alt="move_first_arr"
               width={7}
+              style={{ width: 14, height: 10.5 }}
               height={11}
               onClick={() => {
                 if (pageNum > 1) {
@@ -123,10 +130,10 @@ export const TokensLayout = ({
             />
             <Image
               className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
-              src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
-              alt=""
+              src={`/icons/move_last_arr_enable.svg`}
+              alt="move_last_arr"
               width={7}
-              style={{ width: 7, height: 11 }}
+              style={{ width: 14, height: 10.5 }}
               height={11}
               onClick={() => {
                 setPageNum(pageNum + 1);
