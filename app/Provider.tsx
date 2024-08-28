@@ -9,6 +9,7 @@ import {
   arbitrum,
   base,
   seiDevnet,
+  sepolia,
 } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { CreateConnector } from "../node_modules/@rainbow-me/rainbowkit/dist/wallets/Wallet";
@@ -42,7 +43,7 @@ const config = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: "YOUR_PROJECT_ID",
   // chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
-  chains: [seiDevnet],
+  chains: [sepolia],
   ssr: true,
 });
 

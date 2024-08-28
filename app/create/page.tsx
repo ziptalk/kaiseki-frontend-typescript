@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, use, useEffect, useRef, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
@@ -13,11 +13,7 @@ import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 
-import {
-  RESERVE_SYMBOL,
-  RPC_PROVIDER_URL,
-  SERVER_ENDPOINT,
-} from "@/global/projectConfig";
+import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 
 const Create: NextPage = () => {
   const signer = useEthersSigner();
@@ -25,7 +21,9 @@ const Create: NextPage = () => {
   const router = useRouter();
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(RPC_PROVIDER_URL);
+  const provider = new ethers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
+  );
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
@@ -39,9 +37,10 @@ const Create: NextPage = () => {
     provider,
   );
 
-  const creationFeeInWei = ethers.parseEther("3.5");
+  // TODO - Change creation fee later
+  // const creationFeeInWei = ethers.parseEther("3.5");
+  const creationFeeInWei = ethers.parseEther("0.0007");
   const inputFile = useRef(null);
-
   const [cid, setCid] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tickers, setTickers] = useState([]);
@@ -165,10 +164,11 @@ const Create: NextPage = () => {
       alert("Connect your wallet first!");
       return true;
     }
-    if (await isUserGotMoreThanCreationFee()) {
-      alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
-      return true;
-    }
+    // TODO - Make this able later
+    // if (await isUserGotMoreThanCreationFee()) {
+    //   alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
+    //   return true;
+    // }
     if (matchingTicker) {
       alert("Ticker already exists!");
       return true;
