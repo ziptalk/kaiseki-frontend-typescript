@@ -5,19 +5,9 @@ import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import Image from "next/image";
 import { BuySellLayout } from "./BuySellLayout";
 
-interface TokensLayoutProps {
-  clickedToken: string;
-  setClickedToken: (value: string) => void;
-  hoveredToken: string;
-  setHoveredToken: (value: string) => void;
-}
-
-export const TokensLayout = ({
-  clickedToken,
-  setClickedToken,
-  hoveredToken,
-  setHoveredToken,
-}: TokensLayoutProps) => {
+export const TokensLayout = () => {
+  const [hoveredToken, setHoveredToken] = useState<string>("");
+  const [clickedToken, setClickedToken] = useState<string>("");
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
   useEffect(() => {
@@ -37,7 +27,7 @@ export const TokensLayout = ({
       });
   }
   return (
-    <>
+    <div className="mt-[32px] flex w-[1300px] justify-between">
       <div className="w-full">
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-[20px] flex w-full gap-[20px]">
@@ -150,6 +140,6 @@ export const TokensLayout = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
