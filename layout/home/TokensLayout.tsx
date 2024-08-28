@@ -7,9 +7,13 @@ import { BuySellLayout } from "./BuySellLayout";
 
 interface TokensLayoutProps {
   setHoveredToken: (value: string) => void;
+  hoveredToken: string;
 }
 
-export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
+export const TokensLayout = ({
+  hoveredToken,
+  setHoveredToken,
+}: TokensLayoutProps) => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
   useEffect(() => {
@@ -22,7 +26,6 @@ export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
-        // console.log({ homeData: data });
       })
       .catch((error) => {
         console.log(error);
@@ -59,8 +62,8 @@ export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
             tokenInfo.map((card: any, index: any) => (
               <div
                 key={index}
-                onMouseEnter={() => setHoveredToken(card.tokenAddress)}
-                // onMouseLeave={() => setHoveredToken(null)}
+                onMouseDown={() => setHoveredToken(card.tokenAddress)}
+                // onMouseLeave={() => setHoveredToken("")}
               >
                 <HomeTokenCard
                   cid={card.cid}
@@ -70,6 +73,7 @@ export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
                   cap={card.marketCap}
                   createdBy={card.createdBy}
                   desc={card.description}
+                  hoveredToken={hoveredToken}
                 />
               </div>
             ))
@@ -79,6 +83,19 @@ export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
         </div>
         <div className="mb-32 flex w-full justify-center">
           <div className="flex items-center gap-[20px] ">
+            <Image
+              className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
+              src={`/icons/move_first_arr.svg`}
+              alt=""
+              style={{ width: 14, height: 10.5 }}
+              width={7}
+              height={11}
+              onClick={() => {
+                if (pageNum > 1) {
+                  setPageNum(1);
+                }
+              }}
+            />
             <Image
               className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
               src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
@@ -93,6 +110,17 @@ export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {
               }}
             />
             <h1 className=" text-white">{pageNum}</h1>
+            <Image
+              className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
+              src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
+              alt=""
+              width={7}
+              style={{ width: 7, height: 11 }}
+              height={11}
+              onClick={() => {
+                setPageNum(pageNum + 1);
+              }}
+            />
             <Image
               className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
               src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}

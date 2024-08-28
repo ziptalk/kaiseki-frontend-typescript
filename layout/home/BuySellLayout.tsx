@@ -11,9 +11,6 @@ import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
-import SocialLinkCard from "@/components/detail/SocialLinkCard";
-import TradesCard from "@/components/detail/TradesCard";
-import TokenCard from "@/components/common/TokenCard";
 
 import { impact } from "@/fonts/font";
 import { ether, wei } from "@/utils/weiAndEther";
@@ -26,6 +23,7 @@ import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 import axios from "axios";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
+import Slider from "@/components/common/Slider";
 interface BuySellLayoutProps {
   tokenAddress: string;
 }
@@ -182,7 +180,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
       const price = detail.info.priceForNextMint;
-      // console.log("currentSupply :" + detail.info.currentSupply);
+      await console.log({ detail: detail.info });
       setMemeTokenName(detail.info.name);
       setMemeTokenSymbol(detail.info.symbol);
       setCreator(detail.info.creator);
@@ -559,31 +557,31 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     }
   };
 
-  const transformToTradesCardType = (event: any): TradesCardType => {
-    return {
-      user: event.user.substring(0, 6),
-      isBuy: event.isMint,
-      reserveAmount: event.reserveAmount
-        ? (
-            Math.ceil(Number(ethers.formatEther(event.reserveAmount)) * 10000) /
-            10000
-          )
-            .toFixed(4)
-            .toString()
-        : (
-            Math.ceil(Number(ethers.formatEther(event.refundAmount)) * 10000) /
-            10000
-          )
-            .toFixed(4)
-            .toString(),
+  // const transformToTradesCardType = (event: any): TradesCardType => {
+  //   return {
+  //     user: event.user.substring(0, 6),
+  //     isBuy: event.isMint,
+  //     reserveAmount: event.reserveAmount
+  //       ? (
+  //           Math.ceil(Number(ethers.formatEther(event.reserveAmount)) * 10000) /
+  //           10000
+  //         )
+  //           .toFixed(4)
+  //           .toString()
+  //       : (
+  //           Math.ceil(Number(ethers.formatEther(event.refundAmount)) * 10000) /
+  //           10000
+  //         )
+  //           .toFixed(4)
+  //           .toString(),
 
-      memeTokenAmount: event.amountMinted
-        ? Number(ethers.formatEther(event.amountMinted)).toFixed(0).toString()
-        : ethers.formatEther(event.amountBurned),
-      date: event.blockTimestamp.toString(),
-      tx: event.transactionHash,
-    };
-  };
+  //     memeTokenAmount: event.amountMinted
+  //       ? Number(ethers.formatEther(event.amountMinted)).toFixed(0).toString()
+  //       : ethers.formatEther(event.amountBurned),
+  //     date: event.blockTimestamp.toString(),
+  //     tx: event.transactionHash,
+  //   };
+  // };
 
   //MARK: - Set Distribution
   const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
@@ -616,42 +614,42 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     );
   };
 
-  const HolderDistributionSection: FC = () => {
-    return (
-      <>
-        <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
-          <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
-          <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
-            {distribution ? (
-              Object.entries(distribution).map(
-                ([outerKey, innerObj], index) => (
-                  <div key={outerKey}>
-                    {Object.entries(innerObj).map(
-                      ([innerKey, value], innerIndex) => (
-                        <div key={innerKey} className="flex justify-between">
-                          <div className="flex">
-                            <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
-                            {innerKey === contracts.MCV2_Bond && (
-                              <h1>&nbsp;💳 (bonding curve)</h1>
-                            )}
-                            {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
-                          </div>
+  // const HolderDistributionSection: FC = () => {
+  //   return (
+  //     <>
+  //       <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
+  //         <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
+  //         <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
+  //           {distribution ? (
+  //             Object.entries(distribution).map(
+  //               ([outerKey, innerObj], index) => (
+  //                 <div key={outerKey}>
+  //                   {Object.entries(innerObj).map(
+  //                     ([innerKey, value], innerIndex) => (
+  //                       <div key={innerKey} className="flex justify-between">
+  //                         <div className="flex">
+  //                           <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
+  //                           {innerKey === contracts.MCV2_Bond && (
+  //                             <h1>&nbsp;💳 (bonding curve)</h1>
+  //                           )}
+  //                           {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
+  //                         </div>
 
-                          <h1>{`${parseFloat(value)}%`}</h1>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                ),
-              )
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-        </div>
-      </>
-    );
-  };
+  //                         <h1>{`${parseFloat(value)}%`}</h1>
+  //                       </div>
+  //                     ),
+  //                   )}
+  //                 </div>
+  //               ),
+  //             )
+  //           ) : (
+  //             <p>Loading...</p>
+  //           )}
+  //         </div>
+  //       </div>
+  //     </>
+  //   );
+  // };
 
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75, 100];
@@ -681,8 +679,73 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
       </>
     );
   };
-  const BuySellForm = () => {
-    return (
+  return (
+    <div className="flex flex-col gap-[20px]">
+      <div className="flex gap-[20px]">
+        <img
+          src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+          alt="Image from IPFS"
+          className="h-[120px] w-[120px] border-black "
+        />
+        <TokenDesc
+          {...{
+            name: memeTokenName,
+            ticker: memeTokenSymbol,
+            creator,
+            marketCap,
+            desc,
+          }}
+        />
+      </div>
+      <div className="flex h-[50px] w-full overflow-hidden">
+        <Slider
+          elements={[
+            <ModuleInfo
+              title="Price"
+              desc={12345.12 + " BASE"}
+              percentage="+7.31%"
+              key={"price"}
+            />,
+            <ModuleInfo
+              title="Marketcap"
+              desc={marketCap + " BASE"}
+              key={"Marketcap"}
+            />,
+            <ModuleInfo
+              title="Virtual Liquidity"
+              desc={"$112.77k"}
+              key={"Virtual Liquidity"}
+            />,
+            <ModuleInfo
+              title="24H Volume"
+              desc={12345.12 + " BASE"}
+              key={"24H Volume"}
+            />,
+            <ModuleInfo
+              title="Token Created"
+              desc={"47M"}
+              key={"Token Created"}
+            />,
+          ]}
+        />
+      </div>
+      <div className="h-[250px] w-full bg-[#151527] p-[13px]">
+        <div className="h-[210px] w-full">
+          <div className="flex items-center gap-[7.15px]">
+            <img
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              alt="Image from IPFS"
+              className="h-[28.5px] w-[28.5px] border-black "
+            />
+            <p className="inline-block text-[14.3px] text-white">
+              {memeTokenName} ($ {memeTokenSymbol}) / BASE
+            </p>
+          </div>
+          <TradingViewChart tokenAddress={tokenAddress} />
+        </div>
+      </div>
+      <BuySellButtonSection />
+
       <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
         {/*<div className="flex justify-between">
      <div />
@@ -801,80 +864,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
           place trade
         </button>
       </form>
-    );
-  };
-  return (
-    <div className="flex flex-col gap-[20px]">
-      <div className="flex gap-[20px]">
-        <img
-          src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-          alt="Image from IPFS"
-          className="h-[120px] w-[120px] border-black "
-        />
-        <TokenDesc
-          {...{
-            name: memeTokenName,
-            ticker: memeTokenSymbol,
-            creator,
-            marketCap,
-            desc,
-          }}
-        />
-      </div>
-      <div className="flex flex-wrap gap-[10px]">
-        <ModuleInfo
-          {...{
-            title: "Price",
-            desc: "12345.12 BASE",
-            percentage: "+7.31%",
-          }}
-        />
-        <ModuleInfo
-          {...{
-            title: "Price",
-            desc: "12345.12 BASE",
-            percentage: "+7.31%",
-          }}
-        />
-        <ModuleInfo
-          {...{
-            title: "Price",
-            desc: "12345.12 BASE",
-            percentage: "+7.31%",
-          }}
-        />
-        <ModuleInfo
-          {...{
-            title: "Price",
-            desc: "12345.12 BASE",
-            percentage: "+7.31%",
-          }}
-        />
-        <ModuleInfo
-          {...{
-            title: "Price",
-            desc: "12345.12 BASE",
-            percentage: "+7.31%",
-          }}
-        />
-      </div>
-      <div className="h-[250px] w-[424px] bg-[#151527] p-[13px]">
-        <div className="h-[210px] w-[381px]">
-          <div className="flex items-center gap-[7.15px]">
-            <img
-              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-              alt="Image from IPFS"
-              className="h-[28.5px] w-[28.5px] border-black "
-            />
-            <p className="inline-block text-[14.3px] text-white">
-              F1 Tickets ($ F1T) / BASE
-            </p>
-          </div>
-          <TradingViewChart tokenAddress={tokenAddress} />
-        </div>
-      </div>
-      <BuySellButtonSection />
-      <BuySellForm />
       {/* <SellPercentageButton /> */}
       <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
     </div>

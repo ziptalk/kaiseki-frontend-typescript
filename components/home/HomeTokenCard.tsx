@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FC } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 
@@ -9,16 +8,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   cap,
   desc,
   tokenAddress,
+  hoveredToken,
   cid,
 }) => {
   return (
-    <Link
-      href={tokenAddress ? tokenAddress : ""}
-      className={`hover:card-gradient flex h-[215px] w-[420px] justify-between gap-[10px] bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] hover:bg-gradient-to-t`}
-      // style={{
-      //   background:
-      //     "linear-gradient(180deg, rgba(224, 9, 0, 0.60) 2.23%, rgba(166, 13, 7, 0.60) 97.87%)",
-      // }}
+    <div
+      // href={tokenAddress ? tokenAddress : ""}
+      className={`hover:card-gradient flex h-[215px] w-[420px] cursor-pointer justify-between gap-[10px] bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] ${tokenAddress === hoveredToken && "bg-gradient-to-t"} hover:bg-gradient-to-t`}
     >
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -36,6 +32,6 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
           }}
         />
       </div>
-    </Link>
+    </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { digital } from "@/fonts/font";
 interface ModuleInfoProps {
   title: string;
   desc: string;
@@ -8,14 +8,16 @@ interface ModuleInfoProps {
 
 export const ModuleInfo = ({ title, desc, percentage }: ModuleInfoProps) => {
   return (
-    <div className="flex w-[135px] flex-col gap-[10px] rounded-[8px] bg-[#0FF] px-[10px] py-[8px]">
-      <div className="text-[14px]">
+    <div className="mr-[10px] flex h-[50px] w-[140px] flex-col justify-center rounded-[8px] bg-[#454545] px-[10px] py-[8px]">
+      <div className="text-[13px] text-[#AEAEAE]">
         {title}
-        <p className="ml-[3px] inline text-[12px] text-[#0038FF]">
+        <p
+          className={`${digital.variable} neon-yellow ml-[3px] inline font-digital text-[12px]`}
+        >
           {percentage}
         </p>
       </div>
-      <div className="text-[14px]">{desc}</div>
+      <div className="text-[14px] text-white">{desc}</div>
     </div>
   );
 };

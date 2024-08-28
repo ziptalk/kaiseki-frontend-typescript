@@ -7,7 +7,7 @@ interface BondingCurveCardTypes {
 const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
   return (
     <>
-      <div className="flex h-full w-[40%] flex-col gap-[20px]  ">
+      <div className="flex w-full flex-col gap-[20px]  ">
         <div className="flex items-center">
           <h1 className="text-lg font-bold text-[#ADADAD]">
             bonding curve progress:&nbsp;

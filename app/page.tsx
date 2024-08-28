@@ -14,7 +14,7 @@ export default function Home() {
         <div className="mx-auto pt-[20px]">
           <SlotLayout />
           <div className="mt-[32px] flex w-[1360px] justify-between">
-            <TokensLayout {...{ setHoveredToken }} />
+            <TokensLayout {...{ setHoveredToken, hoveredToken }} />
             <div className="mt-[114px] w-[471px] bg-[#252525] p-[10px]">
               {hoveredToken && <BuySellLayout tokenAddress={hoveredToken} />}
             </div>
