@@ -137,7 +137,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         width: chartContainerRef.current.clientWidth,
         height: chartContainerRef.current.clientHeight,
         layout: {
-          background: { color: "#222" },
+          background: { color: "#151527" },
           textColor: "#DDD",
         },
 
@@ -168,8 +168,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       candlestickSeries.applyOptions({
         priceFormat: {
           type: "price",
-          precision: 13,
-          minMove: 0.0000000000001,
+          precision: 6,
+          minMove: 0.000001,
         },
       });
 

@@ -1,4 +1,4 @@
-import { Dropdown } from "@/components/atoms/Dropdown";
+import { Dropdown } from "@/components/common/Dropdown";
 import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
@@ -6,7 +6,7 @@ import Image from "next/image";
 import { BuySellLayout } from "./BuySellLayout";
 
 interface TokensLayoutProps {
-  setHoveredToken: (value: string | null) => void;
+  setHoveredToken: (value: string) => void;
 }
 
 export const TokensLayout = ({ setHoveredToken }: TokensLayoutProps) => {

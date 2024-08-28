@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FC } from "react";
-import { TokenDesc } from "../atoms/TokenDesc";
+import { TokenDesc } from "../common/TokenDesc";
 
 export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,

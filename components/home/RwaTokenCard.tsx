@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { TokenDesc } from "../atoms/TokenDesc";
+import { TokenDesc } from "../common/TokenDesc";
 
 export const RWATokenCard: FC = () => {
   const [kingName, setKingName] = useState("KingCat");
