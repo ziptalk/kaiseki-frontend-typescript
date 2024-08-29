@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { digital } from "@/fonts/font";
+import { anton, digital } from "@/fonts/font";
 
 export default function Raffle() {
   const [raffleEnd, setRaffleEnd] = useState(false);
-  const [apply, setApply] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
   const [success, setSuccess] = useState(false);
 
   // useEffect(() => {
@@ -15,12 +15,12 @@ export default function Raffle() {
   //   console.log({ clickedToken });
   // }, [hoveredToken, clickedToken]);
   useEffect(() => {
-    if (apply) {
+    if (buttonClicked) {
       setTimeout(() => {
-        setApply(false);
+        setButtonClicked(false);
       }, 3000);
     }
-  }, [apply]);
+  }, [buttonClicked]);
 
   const [kingName, setKingName] = useState("KingCat");
   const [kingTicker, setKingTicker] = useState("KING");
@@ -56,20 +56,25 @@ export default function Raffle() {
       });
   };
   return (
-    <>
+    <div className=" mb-[154px] ">
       <div
         className={
-          "mx-auto mt-[42px] flex h-[644px] w-[1151px] items-center justify-center rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FAFF00]"
+          "mx-auto mt-[42px]  flex h-[644px] w-[1151px] items-center justify-center rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FAFF00]"
         }
       >
         <div className="flex h-[584px] w-[510px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
-          <Image
-            src="/images/join_the_raffle.svg"
-            alt="RWA_Curves_are_ready"
-            width={366}
-            height={60}
-            style={{ width: 366, height: 60 }}
-          />
+          <div className="rounded-[5px] bg-gradient-to-t from-yellow-300 to-white p-[2px]">
+            <div className="flex h-[60px] w-[390px] items-center justify-center rounded-[5px] bg-gradient-to-t from-[#670C0C] to-[#191919]">
+              <div
+                className={`title-typo ${anton.variable} font-anton absolute`}
+              >
+                Join the Raffle!
+              </div>
+              <div className={`title-shadow ${anton.variable} font-anton `}>
+                Join the Raffle!
+              </div>
+            </div>
+          </div>
 
           <div className="flex h-[434px] w-[400px] flex-col border border-dashed border-[#F9FF00]  bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
             <div className="flex h-[161px] gap-[10px] overflow-scroll">
@@ -82,7 +87,7 @@ export default function Raffle() {
                 <h1 className="h-[17px] text-[15px] font-bold text-[#AEAEAE]">
                   {kingName}
                 </h1>
-                <h2 className="mt-[4px] h-[17px] text-[15px] font-bold text-[#AEAEAE]">
+                <h2 className="h-[17px] text-[15px] font-bold text-[#AEAEAE]">
                   [ticker: {kingTicker}]
                 </h2>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
@@ -101,7 +106,7 @@ export default function Raffle() {
                       : `${kingCreator.slice(0, 20)}...`}
                   </h1>
                 </div>
-                <div className="mt-[5px] flex h-[14px] gap-[5px]">
+                <div className="mt-[3px] flex h-[14px] gap-[5px]">
                   <h1 className="neon-yellow text-xs text-[#FAFF00]">
                     market cap :
                   </h1>
@@ -131,24 +136,13 @@ export default function Raffle() {
                   // value={inputValue}
                   // onChange={handleInputChange}
                 />
-                <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                  {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                      alt="img"
-                    />
-                  </div>
-                  <h1 className="mt-1 text-[15px] font-bold text-white">
-                    {memeTokenSymbol}
-                  </h1> */}
-                  <button
-                    type="button"
-                    // onClick={() => handlePercentage(100)}
-                    className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
-                  >
-                    MAX
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  // onClick={() => handlePercentage(100)}
+                  className="absolute right-0 mr-[20px] flex h-[30px] w-[52px] items-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[10px] text-[14px] text-white"
+                >
+                  MAX
+                </button>
               </div>
               <div className="mt-[10px] flex justify-between">
                 <button className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px] font-bold text-white">
@@ -164,13 +158,16 @@ export default function Raffle() {
                 </button>
               </div>
               {raffleEnd ? (
-                <button className="mt-[30px] h-[60px] w-full rounded-[10px] bg-[#2F2F2F] font-bold text-white">
+                <button
+                  className="mt-[30px] h-[60px] w-full rounded-[10px] bg-[#2F2F2F] font-bold text-white"
+                  onClick={() => setButtonClicked(true)}
+                >
                   Raffle has ended
                 </button>
               ) : (
                 <button
                   className="mt-[30px] h-[60px] w-full rounded-[10px] bg-[#950000] font-bold text-white"
-                  onClick={() => setApply(true)}
+                  onClick={() => setButtonClicked(true)}
                 >
                   Apply
                 </button>
@@ -179,32 +176,35 @@ export default function Raffle() {
           </div>
         </div>
       </div>
-      {apply &&
-        (success ? (
-          <div className="mx-auto mb-[154px] mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white">
-            <Image
-              className="mr-[6px]"
-              src={"/icons/complete.svg"}
-              alt="Raffle"
-              width={17}
-              height={17}
-              style={{ width: 17, height: 17 }}
-            />
-            Raffle has been successfully completed!
-          </div>
-        ) : (
-          <div className="mx-auto mb-[154px] mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white">
-            <Image
-              className="mr-[6px]"
-              src={"/icons/fail.svg"}
-              alt="Raffle"
-              width={17}
-              height={17}
-              style={{ width: 17, height: 17 }}
-            />
-            Raffle did not run properly. Please try again.
-          </div>
-        ))}
-    </>
+      {success ? (
+        <div
+          className={`mx-auto mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white${buttonClicked ? "opacity-0" : "opacity-100"} duration-500`}
+        >
+          <Image
+            className="mr-[6px]"
+            src={"/icons/complete.svg"}
+            alt="Raffle"
+            width={17}
+            height={17}
+            style={{ width: 17, height: 17 }}
+          />
+          Raffle has been successfully completed!
+        </div>
+      ) : (
+        <div
+          className={`mx-auto mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white ${buttonClicked ? "opacity-100" : "opacity-0"} duration-500`}
+        >
+          <Image
+            className="mr-[6px]"
+            src={"/icons/fail.svg"}
+            alt="Raffle"
+            width={17}
+            height={17}
+            style={{ width: 17, height: 17 }}
+          />
+          Raffle did not run properly. Please try again.
+        </div>
+      )}
+    </div>
   );
 }
