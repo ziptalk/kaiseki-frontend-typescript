@@ -72,16 +72,14 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     signer,
   );
 
-  const [memeTokenName, setMemeTokenName] = useState("Name");
-  const [memeTokenSymbol, setMemeTokenSymbol] = useState("ticker");
-  const [creator, setCreator] = useState("Me");
+  const [memeTokenName, setMemeTokenName] = useState("");
+  const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
+  const [creator, setCreator] = useState("");
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
   const [desc, setDesc] = useState("");
-  const [cid, setCid] = useState(
-    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
-  );
+  const [cid, setCid] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -130,7 +128,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
       setWeb,
       setDesc,
     );
-  }, []);
+  }, [tokenAddress]);
 
   // listen event later
   useEffect(() => {
@@ -145,7 +143,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
         setUserReserveBalanceIntoState();
       }
     } catch {}
-  }, [account?.address]);
+  }, [account?.address, tokenAddress]);
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
@@ -181,7 +179,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
       const price = detail.info.priceForNextMint;
-      await console.log({ detail: detail.info });
+      // console.log({ detail: detail.info });
       setMemeTokenName(detail.info.name);
       setMemeTokenSymbol(detail.info.symbol);
       setCreator(detail.info.creator);

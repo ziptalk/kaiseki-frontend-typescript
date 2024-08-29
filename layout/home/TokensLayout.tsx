@@ -3,20 +3,10 @@ import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import Image from "next/image";
+import { BuySellLayout } from "./BuySellLayout";
 
-interface TokensLayoutProps {
-  clickedToken: string;
-  setClickedToken: (value: string) => void;
-  hoveredToken: string;
-  setHoveredToken: (value: string) => void;
-}
-
-export const TokensLayout = ({
-  clickedToken,
-  setClickedToken,
-  hoveredToken,
-  setHoveredToken,
-}: TokensLayoutProps) => {
+export const TokensLayout = () => {
+  const [clickedToken, setClickedToken] = useState<string>("");
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
   useEffect(() => {
@@ -29,14 +19,14 @@ export const TokensLayout = ({
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
-        console.log(data);
+        // console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
   }
   return (
-    <>
+    <div className="mt-[32px] flex w-[1300px] justify-between">
       <div className="w-full">
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-[20px] flex w-full gap-[20px]">
@@ -56,36 +46,45 @@ export const TokensLayout = ({
               className="h-[50px] w-[170px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
               placeholder="search for token"
             ></input>
-            <button className="h-[50px] w-[160px] rounded-[10px] bg-[#FF00C6]">
+            <button className="h-[50px] w-[160px] rounded-[10px] bg-[#FF00C6] font-bold text-white">
               search
             </button>
           </form>
         </div>
-        <div
-          className={`mt-[20px] grid ${clickedToken || hoveredToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[30px]`}
-        >
-          {tokenInfo ? (
-            tokenInfo.map((card: any, index: any) => (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredToken(card.tokenAddress)}
-                onMouseDown={() => setClickedToken(card.tokenAddress)}
-                onMouseLeave={() => setHoveredToken("")}
-              >
-                <HomeTokenCard
-                  cid={card.cid}
-                  name={card.name}
-                  ticker={card.ticker}
-                  tokenAddress={card.tokenAddress}
-                  cap={card.marketCap}
-                  createdBy={card.createdBy}
-                  desc={card.description}
-                  hoveredToken={clickedToken}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No token information available.</p>
+        <div className="mt-[20px] flex w-full">
+          <div
+            className={`grid ${clickedToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[20px]`}
+          >
+            {tokenInfo ? (
+              tokenInfo.map((card: any, index: any) => (
+                <div
+                  key={index}
+                  onMouseDown={() => {
+                    clickedToken && clickedToken === card.tokenAddress
+                      ? setClickedToken("")
+                      : setClickedToken(card.tokenAddress);
+                  }}
+                >
+                  <HomeTokenCard
+                    cid={card.cid}
+                    name={card.name}
+                    ticker={card.ticker}
+                    tokenAddress={card.tokenAddress}
+                    cap={card.marketCap}
+                    createdBy={card.createdBy}
+                    desc={card.description}
+                    hoveredToken={clickedToken}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No token information available.</p>
+            )}
+          </div>
+          {clickedToken && (
+            <div className="ml-[20px] h-[950px] w-[420px] bg-[#252525] p-[20px] pt-[10px]">
+              <BuySellLayout tokenAddress={clickedToken} />
+            </div>
           )}
         </div>
         <div className="mb-32 mt-[40px] flex w-full justify-center">
@@ -142,6 +141,6 @@ export const TokensLayout = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

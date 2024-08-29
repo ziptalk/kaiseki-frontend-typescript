@@ -1,10 +1,30 @@
 import { FC, useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
 import { anton } from "@/fonts/font";
 
 export const RWATokenCard: FC = () => {
+  const time = 1725839354679;
+  const [day, setDay] = useState(0);
+  const [hour, setHour] = useState(0);
+  const [minute, setMinute] = useState(0);
+  const [second, setSecond] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      // console.log(now);
+      const distance = time - now;
+      setDay(Math.floor(distance / (1000 * 60 * 60 * 24)));
+      setHour(
+        Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      );
+      setMinute(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
+      setSecond(Math.floor((distance % (1000 * 60)) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [kingName, setKingName] = useState("KingCat");
   const [kingTicker, setKingTicker] = useState("KING");
   const [kingCreator, setKingCreator] = useState("Me");
@@ -75,7 +95,7 @@ export const RWATokenCard: FC = () => {
           </h1>
         </div>
         <div className={`raffle-typo ${anton.variable} font-anton`}>
-          1 Day 00:12 left!
+          {day} Day {hour}:{minute}:{second} left!
         </div>
       </div>
     </div>
