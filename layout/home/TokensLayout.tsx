@@ -6,7 +6,6 @@ import Image from "next/image";
 import { BuySellLayout } from "./BuySellLayout";
 
 export const TokensLayout = () => {
-  const [hoveredToken, setHoveredToken] = useState<string>("");
   const [clickedToken, setClickedToken] = useState<string>("");
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNum] = useState<number>(1);
@@ -54,15 +53,17 @@ export const TokensLayout = () => {
         </div>
         <div className="mt-[20px] flex w-full">
           <div
-            className={`grid ${clickedToken || hoveredToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[20px]`}
+            className={`grid ${clickedToken ? "grid-cols-2" : "grid-cols-3"} grid-rows-4 gap-[20px]`}
           >
             {tokenInfo ? (
               tokenInfo.map((card: any, index: any) => (
                 <div
                   key={index}
-                  onMouseEnter={() => setHoveredToken(card.tokenAddress)}
-                  onMouseDown={() => setClickedToken(card.tokenAddress)}
-                  onMouseLeave={() => setHoveredToken("")}
+                  onMouseDown={() => {
+                    clickedToken
+                      ? setClickedToken("")
+                      : setClickedToken(card.tokenAddress);
+                  }}
                 >
                   <HomeTokenCard
                     cid={card.cid}
@@ -80,9 +81,9 @@ export const TokensLayout = () => {
               <p>No token information available.</p>
             )}
           </div>
-          {(hoveredToken || clickedToken) && (
+          {clickedToken && (
             <div className="ml-[20px] h-[950px] w-[420px] bg-[#252525] p-[20px] pt-[10px]">
-              <BuySellLayout tokenAddress={hoveredToken || clickedToken} />
+              <BuySellLayout tokenAddress={clickedToken} />
             </div>
           )}
         </div>
