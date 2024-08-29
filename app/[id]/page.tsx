@@ -727,7 +727,7 @@ export default function Detail() {
                 />
               </div>
 
-              <SocialLinkCard tw={tw} tg={tg} web={web} />
+              {/* <SocialLinkCard tw={tw} tg={tg} web={web} /> */}
 
               <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
             </div>

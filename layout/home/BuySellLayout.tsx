@@ -25,6 +25,7 @@ import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
 import Link from "next/link";
+import Arrow from "@/public/icons/pagePre.svg";
 interface BuySellLayoutProps {
   tokenAddress: string;
 }
@@ -677,96 +678,107 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     );
   };
   return (
-    <div className="flex flex-col gap-[20px]">
-      <div className="flex gap-[20px]">
-        <img
-          src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-          alt="Image from IPFS"
-          className="h-[120px] w-[120px] border-black "
-        />
-        <TokenDesc
-          {...{
-            name: memeTokenName,
-            ticker: memeTokenSymbol,
-            creator,
-            marketCap,
-            desc,
-          }}
-        />
-      </div>
-      <div className="flex h-[50px] w-full overflow-hidden">
-        <Slider
-          elements={[
-            <ModuleInfo
-              title="Price"
-              desc={12345.12 + " BASE"}
-              percentage="+7.31%"
-              key={"price"}
-            />,
-            <ModuleInfo
-              title="Marketcap"
-              desc={marketCap + " BASE"}
-              key={"Marketcap"}
-            />,
-            <ModuleInfo
-              title="Virtual Liquidity"
-              desc={"$112.77k"}
-              key={"Virtual Liquidity"}
-            />,
-            <ModuleInfo
-              title="24H Volume"
-              desc={12345.12 + " BASE"}
-              key={"24H Volume"}
-            />,
-            <ModuleInfo
-              title="Token Created"
-              desc={"47M"}
-              key={"Token Created"}
-            />,
-          ]}
-        />
-      </div>
-      <div className="h-[250px] w-full bg-[#151527] p-[13px]">
-        <div className="h-[210px] w-full">
-          <div className="flex items-center gap-[7.15px]">
-            <img
-              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-              alt="Image from IPFS"
-              className="h-[28.5px] w-[28.5px] border-black "
-            />
-            <p className="inline-block text-[14.3px] text-white">
-              {memeTokenName} ($ {memeTokenSymbol}) / BASE
-            </p>
-          </div>
-          <TradingViewChart tokenAddress={tokenAddress} />
+    <>
+      <Link
+        href={tokenAddress}
+        className="ml-auto mt-[112px] flex h-[24px] w-[114px] cursor-pointer items-center text-[16px] text-[#AEAEAE]"
+      >
+        View details
+        <Arrow fill={"#AEAEAE"} className={"translate ml-[4px] rotate-180"} />
+      </Link>
+      <div className="mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
+        <div className="flex gap-[20px]">
+          <img
+            src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+            alt="Image from IPFS"
+            className="h-[120px] w-[120px] border-black "
+          />
+          <TokenDesc
+            {...{
+              name: memeTokenName,
+              ticker: memeTokenSymbol,
+              creator,
+              marketCap,
+              desc,
+            }}
+          />
         </div>
-      </div>
-      <BuySellButtonSection />
-      <form onSubmit={isBuy ? buy : sell} className="flex flex-col gap-[10px]">
-        {isBuy ? (
-          <div
-            onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-            className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
-          >
-            Switch to F1T
-          </div>
-        ) : (
-          <SellPercentageButton />
-        )}
-        {isInputInTokenAmount ? (
-          <>
-            <div className="relative flex w-full items-center">
-              <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                type="number"
-                placeholder="Enter the amount"
-                step="0.01"
-                name="inputValue"
-                value={inputValue}
-                onChange={handleInputChange}
+        <div className="flex h-[50px] w-full overflow-hidden">
+          <Slider
+            elements={[
+              <ModuleInfo
+                title="Price"
+                desc={12345.12 + " BASE"}
+                percentage="+7.31%"
+                key={"price"}
+              />,
+              <ModuleInfo
+                title="Marketcap"
+                desc={marketCap + " BASE"}
+                key={"Marketcap"}
+              />,
+              <ModuleInfo
+                title="Virtual Liquidity"
+                desc={"$112.77k"}
+                key={"Virtual Liquidity"}
+              />,
+              <ModuleInfo
+                title="24H Volume"
+                desc={12345.12 + " BASE"}
+                key={"24H Volume"}
+              />,
+              <ModuleInfo
+                title="Token Created"
+                desc={"47M"}
+                key={"Token Created"}
+              />,
+            ]}
+          />
+        </div>
+        <div className="h-[250px] w-full bg-[#151527] p-[13px]">
+          <div className="h-[210px] w-full">
+            <div className="flex items-center gap-[7.15px]">
+              <img
+                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                alt="Image from IPFS"
+                className="h-[28.5px] w-[28.5px] border-black "
               />
-              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
+              <p className="inline-block text-[14.3px] text-white">
+                {memeTokenName} ($ {memeTokenSymbol}) / BASE
+              </p>
+            </div>
+            <TradingViewChart tokenAddress={tokenAddress} />
+          </div>
+        </div>
+        <BuySellButtonSection />
+        <form
+          onSubmit={isBuy ? buy : sell}
+          className="flex flex-col gap-[10px]"
+        >
+          {isBuy ? (
+            <div
+              onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
+              className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
+            >
+              Switch to F1T
+            </div>
+          ) : (
+            <SellPercentageButton />
+          )}
+          {isInputInTokenAmount ? (
+            <>
+              <div className="relative flex w-full items-center">
+                <input
+                  className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
+                  type="number"
+                  placeholder="Enter the amount"
+                  step="0.01"
+                  name="inputValue"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                />
+                <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                  {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
                     <img
                       src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                       alt="img"
@@ -775,85 +787,86 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
                   <h1 className="mt-1 text-[15px] font-bold text-white">
                     {memeTokenSymbol}
                   </h1> */}
-                <button
-                  type="button"
-                  onClick={() => handlePercentage(100)}
-                  className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
-                >
-                  MAX
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePercentage(100)}
+                    className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
+                  >
+                    MAX
+                  </button>
+                </div>
               </div>
-            </div>
-            {/* <h1 className="text-[#B8B8B8]">
+              {/* <h1 className="text-[#B8B8B8]">
                 {ether(
                   BigInt(Math.floor(Number(inputValue))) *
                     BigInt(priceForNextMint),
                 )}
                 &nbsp;{RESERVE_SYMBOL}
               </h1> */}
-          </>
-        ) : (
-          <>
-            {/*input amount == RESERVE_SYMBOL*/}
-            <div className="relative flex w-full items-center">
-              <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                type="number"
-                placeholder="0.00"
-                step="0.01"
-                name="inputValue"
-                value={inputValue}
-                onChange={handleInputChange}
-              />
-              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                <div className="h-[24px] w-[24px] rounded-full">
-                  <Image
-                    src="/icons/SeiLogo.svg"
-                    alt=""
-                    height={24}
-                    width={24}
-                  />
-                </div>
+            </>
+          ) : (
+            <>
+              {/*input amount == RESERVE_SYMBOL*/}
+              <div className="relative flex w-full items-center">
+                <input
+                  className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
+                  type="number"
+                  placeholder="0.00"
+                  step="0.01"
+                  name="inputValue"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                />
+                <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+                  <div className="h-[24px] w-[24px] rounded-full">
+                    <Image
+                      src="/icons/SeiLogo.svg"
+                      alt=""
+                      height={24}
+                      width={24}
+                    />
+                  </div>
 
-                <h1 className="mt-1 text-[15px] font-bold text-white">
-                  {RESERVE_SYMBOL}
-                </h1>
+                  <h1 className="mt-1 text-[15px] font-bold text-white">
+                    {RESERVE_SYMBOL}
+                  </h1>
+                </div>
               </div>
-            </div>
-            <h1 className="text-[#B8B8B8]">
-              {/*RESERVE_SYMBOL value to memetoken*/}~
-              {inputValue &&
-                Number(
-                  String(
-                    Math.floor(
-                      Number(
-                        ethers.parseEther(inputValue) /
-                          BigInt(priceForNextMint),
+              <h1 className="text-[#B8B8B8]">
+                {/*RESERVE_SYMBOL value to memetoken*/}~
+                {inputValue &&
+                  Number(
+                    String(
+                      Math.floor(
+                        Number(
+                          ethers.parseEther(inputValue) /
+                            BigInt(priceForNextMint),
+                        ),
                       ),
                     ),
-                  ),
-                )}
-              &nbsp;{memeTokenSymbol}
-            </h1>
-          </>
-        )}
+                  )}
+                &nbsp;{memeTokenSymbol}
+              </h1>
+            </>
+          )}
 
-        {/*true == toggle module, false == percent for sell*/}
-        <div className="text-[14px] text-white">
-          {"Raffle has already progressed! -> "}
-          <Link href={"#"} className="underline">
-            Join the Raffle!
-          </Link>
-        </div>
-        <button
-          type="submit"
-          className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
-        >
-          Connect Wallet
-        </button>
-      </form>
-      {/* <SellPercentageButton /> */}
-      <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
-    </div>
+          {/*true == toggle module, false == percent for sell*/}
+          <div className="text-[14px] text-white">
+            {"Raffle has already progressed! -> "}
+            <Link href={"#"} className="underline">
+              Join the Raffle!
+            </Link>
+          </div>
+          <button
+            type="submit"
+            className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
+          >
+            Connect Wallet
+          </button>
+        </form>
+        {/* <SellPercentageButton /> */}
+        <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+      </div>
+    </>
   );
 };

@@ -27,8 +27,8 @@ export const TokensLayout = () => {
       });
   }
   return (
-    <div className="mt-[32px] flex w-[1300px] justify-between">
-      <div className="w-full">
+    <div className="flex w-[1300px]">
+      <div className={`${clickedToken && "w-[860px]"} mt-[32px]`}>
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-[20px] flex w-full gap-[20px]">
           <Dropdown
@@ -36,7 +36,6 @@ export const TokensLayout = () => {
             items={["created", "trending"]}
             width={165}
           />
-
           <Dropdown
             placeholder="order : "
             items={["desc", "asc"]}
@@ -44,7 +43,7 @@ export const TokensLayout = () => {
           />
           <form className="ml-auto flex gap-[10px]">
             <input
-              className="h-[50px] w-[170px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
+              className="h-[50px] w-[250px] rounded-[10px] border border-[#FF00C6] bg-black px-[20px] text-white"
               placeholder="search for token"
             ></input>
             <button className="h-[50px] w-[160px] rounded-[10px] bg-[#FF00C6] font-bold text-white">
@@ -82,11 +81,6 @@ export const TokensLayout = () => {
               <p>No token information available.</p>
             )}
           </div>
-          {clickedToken && (
-            <div className="ml-[20px] h-[950px] w-[420px] bg-[#252525] p-[20px] pt-[10px]">
-              <BuySellLayout tokenAddress={clickedToken} />
-            </div>
-          )}
         </div>
         <div className="mb-32 mt-[40px] flex w-full justify-center">
           <div className="flex items-center gap-[20px] ">
@@ -99,7 +93,6 @@ export const TokensLayout = () => {
                 }
               }}
             />
-
             <PagePre
               className="cursor-pointer"
               fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
@@ -127,6 +120,11 @@ export const TokensLayout = () => {
           </div>
         </div>
       </div>
+      {clickedToken && (
+        <div className="ml-[20px]">
+          <BuySellLayout tokenAddress={clickedToken} />
+        </div>
+      )}
     </div>
   );
 };
