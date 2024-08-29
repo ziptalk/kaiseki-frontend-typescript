@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
 import { anton } from "@/fonts/font";
 
@@ -14,7 +13,7 @@ export const RWATokenCard: FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      console.log(now);
+      // console.log(now);
       const distance = time - now;
       setDay(Math.floor(distance / (1000 * 60 * 60 * 24)));
       setHour(

@@ -128,7 +128,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
       setWeb,
       setDesc,
     );
-  }, []);
+  }, [tokenAddress]);
 
   // listen event later
   useEffect(() => {
@@ -143,7 +143,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
         setUserReserveBalanceIntoState();
       }
     } catch {}
-  }, [account?.address]);
+  }, [account?.address, tokenAddress]);
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
     try {
@@ -179,7 +179,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
       const price = detail.info.priceForNextMint;
-      await console.log({ detail: detail.info });
+      // console.log({ detail: detail.info });
       setMemeTokenName(detail.info.name);
       setMemeTokenSymbol(detail.info.symbol);
       setCreator(detail.info.creator);

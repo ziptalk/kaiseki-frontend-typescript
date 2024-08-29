@@ -19,7 +19,7 @@ export const TokensLayout = () => {
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
-        console.log(data);
+        // console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -60,7 +60,7 @@ export const TokensLayout = () => {
                 <div
                   key={index}
                   onMouseDown={() => {
-                    clickedToken
+                    clickedToken && clickedToken === card.tokenAddress
                       ? setClickedToken("")
                       : setClickedToken(card.tokenAddress);
                   }}
