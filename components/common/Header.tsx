@@ -20,6 +20,9 @@ import {
   RESERVE_SYMBOL,
   SERVER_ENDPOINT,
 } from "@/global/projectConfig";
+import X from "@/public/icons/X_logo.svg";
+import Info from "@/public/icons/info.svg";
+import Telegram from "@/public/icons/Telegram_logo.svg";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -183,79 +186,79 @@ const Header: FC = () => {
     }
   };
 
-  const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
-    return (
-      <EventWrapper>
-        {/* // <EventWrapper $itemN={index}> */}
-        <div className="flex h-[18px] w-full gap-[3px] ">
-          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
-          <Image
-            width={18}
-            height={18}
-            className="rounded-full "
-            src="/images/Seiyan.png"
-            alt="user profile"
-          />
-          <h1 className="text-sm">{user} bought </h1>
-        </div>
-        <div className="flex h-[18px] w-full justify-end gap-[3px]">
-          <h1 className="text-sm">
-            {" "}
-            {value} {RESERVE_SYMBOL} of {ticker}
-          </h1>
-          <Image
-            width={18}
-            height={18}
-            className="rounded-full "
-            src="/images/Seiyan.png"
-            alt="user profile"
-          />
-        </div>
-      </EventWrapper>
-    );
-  };
+  // const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
+  //   return (
+  //     <EventWrapper>
+  //       {/* // <EventWrapper $itemN={index}> */}
+  //       <div className="flex h-[18px] w-full gap-[3px] ">
+  //         {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+  //         <Image
+  //           width={18}
+  //           height={18}
+  //           className="rounded-full "
+  //           src="/images/Seiyan.png"
+  //           alt="user profile"
+  //         />
+  //         <h1 className="text-sm">{user} bought </h1>
+  //       </div>
+  //       <div className="flex h-[18px] w-full justify-end gap-[3px]">
+  //         <h1 className="text-sm">
+  //           {" "}
+  //           {value} {RESERVE_SYMBOL} of {ticker}
+  //         </h1>
+  //         <Image
+  //           width={18}
+  //           height={18}
+  //           className="rounded-full "
+  //           src="/images/Seiyan.png"
+  //           alt="user profile"
+  //         />
+  //       </div>
+  //     </EventWrapper>
+  //   );
+  // };
 
-  const CreateEventCard: FC<EventCardTypes> = ({
-    index,
-    user,
-    ticker,
-    time,
-  }) => {
-    return (
-      <EventWrapper $itemN={index}>
-        <div className="flex h-[18px] w-full gap-[3px] ">
-          {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
-          <Image
-            width={18}
-            height={18}
-            className="rounded-full "
-            src="/images/Seiyan.png"
-            alt="user profile"
-          />
-          <h1 className="text-sm">{user} created </h1>
-        </div>
-        <div className="flex h-[18px] w-full justify-end gap-[3px]">
-          <h1 className="text-sm">
-            {ticker} on {time}
-          </h1>
-          <Image
-            width={18}
-            height={18}
-            className="rounded-full "
-            src="/images/Seiyan.png"
-            alt="user profile"
-          />
-        </div>
-      </EventWrapper>
-    );
-  };
+  // const CreateEventCard: FC<EventCardTypes> = ({
+  //   index,
+  //   user,
+  //   ticker,
+  //   time,
+  // }) => {
+  //   return (
+  //     <EventWrapper $itemN={index}>
+  //       <div className="flex h-[18px] w-full gap-[3px] ">
+  //         {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
+  //         <Image
+  //           width={18}
+  //           height={18}
+  //           className="rounded-full "
+  //           src="/images/Seiyan.png"
+  //           alt="user profile"
+  //         />
+  //         <h1 className="text-sm">{user} created </h1>
+  //       </div>
+  //       <div className="flex h-[18px] w-full justify-end gap-[3px]">
+  //         <h1 className="text-sm">
+  //           {ticker} on {time}
+  //         </h1>
+  //         <Image
+  //           width={18}
+  //           height={18}
+  //           className="rounded-full "
+  //           src="/images/Seiyan.png"
+  //           alt="user profile"
+  //         />
+  //       </div>
+  //     </EventWrapper>
+  //   );
+  // };
 
-  const setModalVisible = () => {
-    if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
-      setIsInfoModalActive(true);
-      window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
-    }
-  };
+  // const setModalVisible = () => {
+  //   if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
+  //     setIsInfoModalActive(true);
+  //     window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
+  //   }
+  // };
 
   const handleUrlClick = (url: string) => {
     if (url) {
@@ -372,44 +375,19 @@ const Header: FC = () => {
               </Link>
 
               <div className="flex gap-[30px]">
-                <Image
-                  src={
-                    isHoveredX
-                      ? "/icons/telegram-hover.svg"
-                      : "/icons/telegram_logo.svg"
-                  }
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={() => setIsHoveredX(true)}
-                  onMouseLeave={() => setIsHoveredX(false)}
+                <Telegram
+                  // fill={isHoveredTG ? "#5E5E5E" : "white"}
+                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
                   onClick={() => handleUrlClick("https://t.me/memesinodotfun")}
                 />
-
-                <Image
-                  src={isHoveredTG ? "/icons/x-hover.svg" : "/icons/X_logo.svg"}
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={() => setIsHoveredTG(true)}
-                  onMouseLeave={() => setIsHoveredTG(false)}
+                <X
+                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
                   onClick={() =>
                     handleUrlClick("https://twitter.com/memesinodotfun")
                   }
                 />
-
-                <Image
-                  src={
-                    isHoveredIF ? "/icons/info-hover.svg" : "/icons/info.svg"
-                  }
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="h-[15px] w-[15px] cursor-pointer"
-                  onMouseEnter={() => setIsHoveredIF(true)}
-                  onMouseLeave={() => setIsHoveredIF(false)}
+                <Info
+                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
                   onClick={() => setIsInfoModalActive(!isInfoModalActive)}
                 />
               </div>
@@ -465,7 +443,7 @@ const Header: FC = () => {
                 <h1 className="text-sm">on {curCreateTime}</h1>
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
                     alt="img"
                   />
                 </div>
@@ -487,7 +465,7 @@ const Header: FC = () => {
                   />
                   {address?.substring(0, 7)}
                   <Image
-                    src="/icons/DownTri.svg"
+                    src="/icons/dwnArrow.svg"
                     alt=""
                     width={18}
                     height={18}

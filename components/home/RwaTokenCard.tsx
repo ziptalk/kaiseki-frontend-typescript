@@ -29,6 +29,7 @@ export const RWATokenCard: FC = () => {
   const [kingTicker, setKingTicker] = useState("KING");
   const [kingCreator, setKingCreator] = useState("Me");
   const [kingMarketCap, setKingMarketCap] = useState("0");
+  const [kingToken, setKingToken] = useState("0");
   // const [kingDesc, setKingDesc] = useState(
   //   "Figma ipsum component variant main layer. Stroke opacity blur style bullet group library pencil content. Pencil effect underline pencil pixel follower.",
   // );
@@ -45,14 +46,15 @@ export const RWATokenCard: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data[0]) {
+          setKingCid(data[0].cid);
+          setKingMarketCap(data[0].marketCap);
+          setKingToken(data[0].token);
           setKingName(data[0].name);
           setKingTicker(data[0].symbol);
-          setKingCid(data[0].cid);
           setKingCreator(data[0].creator);
           // setKingDesc(data[0].description);
-          setKingMarketCap(data[0].marketCap);
         }
-        // console.log({ tothemoon: data });
+        console.log({ tothemoon: data });
       })
       .catch((error) => {
         console.log(error);
@@ -80,7 +82,7 @@ export const RWATokenCard: FC = () => {
             alt=""
             style={{ width: 12, height: 12 }}
           />
-          <h1 className="neon-lime mt-[5px] text-[12px] text-[#C5F900]">
+          <h1 className="neon-lime text-[12px] text-[#C5F900]">
             {kingCreator.length < 20
               ? kingCreator
               : `${kingCreator.slice(0, 20)}...`}
@@ -95,7 +97,9 @@ export const RWATokenCard: FC = () => {
           </h1>
         </div>
         <div className={`raffle-typo ${anton.variable} font-anton`}>
-          {day} Day {hour}:{minute}:{second} left!
+          {day} Day {hour.toString().padStart(2, "0")}:
+          {minute.toString().padStart(2, "0")}:
+          {second.toString().padStart(2, "0")} left!
         </div>
       </div>
     </div>

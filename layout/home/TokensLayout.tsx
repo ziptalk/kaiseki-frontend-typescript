@@ -2,8 +2,9 @@ import { Dropdown } from "@/components/common/Dropdown";
 import React, { useEffect, useState } from "react";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
-import Image from "next/image";
 import { BuySellLayout } from "./BuySellLayout";
+import PagePre from "@/public/icons/pagePre.svg";
+import PageFirst from "@/public/icons/pageFirst.svg";
 
 export const TokensLayout = () => {
   const [clickedToken, setClickedToken] = useState<string>("");
@@ -89,51 +90,36 @@ export const TokensLayout = () => {
         </div>
         <div className="mb-32 mt-[40px] flex w-full justify-center">
           <div className="flex items-center gap-[20px] ">
-            <Image
-              className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
-              src={`/icons/move_first_arr.svg`}
-              alt="move_first_arr"
-              width={7}
-              style={{ width: 14, height: 10.5 }}
-              height={11}
+            <PageFirst
+              className="cursor-pointer"
+              fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
               onClick={() => {
                 if (pageNum > 1) {
                   setPageNum(1);
                 }
               }}
             />
-            <Image
-              className={`h-auto w-auto ${pageNum > 1 ? "cursor-pointer" : ""}`}
-              src={`/icons/ic-pagePre-${pageNum > 1 ? "able" : "disable"}.svg`}
-              alt=""
-              style={{ width: 7, height: 11 }}
-              width={7}
-              height={11}
+
+            <PagePre
+              className="cursor-pointer"
+              fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
               onClick={() => {
                 if (pageNum > 1) {
                   setPageNum(pageNum - 1);
                 }
               }}
             />
-            <h1 className=" text-white">{pageNum}</h1>
-            <Image
-              className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
-              src={`/icons/ic-pageNext-${tokenInfo && tokenInfo.length === 21 ? "able" : "disable"}.svg`}
-              alt=""
-              width={7}
-              style={{ width: 7, height: 11 }}
-              height={11}
+            <h1 className=" text-[16px] text-[#909090]">{pageNum}</h1>
+            <PagePre
+              className="translate rotate-180 cursor-pointer"
+              fill={`${tokenInfo && tokenInfo.length === 21 ? "#909090" : "#3F3F3F"}`}
               onClick={() => {
                 setPageNum(pageNum + 1);
               }}
             />
-            <Image
-              className={`h-auto w-auto ${tokenInfo && tokenInfo.length === 21 ? "cursor-pointer" : ""}`}
-              src={`/icons/move_last_arr_enable.svg`}
-              alt="move_last_arr"
-              width={7}
-              style={{ width: 14, height: 10.5 }}
-              height={11}
+            <PageFirst
+              className="translate rotate-180 cursor-pointer"
+              fill={`${tokenInfo && tokenInfo.length === 21 ? "#909090" : "#3F3F3F"}`}
               onClick={() => {
                 setPageNum(pageNum + 1);
               }}

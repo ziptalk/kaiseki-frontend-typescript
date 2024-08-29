@@ -7,6 +7,8 @@ import { SlotSection } from "@/components/home/SlotSection";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { anton } from "@/fonts/font";
+import Start from "@/public/icons/create.svg";
+import Arrow from "@/public/icons/leftArrowCircle.svg";
 
 export const SlotLayout = () => {
   const router = useRouter();
@@ -36,38 +38,23 @@ export const SlotLayout = () => {
           <SlotSection />
         </Link>
         <div className="flex gap-[20px]">
-          <Image
-            className="cursor-pointer"
-            src="/icons/arrow-left-contained-unactive.svg"
-            alt=""
-            width={24}
-            height={24}
-          />
+          <Arrow fill={"#AEAEAE"} className="cursor-pointer" />
           <h1 className="text-white">1/1</h1>
-          <Image
-            className="cursor-pointer"
-            src="/icons/arrow-right-contained-unactive.svg"
-            alt=""
-            width={24}
-            height={24}
+          <Arrow
+            fill={"#AEAEAE"}
+            className="rotate-180 transform cursor-pointer"
           />
         </div>
       </div>
-      <Image
+      <div
+        className="create-default h-[293px] w-[201px] cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => router.push("/create")}
-        src={
-          isHovered
-            ? "/images/create_hovered.svg"
-            : "/images/create_default.svg"
-        }
-        alt="Create"
-        width={201}
-        height={293}
-        priority
-        className="cursor-pointer"
-      />
+      >
+        <h1 className="create-title">create new coin</h1>
+        <Start fill={isHovered ? "yellow" : "#FF2626"} />
+      </div>
     </div>
   );
 };

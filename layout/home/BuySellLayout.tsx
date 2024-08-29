@@ -804,7 +804,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
                 name="inputValue"
                 value={inputValue}
                 onChange={handleInputChange}
-              ></input>
+              />
               <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
                 <div className="h-[24px] w-[24px] rounded-full">
                   <Image
