@@ -18,7 +18,7 @@
     @apply mx-auto mt-[50px] flex h-full w-[1150px] items-center justify-center gap-[60px] rounded-2xl border-2 border-secondary bg-primary shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-secondary;
   }
   .main-inner {
-    @apply flex h-full w-full flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white;
+    @apply flex h-full w-full flex-col items-center justify-center gap-[20px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white;
   }
   .main-tokenarea {
     @apply flex h-full w-full justify-between gap-[10px] border border-dashed border-secondary bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525];

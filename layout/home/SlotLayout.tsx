@@ -17,7 +17,7 @@ export const SlotLayout = () => {
     <div className="main h-[534px]">
       <div className="main-inner h-[474px] w-[520px]">
         {/* raffle section */}
-        <Link href="/raffle" className="flex flex-col items-center gap-[30px] ">
+        <Link href="/raffle" className="flex flex-col items-center gap-[20px] ">
           <MainTitle title="Raffle is ready!" />
           <RWATokenCard />
           <SlotSection />

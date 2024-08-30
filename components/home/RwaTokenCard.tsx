@@ -62,7 +62,7 @@ export const RWATokenCard: FC = () => {
       });
   };
   return (
-    <div className="main-tokenarea h-[120px] w-[390px]">
+    <div className="main-tokenarea mt-[10px] h-[120px] w-[390px]">
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
         alt="Image from IPFS"
