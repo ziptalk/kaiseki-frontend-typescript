@@ -30,7 +30,7 @@ const TradesCard: FC<TradesCardType> = ({
           </h1>
         </div>
         <h1
-          className={`${true ? "text-[#6BD650]" : "text-[#D64F4F]"} w-[14%] font-bold`}
+          className={`${isBuy ? "text-[#6BD650]" : "text-[#D64F4F]"} w-[14%] font-bold`}
         >
           {isBuy ? "buy" : "sell"}
         </h1>
