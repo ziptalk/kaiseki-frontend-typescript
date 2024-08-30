@@ -10,6 +10,7 @@ export const TokensLayout = () => {
   const [clickedToken, setClickedToken] = useState<string>("");
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNumber] = useState<number>(1);
+  const [value, setValue] = useState<string>("");
 
   const setPageNum = (num: number) => {
     setPageNumber(num);
@@ -21,7 +22,9 @@ export const TokensLayout = () => {
   }, [pageNum]);
 
   function getData() {
-    fetch(`${SERVER_ENDPOINT}/search?page=${pageNum}`) // Add this block
+    fetch(
+      `${SERVER_ENDPOINT}/search?page=${pageNum}${value && "?keyword=" + value}`,
+    ) // Add this block
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
@@ -45,12 +48,24 @@ export const TokensLayout = () => {
             items={["desc", "asc"]}
             width={145}
           />
-          <form className="ml-auto flex gap-[10px]">
+          <form
+            className="ml-auto flex gap-[10px]"
+            onSubmit={(e) => {
+              e.preventDefault();
+              getData();
+            }}
+          >
             <input
               className="h-[50px] w-[250px] rounded-[10px] border border-background bg-black px-[20px] text-white"
+              type="text"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               placeholder="search for token"
-            ></input>
-            <button className="h-[50px] w-[160px] rounded-[10px] bg-background font-bold text-white">
+            />
+            <button
+              className="h-[50px] w-[160px] rounded-[10px] bg-background font-bold text-white"
+              type="submit"
+            >
               search
             </button>
           </form>
