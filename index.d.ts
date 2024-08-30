@@ -30,7 +30,7 @@ interface TokenCardTypes {
   name: string;
   ticker: string;
   createdBy: string;
-  cap?: string;
+  marketCap?: string;
   desc: string;
   border?: boolean;
   tokenAddress?: string;

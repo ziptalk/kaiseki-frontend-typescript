@@ -6,7 +6,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
   createdBy,
-  cap,
+  marketCap,
   desc,
   tokenAddress,
   clickedToken,
@@ -29,7 +29,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
               name,
               ticker,
               creator: createdBy,
-              marketCap: cap,
+              marketCap,
               desc,
             }}
           />
@@ -40,7 +40,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         <h1
           className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
         >
-          {cap}K
+          {marketCap}K
         </h1>
         <div className="text-[12px] text-[#CFCFCF]">(13%)</div>
       </div>
