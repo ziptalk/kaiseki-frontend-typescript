@@ -75,7 +75,7 @@ export const TokensLayout = () => {
             <p className="text-white">No token information available.</p>
           )}
         </div>
-        <div className="mb-32 mt-[40px] flex w-full items-center justify-center gap-[20px] ">
+        <div className="mt-[40px] flex w-full items-center justify-center gap-[20px] ">
           <PageFirst
             className="cursor-pointer"
             fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}

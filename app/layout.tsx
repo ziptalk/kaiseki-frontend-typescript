@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     icon: "images/memeLogo.png",
   },
 };
-import { arial, digital } from "@/fonts/font";
+import { arial } from "@/fonts/font";
 import Header from "@/components/common/Header";
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${arial.variable} bg-[#0E0E0E] font-arial`}
+        className={`${inter.className} ${arial.variable} mb-20 bg-[#0E0E0E] font-arial`}
       >
         <Provider>
           <Header />

@@ -72,7 +72,7 @@ export default function Raffle() {
   };
   return (
     <div className="mb-[154px]">
-      <div className="mx-auto mt-3">
+      <div className="mx-auto mt-3 w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home
         </PageLinkButton>
