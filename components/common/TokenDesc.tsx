@@ -3,10 +3,15 @@ interface TokenDescProps {
   name: string;
   ticker: string;
   creator: string;
-  desc: string;
+  description: string;
 }
 
-export const TokenDesc = ({ name, ticker, creator, desc }: TokenDescProps) => {
+export const TokenDesc = ({
+  name,
+  ticker,
+  creator,
+  description,
+}: TokenDescProps) => {
   return (
     <div className="w-full overflow-scroll">
       <h1 className="text-[15px] font-bold leading-none text-white">{name}</h1>
@@ -26,7 +31,7 @@ export const TokenDesc = ({ name, ticker, creator, desc }: TokenDescProps) => {
         </h1>
       </div>
       <div className="mt-[5px] overflow-scroll text-[13px] text-[#808080]">
-        {desc}
+        {description}
       </div>
     </div>
   );

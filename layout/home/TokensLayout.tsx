@@ -12,7 +12,7 @@ const initialTokenInfo: TokenInfo = {
   tw: "",
   tg: "",
   web: "",
-  desc: "",
+  description: "",
 };
 
 export const TokensLayout = () => {
@@ -37,6 +37,7 @@ export const TokensLayout = () => {
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
@@ -97,7 +98,7 @@ export const TokensLayout = () => {
                         tw: card.tw,
                         tg: card.tg,
                         web: card.website,
-                        desc: card.desc,
+                        description: card.description,
                       });
                 }}
               >
@@ -148,7 +149,7 @@ export const TokensLayout = () => {
             tw: info.tw,
             tg: info.tg,
             web: info.web,
-            desc: info.desc,
+            description: info.description,
           }}
         />
       )}

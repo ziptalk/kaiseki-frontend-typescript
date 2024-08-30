@@ -31,7 +31,7 @@ interface TokenCardTypes {
   ticker: string;
   createdBy: string;
   marketCap?: string;
-  desc: string;
+  description: string;
   border?: boolean;
   tokenAddress?: string;
   clickedToken?: string;
@@ -53,7 +53,7 @@ interface TokenInfo {
   tw: string;
   tg: string;
   web: string;
-  desc: string;
+  description: string;
 }
 
 interface FilteredData {

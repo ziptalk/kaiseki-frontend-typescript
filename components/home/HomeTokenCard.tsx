@@ -7,7 +7,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   ticker,
   createdBy,
   marketCap,
-  desc,
+  description,
   tokenAddress,
   clickedToken,
   cid,
@@ -30,7 +30,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
               ticker,
               creator: createdBy,
               marketCap,
-              desc,
+              description,
             }}
           />
         </div>

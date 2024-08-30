@@ -29,7 +29,7 @@ export const BuySellLayout = ({
   tw,
   tg,
   web,
-  desc,
+  description,
 }: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
@@ -76,11 +76,6 @@ export const BuySellLayout = ({
   const [memeTokenName, setMemeTokenName] = useState("");
   const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
   const [creator, setCreator] = useState("");
-  // const [tw, setTw] = useState("");
-  // const [tg, setTg] = useState("");
-  // const [web, setWeb] = useState("");
-  // const [desc, setDesc] = useState("");
-  // const [cid, setCid] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -121,14 +116,6 @@ export const BuySellLayout = ({
 
   useEffect(() => {
     fetchTokenDetailFromContract();
-    // fetchHomeTokenInfoFromServer(
-    //   tokenAddress,
-    //   setCid,
-    //   setTw,
-    //   setTg,
-    //   setWeb,
-    //   setDesc,
-    // );
   }, [tokenAddress]);
 
   // listen event later
@@ -199,31 +186,6 @@ export const BuySellLayout = ({
       console.log(error);
     }
   };
-  // const fetchHomeTokenInfoFromServer = async (
-  //   tokenAddress: any,
-  //   setCid: any,
-  //   setTw: any,
-  //   setTg: any,
-  //   setWeb: any,
-  //   setDesc: any,
-  // ) => {
-  //   try {
-  //     const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
-  //     const data = await response.json();
-  //     const filteredData = data.filter(
-  //       (item: any) => item.tokenAddress === tokenAddress,
-  //     );
-  //     if (filteredData.length > 0) {
-  //       setCid(filteredData[0].cid);
-  //       setTw(filteredData[0].twitterUrl);
-  //       setTg(filteredData[0].telegramUrl);
-  //       setWeb(filteredData[0].websiteUrl);
-  //       setDesc(filteredData[0].description);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const fetchTXLogsFromServer = async (
     tokenAddress: any,
@@ -647,7 +609,7 @@ export const BuySellLayout = ({
                 ticker: memeTokenSymbol,
                 creator,
                 marketCap,
-                desc,
+                description,
               }}
             />
           </div>
