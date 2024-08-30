@@ -4,16 +4,13 @@ import { usePathname } from "next/navigation";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import Image from "next/image";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
-import TradesCard from "@/components/detail/TradesCard";
 import TokenCard from "@/components/detail/TokenCard";
 
-import { impact } from "@/fonts/font";
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { MAX_INT_256, BILLION } from "@/global/constants";
@@ -27,6 +24,7 @@ import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import Slider from "@/components/common/Slider";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import { TradesLayout } from "@/layout/detail/TradesLayout";
+import { HolderDistributionLayout } from "@/layout/detail/HolderDistrubutionLayout";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -570,42 +568,6 @@ export default function Detail() {
     return {};
   };
 
-  const HolderDistributionSection: FC = () => {
-    return (
-      <>
-        <div className="mt-[70px] h-[560px] w-[420px] rounded-[10px] bg-[#1A1A1A] p-[30px]">
-          <h1 className="font-bold text-[#ADADAD]">Holder distribution</h1>
-          <div className="mt-[20px] gap-[8px] text-[#6A6A6A]">
-            {distribution ? (
-              Object.entries(distribution).map(
-                ([outerKey, innerObj], index) => (
-                  <div key={outerKey}>
-                    {Object.entries(innerObj).map(
-                      ([innerKey, value], innerIndex) => (
-                        <div key={innerKey} className="flex justify-between">
-                          <div className="flex">
-                            <h1>{`${innerIndex + 1}. ${innerKey.substring(0, 6)}`}</h1>
-                            {innerKey === contracts.MCV2_Bond && (
-                              <h1>&nbsp;💳 (bonding curve)</h1>
-                            )}
-                            {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
-                          </div>
-                          <h1>{`${parseFloat(value)}%`}</h1>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                ),
-              )
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-        </div>
-      </>
-    );
-  };
-
   return (
     <main className="flex w-full justify-center gap-[30px]">
       {/* left side */}
@@ -629,31 +591,36 @@ export default function Detail() {
             desc={desc}
           />
         </div>
-        <div className="mt-[30px] flex h-[50px] w-full overflow-hidden">
+        <div className="bg-card mt-[30px] flex h-[50px] w-full">
           <Slider
             elements={[
               <ModuleInfo
                 title="Price"
+                className="mr-10 bg-transparent"
                 desc={12345.12 + " BASE"}
                 percentage="+7.31%"
                 key={"price"}
               />,
               <ModuleInfo
                 title="Marketcap"
+                className="mr-10 bg-transparent"
                 desc={marketCap + " BASE"}
                 key={"Marketcap"}
               />,
               <ModuleInfo
                 title="Virtual Liquidity"
+                className="mr-10 bg-transparent"
                 desc={"$112.77k"}
                 key={"Virtual Liquidity"}
               />,
               <ModuleInfo
                 title="24H Volume"
+                className="mr-10 bg-transparent"
                 desc={12345.12 + " BASE"}
                 key={"24H Volume"}
               />,
               <ModuleInfo
+                className="mr-10 bg-transparent"
                 title="Token Created"
                 desc={"47M"}
                 key={"Token Created"}
@@ -675,24 +642,28 @@ export default function Detail() {
           }}
         />
       </div>
-      <div className="w-[470px]">
-        <Tradesection
-          {...{
-            isBuy,
-            setIsBuy,
-            setIsInputInTokenAmount,
-            isInputInTokenAmount,
-            inputValue,
-            handleInputChange,
-            handlePercentage,
-            buy,
-            sell,
-            memeTokenSymbol,
-            priceForNextMint,
-            RESERVE_SYMBOL,
-          }}
-        />
-        <HolderDistributionSection />
+
+      {/* right side */}
+      <div>
+        <div className="mt-[38px] h-[290px] w-[470px] bg-[#252525] p-[20px]">
+          <Tradesection
+            {...{
+              isBuy,
+              setIsBuy,
+              setIsInputInTokenAmount,
+              isInputInTokenAmount,
+              inputValue,
+              handleInputChange,
+              handlePercentage,
+              buy,
+              sell,
+              memeTokenSymbol,
+              priceForNextMint,
+              RESERVE_SYMBOL,
+            }}
+          />
+        </div>
+        <HolderDistributionLayout {...{ distribution, creator }} />
       </div>
     </main>
   );

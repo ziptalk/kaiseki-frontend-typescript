@@ -22,7 +22,7 @@ import {
 } from "@/global/projectConfig";
 import X from "@/public/icons/X_logo.svg";
 import Info from "@/public/icons/info.svg";
-import Telegram from "@/public/icons/Telegram_logo.svg";
+import Telegram from "@/public/icons/telegram_logo.svg";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();

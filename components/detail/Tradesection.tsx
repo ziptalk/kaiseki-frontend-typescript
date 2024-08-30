@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ethers } from "ethers";
+import { Button } from "../atoms/Button";
 
 interface TradesectionProps {
   isBuy: boolean;
@@ -16,6 +17,7 @@ interface TradesectionProps {
   memeTokenSymbol: string;
   priceForNextMint: number;
   RESERVE_SYMBOL: string;
+  raffle?: boolean;
 }
 
 export const Tradesection = ({
@@ -31,6 +33,7 @@ export const Tradesection = ({
   memeTokenSymbol,
   priceForNextMint,
   RESERVE_SYMBOL,
+  raffle,
 }: TradesectionProps) => {
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75, 100];
@@ -62,21 +65,21 @@ export const Tradesection = ({
   const BuySellButtonSection: FC = () => {
     return (
       <div className="flex h-[50px] justify-between gap-[5px]">
-        <button
-          className={`h-full w-[210px] ${isBuy && "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
+        <Button
+          className={`h-full w-[210px] ${!isBuy && "bg-[#454545]"}`}
           onClick={() => setIsBuy(true)}
         >
           Buy
-        </button>
-        <button
-          className={`h-full w-[210px] ${isBuy || "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
+        </Button>
+        <Button
+          className={`h-full w-[210px] ${isBuy && "bg-[#454545]"}`}
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
           }}
         >
           Sell
-        </button>
+        </Button>
       </div>
     );
   };
@@ -86,9 +89,9 @@ export const Tradesection = ({
       {isBuy ? (
         <div
           onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-          className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
+          className={`mt-[11px] flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
         >
-          Switch to F1T
+          Switch to {memeTokenSymbol}
         </div>
       ) : (
         <SellPercentageButton />
@@ -139,7 +142,7 @@ export const Tradesection = ({
             <input
               className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
               type="number"
-              placeholder="0.00"
+              placeholder="Enter the amount"
               step="0.01"
               name="inputValue"
               value={inputValue}
@@ -155,9 +158,9 @@ export const Tradesection = ({
               </h1>
             </div>
           </div>
-          <h1 className="text-[#B8B8B8]">
-            {/*RESERVE_SYMBOL value to memetoken*/}~
-            {inputValue &&
+          {/* <h1 className="text-[#B8B8B8]"> */}
+          {/*RESERVE_SYMBOL value to memetoken*/}
+          {/* {inputValue &&
               Number(
                 String(
                   Math.floor(
@@ -168,23 +171,20 @@ export const Tradesection = ({
                 ),
               )}
             &nbsp;{memeTokenSymbol}
-          </h1>
+          </h1> */}
         </>
       )}
 
       {/*true == toggle module, false == percent for sell*/}
-      <div className="text-[14px] text-white">
-        {"Raffle has already progressed! -> "}
-        <Link href={"#"} className="underline">
-          Join the Raffle!
-        </Link>
-      </div>
-      <button
-        type="submit"
-        className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
-      >
-        Connect Wallet
-      </button>
+      {raffle && (
+        <div className="text-[14px] text-white">
+          {"Raffle has already progressed! -> "}
+          <Link href={"#"} className="underline">
+            Join the Raffle!
+          </Link>
+        </div>
+      )}
+      <Button onClick={isBuy ? buy : sell}>Connect Wallet</Button>
     </form>
   );
 };

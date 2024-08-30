@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface ButtonProps {
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   className?: string;
 }
 
@@ -14,7 +14,7 @@ export const Button = ({
   return (
     <button
       className={twMerge([
-        "bg-primary button-shadow h-[60px] w-full rounded-[10px] text-[16px] font-bold text-white",
+        "button-shadow h-[60px] w-full rounded-[10px] bg-primary text-[16px] font-bold text-white",
         className,
       ])}
       onClick={onClick}
