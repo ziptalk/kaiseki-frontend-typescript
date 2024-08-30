@@ -1,22 +1,12 @@
 import React from "react";
-import Image from "next/image";
-import { digital } from "@/fonts/font";
-
 interface TokenDescProps {
   name: string;
   ticker: string;
   creator: string;
-  marketCap: string;
   desc: string;
 }
 
-export const TokenDesc = ({
-  name,
-  ticker,
-  creator,
-  marketCap,
-  desc,
-}: TokenDescProps) => {
+export const TokenDesc = ({ name, ticker, creator, desc }: TokenDescProps) => {
   return (
     <div className="w-full overflow-scroll">
       <h1 className="text-[15px] font-bold leading-none text-white">{name}</h1>
