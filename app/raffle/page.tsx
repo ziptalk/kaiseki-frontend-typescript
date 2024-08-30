@@ -3,17 +3,33 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { anton, digital } from "@/fonts/font";
+import { digital } from "@/fonts/font";
+import { MainTitle } from "@/components/common/MainTitle";
+import { Button } from "@/components/atoms/Button";
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+import { AlertInfo } from "@/components/atoms/AlertInfo";
 
 export default function Raffle() {
   const [raffleEnd, setRaffleEnd] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [inputValue, setInputValue] = useState(0);
 
-  // useEffect(() => {
-  //   console.log({ hoveredToken });
-  //   console.log({ clickedToken });
-  // }, [hoveredToken, clickedToken]);
+  const buttonValue = [
+    {
+      value: 10,
+      onClick: () => setInputValue(10),
+    },
+    {
+      value: 50,
+      onClick: () => setInputValue(50),
+    },
+    {
+      value: 100,
+      onClick: () => setInputValue(100),
+    },
+  ];
+
   useEffect(() => {
     if (buttonClicked) {
       setTimeout(() => {
@@ -56,27 +72,16 @@ export default function Raffle() {
       });
   };
   return (
-    <div className=" mb-[154px] ">
-      <div
-        className={
-          "mx-auto mt-[42px]  flex h-[644px] w-[1151px] items-center justify-center rounded-2xl border-2 border-[#FAFF00] bg-gradient-to-b from-red-600 to-red-800 shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FAFF00]"
-        }
-      >
-        <div className="flex h-[584px] w-[510px] flex-col items-center gap-[30px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white">
-          <div className="rounded-[5px] bg-gradient-to-t from-yellow-300 to-white p-[2px]">
-            <div className="flex h-[60px] w-[390px] items-center justify-center rounded-[5px] bg-gradient-to-t from-[#670C0C] to-[#191919]">
-              <div
-                className={`title-typo ${anton.variable} font-anton absolute`}
-              >
-                Join the Raffle!
-              </div>
-              <div className={`title-shadow ${anton.variable} font-anton `}>
-                Join the Raffle!
-              </div>
-            </div>
-          </div>
-
-          <div className="flex h-[434px] w-[400px] flex-col border border-dashed border-[#F9FF00]  bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
+    <div className="mb-[154px]">
+      <div className="mx-auto mt-3">
+        <PageLinkButton href={"/"} prev>
+          Back Home
+        </PageLinkButton>
+      </div>
+      <div className={"main mt-[10px] h-[644px] w-[1151px]"}>
+        <div className="main-inner h-[584px] w-[510px]">
+          <MainTitle title="Join the Raffle!" />
+          <div className="main-tokenarea h-[434px] w-[400px] flex-col">
             <div className="flex h-[161px] gap-[10px] overflow-scroll">
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
@@ -117,94 +122,63 @@ export default function Raffle() {
                   </h1>
                 </div>
                 <div className="mt-[5px] text-[13px] text-[#808080] ">
-                  Pizza ipsum dolor meat lovers buffalo. Bacon Aussie mozzarella
-                  buffalo hand lovers string. Chicago garlic roll banana
+                  {kingDesc}
                 </div>
               </div>
             </div>
             <div className="mt-[10px]">
-              <h1 className="text-[20px] font-bold text-white underline">
+              <h1 className="text-[20px] font-bold text-[#D9D9D9] underline underline-offset-4">
                 Amount of Tokens
               </h1>
               <div className="relative mt-[20px] flex w-full items-center">
                 <input
-                  className="h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
+                  className="h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-white"
                   type="number"
                   // placeholder="0.00"
                   step="0.01"
                   name="inputValue"
-                  // value={inputValue}
+                  value={inputValue}
                   // onChange={handleInputChange}
                 />
                 <button
                   type="button"
-                  // onClick={() => handlePercentage(100)}
+                  onClick={() => setInputValue(200)}
                   className="absolute right-0 mr-[20px] flex h-[30px] w-[52px] items-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[10px] text-[14px] text-white"
                 >
                   MAX
                 </button>
               </div>
               <div className="mt-[10px] flex justify-between">
-                <button className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px] font-bold text-white">
-                  10%
-                </button>
-
-                <button className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px] font-bold text-white">
-                  50%
-                </button>
-
-                <button className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px] font-bold text-white">
-                  100%
-                </button>
+                {buttonValue.map((item, index) => (
+                  <Button
+                    key={index}
+                    className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px]"
+                    onClick={item.onClick}
+                  >
+                    {item.value}%
+                  </Button>
+                ))}
               </div>
               {raffleEnd ? (
-                <button
-                  className="mt-[30px] h-[60px] w-full rounded-[10px] bg-[#2F2F2F] font-bold text-white"
+                <Button
+                  className="mt-[30px] bg-[#2F2F2F]"
                   onClick={() => setButtonClicked(true)}
                 >
                   Raffle has ended
-                </button>
+                </Button>
               ) : (
-                <button
-                  className="mt-[30px] h-[60px] w-full rounded-[10px] bg-[#950000] font-bold text-white"
+                <Button
+                  className="mt-[30px]"
                   onClick={() => setButtonClicked(true)}
                 >
                   Apply
-                </button>
+                </Button>
               )}
             </div>
           </div>
         </div>
       </div>
-      {success ? (
-        <div
-          className={`mx-auto mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white${buttonClicked ? "opacity-0" : "opacity-100"} duration-500`}
-        >
-          <Image
-            className="mr-[6px]"
-            src={"/icons/complete.svg"}
-            alt="Raffle"
-            width={17}
-            height={17}
-            style={{ width: 17, height: 17 }}
-          />
-          Raffle has been successfully completed!
-        </div>
-      ) : (
-        <div
-          className={`mx-auto mt-[61px] flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F80] text-[16px] font-bold text-white ${buttonClicked ? "opacity-100" : "opacity-0"} duration-500`}
-        >
-          <Image
-            className="mr-[6px]"
-            src={"/icons/fail.svg"}
-            alt="Raffle"
-            width={17}
-            height={17}
-            style={{ width: 17, height: 17 }}
-          />
-          Raffle did not run properly. Please try again.
-        </div>
-      )}
+      <AlertInfo {...{ buttonClicked, success }} />
     </div>
   );
 }

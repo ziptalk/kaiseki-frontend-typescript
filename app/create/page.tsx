@@ -277,7 +277,7 @@ const Create: NextPage = () => {
     return (
       <div className="">
         <Image
-          src="/images/Preview.svg"
+          src="/icons/Preview.svg"
           alt=""
           width={500}
           height={500}

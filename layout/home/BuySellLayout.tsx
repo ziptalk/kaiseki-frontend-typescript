@@ -25,7 +25,7 @@ import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
 import Link from "next/link";
-import Arrow from "@/public/icons/pagePre.svg";
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 interface BuySellLayoutProps {
   tokenAddress: string;
 }
@@ -678,14 +678,10 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     );
   };
   return (
-    <>
-      <Link
-        href={tokenAddress}
-        className="ml-auto mt-[112px] flex h-[24px] w-[114px] cursor-pointer items-center text-[16px] text-[#AEAEAE]"
-      >
+    <div className="ml-[20px]">
+      <PageLinkButton href={tokenAddress} className="mt-[112px]">
         View details
-        <Arrow fill={"#AEAEAE"} className={"translate ml-[4px] rotate-180"} />
-      </Link>
+      </PageLinkButton>
       <div className="mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
         <div className="flex gap-[20px]">
           <img
@@ -867,6 +863,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
         {/* <SellPercentageButton /> */}
         <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
       </div>
-    </>
+    </div>
   );
 };

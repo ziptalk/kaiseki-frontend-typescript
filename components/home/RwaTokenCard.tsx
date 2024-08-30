@@ -11,9 +11,10 @@ export const RWATokenCard: FC = () => {
   const [second, setSecond] = useState(0);
 
   useEffect(() => {
+    // Calculate the remaining time
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      // console.log(now);
+
       const distance = time - now;
       setDay(Math.floor(distance / (1000 * 60 * 60 * 24)));
       setHour(
@@ -61,7 +62,7 @@ export const RWATokenCard: FC = () => {
       });
   };
   return (
-    <div className="flex h-[120px] w-[390px] justify-between gap-[10px] border border-dashed border-[#F9FF00]  bg-black  p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
+    <div className="main-tokenarea h-[120px] w-[390px]">
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
         alt="Image from IPFS"

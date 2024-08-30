@@ -9,13 +9,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   cap,
   desc,
   tokenAddress,
-  hoveredToken,
+  clickedToken,
   cid,
 }) => {
   return (
     <div
       // href={tokenAddress ? tokenAddress : ""}
-      className={`hover:card-gradient h-[215px] w-[420px] cursor-pointer bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] ${tokenAddress === hoveredToken && "bg-gradient-to-t"} hover:bg-gradient-to-t`}
+      className={`hover:card-gradient h-[215px] w-[420px] cursor-pointer bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] ${tokenAddress === clickedToken && "bg-gradient-to-t"} hover:bg-gradient-to-t`}
     >
       <div className="flex h-[148px] gap-[10px]">
         <img
