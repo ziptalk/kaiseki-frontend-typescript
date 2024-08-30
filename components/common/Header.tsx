@@ -30,18 +30,14 @@ const Header: FC = () => {
   const { openChainModal } = useChainModal();
   const { address, chainId, isConnected } = useAccount();
 
-  const [curMintValue, setCurMintValue] = useState("0.1043");
-  const [curMintTic, setCurMintTic] = useState("MEME");
-  const [curMintUser, setCurMintUser] = useState("0x7A2");
-  const [curMintCid, setCurMintCid] = useState(
-    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
-  );
-  const [curCreateTic, setCurCreateTic] = useState("MEME");
-  const [curCreateUser, setCurCreateUser] = useState("0x7A2");
-  const [curCreateTime, setCurCreateTime] = useState("Date");
-  const [curCreateCid, setCurCreateCid] = useState(
-    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
-  );
+  const [curMintValue, setCurMintValue] = useState("");
+  const [curMintTic, setCurMintTic] = useState("");
+  const [curMintUser, setCurMintUser] = useState("");
+  const [curMintCid, setCurMintCid] = useState("");
+  const [curCreateTic, setCurCreateTic] = useState("");
+  const [curCreateUser, setCurCreateUser] = useState("");
+  const [curCreateTime, setCurCreateTime] = useState("");
+  const [curCreateCid, setCurCreateCid] = useState("");
   const [curCreateTokenAddress, setCurCreateTokenAddress] = useState("");
   const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
@@ -49,10 +45,6 @@ const Header: FC = () => {
   const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
   const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
   const [isWrongChain, setIsWrongChain] = useState(false);
-
-  const [isHoveredX, setIsHoveredX] = useState(false);
-  const [isHoveredTG, setIsHoveredTG] = useState(false);
-  const [isHoveredIF, setIsHoveredIF] = useState(false);
 
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
   const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
@@ -393,61 +385,67 @@ const Header: FC = () => {
               </div>
             </div>
             <div className="flex h-[40px] items-center gap-[20px]">
-              <MintAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
-              >
-                <div className="h-[18px] w-[18px] rounded-full ">
-                  <Image
-                    src="/images/memesinoGhost.png"
-                    alt=""
-                    height={18}
-                    width={18}
-                    style={{ width: 18, height: 18 }}
-                  />
-                </div>
+              {curMintUser && (
+                <MintAnimateWrapper
+                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
+                >
+                  <div className="h-[18px] w-[18px] rounded-full ">
+                    <Image
+                      src="/images/memesinoGhost.png"
+                      alt=""
+                      height={18}
+                      width={18}
+                      style={{ width: 18, height: 18 }}
+                    />
+                  </div>
 
-                <h1 className="text-sm">
-                  {curMintUser} bought {curMintValue} SEI of
-                </h1>
-                <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
-                  <h1 className="cursor-pointer text-sm hover:underline">
-                    {curMintTic}
+                  <h1 className="text-sm">
+                    {curMintUser} bought {curMintValue} SEI of
                   </h1>
-                </Link>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
-                    alt="img"
-                  />
-                </div>
-              </MintAnimateWrapper>
-              <CreateAnimateWrapper
-                className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
-              >
-                <div className="h-[18px] w-[18px] rounded-full ">
-                  <Image
-                    src="/images/memesinoGhost.png"
-                    alt=""
-                    height={18}
-                    width={18}
-                    style={{ width: 18, height: 18 }}
-                  />
-                </div>
-                <h1 className="text-sm">{curCreateUser} Created</h1>
-                <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
-                  <h1 className="cursor-pointer text-sm hover:underline">
-                    {curCreateTic}
-                  </h1>
-                </Link>
+                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                    <h1 className="cursor-pointer text-sm hover:underline">
+                      {curMintTic}
+                    </h1>
+                  </Link>
+                  <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                      alt="img"
+                    />
+                  </div>
+                </MintAnimateWrapper>
+              )}
+              {curCreateUser && (
+                <CreateAnimateWrapper
+                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                >
+                  <div className="h-[18px] w-[18px] rounded-full ">
+                    <Image
+                      src="/images/memesinoGhost.png"
+                      alt=""
+                      height={18}
+                      width={18}
+                      style={{ width: 18, height: 18 }}
+                    />
+                  </div>
+                  <h1 className="text-sm">{curCreateUser} Created</h1>
+                  <Link
+                    href={curCreateTokenAddress ? curCreateTokenAddress : ""}
+                  >
+                    <h1 className="cursor-pointer text-sm hover:underline">
+                      {curCreateTic}
+                    </h1>
+                  </Link>
 
-                <h1 className="text-sm">on {curCreateTime}</h1>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
-                    alt="img"
-                  />
-                </div>
-              </CreateAnimateWrapper>
+                  <h1 className="text-sm">on {curCreateTime}</h1>
+                  <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                      alt="img"
+                    />
+                  </div>
+                </CreateAnimateWrapper>
+              )}
             </div>
             <div className="relative flex w-[300px] flex-row-reverse items-center">
               {address ? (

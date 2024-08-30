@@ -47,6 +47,15 @@ interface TradesCardType {
   tx: string;
 }
 
+interface TokenInfo {
+  tokenAddress: string;
+  cid: string;
+  tw: string;
+  tg: string;
+  web: string;
+  desc: string;
+}
+
 interface FilteredData {
   [key: string]: {
     [innerKey: string]: string;

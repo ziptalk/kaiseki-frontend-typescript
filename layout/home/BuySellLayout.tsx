@@ -23,11 +23,14 @@ import Slider from "@/components/common/Slider";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
-interface BuySellLayoutProps {
-  tokenAddress: string;
-}
-
-export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
+export const BuySellLayout = ({
+  tokenAddress,
+  cid,
+  tw,
+  tg,
+  web,
+  desc,
+}: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
 
@@ -73,11 +76,11 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   const [memeTokenName, setMemeTokenName] = useState("");
   const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
   const [creator, setCreator] = useState("");
-  const [tw, setTw] = useState("");
-  const [tg, setTg] = useState("");
-  const [web, setWeb] = useState("");
-  const [desc, setDesc] = useState("");
-  const [cid, setCid] = useState("");
+  // const [tw, setTw] = useState("");
+  // const [tg, setTg] = useState("");
+  // const [web, setWeb] = useState("");
+  // const [desc, setDesc] = useState("");
+  // const [cid, setCid] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -118,14 +121,14 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
 
   useEffect(() => {
     fetchTokenDetailFromContract();
-    fetchHomeTokenInfoFromServer(
-      tokenAddress,
-      setCid,
-      setTw,
-      setTg,
-      setWeb,
-      setDesc,
-    );
+    // fetchHomeTokenInfoFromServer(
+    //   tokenAddress,
+    //   setCid,
+    //   setTw,
+    //   setTg,
+    //   setWeb,
+    //   setDesc,
+    // );
   }, [tokenAddress]);
 
   // listen event later
@@ -196,31 +199,31 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
       console.log(error);
     }
   };
-  const fetchHomeTokenInfoFromServer = async (
-    tokenAddress: any,
-    setCid: any,
-    setTw: any,
-    setTg: any,
-    setWeb: any,
-    setDesc: any,
-  ) => {
-    try {
-      const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
-      const data = await response.json();
-      const filteredData = data.filter(
-        (item: any) => item.tokenAddress === tokenAddress,
-      );
-      if (filteredData.length > 0) {
-        setCid(filteredData[0].cid);
-        setTw(filteredData[0].twitterUrl);
-        setTg(filteredData[0].telegramUrl);
-        setWeb(filteredData[0].websiteUrl);
-        setDesc(filteredData[0].description);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const fetchHomeTokenInfoFromServer = async (
+  //   tokenAddress: any,
+  //   setCid: any,
+  //   setTw: any,
+  //   setTg: any,
+  //   setWeb: any,
+  //   setDesc: any,
+  // ) => {
+  //   try {
+  //     const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
+  //     const data = await response.json();
+  //     const filteredData = data.filter(
+  //       (item: any) => item.tokenAddress === tokenAddress,
+  //     );
+  //     if (filteredData.length > 0) {
+  //       setCid(filteredData[0].cid);
+  //       setTw(filteredData[0].twitterUrl);
+  //       setTg(filteredData[0].telegramUrl);
+  //       setWeb(filteredData[0].websiteUrl);
+  //       setDesc(filteredData[0].description);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const fetchTXLogsFromServer = async (
     tokenAddress: any,
@@ -627,91 +630,93 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
 
   return (
     <div className="ml-[20px]">
-      <PageLinkButton href={tokenAddress} className="mt-[112px]">
-        View details
-      </PageLinkButton>
-      <div className="mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
-        <div className="flex gap-[20px]">
-          <img
-            src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-            alt="Image from IPFS"
-            className="h-[120px] w-[120px] border-black "
-          />
-          <TokenDesc
+      <div className="sticky top-[80px] pb-[60px]">
+        <PageLinkButton href={tokenAddress} className="mt-[112px]">
+          View details
+        </PageLinkButton>
+        <div className="mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
+          <div className="flex gap-[20px]">
+            <img
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              alt="Image from IPFS"
+              className="h-[120px] w-[120px] border-black "
+            />
+            <TokenDesc
+              {...{
+                name: memeTokenName,
+                ticker: memeTokenSymbol,
+                creator,
+                marketCap,
+                desc,
+              }}
+            />
+          </div>
+          <div className="flex h-[50px] w-full overflow-hidden">
+            <Slider
+              elements={[
+                <ModuleInfo
+                  title="Price"
+                  desc={12345.12 + " BASE"}
+                  percentage="+7.31%"
+                  key={"price"}
+                />,
+                <ModuleInfo
+                  title="Marketcap"
+                  desc={marketCap + " BASE"}
+                  key={"Marketcap"}
+                />,
+                <ModuleInfo
+                  title="Virtual Liquidity"
+                  desc={"$112.77k"}
+                  key={"Virtual Liquidity"}
+                />,
+                <ModuleInfo
+                  title="24H Volume"
+                  desc={12345.12 + " BASE"}
+                  key={"24H Volume"}
+                />,
+                <ModuleInfo
+                  title="Token Created"
+                  desc={"47M"}
+                  key={"Token Created"}
+                />,
+              ]}
+            />
+          </div>
+          <div className="h-[250px] w-full bg-[#151527] p-[13px]">
+            <div className="h-[210px] w-full">
+              <div className="flex items-center gap-[7.15px]">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                  alt="Image from IPFS"
+                  className="h-[28.5px] w-[28.5px] border-black "
+                />
+                <p className="inline-block text-[14.3px] text-white">
+                  {memeTokenName} ($ {memeTokenSymbol}) / BASE
+                </p>
+              </div>
+              <TradingViewChart tokenAddress={tokenAddress} />
+            </div>
+          </div>
+          <Tradesection
             {...{
-              name: memeTokenName,
-              ticker: memeTokenSymbol,
-              creator,
-              marketCap,
-              desc,
+              isBuy,
+              setIsBuy,
+              setIsInputInTokenAmount,
+              isInputInTokenAmount,
+              inputValue,
+              handleInputChange,
+              handlePercentage,
+              buy,
+              sell,
+              memeTokenSymbol,
+              priceForNextMint,
+              RESERVE_SYMBOL,
             }}
           />
+          {/* <SellPercentageButton /> */}
+          <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
         </div>
-        <div className="flex h-[50px] w-full overflow-hidden">
-          <Slider
-            elements={[
-              <ModuleInfo
-                title="Price"
-                desc={12345.12 + " BASE"}
-                percentage="+7.31%"
-                key={"price"}
-              />,
-              <ModuleInfo
-                title="Marketcap"
-                desc={marketCap + " BASE"}
-                key={"Marketcap"}
-              />,
-              <ModuleInfo
-                title="Virtual Liquidity"
-                desc={"$112.77k"}
-                key={"Virtual Liquidity"}
-              />,
-              <ModuleInfo
-                title="24H Volume"
-                desc={12345.12 + " BASE"}
-                key={"24H Volume"}
-              />,
-              <ModuleInfo
-                title="Token Created"
-                desc={"47M"}
-                key={"Token Created"}
-              />,
-            ]}
-          />
-        </div>
-        <div className="h-[250px] w-full bg-[#151527] p-[13px]">
-          <div className="h-[210px] w-full">
-            <div className="flex items-center gap-[7.15px]">
-              <img
-                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                alt="Image from IPFS"
-                className="h-[28.5px] w-[28.5px] border-black "
-              />
-              <p className="inline-block text-[14.3px] text-white">
-                {memeTokenName} ($ {memeTokenSymbol}) / BASE
-              </p>
-            </div>
-            <TradingViewChart tokenAddress={tokenAddress} />
-          </div>
-        </div>
-        <Tradesection
-          {...{
-            isBuy,
-            setIsBuy,
-            setIsInputInTokenAmount,
-            isInputInTokenAmount,
-            inputValue,
-            handleInputChange,
-            handlePercentage,
-            buy,
-            sell,
-            memeTokenSymbol,
-            priceForNextMint,
-            RESERVE_SYMBOL,
-          }}
-        />
-        {/* <SellPercentageButton /> */}
-        <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
       </div>
     </div>
   );

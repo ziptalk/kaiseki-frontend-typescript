@@ -6,15 +6,24 @@ import { BuySellLayout } from "./BuySellLayout";
 import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
 
+const initialTokenInfo: TokenInfo = {
+  tokenAddress: "",
+  cid: "",
+  tw: "",
+  tg: "",
+  web: "",
+  desc: "",
+};
+
 export const TokensLayout = () => {
-  const [clickedToken, setClickedToken] = useState<string>("");
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNumber] = useState<number>(1);
   const [value, setValue] = useState<string>("");
+  const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
 
   const setPageNum = (num: number) => {
     setPageNumber(num);
-    setClickedToken("");
+    setInfo(initialTokenInfo);
   };
   useEffect(() => {
     getData();
@@ -35,7 +44,9 @@ export const TokensLayout = () => {
   }
   return (
     <div className="mx-auto flex w-[1300px]">
-      <div className={`${clickedToken ? "w-[860px]" : "w-full"} mt-[32px]`}>
+      <div
+        className={`${info.tokenAddress ? "w-[860px]" : "w-full"} mt-[32px]`}
+      >
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-[20px] flex w-full gap-[20px]">
           <Dropdown // sort dropdown
@@ -71,19 +82,26 @@ export const TokensLayout = () => {
           </form>
         </div>
         <div
-          className={`mt-[20px] grid w-full ${clickedToken ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  gap-[20px]`}
+          className={`mt-[20px] grid w-full ${info.tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  gap-[20px]`}
         >
           {tokenInfo ? (
             tokenInfo.map((card: any, index: any) => (
               <div
                 key={index}
                 onMouseDown={() => {
-                  clickedToken && clickedToken === card.tokenAddress
-                    ? setClickedToken("")
-                    : setClickedToken(card.tokenAddress);
+                  info.tokenAddress && info.tokenAddress === card.tokenAddress
+                    ? setInfo(initialTokenInfo)
+                    : setInfo({
+                        tokenAddress: card.tokenAddress,
+                        cid: card.cid,
+                        tw: card.tw,
+                        tg: card.tg,
+                        web: card.website,
+                        desc: card.desc,
+                      });
                 }}
               >
-                <HomeTokenCard {...card} clickedToken={clickedToken} />
+                <HomeTokenCard {...card} clickedToken={info.tokenAddress} />
               </div>
             ))
           ) : (
@@ -122,7 +140,18 @@ export const TokensLayout = () => {
           />
         </div>
       </div>
-      {clickedToken && <BuySellLayout tokenAddress={clickedToken} />}
+      {info.tokenAddress && (
+        <BuySellLayout
+          {...{
+            tokenAddress: info.tokenAddress,
+            cid: info.cid,
+            tw: info.tw,
+            tg: info.tg,
+            web: info.web,
+            desc: info.desc,
+          }}
+        />
+      )}
     </div>
   );
 };

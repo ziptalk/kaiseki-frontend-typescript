@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
@@ -74,16 +74,14 @@ export default function Detail() {
     signer,
   );
 
-  const [memeTokenName, setMemeTokenName] = useState("Name");
-  const [memeTokenSymbol, setMemeTokenSymbol] = useState("ticker");
-  const [creator, setCreator] = useState("Me");
+  const [memeTokenName, setMemeTokenName] = useState("");
+  const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
+  const [creator, setCreator] = useState("");
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
-  const [desc, setDesc] = useState("adfadfadf");
-  const [cid, setCid] = useState(
-    "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
-  );
+  const [desc, setDesc] = useState("");
+  const [cid, setCid] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -591,7 +589,7 @@ export default function Detail() {
             desc={desc}
           />
         </div>
-        <div className="bg-card mt-[30px] flex h-[50px] w-full">
+        <div className="mt-[30px] flex h-[50px] w-full bg-card">
           <Slider
             elements={[
               <ModuleInfo
