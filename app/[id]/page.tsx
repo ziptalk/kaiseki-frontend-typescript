@@ -10,9 +10,8 @@ import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
-import SocialLinkCard from "@/components/detail/SocialLinkCard";
 import TradesCard from "@/components/detail/TradesCard";
-import TokenCard from "@/components/common/TokenCard";
+import TokenCard from "@/components/detail/TokenCard";
 
 import { impact } from "@/fonts/font";
 import { ether, wei } from "@/utils/weiAndEther";
@@ -23,6 +22,11 @@ import contracts from "@/global/contracts";
 import TradingViewChart from "@/components/common/TradingViewWidget";
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 import axios from "axios";
+import { Tradesection } from "@/components/detail/Tradesection";
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+import Slider from "@/components/common/Slider";
+import { ModuleInfo } from "@/components/common/ModuleInfo";
+import { TradesLayout } from "@/layout/detail/TradesLayout";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -78,7 +82,7 @@ export default function Detail() {
   const [tw, setTw] = useState("");
   const [tg, setTg] = useState("");
   const [web, setWeb] = useState("");
-  const [desc, setDesc] = useState("");
+  const [desc, setDesc] = useState("adfadfadf");
   const [cid, setCid] = useState(
     "QmT9jVuYbem8pJpMVtcEqkFRDBqjinEsaDtm6wz9R8VuKC",
   );
@@ -558,88 +562,12 @@ export default function Detail() {
     }
   };
 
-  const transformToTradesCardType = (event: any): TradesCardType => {
-    return {
-      user: event.user.substring(0, 6),
-      isBuy: event.isMint,
-      reserveAmount: event.reserveAmount
-        ? (
-            Math.ceil(Number(ethers.formatEther(event.reserveAmount)) * 10000) /
-            10000
-          )
-            .toFixed(4)
-            .toString()
-        : (
-            Math.ceil(Number(ethers.formatEther(event.refundAmount)) * 10000) /
-            10000
-          )
-            .toFixed(4)
-            .toString(),
-
-      memeTokenAmount: event.amountMinted
-        ? Number(ethers.formatEther(event.amountMinted)).toFixed(0).toString()
-        : ethers.formatEther(event.amountBurned),
-      date: event.blockTimestamp.toString(),
-      tx: event.transactionHash,
-    };
-  };
-
   //MARK: - Set Distribution
   const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
     if (targetOuterKey in data) {
       return { [targetOuterKey]: data[targetOuterKey] };
     }
     return {};
-  };
-
-  const TradesSection: FC = () => {
-    return (
-      <>
-        <h1 className="mt-[30px] text-xl font-bold text-white">Trades</h1>
-        <div className="mb-20 mt-[15px] gap-[20px] rounded-[10px] bg-[#1A1A1A]  p-[30px]">
-          <div className="flex w-full justify-between border-b border-[#6A6A6A] px-[10px] pb-[15px] text-[#6A6A6A]">
-            <h1 className="w-1/6">account</h1>
-            <h1 className="w-1/6">buy / sell</h1>
-            <h1 className="w-1/6">{RESERVE_SYMBOL}</h1>
-            <h1 className="w-1/6">{memeTokenSymbol}</h1>
-            <h1 className="w-1/6">date</h1>
-            <h1 className="flex w-1/6 flex-row-reverse">transaction</h1>
-          </div>
-          {TXLogs20FromServer ? (
-            TXLogs20FromServer.map((event) => {
-              const cardProps = transformToTradesCardType(event);
-              return <TradesCard key={event._id} {...cardProps} />;
-            })
-          ) : (
-            <p>Loading...</p>
-          )}
-        </div>
-      </>
-    );
-  };
-
-  const BuySellButtonSection: FC = () => {
-    return (
-      <>
-        <div className="flex gap-[10px] rounded-[10px] border-2 border-[#880400] bg-black p-[10px]">
-          <button
-            className={`h-[44px] w-full rounded-[8px]  ${impact.variable} font-impact ${isBuy ? " border-[#43FF4B] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#43FF4B]" : " border-[#4E4B4B] bg-[#4E4B4B]"} border-2 `}
-            onClick={() => setIsBuy(true)}
-          >
-            Buy
-          </button>
-          <button
-            className={`h-[44px] w-full rounded-[8px] border-2 ${impact.variable} font-impact ${isBuy ? " border-[#4E4B4B] bg-[#4E4B4B]" : "border-[#FB30FF] bg-white shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FB30FF]"}`}
-            onClick={() => {
-              setIsBuy(false);
-              setIsInputInTokenAmount(true);
-            }}
-          >
-            Sell
-          </button>
-        </div>
-      </>
-    );
   };
 
   const HolderDistributionSection: FC = () => {
@@ -662,7 +590,6 @@ export default function Detail() {
                             )}
                             {innerKey == creator && <h1>&nbsp;🛠️ (dev)</h1>}
                           </div>
-
                           <h1>{`${parseFloat(value)}%`}</h1>
                         </div>
                       ),
@@ -679,195 +606,94 @@ export default function Detail() {
     );
   };
 
-  const SellPercentageButton: FC = () => {
-    const percentages = [25, 50, 75, 100];
-
-    return (
-      <>
-        <h1 className="mt-[15px] text-sm text-white">{tradeModuleErrorMsg}</h1>
-        <div className="my-[15px] flex h-[20px] gap-[7px] text-[13px]">
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={handleReset}
-          >
-            reset
-          </button>
-          {percentages.map((percentage) => (
-            <button
-              key={percentage}
-              type="button"
-              className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-              onClick={() => handlePercentage(percentage)}
-            >
-              {percentage}%
-            </button>
-          ))}
-        </div>
-      </>
-    );
-  };
-
   return (
-    <>
-      <main className="flex w-screen bg-[#0E0E0E]">
-        <div className="mx-auto flex h-full w-full justify-between px-[5vw] pt-[60px]">
-          <div className="w-[60vw]">
-            <div className="mr-10 flex h-[245px] items-center justify-between bg-[#1A1A1A] px-[20px] py-[30px]">
-              <div className="h-full w-[40%]">
-                <TokenCard
-                  cid={cid}
-                  name={memeTokenName}
-                  ticker={memeTokenSymbol}
-                  cap={marketCap}
-                  createdBy={creator.substring(0, 6)}
-                  desc={desc}
-                  tokenAddress=""
-                  border={true}
-                />
-              </div>
+    <main className="flex w-full justify-center gap-[30px]">
+      {/* left side */}
+      <div className="w-[860px]">
+        <PageLinkButton href="/" prev>
+          Back Home
+        </PageLinkButton>
+        <div className="mt-[10px] flex justify-between">
+          {/* token card */}
+          <TokenCard
+            cid={cid}
+            name={memeTokenName}
+            ticker={memeTokenSymbol}
+            createdBy={creator.substring(0, 6)}
+            desc={desc}
+          />
 
-              {/* <SocialLinkCard tw={tw} tg={tg} web={web} /> */}
-
-              <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
-            </div>
-            <div className="mr-10 mt-[20px] flex h-[420px] gap-[20px]">
-              <TradingViewChart tokenAddress={tokenAddress} />
-            </div>
-            <div className="mr-10">
-              <TradesSection />
-            </div>
-          </div>
-          <div>
-            <div className=" w-[420px] rounded-[15px] border border-[#FAFF00] bg-gradient-to-b from-[#E00900] to-[#A60D07] p-[30px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-[#FFF100]">
-              <BuySellButtonSection />
-              <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
-                {/*<div className="flex justify-between">
-                 <div />
-                   <div
-                    className="mt-[15px]
-                   flex h-[30px] w-[128px] cursor-pointer items-center justify-center rounded-lg bg-black text-sm text-[#A7A7A7]"
-                  >
-                    Set max slippage
-                  </div> 
-                </div>
-                */}
-                {isInputInTokenAmount ? (
-                  <>
-                    {/*input amount == memetoken*/}
-                    <div className="relative flex w-full items-center">
-                      <input
-                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
-                        type="number"
-                        placeholder="0.00"
-                        step="0.01"
-                        name="inputValue"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                      ></input>
-                      <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                            alt="img"
-                          />
-                        </div>
-                        <h1 className="mt-1 text-[15px] font-bold text-white">
-                          {memeTokenSymbol}
-                        </h1>
-                      </div>
-                    </div>
-                    <h1 className="text-[#B8B8B8]">
-                      {/* {curMemeTokenValue}&nbsp; */}
-                      {/* {name} */}
-                      {/*memetoken value to RESERVE_SYMBOL*/}
-                      {ether(
-                        BigInt(Math.floor(Number(inputValue))) *
-                          BigInt(priceForNextMint),
-                      )}
-                      &nbsp;{RESERVE_SYMBOL}
-                    </h1>
-                  </>
-                ) : (
-                  <>
-                    {/*input amount == RESERVE_SYMBOL*/}
-                    <div className="relative flex w-full items-center">
-                      <input
-                        className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-black px-[20px] text-[#FFFFFF]"
-                        type="number"
-                        placeholder="0.00"
-                        step="0.01"
-                        name="inputValue"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                      ></input>
-                      <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                        <div className="h-[24px] w-[24px] rounded-full">
-                          <Image
-                            src="/icons/SeiLogo.svg"
-                            alt=""
-                            height={24}
-                            width={24}
-                          />
-                        </div>
-
-                        <h1 className="mt-1 text-[15px] font-bold text-white">
-                          {RESERVE_SYMBOL}
-                        </h1>
-                      </div>
-                    </div>
-                    <h1 className="text-[#B8B8B8]">
-                      {/*RESERVE_SYMBOL value to memetoken*/}~
-                      {inputValue &&
-                        Number(
-                          String(
-                            Math.floor(
-                              Number(
-                                ethers.parseEther(inputValue) /
-                                  BigInt(priceForNextMint),
-                              ),
-                            ),
-                          ),
-                        )}
-                      &nbsp;{memeTokenSymbol}
-                    </h1>
-                  </>
-                )}
-
-                {/*true == toggle module, false == percent for sell*/}
-                {isBuy ? (
-                  <div className="my-[15px] flex h-[20px] items-center justify-between">
-                    <h1 className="text-sm text-white">
-                      {tradeModuleErrorMsg}
-                    </h1>
-                    <div
-                      onClick={() =>
-                        setIsInputInTokenAmount(!isInputInTokenAmount)
-                      }
-                      className={`flex h-[12px] w-[46px] cursor-pointer ${isInputInTokenAmount && "flex-row-reverse"} items-center justify-between rounded-full bg-[#4E4B4B]`}
-                    >
-                      <div className="h-full w-[12px] rounded-full bg-[#161616]"></div>
-                      <div
-                        className={`h-[24px] w-[24px] rounded-full ${isInputInTokenAmount ? "bg-[#00FFF0]" : "bg-[#43FF4B]"}`}
-                      ></div>
-                    </div>
-                  </div>
-                ) : (
-                  <SellPercentageButton />
-                )}
-
-                <button
-                  type="submit"
-                  className={`h-[51px] w-full rounded-[8px] border-2 border-[#880400] bg-white ${impact.variable} font-impact`}
-                >
-                  place trade
-                </button>
-              </form>
-            </div>
-            <HolderDistributionSection />
-          </div>
+          {/* progress bar + desc */}
+          <BondingCurveCard
+            prog={Math.floor(bondingCurveProgress)}
+            desc={desc}
+          />
         </div>
-      </main>
-    </>
+        <div className="mt-[30px] flex h-[50px] w-full overflow-hidden">
+          <Slider
+            elements={[
+              <ModuleInfo
+                title="Price"
+                desc={12345.12 + " BASE"}
+                percentage="+7.31%"
+                key={"price"}
+              />,
+              <ModuleInfo
+                title="Marketcap"
+                desc={marketCap + " BASE"}
+                key={"Marketcap"}
+              />,
+              <ModuleInfo
+                title="Virtual Liquidity"
+                desc={"$112.77k"}
+                key={"Virtual Liquidity"}
+              />,
+              <ModuleInfo
+                title="24H Volume"
+                desc={12345.12 + " BASE"}
+                key={"24H Volume"}
+              />,
+              <ModuleInfo
+                title="Token Created"
+                desc={"47M"}
+                key={"Token Created"}
+              />,
+            ]}
+          />
+        </div>
+
+        {/* trading view chart */}
+        <div className="mt-[30px] h-[372px] w-full">
+          <TradingViewChart tokenAddress={tokenAddress} />
+        </div>
+
+        {/* past trading record */}
+        <TradesLayout
+          {...{
+            memeTokenSymbol,
+            TXLogs20FromServer,
+          }}
+        />
+      </div>
+      <div className="w-[470px]">
+        <Tradesection
+          {...{
+            isBuy,
+            setIsBuy,
+            setIsInputInTokenAmount,
+            isInputInTokenAmount,
+            inputValue,
+            handleInputChange,
+            handlePercentage,
+            buy,
+            sell,
+            memeTokenSymbol,
+            priceForNextMint,
+            RESERVE_SYMBOL,
+          }}
+        />
+        <HolderDistributionSection />
+      </div>
+    </main>
   );
 }

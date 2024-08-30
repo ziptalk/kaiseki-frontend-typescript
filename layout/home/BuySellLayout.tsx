@@ -1,18 +1,14 @@
 import React from "react";
 
-import { FC, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import Image from "next/image";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
-import BondingCurveCard from "@/components/detail/BondingCurveCard";
 
-import { impact } from "@/fonts/font";
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { MAX_INT_256, BILLION } from "@/global/constants";
@@ -24,8 +20,9 @@ import axios from "axios";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
-import Link from "next/link";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+import { Tradesection } from "@/components/detail/Tradesection";
+import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
 interface BuySellLayoutProps {
   tokenAddress: string;
 }
@@ -590,27 +587,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     }
     return {};
   };
-  const BuySellButtonSection: FC = () => {
-    return (
-      <div className="flex h-[50px] justify-between gap-[5px]">
-        <button
-          className={`h-full w-[210px] ${isBuy && "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
-          onClick={() => setIsBuy(true)}
-        >
-          Buy
-        </button>
-        <button
-          className={`h-full w-[210px] ${isBuy || "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
-          onClick={() => {
-            setIsBuy(false);
-            setIsInputInTokenAmount(true);
-          }}
-        >
-          Sell
-        </button>
-      </div>
-    );
-  };
 
   // const HolderDistributionSection: FC = () => {
   //   return (
@@ -649,34 +625,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   //   );
   // };
 
-  const SellPercentageButton: FC = () => {
-    const percentages = [25, 50, 75, 100];
-
-    return (
-      <>
-        <h1 className="text-sm text-white">{tradeModuleErrorMsg}</h1>
-        <div className="flex h-[20px] gap-[7px] text-[13px]">
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={handleReset}
-          >
-            reset
-          </button>
-          {percentages.map((percentage) => (
-            <button
-              key={percentage}
-              type="button"
-              className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-              onClick={() => handlePercentage(percentage)}
-            >
-              {percentage}%
-            </button>
-          ))}
-        </div>
-      </>
-    );
-  };
   return (
     <div className="ml-[20px]">
       <PageLinkButton href={tokenAddress} className="mt-[112px]">
@@ -746,122 +694,24 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
             <TradingViewChart tokenAddress={tokenAddress} />
           </div>
         </div>
-        <BuySellButtonSection />
-        <form
-          onSubmit={isBuy ? buy : sell}
-          className="flex flex-col gap-[10px]"
-        >
-          {isBuy ? (
-            <div
-              onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-              className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
-            >
-              Switch to F1T
-            </div>
-          ) : (
-            <SellPercentageButton />
-          )}
-          {isInputInTokenAmount ? (
-            <>
-              <div className="relative flex w-full items-center">
-                <input
-                  className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                  type="number"
-                  placeholder="Enter the amount"
-                  step="0.01"
-                  name="inputValue"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                />
-                <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                  {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                      alt="img"
-                    />
-                  </div>
-                  <h1 className="mt-1 text-[15px] font-bold text-white">
-                    {memeTokenSymbol}
-                  </h1> */}
-                  <button
-                    type="button"
-                    onClick={() => handlePercentage(100)}
-                    className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
-                  >
-                    MAX
-                  </button>
-                </div>
-              </div>
-              {/* <h1 className="text-[#B8B8B8]">
-                {ether(
-                  BigInt(Math.floor(Number(inputValue))) *
-                    BigInt(priceForNextMint),
-                )}
-                &nbsp;{RESERVE_SYMBOL}
-              </h1> */}
-            </>
-          ) : (
-            <>
-              {/*input amount == RESERVE_SYMBOL*/}
-              <div className="relative flex w-full items-center">
-                <input
-                  className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                  type="number"
-                  placeholder="0.00"
-                  step="0.01"
-                  name="inputValue"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                />
-                <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                  <div className="h-[24px] w-[24px] rounded-full">
-                    <Image
-                      src="/icons/SeiLogo.svg"
-                      alt=""
-                      height={24}
-                      width={24}
-                    />
-                  </div>
-
-                  <h1 className="mt-1 text-[15px] font-bold text-white">
-                    {RESERVE_SYMBOL}
-                  </h1>
-                </div>
-              </div>
-              <h1 className="text-[#B8B8B8]">
-                {/*RESERVE_SYMBOL value to memetoken*/}~
-                {inputValue &&
-                  Number(
-                    String(
-                      Math.floor(
-                        Number(
-                          ethers.parseEther(inputValue) /
-                            BigInt(priceForNextMint),
-                        ),
-                      ),
-                    ),
-                  )}
-                &nbsp;{memeTokenSymbol}
-              </h1>
-            </>
-          )}
-
-          {/*true == toggle module, false == percent for sell*/}
-          <div className="text-[14px] text-white">
-            {"Raffle has already progressed! -> "}
-            <Link href={"#"} className="underline">
-              Join the Raffle!
-            </Link>
-          </div>
-          <button
-            type="submit"
-            className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
-          >
-            Connect Wallet
-          </button>
-        </form>
+        <Tradesection
+          {...{
+            isBuy,
+            setIsBuy,
+            setIsInputInTokenAmount,
+            isInputInTokenAmount,
+            inputValue,
+            handleInputChange,
+            handlePercentage,
+            buy,
+            sell,
+            memeTokenSymbol,
+            priceForNextMint,
+            RESERVE_SYMBOL,
+          }}
+        />
         {/* <SellPercentageButton /> */}
-        <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+        <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
       </div>
     </div>
   );

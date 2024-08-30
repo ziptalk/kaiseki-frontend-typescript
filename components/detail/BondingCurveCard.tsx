@@ -1,28 +1,33 @@
 import { FC } from "react";
+import { digital } from "@/fonts/font";
 
 interface BondingCurveCardTypes {
   prog: number;
+  desc: string;
 }
-const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
+const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
   return (
-    <>
-      <div className="flex w-full flex-col gap-[10px]  ">
-        <h1 className="text-[18px] font-bold text-white">
-          bonding curve progress:&nbsp;{prog}%
-        </h1>
-        <div className="h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
-          <div
-            className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
-            style={{ width: `${prog}%` }}
-          ></div>
+    <div className="bg-card flex w-[450px] flex-col rounded-[20px] rounded-tr-[100px] py-[13px] pl-[10px] pr-[66px]">
+      <div className="flex h-[21px] items-end gap-2">
+        <div className="text-[13px] leading-[15px] text-[#FAFF00]">
+          Bonding Curve Progress:{" "}
         </div>
-        <h1 className="h-[75px] overflow-hidden leading-tight text-[#6A6A6A]">
-          Once the bonding curve progress hits 100%, all the liquidity from the
-          bonding curve will be deposited into dragonswap and burned.
-          Progression increases as the price rises.
-        </h1>
+        <div
+          className={`text-[27px] text-[#FAFF00] ${digital.variable} h-[24px] font-digital leading-none`}
+        >
+          {prog} %
+        </div>
       </div>
-    </>
+      <div className="mt-[5px] h-[6px] w-full rounded-full bg-white">
+        <div
+          className="h-full rounded-full bg-primary"
+          style={{ width: `${prog}%` }}
+        />
+      </div>
+      <p className="mt-[21px] h-[85px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
+        {desc}
+      </p>
+    </div>
   );
 };
 

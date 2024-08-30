@@ -14,6 +14,7 @@ const config: Config = {
         secondary: "var(--secondary)",
         basic: "var(--basic)",
         background: "var(--background)",
+        card: "var(--card)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

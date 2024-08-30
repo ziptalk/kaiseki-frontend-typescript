@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { digital } from "@/fonts/font";
 import { MainTitle } from "@/components/common/MainTitle";
