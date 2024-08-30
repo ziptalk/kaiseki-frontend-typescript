@@ -580,7 +580,7 @@ export default function Detail() {
             name={memeTokenName}
             ticker={memeTokenSymbol}
             createdBy={creator.substring(0, 6)}
-            desc={desc}
+            description={desc}
           />
 
           {/* progress bar + desc */}
