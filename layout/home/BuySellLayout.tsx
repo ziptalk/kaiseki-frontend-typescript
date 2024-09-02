@@ -24,12 +24,13 @@ import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
 export const BuySellLayout = ({
-  tokenAddress,
   cid,
-  tw,
-  tg,
-  web,
+  createdBy,
   description,
+  marketCap,
+  name,
+  ticker,
+  tokenAddress,
 }: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
@@ -77,18 +78,12 @@ export const BuySellLayout = ({
   const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
   const [creator, setCreator] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
-  const [distribution, setDistribution] = useState<FilteredData | undefined>(
-    undefined,
-  );
-  const [TXLogs20FromServer, setTXLogs20FromServer] = useState<any[] | null>(
-    null,
-  );
 
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState("");
+  // const [marketCap, setMarketCap] = useState("");
 
   const [isBuy, setIsBuy] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -98,15 +93,9 @@ export const BuySellLayout = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetchHolderDistributionFromServer();
       fetchTXLogsFromServer(
         tokenAddress,
         setTXLogsFromServer,
-        TXLogsFromServer,
-      );
-      fetch20TXLogsFromServer(
-        tokenAddress,
-        setTXLogs20FromServer,
         TXLogsFromServer,
       );
     }, 5000); // Fetch every 5 seconds (adjust as needed)
@@ -152,17 +141,6 @@ export const BuySellLayout = ({
     }
   };
 
-  const fetchHolderDistributionFromServer = async () => {
-    try {
-      const response = await fetch(`${SERVER_ENDPOINT}/HolderDistribution`);
-      const data = await response.json();
-      const filteredData = filterDataByOuterKey(data, tokenAddress);
-      setDistribution(filteredData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const fetchTokenDetailFromContract = async () => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
@@ -181,7 +159,7 @@ export const BuySellLayout = ({
       const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
 
       await updateMarketCapToServer(tokenAddress, marketCapInUSD);
-      setMarketCap(marketCapInUSD);
+      // setMarketCap(marketCapInUSD);
     } catch (error) {
       console.log(error);
     }
@@ -195,25 +173,6 @@ export const BuySellLayout = ({
     try {
       const response = await fetch(
         `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}`,
-      );
-      const data = await response.json();
-      const filteredData = filterEventsByToken(data);
-      if (filteredData.length !== eventsFromDB?.length) {
-        setEventsFromDB(filteredData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetch20TXLogsFromServer = async (
-    tokenAddress: any,
-    setEventsFromDB: any,
-    eventsFromDB: any,
-  ) => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}?itemCount=20`,
       );
       const data = await response.json();
       const filteredData = filterEventsByToken(data);
@@ -546,12 +505,12 @@ export const BuySellLayout = ({
   // };
 
   //MARK: - Set Distribution
-  const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
-    if (targetOuterKey in data) {
-      return { [targetOuterKey]: data[targetOuterKey] };
-    }
-    return {};
-  };
+  // const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
+  //   if (targetOuterKey in data) {
+  //     return { [targetOuterKey]: data[targetOuterKey] };
+  //   }
+  //   return {};
+  // };
 
   // const HolderDistributionSection: FC = () => {
   //   return (
@@ -605,39 +564,46 @@ export const BuySellLayout = ({
             />
             <TokenDesc
               {...{
-                name: memeTokenName,
-                ticker: memeTokenSymbol,
-                creator,
-                marketCap,
+                cid,
+                createdBy,
                 description,
+                marketCap,
+                name,
+                ticker,
+                tokenAddress,
               }}
             />
           </div>
-          <div className="flex h-[50px] w-full overflow-hidden">
+          <div className="flex h-[50px] w-full bg-card">
             <Slider
               elements={[
                 <ModuleInfo
                   title="Price"
-                  desc={12345.12 + " BASE"}
+                  className="mr-10 bg-transparent"
+                  desc={12345.12 + " ETH"}
                   percentage="+7.31%"
                   key={"price"}
                 />,
                 <ModuleInfo
                   title="Marketcap"
-                  desc={marketCap + " BASE"}
+                  className="mr-10 bg-transparent"
+                  desc={marketCap + " ETH"}
                   key={"Marketcap"}
                 />,
                 <ModuleInfo
                   title="Virtual Liquidity"
+                  className="mr-10 bg-transparent"
                   desc={"$112.77k"}
                   key={"Virtual Liquidity"}
                 />,
                 <ModuleInfo
                   title="24H Volume"
-                  desc={12345.12 + " BASE"}
+                  className="mr-10 bg-transparent"
+                  desc={12345.12 + " ETH"}
                   key={"24H Volume"}
                 />,
                 <ModuleInfo
+                  className="mr-10 bg-transparent"
                   title="Token Created"
                   desc={"47M"}
                   key={"Token Created"}
@@ -654,7 +620,7 @@ export const BuySellLayout = ({
                   className="h-[28.5px] w-[28.5px] border-black "
                 />
                 <p className="inline-block text-[14.3px] text-white">
-                  {memeTokenName} ($ {memeTokenSymbol}) / BASE
+                  {name} ($ {ticker}) / ETH
                 </p>
               </div>
               <TradingViewChart tokenAddress={tokenAddress} />

@@ -26,11 +26,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         <div className=" text h-[148px] w-[270px] overflow-hidden px-[10px]">
           <TokenDesc
             {...{
+              cid,
+              createdBy,
+              description,
+              marketCap,
               name,
               ticker,
-              creator: createdBy,
-              marketCap,
-              description,
+              tokenAddress,
             }}
           />
         </div>

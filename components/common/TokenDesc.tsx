@@ -9,9 +9,9 @@ interface TokenDescProps {
 export const TokenDesc = ({
   name,
   ticker,
-  creator,
+  createdBy,
   description,
-}: TokenDescProps) => {
+}: TokenInfo) => {
   return (
     <div className="w-full overflow-scroll">
       <h1 className="text-[15px] font-bold leading-none text-white">{name}</h1>
@@ -27,7 +27,9 @@ export const TokenDesc = ({
           style={{ width: 12, height: 12 }}
         />
         <h1 className="neon-lime mt-[3px] text-[12px] text-[#C5F900]">
-          {creator.length < 20 ? creator : `${creator.slice(0, 20)}...`}
+          {createdBy && createdBy.length < 13
+            ? createdBy
+            : `${createdBy?.slice(0, 16)}...`}
         </h1>
       </div>
       <div className="mt-[5px] overflow-scroll text-[13px] text-[#808080]">

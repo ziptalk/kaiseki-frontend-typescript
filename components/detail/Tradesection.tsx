@@ -89,7 +89,7 @@ export const Tradesection = ({
       {isBuy ? (
         <div
           onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-          className={`mt-[11px] flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
+          className={`mt-[11px] flex cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-2 text-[12px] text-[#AEAEAE]`}
         >
           Switch to {memeTokenSymbol}
         </div>

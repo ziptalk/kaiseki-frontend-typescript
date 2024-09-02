@@ -37,7 +37,7 @@ const TokenCard: FC<TokenCardTypes> = ({
               style={{ width: 12, height: 12 }}
             />
             <div className="text-xs text-[#C5F900] ">
-              {createdBy.slice(0, 7)}
+              {createdBy && createdBy.slice(0, 7)}
             </div>
           </div>
         </div>

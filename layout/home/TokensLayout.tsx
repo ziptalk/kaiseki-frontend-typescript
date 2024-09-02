@@ -7,12 +7,13 @@ import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
 
 const initialTokenInfo: TokenInfo = {
-  tokenAddress: "",
   cid: "",
-  tw: "",
-  tg: "",
-  web: "",
+  createdBy: "",
   description: "",
+  marketCap: "",
+  name: "",
+  ticker: "",
+  tokenAddress: "",
 };
 
 export const TokensLayout = () => {
@@ -92,14 +93,7 @@ export const TokensLayout = () => {
                 onMouseDown={() => {
                   info.tokenAddress && info.tokenAddress === card.tokenAddress
                     ? setInfo(initialTokenInfo)
-                    : setInfo({
-                        tokenAddress: card.tokenAddress,
-                        cid: card.cid,
-                        tw: card.tw,
-                        tg: card.tg,
-                        web: card.website,
-                        description: card.description,
-                      });
+                    : setInfo({ ...card });
                 }}
               >
                 <HomeTokenCard {...card} clickedToken={info.tokenAddress} />
@@ -141,18 +135,7 @@ export const TokensLayout = () => {
           />
         </div>
       </div>
-      {info.tokenAddress && (
-        <BuySellLayout
-          {...{
-            tokenAddress: info.tokenAddress,
-            cid: info.cid,
-            tw: info.tw,
-            tg: info.tg,
-            web: info.web,
-            description: info.description,
-          }}
-        />
-      )}
+      {info.tokenAddress && <BuySellLayout {...info} />}
     </div>
   );
 };

@@ -50,11 +50,11 @@ export const TradesLayout = ({
   return (
     <>
       <h1 className="mt-[30px] text-lg font-bold text-[#AEAEAE]">Trades</h1>
-      <div className="bg-card mt-[10px] rounded-[10px] p-[20px]">
+      <div className="mt-[10px] rounded-[10px] bg-card p-[20px]">
         <div className="flex w-full justify-between px-[20px] text-[#6A6A6A]">
-          {TradeListTitle.map((title) => (
+          {TradeListTitle.map((title, idx) => (
             <div
-              key={title}
+              key={idx}
               className={`w-[14%] text-[13px] font-bold text-white ${title === "Transaction" && "text-right"}`}
             >
               {title}

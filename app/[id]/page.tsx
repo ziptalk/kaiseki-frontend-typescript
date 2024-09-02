@@ -74,14 +74,15 @@ export default function Detail() {
     signer,
   );
 
-  const [memeTokenName, setMemeTokenName] = useState("");
-  const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
-  const [creator, setCreator] = useState("");
-  const [tw, setTw] = useState("");
-  const [tg, setTg] = useState("");
-  const [web, setWeb] = useState("");
-  const [desc, setDesc] = useState("");
-  const [cid, setCid] = useState("");
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo>({
+    cid: "",
+    createdBy: "",
+    description: "",
+    marketCap: "",
+    name: "",
+    ticker: "",
+    tokenAddress: "",
+  });
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -94,7 +95,6 @@ export default function Detail() {
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState("");
 
   const [isBuy, setIsBuy] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -122,14 +122,7 @@ export default function Detail() {
 
   useEffect(() => {
     fetchTokenDetailFromContract();
-    fetchHomeTokenInfoFromServer(
-      tokenAddress,
-      setCid,
-      setTw,
-      setTg,
-      setWeb,
-      setDesc,
-    );
+    fetchHomeTokenInfoFromServer();
   }, []);
 
   // listen event later
@@ -179,35 +172,26 @@ export default function Detail() {
 
   const fetchTokenDetailFromContract = async () => {
     try {
-      const detail = await bondContract.getDetail(tokenAddress);
-      const price = detail.info.priceForNextMint;
+      // const detail = await bondContract.getDetail(tokenAddress);
+      // const price = detail.info.priceForNextMint;
       // console.log("currentSupply :" + detail.info.currentSupply);
-      setMemeTokenName(detail.info.name);
-      setMemeTokenSymbol(detail.info.symbol);
-      setCreator(detail.info.creator);
-      const mcap = (
-        Number(ethers.formatEther(price.toString())) * BILLION
-      ).toFixed(2);
+      // setMemeTokenName(detail.info.name);
+      // setMemeTokenSymbol(detail.info.symbol);
+      // setCreator(detail.info.creator);
+      // const mcap = (
+      //   Number(ethers.formatEther(price.toString())) * BILLION
+      // ).toFixed(2);
       // console.log("this is mcap" + mcap);
-      const response = await axios.get(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
-      );
-      const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
-
-      await updateMarketCapToServer(tokenAddress, marketCapInUSD);
-      setMarketCap(marketCapInUSD);
+      // const response = await axios.get(
+      //   `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+      // );
+      // const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
+      // await updateMarketCapToServer(tokenAddress, marketCapInUSD);
     } catch (error) {
       console.log(error);
     }
   };
-  const fetchHomeTokenInfoFromServer = async (
-    tokenAddress: any,
-    setCid: any,
-    setTw: any,
-    setTg: any,
-    setWeb: any,
-    setDesc: any,
-  ) => {
+  const fetchHomeTokenInfoFromServer = async () => {
     try {
       const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
       const data = await response.json();
@@ -215,11 +199,8 @@ export default function Detail() {
         (item: any) => item.tokenAddress === tokenAddress,
       );
       if (filteredData.length > 0) {
-        setCid(filteredData[0].cid);
-        setTw(filteredData[0].twitterUrl);
-        setTg(filteredData[0].telegramUrl);
-        setWeb(filteredData[0].websiteUrl);
-        setDesc(filteredData[0].description);
+        console.log(filteredData);
+        setTokenInfo(filteredData[0]);
       }
     } catch (error) {
       console.log(error);
@@ -281,11 +262,11 @@ export default function Detail() {
   const setUserReserveBalanceIntoState = async () => {
     try {
       if (account.address) {
-        const balanceWei = await provider.getBalance(account.address);
+        // const balanceWei = await provider.getBalance(account.address);
         // console.log(balanceWei);
-        const balanceEther = ethers.formatEther(balanceWei);
+        // const balanceEther = ethers.formatEther(balanceWei);
         // console.log(balanceEther);
-        setCurUserReserveBalance(balanceEther);
+        // setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {
       console.log(error);
@@ -474,7 +455,7 @@ export default function Detail() {
       ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
     ) {
       setTradeModuleErrorMsg(
-        `Insufficient balance : You have ${curMemeTokenValue} ${memeTokenName}`,
+        `Insufficient balance : You have ${curMemeTokenValue} ${tokenInfo.name}`,
       );
       return;
     }
@@ -565,7 +546,9 @@ export default function Detail() {
     }
     return {};
   };
-
+  useEffect(() => {
+    console.log(tokenInfo);
+  }, [tokenInfo]);
   return (
     <main className="flex w-full justify-center gap-[30px]">
       {/* left side */}
@@ -575,18 +558,13 @@ export default function Detail() {
         </PageLinkButton>
         <div className="mt-[10px] flex justify-between">
           {/* token card */}
-          <TokenCard
-            cid={cid}
-            name={memeTokenName}
-            ticker={memeTokenSymbol}
-            createdBy={creator.substring(0, 6)}
-            description={desc}
-          />
-
+          <TokenCard {...tokenInfo} />
           {/* progress bar + desc */}
           <BondingCurveCard
             prog={Math.floor(bondingCurveProgress)}
-            desc={desc}
+            desc={
+              "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
+            }
           />
         </div>
         <div className="mt-[30px] flex h-[50px] w-full bg-card">
@@ -595,14 +573,14 @@ export default function Detail() {
               <ModuleInfo
                 title="Price"
                 className="mr-10 bg-transparent"
-                desc={12345.12 + " BASE"}
+                desc={12345.12 + " ETH"}
                 percentage="+7.31%"
                 key={"price"}
               />,
               <ModuleInfo
                 title="Marketcap"
                 className="mr-10 bg-transparent"
-                desc={marketCap + " BASE"}
+                desc={tokenInfo.marketCap + " ETH"}
                 key={"Marketcap"}
               />,
               <ModuleInfo
@@ -614,7 +592,7 @@ export default function Detail() {
               <ModuleInfo
                 title="24H Volume"
                 className="mr-10 bg-transparent"
-                desc={12345.12 + " BASE"}
+                desc={12345.12 + " ETH"}
                 key={"24H Volume"}
               />,
               <ModuleInfo
@@ -635,7 +613,7 @@ export default function Detail() {
         {/* past trading record */}
         <TradesLayout
           {...{
-            memeTokenSymbol,
+            memeTokenSymbol: tokenInfo.ticker,
             TXLogs20FromServer,
           }}
         />
@@ -655,13 +633,15 @@ export default function Detail() {
               handlePercentage,
               buy,
               sell,
-              memeTokenSymbol,
+              memeTokenSymbol: tokenInfo.ticker,
               priceForNextMint,
               RESERVE_SYMBOL,
             }}
           />
         </div>
-        <HolderDistributionLayout {...{ distribution, creator }} />
+        <HolderDistributionLayout
+          {...{ distribution, creator: tokenInfo.createdBy }}
+        />
       </div>
     </main>
   );

@@ -30,10 +30,9 @@ interface TokenCardTypes {
   name: string;
   ticker: string;
   createdBy: string;
-  marketCap?: string;
+  marketCap: string;
   description: string;
-  border?: boolean;
-  tokenAddress?: string;
+  tokenAddress: string;
   clickedToken?: string;
   cid: string;
 }
@@ -48,12 +47,13 @@ interface TradesCardType {
 }
 
 interface TokenInfo {
-  tokenAddress: string;
   cid: string;
-  tw: string;
-  tg: string;
-  web: string;
+  createdBy: string;
   description: string;
+  marketCap: string;
+  name: string;
+  ticker: string;
+  tokenAddress: string;
 }
 
 interface FilteredData {
