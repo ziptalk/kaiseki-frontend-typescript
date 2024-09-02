@@ -19,6 +19,7 @@ import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 import { Inputform } from "@/components/common/Inputform";
 import { Button } from "@/components/atoms/Button";
 import { CreateCard } from "@/components/detail/CreateCard";
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 
 export interface HookFormTypes {
   Name: string;
@@ -287,6 +288,9 @@ const Create: NextPage = () => {
 
   return (
     <div className="flex w-screen flex-col items-center gap-6 bg-[#0E0E0E]">
+      <PageLinkButton href="/" prev className="w-1/2">
+        Back Home
+      </PageLinkButton>
       <Preview />
       <CreateCard
         {...{
