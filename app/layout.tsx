@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 import { arial } from "@/fonts/font";
 import Header from "@/components/common/Header";
+import { Footer } from "@/components/common/Footer";
 
 export default function RootLayout({
   children,
@@ -24,11 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${arial.variable} mb-20 bg-[#0E0E0E] font-arial`}
+        className={`${inter.className} ${arial.variable} bg-[#0E0E0E] font-arial`}
       >
         <Provider>
           <Header />
           {children}
+          <Footer />
         </Provider>
       </body>
     </html>

@@ -90,11 +90,11 @@ export const RWATokenCard: FC = () => {
           </h1>
         </div>
         <div className="flex h-[14px]  gap-[5px]">
-          <h1 className="neon-yellow text-xs text-[#FAFF00]">market cap :</h1>
+          <h1 className="text-xs text-[#FAFF00]">prize :</h1>
           <h1
-            className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+            className={`${digital.variable} font-digital text-xs text-[#FAFF00]`}
           >
-            {kingMarketCap}K
+            {kingTicker}
           </h1>
         </div>
         <div className={`raffle-typo ${anton.variable} font-anton`}>
