@@ -12,8 +12,10 @@ import { useEthersSigner } from "@/utils/ethersSigner";
 import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
+import Preview from "@/public/icons/Preview.svg";
 
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
+import { Inputform } from "@/components/common/Inputform";
 
 const Create: NextPage = () => {
   const signer = useEthersSigner();
@@ -275,188 +277,174 @@ const Create: NextPage = () => {
 
   const PreviewTokenCard: FC = () => {
     return (
-      <div className="">
-        <Image
-          src="/icons/Preview.svg"
-          alt=""
-          width={500}
-          height={500}
-          className="mx-auto h-full w-1/4"
-        />
-        <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
-          <div>
-            {cid ? (
-              <div className="h-[120px] w-[120px]">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                  alt="Image from IPFS"
-                />
-              </div>
-            ) : (
-              <div className="h-[120px] w-[120px] bg-[#D9D9D9]"></div>
-            )}
+      <div className="main-tokenarea h-[215px] w-[420px]">
+        {cid ? (
+          <div className="h-[120px] w-[120px]">
+            <img
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              alt="Image from IPFS"
+            />
           </div>
-          <div className=" text w-[334px] overflow-hidden px-[10px]">
-            <div className="">
-              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                {inputName ? inputName : "Name"}
-              </h1>
-              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                [ticker: {inputTicker ? inputTicker : "ticker"}]
-              </h1>
-            </div>
-
-            <div className="flex items-center gap-[5px]">
-              <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
-              <Image
-                className="rounded-full"
-                src="/images/memesinoGhost.png"
-                alt=""
-                width={12}
-                height={12}
-                style={{ width: 12, height: 12 }}
-              />
-              <h1 className="neon-lime text-xs text-[#C5F900] ">
-                {account.address?.substring(0, 6)}
-              </h1>
-            </div>
-
-            <div className="flex">
-              <h1 className="neon-yellow text-xs text-[#FAFF00]">
-                Market cap:&nbsp;
-              </h1>
-              <h1
-                className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
-              >
-                0.00K
-              </h1>
-            </div>
-
-            <h1 className="h-[90px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-              {inputDesc
-                ? inputDesc
-                : "Pizza ipsum dolor meat lovers buffalo. Bacon Aussie mozzarella buffalo hand lovers string. Chicago garlic roll banana mayo tomatoes banana pineapple marinara sauce. Thin anchovies deep banana lasagna style ranch pesto string. Onions crust fresh mayo dolor fresh onions pizza buffalo."}
-            </h1>
+        ) : (
+          <div className="h-[120px] w-[120px] bg-[#D9D9D9]" />
+        )}
+        <div className="flex w-[250px] flex-col gap-1 overflow-hidden px-[10px]">
+          <h1 className="whitespace-pre-line text-base font-bold leading-none text-[#AEAEAE]">
+            {inputName ? inputName : "Name"}
+            {"\n"}
+            [ticker: {inputTicker ? inputTicker : "ticker"}]
+          </h1>
+          <div className="flex items-center gap-1">
+            <p className="neon-lime text-xs text-[#C5F900] ">Created by:</p>
+            <Image
+              className="rounded-full"
+              src="/images/memesinoGhost.png"
+              alt=""
+              width={12}
+              height={12}
+              style={{ width: 12, height: 12 }}
+            />
+            <p className="neon-lime text-xs text-[#C5F900] ">
+              {account.address?.substring(0, 6)}
+            </p>
           </div>
+
+          <div className="flex">
+            <p className="neon-yellow text-xs text-[#FAFF00]">
+              Market cap:&nbsp;
+            </p>
+            <p
+              className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+            >
+              0.00K
+            </p>
+          </div>
+
+          <h1 className="h-[90px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
+            {inputDesc && inputDesc}
+          </h1>
         </div>
       </div>
     );
   };
 
   return (
-    <>
-      <div className="w-screen bg-[#0E0E0E]">
-        <div className="mx-auto h-full w-[500px] pt-[30px]">
-          <PreviewTokenCard />
-          <form onSubmit={createToken}>
-            <h1 className="mt-[30px] pb-[7px] text-[16px] font-normal text-white">
-              name
-            </h1>
-            <input
-              name="name"
-              type="text"
-              placeholder="name (up to 30)"
-              value={inputName}
-              onChange={(e: any) => setInputName(e.target.value)}
-              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              ticker
-            </h1>
-            <input
-              name="ticker"
-              type="text"
-              placeholder="ticker (up to 10)"
-              value={inputTicker}
-              onChange={(e: any) => setInputTicker(e.target.value)}
-              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              image
-            </h1>
-            <input
-              ref={inputFile}
-              onChange={handleFileChange}
-              name="image"
-              type="file"
-              accept="image/*"
-              className=" flex h-[50px] w-full items-center rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              description
-            </h1>
-            <textarea
-              value={inputDesc}
-              onChange={(e: any) => setInputDesc(e.target.value)}
-              name="description"
-              placeholder="description (up to 100)"
-              className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <div
-              onClick={() => setIsMoreOptionsToggled(!isMoreOptionsToggled)}
-              className="mt-[18px] flex cursor-pointer text-[#FF2626]"
-            >
-              <h1>more options&nbsp;</h1>
-              <h1 className="text-white">{isMoreOptionsToggled ? "-" : "+"}</h1>
-            </div>
-            {isMoreOptionsToggled && (
-              <>
-                <h1 className="mt-[20px] pb-[7px] text-[16px] font-normal text-white">
-                  twitter link
-                </h1>
-                <input
-                  value={inputXURL}
-                  onChange={(e: any) => setInputXURL(e.target.value)}
-                  name="X URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-                <h1 className="mt-[19px] pb-[7px]  text-[16px] font-normal text-white">
-                  telegram link
-                </h1>
-                <input
-                  value={inputTGURL}
-                  onChange={(e: any) => setInputTGURL(e.target.value)}
-                  name="Telegram URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-                <h1 className="mt-[19px] pb-[7px] text-[16px] font-normal text-white">
-                  website link
-                </h1>
-                <input
-                  value={inputWebURL}
-                  onChange={(e: any) => setInputWebURL(e.target.value)}
-                  name="Website URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-              </>
-            )}
-            <button
-              type="submit"
-              className={`mt-[34px] flex h-[60px] w-full items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
-            >
-              {isLoading ? (
-                <Image
-                  src="/icons/Loading.svg"
-                  alt="loading Icon"
-                  height={24}
-                  width={24}
-                  className="animate-spin"
-                />
-              ) : (
-                <h1>Create Token</h1>
-              )}
-            </button>
-          </form>
-          <div className="pb-20" />
+    <div className="flex w-screen flex-col items-center gap-[15px] bg-[#0E0E0E]">
+      <Preview />
+      <PreviewTokenCard />
+      <Inputform
+        {...{
+          setValueProp: setInputName,
+          max: 30,
+        }}
+      />
+      <form onSubmit={createToken}>
+        <h1 className="mt-[30px] pb-[7px] text-[16px] font-normal text-white">
+          name
+        </h1>
+        <input
+          name="name"
+          type="text"
+          placeholder="name (up to 30)"
+          value={inputName}
+          onChange={(e: any) => setInputName(e.target.value)}
+          className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+        />
+        <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
+          ticker
+        </h1>
+        <input
+          name="ticker"
+          type="text"
+          placeholder="ticker (up to 10)"
+          value={inputTicker}
+          onChange={(e: any) => setInputTicker(e.target.value)}
+          className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+        />
+        <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
+          image
+        </h1>
+        <input
+          ref={inputFile}
+          onChange={handleFileChange}
+          name="image"
+          type="file"
+          accept="image/*"
+          className=" flex h-[50px] w-full items-center rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+        />
+        <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
+          description
+        </h1>
+        <textarea
+          value={inputDesc}
+          onChange={(e: any) => setInputDesc(e.target.value)}
+          name="description"
+          placeholder="description (up to 100)"
+          className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+        />
+        <div
+          onClick={() => setIsMoreOptionsToggled(!isMoreOptionsToggled)}
+          className="mt-[18px] flex cursor-pointer text-[#FF2626]"
+        >
+          <h1>more options&nbsp;</h1>
+          <h1 className="text-white">{isMoreOptionsToggled ? "-" : "+"}</h1>
         </div>
-      </div>
-    </>
+        {isMoreOptionsToggled && (
+          <>
+            <h1 className="mt-[20px] pb-[7px] text-[16px] font-normal text-white">
+              twitter link
+            </h1>
+            <input
+              value={inputXURL}
+              onChange={(e: any) => setInputXURL(e.target.value)}
+              name="X URL"
+              type="text"
+              placeholder="(optional)"
+              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+            />
+            <h1 className="mt-[19px] pb-[7px]  text-[16px] font-normal text-white">
+              telegram link
+            </h1>
+            <input
+              value={inputTGURL}
+              onChange={(e: any) => setInputTGURL(e.target.value)}
+              name="Telegram URL"
+              type="text"
+              placeholder="(optional)"
+              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+            />
+            <h1 className="mt-[19px] pb-[7px] text-[16px] font-normal text-white">
+              website link
+            </h1>
+            <input
+              value={inputWebURL}
+              onChange={(e: any) => setInputWebURL(e.target.value)}
+              name="Website URL"
+              type="text"
+              placeholder="(optional)"
+              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
+            />
+          </>
+        )}
+        <button
+          type="submit"
+          className={`mt-[34px] flex h-[60px] w-full items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
+        >
+          {isLoading ? (
+            <Image
+              src="/icons/Loading.svg"
+              alt="loading Icon"
+              height={24}
+              width={24}
+              className="animate-spin"
+            />
+          ) : (
+            <h1>Create Token</h1>
+          )}
+        </button>
+      </form>
+      <div className="pb-20" />
+    </div>
   );
 };
 

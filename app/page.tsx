@@ -5,7 +5,7 @@ import { TokensLayout } from "@/layout/home/TokensLayout";
 
 export default function Home() {
   return (
-    <main>
+    <main className="p-[30px]">
       {/* main page top slot layout - raffle, token creation */}
       <SlotLayout />
 

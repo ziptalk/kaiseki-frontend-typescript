@@ -19,3 +19,8 @@ export const anton = localFont({
   src: "./Anton/Anton-Regular.ttf",
   variable: "--font-anton",
 });
+
+export const comicNeue = localFont({
+  src: "./Comic_Neue/ComicNeue-Light.ttf",
+  variable: "--font-comic-neue",
+});

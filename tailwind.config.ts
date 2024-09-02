@@ -26,6 +26,7 @@ const config: Config = {
         arial: ["var(--font-arial)"],
         impact: ["var(--font-impact)"],
         anton: ["var(--font-anton)"],
+        comicNeue: ["var(--font-comic-neue)"],
       },
     },
   },
