@@ -14,7 +14,7 @@ export const Button = ({
   return (
     <button
       className={twMerge([
-        "button-shadow h-[60px] w-full rounded-[10px] bg-primary text-[16px] font-bold text-white",
+        "button-shadow flex h-[60px] w-full items-center justify-center rounded-[10px] bg-primary text-[16px] font-bold text-white",
         className,
       ])}
       onClick={onClick}
