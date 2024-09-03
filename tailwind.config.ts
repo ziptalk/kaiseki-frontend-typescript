@@ -9,6 +9,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: "var(--primary)",
+        secondary: "var(--secondary)",
+        basic: "var(--basic)",
+        background: "var(--background)",
+        card: "var(--card)",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -18,6 +25,8 @@ const config: Config = {
         digital: ["var(--font-digital)"],
         arial: ["var(--font-arial)"],
         impact: ["var(--font-impact)"],
+        anton: ["var(--font-anton)"],
+        comicNeue: ["var(--font-comic-neue)"],
       },
     },
   },

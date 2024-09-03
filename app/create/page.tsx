@@ -6,19 +6,45 @@ import { ethers } from "ethers";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import Image from "next/image";
+import { FieldErrors, set, useForm } from "react-hook-form";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
+import Preview from "@/public/icons/Preview.svg";
 
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
+import { Inputform } from "@/components/common/Inputform";
+import { Button } from "@/components/atoms/Button";
+import { CreateCard } from "@/components/detail/CreateCard";
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+
+export interface HookFormTypes {
+  Name: string;
+  Ticker: string;
+  Image: FileList;
+  prize: string;
+  threshold: string;
+  Description: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
+}
 
 const Create: NextPage = () => {
   const signer = useEthersSigner();
   const account = useAccount();
   const router = useRouter();
+  const { register, handleSubmit, watch, setValue } = useForm<HookFormTypes>({
+    defaultValues: {
+      Name: "",
+      Ticker: "",
+      Image: undefined,
+      Description: "",
+    },
+  });
 
   // MARK: - ethers init
   const provider = new ethers.JsonRpcProvider(
@@ -40,19 +66,14 @@ const Create: NextPage = () => {
   // TODO - Change creation fee later
   // const creationFeeInWei = ethers.parseEther("3.5");
   const creationFeeInWei = ethers.parseEther("0.0007");
-  const inputFile = useRef(null);
-  const [cid, setCid] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [tickers, setTickers] = useState([]);
-
+  const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
-  const [inputName, setInputName] = useState("");
-  const [inputTicker, setInputTicker] = useState("");
-  const [inputDesc, setInputDesc] = useState("");
-  const [inputXURL, setInputXURL] = useState("");
-  const [inputTGURL, setInputTGURL] = useState("");
-  const [inputWebURL, setInputWebURL] = useState("");
 
+  useEffect(() => {
+    console.log({ cid });
+  }, [cid]);
   // Get data from server for check dup
   useEffect(() => {
     fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
@@ -68,10 +89,7 @@ const Create: NextPage = () => {
   }, []);
 
   // MARK: - Upload to Server
-  const sendCidAndTokenAddressToServer = async (
-    createdTokenAddress: any,
-    cid: any,
-  ) => {
+  const sendCidAndTokenAddressToServer = async (createdTokenAddress: any) => {
     try {
       const response = await fetch(
         `${SERVER_ENDPOINT}/storeCidAndTokenAddress`,
@@ -82,13 +100,13 @@ const Create: NextPage = () => {
           },
           body: JSON.stringify({
             cid,
-            name: inputName,
-            ticker: inputTicker,
+            name: watch("Name"),
+            ticker: watch("Ticker"),
             tokenAddress: createdTokenAddress,
-            description: inputDesc,
-            twitterUrl: inputXURL,
-            telegramUrl: inputTGURL,
-            websiteUrl: inputWebURL,
+            description: watch("Description"),
+            twitterUrl: watch("twitter"),
+            telegramUrl: watch("telegram"),
+            websiteUrl: watch("website"),
             marketCap: 0,
             createdBy: account.address,
             timestamp: new Date().toISOString(),
@@ -154,11 +172,8 @@ const Create: NextPage = () => {
     }
   };
 
-  const isInvalidInput = async (
-    name: string,
-    ticker: string,
-  ): Promise<boolean> => {
-    const matchingTicker = tickers.find((t) => t === ticker);
+  const isInvalidInput = async (): Promise<boolean> => {
+    const matchingTicker = tickers.find((t) => t === watch("Ticker"));
 
     if (account.status === "disconnected") {
       alert("Connect your wallet first!");
@@ -173,23 +188,23 @@ const Create: NextPage = () => {
       alert("Ticker already exists!");
       return true;
     }
-    if (!name || !ticker) {
+    if (!watch("Name") || !watch("Ticker")) {
       alert("Invalid input value!");
       return true;
     }
-    if (name.length > 30) {
+    if (watch("Name").length > 30) {
       alert("Invalid name length!");
       return true;
     }
-    if (ticker.length > 10) {
+    if (watch("Ticker").length > 10) {
       alert("Invalid Ticker length!");
       return true;
     }
-    if (inputDesc.length > 100) {
+    if (watch("Description").length > 100) {
       alert("Invalid description length!");
       return true;
     }
-    if (!cid) {
+    if (!watch("Image")) {
       alert("Invalid input value!");
       return true;
     }
@@ -212,7 +227,7 @@ const Create: NextPage = () => {
             log.data,
             log.topics,
           );
-          if (event[1] === inputName) {
+          if (event[1] === watch("Name")) {
             console.log("event :" + event[0]);
             return event[0];
           }
@@ -226,18 +241,13 @@ const Create: NextPage = () => {
   };
 
   // MARK: - Create token
-  const createToken = async (e: React.FormEvent<HTMLFormElement>) => {
+  const createToken = async (data: HookFormTypes) => {
     try {
-      e.preventDefault();
-      const formData = new FormData(e.target as HTMLFormElement);
-      const name = formData.get("name") as string;
-      const ticker = formData.get("ticker") as string;
-
-      if (await isInvalidInput(name, ticker)) return;
+      if (await isInvalidInput()) return;
 
       setIsLoading(true);
       const receipt = await bondWriteContract.createToken(
-        { name: name, symbol: ticker },
+        { name: data.Name, symbol: data.Ticker },
         {
           mintRoyalty: 100,
           burnRoyalty: 100,
@@ -255,7 +265,7 @@ const Create: NextPage = () => {
 
       const createdTokenAddress = await fetchTokenAddressFromEvent();
 
-      await sendCidAndTokenAddressToServer(createdTokenAddress, cid);
+      await sendCidAndTokenAddressToServer(createdTokenAddress);
       setIsLoading(false);
 
       routeToDetailPageAfterMint(createdTokenAddress);
@@ -273,190 +283,134 @@ const Create: NextPage = () => {
     router.push(`/${createdTokenAddress}`);
   };
 
-  const PreviewTokenCard: FC = () => {
-    return (
-      <div className="">
-        <Image
-          src="/images/Preview.svg"
-          alt=""
-          width={500}
-          height={500}
-          className="mx-auto h-full w-1/4"
-        />
-        <div className="flex h-[185px] w-full justify-between gap-[10px] border border-dashed border-[#F9FF00] p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
-          <div>
-            {cid ? (
-              <div className="h-[120px] w-[120px]">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                  alt="Image from IPFS"
-                />
-              </div>
-            ) : (
-              <div className="h-[120px] w-[120px] bg-[#D9D9D9]"></div>
-            )}
-          </div>
-          <div className=" text w-[334px] overflow-hidden px-[10px]">
-            <div className="">
-              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                {inputName ? inputName : "Name"}
-              </h1>
-              <h1 className="text-[15px] font-bold leading-none text-[#ADADAD]">
-                [ticker: {inputTicker ? inputTicker : "ticker"}]
-              </h1>
-            </div>
-
-            <div className="flex items-center gap-[5px]">
-              <h1 className="neon-lime text-xs text-[#C5F900] ">Created by:</h1>
-              <Image
-                className="rounded-full"
-                src="/images/memesinoGhost.png"
-                alt=""
-                width={12}
-                height={12}
-                style={{ width: 12, height: 12 }}
-              />
-              <h1 className="neon-lime text-xs text-[#C5F900] ">
-                {account.address?.substring(0, 6)}
-              </h1>
-            </div>
-
-            <div className="flex">
-              <h1 className="neon-yellow text-xs text-[#FAFF00]">
-                Market cap:&nbsp;
-              </h1>
-              <h1
-                className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
-              >
-                0.00K
-              </h1>
-            </div>
-
-            <h1 className="h-[90px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-              {inputDesc
-                ? inputDesc
-                : "Pizza ipsum dolor meat lovers buffalo. Bacon Aussie mozzarella buffalo hand lovers string. Chicago garlic roll banana mayo tomatoes banana pineapple marinara sauce. Thin anchovies deep banana lasagna style ranch pesto string. Onions crust fresh mayo dolor fresh onions pizza buffalo."}
-            </h1>
-          </div>
-        </div>
-      </div>
-    );
+  const onInvalid = async () => {
+    if (await isInvalidInput()) return;
   };
 
   return (
-    <>
-      <div className="w-screen bg-[#0E0E0E]">
-        <div className="mx-auto h-full w-[500px] pt-[30px]">
-          <PreviewTokenCard />
-          <form onSubmit={createToken}>
-            <h1 className="mt-[30px] pb-[7px] text-[16px] font-normal text-white">
-              name
-            </h1>
-            <input
-              name="name"
-              type="text"
-              placeholder="name (up to 30)"
-              value={inputName}
-              onChange={(e: any) => setInputName(e.target.value)}
-              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              ticker
-            </h1>
-            <input
-              name="ticker"
-              type="text"
-              placeholder="ticker (up to 10)"
-              value={inputTicker}
-              onChange={(e: any) => setInputTicker(e.target.value)}
-              className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              image
-            </h1>
-            <input
-              ref={inputFile}
-              onChange={handleFileChange}
-              name="image"
-              type="file"
-              accept="image/*"
-              className=" flex h-[50px] w-full items-center rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <h1 className="mt-[15px] pb-[7px] text-[16px] font-normal text-white">
-              description
-            </h1>
-            <textarea
-              value={inputDesc}
-              onChange={(e: any) => setInputDesc(e.target.value)}
-              name="description"
-              placeholder="description (up to 100)"
-              className="h-[120px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-            />
-            <div
-              onClick={() => setIsMoreOptionsToggled(!isMoreOptionsToggled)}
-              className="mt-[18px] flex cursor-pointer text-[#FF2626]"
-            >
-              <h1>more options&nbsp;</h1>
-              <h1 className="text-white">{isMoreOptionsToggled ? "-" : "+"}</h1>
-            </div>
-            {isMoreOptionsToggled && (
-              <>
-                <h1 className="mt-[20px] pb-[7px] text-[16px] font-normal text-white">
-                  twitter link
-                </h1>
-                <input
-                  value={inputXURL}
-                  onChange={(e: any) => setInputXURL(e.target.value)}
-                  name="X URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-                <h1 className="mt-[19px] pb-[7px]  text-[16px] font-normal text-white">
-                  telegram link
-                </h1>
-                <input
-                  value={inputTGURL}
-                  onChange={(e: any) => setInputTGURL(e.target.value)}
-                  name="Telegram URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-                <h1 className="mt-[19px] pb-[7px] text-[16px] font-normal text-white">
-                  website link
-                </h1>
-                <input
-                  value={inputWebURL}
-                  onChange={(e: any) => setInputWebURL(e.target.value)}
-                  name="Website URL"
-                  type="text"
-                  placeholder="(optional)"
-                  className="h-[50px] w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] p-[10px] text-white"
-                />
-              </>
-            )}
-            <button
-              type="submit"
-              className={`mt-[34px] flex h-[60px] w-full items-center justify-center rounded-[8px] font-['Impact'] text-[16px] font-light tracking-wider text-white ${isLoading ? "bg-[#900000]" : "bg-gradient-to-b from-[#FF0000] to-[#900000] shadow-[0_0px_20px_rgba(255,38,38,0.5)]"} `}
-            >
-              {isLoading ? (
-                <Image
-                  src="/icons/Loading.svg"
-                  alt="loading Icon"
-                  height={24}
-                  width={24}
-                  className="animate-spin"
-                />
-              ) : (
-                <h1>Create Token</h1>
-              )}
-            </button>
-          </form>
-          <div className="pb-20" />
+    <div className="flex w-screen flex-col items-center gap-6 bg-[#0E0E0E]">
+      <PageLinkButton href="/" prev className="w-1/2">
+        Back Home
+      </PageLinkButton>
+      <Preview />
+      <CreateCard
+        {...{
+          cid,
+          name: watch("Name"),
+          ticker: watch("Ticker"),
+          address: account.address?.substring(0, 6) || "unvalid",
+          description: watch("Description"),
+        }}
+      />
+      <form
+        onSubmit={handleSubmit(createToken, onInvalid)}
+        className="flex flex-col gap-6"
+      >
+        <Inputform
+          {...{
+            name: "Name",
+            maxLength: 30,
+            register,
+            value: watch("Name"),
+          }}
+        />
+        <Inputform
+          {...{
+            name: "Ticker",
+            maxLength: 10,
+            register,
+            value: watch("Ticker"),
+          }}
+        />
+        <Inputform
+          {...{
+            name: "Image",
+            register,
+            onChange: handleFileChange,
+            file: watch("Image"),
+            type: "file",
+          }}
+        />
+        <Inputform
+          {...{
+            viewName: "Raffle Prize",
+            maxLength: 10,
+            name: "prize",
+            register,
+            value: watch("prize"),
+          }}
+        />
+        <Inputform
+          {...{
+            viewName: "Mint Threshold For Raffle and DEX Listing",
+            name: "threshold",
+            register,
+            value: watch("threshold"),
+            type: "number",
+          }}
+        />
+        <Inputform
+          {...{
+            name: "Description",
+            maxLength: 100,
+            register,
+            value: watch("Description"),
+            type: "textarea",
+          }}
+        />
+        <div
+          onClick={() => setIsMoreOptionsToggled(!isMoreOptionsToggled)}
+          className="flex cursor-pointer text-[#FF2626]"
+        >
+          <h1>more options&nbsp;</h1>
+          <h1 className="text-white">{isMoreOptionsToggled ? "-" : "+"}</h1>
         </div>
-      </div>
-    </>
+        {isMoreOptionsToggled && (
+          <>
+            <Inputform
+              optional
+              {...{
+                viewName: "twitter link",
+                name: "twitter",
+                register,
+                value: watch("twitter"),
+              }}
+            />
+            <Inputform
+              optional
+              {...{
+                viewName: "telegram link",
+                name: "telegram",
+                register,
+                value: watch("telegram"),
+              }}
+            />
+            <Inputform
+              optional
+              {...{
+                viewName: "website link",
+                name: "website",
+                register,
+                value: watch("website"),
+              }}
+            />
+          </>
+        )}
+        <Button>
+          {isLoading ? (
+            <Image
+              src="/icons/Loading.svg"
+              alt="loading Icon"
+              height={24}
+              width={24}
+              className="animate-spin"
+            />
+          ) : (
+            <h1>Create Token</h1>
+          )}
+        </Button>
+      </form>
+    </div>
   );
 };
 

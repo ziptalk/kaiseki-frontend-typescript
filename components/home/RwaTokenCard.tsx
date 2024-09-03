@@ -11,9 +11,10 @@ export const RWATokenCard: FC = () => {
   const [second, setSecond] = useState(0);
 
   useEffect(() => {
+    // Calculate the remaining time
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      // console.log(now);
+
       const distance = time - now;
       setDay(Math.floor(distance / (1000 * 60 * 60 * 24)));
       setHour(
@@ -29,9 +30,10 @@ export const RWATokenCard: FC = () => {
   const [kingTicker, setKingTicker] = useState("KING");
   const [kingCreator, setKingCreator] = useState("Me");
   const [kingMarketCap, setKingMarketCap] = useState("0");
-  const [kingDesc, setKingDesc] = useState(
-    "Figma ipsum component variant main layer. Stroke opacity blur style bullet group library pencil content. Pencil effect underline pencil pixel follower.",
-  );
+  const [kingToken, setKingToken] = useState("0");
+  // const [kingDesc, setKingDesc] = useState(
+  //   "Figma ipsum component variant main layer. Stroke opacity blur style bullet group library pencil content. Pencil effect underline pencil pixel follower.",
+  // );
   const [kingCid, setKingCid] = useState(
     "QmeSwf4GCPw1TBpimcB5zoreCbgGL5fEo7kTfMjrNAXb3U",
   );
@@ -45,21 +47,22 @@ export const RWATokenCard: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data[0]) {
+          setKingCid(data[0].cid);
+          setKingMarketCap(data[0].marketCap);
+          setKingToken(data[0].token);
           setKingName(data[0].name);
           setKingTicker(data[0].symbol);
-          setKingCid(data[0].cid);
           setKingCreator(data[0].creator);
-          setKingDesc(data[0].description);
-          setKingMarketCap(data[0].marketCap);
+          // setKingDesc(data[0].description);
         }
-        // console.log({ tothemoon: data });
+        console.log({ tothemoon: data });
       })
       .catch((error) => {
         console.log(error);
       });
   };
   return (
-    <div className="flex h-[120px] w-[390px] justify-between gap-[10px] border border-dashed border-[#F9FF00] bg-black p-[10px]  shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525]">
+    <div className="main-tokenarea mt-[10px] h-[120px] w-[390px]">
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
         alt="Image from IPFS"
@@ -80,22 +83,24 @@ export const RWATokenCard: FC = () => {
             alt=""
             style={{ width: 12, height: 12 }}
           />
-          <h1 className="neon-lime mt-[5px] text-[12px] text-[#C5F900]">
+          <h1 className="neon-lime text-[12px] text-[#C5F900]">
             {kingCreator.length < 20
               ? kingCreator
               : `${kingCreator.slice(0, 20)}...`}
           </h1>
         </div>
         <div className="flex h-[14px]  gap-[5px]">
-          <h1 className="neon-yellow text-xs text-[#FAFF00]">market cap :</h1>
+          <h1 className="text-xs text-[#FAFF00]">prize :</h1>
           <h1
-            className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+            className={`${digital.variable} font-digital text-xs text-[#FAFF00]`}
           >
-            {kingMarketCap}K
+            {kingTicker}
           </h1>
         </div>
         <div className={`raffle-typo ${anton.variable} font-anton`}>
-          {day} Day {hour}:{minute}:{second} left!
+          {day} Day {hour.toString().padStart(2, "0")}:
+          {minute.toString().padStart(2, "0")}:
+          {second.toString().padStart(2, "0")} left!
         </div>
       </div>
     </div>

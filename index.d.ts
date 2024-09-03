@@ -29,12 +29,11 @@ interface Event {
 interface TokenCardTypes {
   name: string;
   ticker: string;
-  createdBy: string;
-  cap: string;
-  desc: string;
-  border?: boolean;
-  tokenAddress?: string;
-  hoveredToken?: string;
+  createdBy?: string;
+  marketCap: string;
+  description: string;
+  tokenAddress: string;
+  clickedToken?: string;
   cid: string;
 }
 
@@ -45,6 +44,16 @@ interface TradesCardType {
   memeTokenAmount: string;
   date: string;
   tx: string;
+}
+
+interface TokenInfo {
+  cid: string;
+  createdBy?: string;
+  description: string;
+  marketCap: string;
+  name: string;
+  ticker: string;
+  tokenAddress: string;
 }
 
 interface FilteredData {

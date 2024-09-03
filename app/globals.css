@@ -1,6 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #950000;
+    --secondary: #faff00;
+    --basic: #0e0e0e;
+    --background: #ff20f6;
+    --input-stroke: #8f8f8f;
+    --card: #1a1a1a;
+  }
+}
+
+@layer components {
+  .main {
+    @apply mx-auto flex h-full w-[1150px] items-center justify-center gap-[60px] rounded-2xl border-2 border-secondary bg-primary shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-secondary;
+  }
+  .main-inner {
+    @apply flex h-full w-full flex-col items-center justify-center gap-[20px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white;
+  }
+  .main-tokenarea {
+    @apply flex h-full w-full justify-between gap-2.5 border border-dashed border-secondary bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525];
+  }
+}
+
+.bg-primary {
+  background: linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%);
+}
+.button-shadow {
+  box-shadow: 1.936px 1.936px 3.872px 0px rgba(0, 0, 0, 0.08);
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
@@ -107,15 +138,65 @@ input::-webkit-inner-spin-button {
 
 .raffle-typo {
   font-family: var(--font-anton);
-  -webkit-text-stroke-width: 1;
-  -webkit-text-stroke-color: #ffd600;
+  -webkit-text-stroke-width: 0.4px;
+  -webkit-text-stroke-color: #860000;
   font-size: 18px;
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.36px;
+  letter-spacing: -0.6px;
   background: linear-gradient(0deg, #fff 0%, #faff00 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.title-typo {
+  font-family: var(--font-anton);
+  -webkit-text-stroke: 0.7px #860000;
+  font-size: 30px;
+  letter-spacing: -1px;
+  background: linear-gradient(0deg, #fff 0%, #faff00 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 2;
+}
+
+.title-shadow {
+  font-family: var(--font-anton);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.6px;
+  color: transparent;
+  background: transparent;
+  text-shadow: 1px 3px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.create-default {
+  border-radius: 20px;
+  border: 5px solid #e6180f;
+  background: radial-gradient(50% 50% at 50% 50%, #d0140c 0%, #6a0a06 100%);
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.5) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.create-title {
+  color: white;
+  font-family: Impact;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: #5a0703;
+  font-size: 23px;
+}
+
+.winStyle {
+  background: linear-gradient(288deg, #fff 16.45%, #faff00 103.12%);
+  color: #222222;
+}
+
+.progressStyle {
+  background: linear-gradient(279deg, #e00900 1.93%, #a60d07 86.23%);
+  color: #ffffff;
 }

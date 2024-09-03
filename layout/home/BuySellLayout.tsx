@@ -1,18 +1,14 @@
 import React from "react";
 
-import { FC, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import Image from "next/image";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
-import BondingCurveCard from "@/components/detail/BondingCurveCard";
 
-import { impact } from "@/fonts/font";
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { MAX_INT_256, BILLION } from "@/global/constants";
@@ -24,12 +20,19 @@ import axios from "axios";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
-import Link from "next/link";
-interface BuySellLayoutProps {
-  tokenAddress: string;
-}
+import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+import { Tradesection } from "@/components/detail/Tradesection";
+import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
 
-export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
+export const BuySellLayout = ({
+  cid,
+  createdBy,
+  description,
+  marketCap,
+  name,
+  ticker,
+  tokenAddress,
+}: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
 
@@ -75,24 +78,13 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   const [memeTokenName, setMemeTokenName] = useState("");
   const [memeTokenSymbol, setMemeTokenSymbol] = useState("");
   const [creator, setCreator] = useState("");
-  const [tw, setTw] = useState("");
-  const [tg, setTg] = useState("");
-  const [web, setWeb] = useState("");
-  const [desc, setDesc] = useState("");
-  const [cid, setCid] = useState("");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
-  const [distribution, setDistribution] = useState<FilteredData | undefined>(
-    undefined,
-  );
-  const [TXLogs20FromServer, setTXLogs20FromServer] = useState<any[] | null>(
-    null,
-  );
 
   const [curMemeTokenValue, setCurMemeTokenValue] = useState("0");
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState("");
+  // const [marketCap, setMarketCap] = useState("");
 
   const [isBuy, setIsBuy] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -102,15 +94,9 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetchHolderDistributionFromServer();
       fetchTXLogsFromServer(
         tokenAddress,
         setTXLogsFromServer,
-        TXLogsFromServer,
-      );
-      fetch20TXLogsFromServer(
-        tokenAddress,
-        setTXLogs20FromServer,
         TXLogsFromServer,
       );
     }, 5000); // Fetch every 5 seconds (adjust as needed)
@@ -120,14 +106,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
 
   useEffect(() => {
     fetchTokenDetailFromContract();
-    fetchHomeTokenInfoFromServer(
-      tokenAddress,
-      setCid,
-      setTw,
-      setTg,
-      setWeb,
-      setDesc,
-    );
   }, [tokenAddress]);
 
   // listen event later
@@ -164,17 +142,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     }
   };
 
-  const fetchHolderDistributionFromServer = async () => {
-    try {
-      const response = await fetch(`${SERVER_ENDPOINT}/HolderDistribution`);
-      const data = await response.json();
-      const filteredData = filterDataByOuterKey(data, tokenAddress);
-      setDistribution(filteredData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const fetchTokenDetailFromContract = async () => {
     try {
       const detail = await bondContract.getDetail(tokenAddress);
@@ -193,32 +160,7 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
       const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
 
       await updateMarketCapToServer(tokenAddress, marketCapInUSD);
-      setMarketCap(marketCapInUSD);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const fetchHomeTokenInfoFromServer = async (
-    tokenAddress: any,
-    setCid: any,
-    setTw: any,
-    setTg: any,
-    setWeb: any,
-    setDesc: any,
-  ) => {
-    try {
-      const response = await fetch(`${SERVER_ENDPOINT}/homeTokenInfo`);
-      const data = await response.json();
-      const filteredData = data.filter(
-        (item: any) => item.tokenAddress === tokenAddress,
-      );
-      if (filteredData.length > 0) {
-        setCid(filteredData[0].cid);
-        setTw(filteredData[0].twitterUrl);
-        setTg(filteredData[0].telegramUrl);
-        setWeb(filteredData[0].websiteUrl);
-        setDesc(filteredData[0].description);
-      }
+      // setMarketCap(marketCapInUSD);
     } catch (error) {
       console.log(error);
     }
@@ -232,25 +174,6 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
     try {
       const response = await fetch(
         `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}`,
-      );
-      const data = await response.json();
-      const filteredData = filterEventsByToken(data);
-      if (filteredData.length !== eventsFromDB?.length) {
-        setEventsFromDB(filteredData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetch20TXLogsFromServer = async (
-    tokenAddress: any,
-    setEventsFromDB: any,
-    eventsFromDB: any,
-  ) => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}?itemCount=20`,
       );
       const data = await response.json();
       const filteredData = filterEventsByToken(data);
@@ -583,33 +506,12 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   // };
 
   //MARK: - Set Distribution
-  const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
-    if (targetOuterKey in data) {
-      return { [targetOuterKey]: data[targetOuterKey] };
-    }
-    return {};
-  };
-  const BuySellButtonSection: FC = () => {
-    return (
-      <div className="flex h-[50px] justify-between gap-[5px]">
-        <button
-          className={`h-full w-[210px] ${isBuy && "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
-          onClick={() => setIsBuy(true)}
-        >
-          Buy
-        </button>
-        <button
-          className={`h-full w-[210px] ${isBuy || "bg-[#950000]"} rounded-[10px] bg-[#454545] font-[700] text-white`}
-          onClick={() => {
-            setIsBuy(false);
-            setIsInputInTokenAmount(true);
-          }}
-        >
-          Sell
-        </button>
-      </div>
-    );
-  };
+  // const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
+  //   if (targetOuterKey in data) {
+  //     return { [targetOuterKey]: data[targetOuterKey] };
+  //   }
+  //   return {};
+  // };
 
   // const HolderDistributionSection: FC = () => {
   //   return (
@@ -648,212 +550,106 @@ export const BuySellLayout = ({ tokenAddress }: BuySellLayoutProps) => {
   //   );
   // };
 
-  const SellPercentageButton: FC = () => {
-    const percentages = [25, 50, 75, 100];
-
-    return (
-      <>
-        <h1 className="text-sm text-white">{tradeModuleErrorMsg}</h1>
-        <div className="flex h-[20px] gap-[7px] text-[13px]">
-          <button
-            type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            onClick={handleReset}
-          >
-            reset
-          </button>
-          {percentages.map((percentage) => (
-            <button
-              key={percentage}
-              type="button"
-              className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-              onClick={() => handlePercentage(percentage)}
-            >
-              {percentage}%
-            </button>
-          ))}
-        </div>
-      </>
-    );
-  };
   return (
-    <div className="flex flex-col gap-[20px]">
-      <div className="flex gap-[20px]">
-        <img
-          src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-          alt="Image from IPFS"
-          className="h-[120px] w-[120px] border-black "
-        />
-        <TokenDesc
-          {...{
-            name: memeTokenName,
-            ticker: memeTokenSymbol,
-            creator,
-            marketCap,
-            desc,
-          }}
-        />
-      </div>
-      <div className="flex h-[50px] w-full overflow-hidden">
-        <Slider
-          elements={[
-            <ModuleInfo
-              title="Price"
-              desc={12345.12 + " BASE"}
-              percentage="+7.31%"
-              key={"price"}
-            />,
-            <ModuleInfo
-              title="Marketcap"
-              desc={marketCap + " BASE"}
-              key={"Marketcap"}
-            />,
-            <ModuleInfo
-              title="Virtual Liquidity"
-              desc={"$112.77k"}
-              key={"Virtual Liquidity"}
-            />,
-            <ModuleInfo
-              title="24H Volume"
-              desc={12345.12 + " BASE"}
-              key={"24H Volume"}
-            />,
-            <ModuleInfo
-              title="Token Created"
-              desc={"47M"}
-              key={"Token Created"}
-            />,
-          ]}
-        />
-      </div>
-      <div className="h-[250px] w-full bg-[#151527] p-[13px]">
-        <div className="h-[210px] w-full">
-          <div className="flex items-center gap-[7.15px]">
+    <div className="ml-[20px]">
+      <div className="sticky top-[80px] pb-[60px]">
+        <PageLinkButton href={tokenAddress} className="mt-[112px]">
+          View details
+        </PageLinkButton>
+        <div className="relative mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
+          <div className="flex gap-[20px]">
             <img
               src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
               alt="Image from IPFS"
-              className="h-[28.5px] w-[28.5px] border-black "
+              className="h-[120px] w-[120px] border-black "
             />
-            <p className="inline-block text-[14.3px] text-white">
-              {memeTokenName} ($ {memeTokenSymbol}) / BASE
-            </p>
+            <TokenDesc
+              {...{
+                cid,
+                createdBy,
+                description,
+                marketCap,
+                name,
+                ticker,
+                tokenAddress,
+              }}
+            />
           </div>
-          <TradingViewChart tokenAddress={tokenAddress} />
+          <div className="flex h-[50px] w-full bg-card">
+            <Slider
+              elements={[
+                <ModuleInfo
+                  title="Price"
+                  className="mr-10 bg-transparent"
+                  desc={12345.12 + " ETH"}
+                  percentage="+7.31%"
+                  key={"price"}
+                />,
+                <ModuleInfo
+                  title="Marketcap"
+                  className="mr-10 bg-transparent"
+                  desc={marketCap + " ETH"}
+                  key={"Marketcap"}
+                />,
+                <ModuleInfo
+                  title="Virtual Liquidity"
+                  className="mr-10 bg-transparent"
+                  desc={"$112.77k"}
+                  key={"Virtual Liquidity"}
+                />,
+                <ModuleInfo
+                  title="24H Volume"
+                  className="mr-10 bg-transparent"
+                  desc={12345.12 + " ETH"}
+                  key={"24H Volume"}
+                />,
+                <ModuleInfo
+                  className="mr-10 bg-transparent"
+                  title="Token Created"
+                  desc={"47M"}
+                  key={"Token Created"}
+                />,
+              ]}
+            />
+          </div>
+          <div className="h-[250px] w-full bg-[#151527] p-[13px]">
+            <div className="h-[210px] w-full">
+              <div className="flex items-center gap-[7.15px]">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                  alt="Image from IPFS"
+                  className="h-[28.5px] w-[28.5px] border-black "
+                />
+                <p className="inline-block text-[14.3px] text-white">
+                  {name} ($ {ticker}) / ETH
+                </p>
+              </div>
+              <TradingViewChart tokenAddress={tokenAddress} />
+            </div>
+          </div>
+          <Tradesection
+            {...{
+              isBuy,
+              setIsBuy,
+              setIsInputInTokenAmount,
+              isInputInTokenAmount,
+              inputValue,
+              handleInputChange,
+              handlePercentage,
+              buy,
+              sell,
+              memeTokenSymbol,
+              priceForNextMint,
+              RESERVE_SYMBOL,
+            }}
+          />
+          {/* <SellPercentageButton /> */}
+          <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+          <div className="absolute bottom-3 right-5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black">
+            ?
+          </div>
         </div>
       </div>
-      <BuySellButtonSection />
-      <form onSubmit={isBuy ? buy : sell} className="flex flex-col gap-[10px]">
-        {isBuy ? (
-          <div
-            onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-            className={`flex h-[22px] w-[90px] cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] text-[12px] text-[#AEAEAE]`}
-          >
-            Switch to F1T
-          </div>
-        ) : (
-          <SellPercentageButton />
-        )}
-        {isInputInTokenAmount ? (
-          <>
-            <div className="relative flex w-full items-center">
-              <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                type="number"
-                placeholder="Enter the amount"
-                step="0.01"
-                name="inputValue"
-                value={inputValue}
-                onChange={handleInputChange}
-              />
-              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                      alt="img"
-                    />
-                  </div>
-                  <h1 className="mt-1 text-[15px] font-bold text-white">
-                    {memeTokenSymbol}
-                  </h1> */}
-                <button
-                  type="button"
-                  onClick={() => handlePercentage(100)}
-                  className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
-                >
-                  MAX
-                </button>
-              </div>
-            </div>
-            {/* <h1 className="text-[#B8B8B8]">
-                {ether(
-                  BigInt(Math.floor(Number(inputValue))) *
-                    BigInt(priceForNextMint),
-                )}
-                &nbsp;{RESERVE_SYMBOL}
-              </h1> */}
-          </>
-        ) : (
-          <>
-            {/*input amount == RESERVE_SYMBOL*/}
-            <div className="relative flex w-full items-center">
-              <input
-                className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
-                type="number"
-                placeholder="0.00"
-                step="0.01"
-                name="inputValue"
-                value={inputValue}
-                onChange={handleInputChange}
-              ></input>
-              <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-                <div className="h-[24px] w-[24px] rounded-full">
-                  <Image
-                    src="/icons/SeiLogo.svg"
-                    alt=""
-                    height={24}
-                    width={24}
-                  />
-                </div>
-
-                <h1 className="mt-1 text-[15px] font-bold text-white">
-                  {RESERVE_SYMBOL}
-                </h1>
-              </div>
-            </div>
-            <h1 className="text-[#B8B8B8]">
-              {/*RESERVE_SYMBOL value to memetoken*/}~
-              {inputValue &&
-                Number(
-                  String(
-                    Math.floor(
-                      Number(
-                        ethers.parseEther(inputValue) /
-                          BigInt(priceForNextMint),
-                      ),
-                    ),
-                  ),
-                )}
-              &nbsp;{memeTokenSymbol}
-            </h1>
-          </>
-        )}
-
-        {/*true == toggle module, false == percent for sell*/}
-        <div className="text-[14px] text-white">
-          {"Raffle has already progressed! -> "}
-          <Link href={"#"} className="underline">
-            Join the Raffle!
-          </Link>
-        </div>
-        <button
-          type="submit"
-          className={`h-[50px] w-full rounded-[10px] border-2 border-[#880400] bg-[#950000] text-[16px] font-[700] text-white`}
-        >
-          Connect Wallet
-        </button>
-      </form>
-      {/* <SellPercentageButton /> */}
-      <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
     </div>
   );
 };

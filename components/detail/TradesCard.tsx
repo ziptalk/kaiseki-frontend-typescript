@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { FC } from "react";
 
 const TradesCard: FC<TradesCardType> = ({
@@ -16,28 +15,31 @@ const TradesCard: FC<TradesCardType> = ({
     SMA = NMA / 1000;
     legitK = true;
   }
+  const data = [reserveAmount, legitK ? SMA + "k" : SMA, date];
   return (
     <>
-      <div className="mt-[15px] flex h-[60px] items-center justify-between rounded-[10px] bg-[#242424] px-[10px] text-[#6A6A6A]">
-        <div className="flex w-1/6 items-center gap-[5px]">
-          <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
-            <Image
-              src="/images/memesinoGhost.png"
-              alt=""
-              height={18}
-              width={18}
-              style={{ width: 18, height: 18 }}
-            />
-          </div>
-          <h1 className="text-[#9AFFC2]">{user}</h1>
+      <div className="flex h-[60px] items-center justify-between rounded-[10px] bg-[#313131] px-[20px] py-[15px] text-[13px] text-[#808080]">
+        <div className="flex w-[14%] items-center gap-[5px]">
+          <img
+            src="/images/memesinoGhost.png"
+            alt=""
+            style={{ width: 18, height: 18 }}
+          />
+          <h1 className="text-[#9AFFC2]">
+            {user.length > 14 ? user.substring(0, 12) + "..." : user}
+          </h1>
         </div>
-        <h1 className={`${isBuy ? "text-[#6AD64F]" : "text-[#D64F4F]"} w-1/6`}>
+        <h1
+          className={`${isBuy ? "text-[#6BD650]" : "text-[#D64F4F]"} w-[14%] font-bold`}
+        >
           {isBuy ? "buy" : "sell"}
         </h1>
-        <h1 className="w-1/6">{reserveAmount}</h1>
-        <h1 className="w-1/6">{legitK ? SMA + "k" : SMA}</h1>
-        <h1 className="w-1/6">{date}</h1>
-        <h1 className=" flex w-1/6 flex-row-reverse">{tx}</h1>
+        {data.map((item, index) => (
+          <h1 key={index} className="w-[14%] overflow-scroll text-nowrap">
+            {item}
+          </h1>
+        ))}
+        <h1 className="w-[14%] overflow-scroll text-nowrap text-right">{tx}</h1>
       </div>
     </>
   );

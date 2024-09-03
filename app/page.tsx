@@ -5,11 +5,12 @@ import { TokensLayout } from "@/layout/home/TokensLayout";
 
 export default function Home() {
   return (
-    <main className="relative mx-auto flex w-screen bg-[#0E0E0E] pt-[20px]">
-      <div className="mx-auto pt-[20px]">
-        <SlotLayout />
-        <TokensLayout />
-      </div>
+    <main className="p-[30px]">
+      {/* main page top slot layout - raffle, token creation */}
+      <SlotLayout />
+
+      {/* main page bottom token layout - token list + quick buy/sell */}
+      <TokensLayout />
     </main>
   );
 }
