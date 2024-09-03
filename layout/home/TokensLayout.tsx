@@ -38,7 +38,6 @@ export const TokensLayout = () => {
       .then((response) => response.json())
       .then((data) => {
         setTokenInfo(data);
-        console.log(data);
       })
       .catch((error) => {
         console.log(error);

@@ -172,21 +172,21 @@ export default function Detail() {
 
   const fetchTokenDetailFromContract = async () => {
     try {
-      // const detail = await bondContract.getDetail(tokenAddress);
-      // const price = detail.info.priceForNextMint;
-      // console.log("currentSupply :" + detail.info.currentSupply);
+      const detail = await bondContract.getDetail(tokenAddress);
+      const price = detail.info.priceForNextMint;
+      console.log("currentSupply :" + detail.info.currentSupply);
       // setMemeTokenName(detail.info.name);
       // setMemeTokenSymbol(detail.info.symbol);
       // setCreator(detail.info.creator);
-      // const mcap = (
-      //   Number(ethers.formatEther(price.toString())) * BILLION
-      // ).toFixed(2);
-      // console.log("this is mcap" + mcap);
-      // const response = await axios.get(
-      //   `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
-      // );
-      // const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
-      // await updateMarketCapToServer(tokenAddress, marketCapInUSD);
+      const mcap = (
+        Number(ethers.formatEther(price.toString())) * BILLION
+      ).toFixed(2);
+      console.log("this is mcap" + mcap);
+      const response = await axios.get(
+        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+      );
+      const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
+      await updateMarketCapToServer(tokenAddress, marketCapInUSD);
     } catch (error) {
       console.log(error);
     }
@@ -199,7 +199,6 @@ export default function Detail() {
         (item: any) => item.tokenAddress === tokenAddress,
       );
       if (filteredData.length > 0) {
-        console.log(filteredData);
         setTokenInfo(filteredData[0]);
       }
     } catch (error) {
@@ -262,11 +261,11 @@ export default function Detail() {
   const setUserReserveBalanceIntoState = async () => {
     try {
       if (account.address) {
-        // const balanceWei = await provider.getBalance(account.address);
-        // console.log(balanceWei);
-        // const balanceEther = ethers.formatEther(balanceWei);
-        // console.log(balanceEther);
-        // setCurUserReserveBalance(balanceEther);
+        const balanceWei = await provider.getBalance(account.address);
+        console.log(balanceWei);
+        const balanceEther = ethers.formatEther(balanceWei);
+        console.log(balanceEther);
+        setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {
       console.log(error);
@@ -546,9 +545,6 @@ export default function Detail() {
     }
     return {};
   };
-  useEffect(() => {
-    console.log(tokenInfo);
-  }, [tokenInfo]);
   return (
     <main className="flex w-full justify-center gap-[30px]">
       {/* left side */}

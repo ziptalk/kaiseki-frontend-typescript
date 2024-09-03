@@ -23,6 +23,7 @@ import Slider from "@/components/common/Slider";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
+
 export const BuySellLayout = ({
   cid,
   createdBy,
