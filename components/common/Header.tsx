@@ -480,7 +480,7 @@ const Header: FC = () => {
                 <div className="flex h-10 w-52 items-center justify-between rounded-lg border bg-[#252525] px-5 text-sm font-bold text-white">
                   <div
                     onClick={() => copyToClipboard(address)}
-                    className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] `}
+                    className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
                   >
                     <Image
                       src="/images/memesinoGhost.png"

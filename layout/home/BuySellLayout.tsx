@@ -555,7 +555,7 @@ export const BuySellLayout = ({
         <PageLinkButton href={tokenAddress} className="mt-[112px]">
           View details
         </PageLinkButton>
-        <div className="mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
+        <div className="relative mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
           <div className="flex gap-[20px]">
             <img
               src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -644,6 +644,9 @@ export const BuySellLayout = ({
           />
           {/* <SellPercentageButton /> */}
           <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+          <div className="absolute bottom-3 right-5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black">
+            ?
+          </div>
         </div>
       </div>
     </div>

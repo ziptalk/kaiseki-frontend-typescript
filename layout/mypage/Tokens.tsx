@@ -56,8 +56,8 @@ export const Tokens = () => {
           </div>
         </div>
       ))}
-      <div className="ml-auto mt-10 rounded-full bg-[#D9D9D9] p-2">
-        <Telegram className="cursor-pointer fill-[#5E5E5E]" />
+      <div className="ml-auto mt-10 rounded-full bg-[#31A8DC] p-2">
+        <Telegram className="cursor-pointer fill-white" />
       </div>
     </div>
   );

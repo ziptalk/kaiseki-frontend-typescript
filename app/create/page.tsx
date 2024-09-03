@@ -24,11 +24,13 @@ import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 export interface HookFormTypes {
   Name: string;
   Ticker: string;
-  File: FileList;
+  Image: FileList;
+  prize: string;
+  threshold: string;
   Description: string;
-  "twitter link"?: string;
-  "telegram link"?: string;
-  "website link"?: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
 }
 
 const Create: NextPage = () => {
@@ -39,11 +41,10 @@ const Create: NextPage = () => {
     defaultValues: {
       Name: "",
       Ticker: "",
-      File: undefined,
+      Image: undefined,
       Description: "",
     },
   });
-  console.log("🚀 ~ watch:", watch());
 
   // MARK: - ethers init
   const provider = new ethers.JsonRpcProvider(
@@ -103,9 +104,9 @@ const Create: NextPage = () => {
             ticker: watch("Ticker"),
             tokenAddress: createdTokenAddress,
             description: watch("Description"),
-            twitterUrl: watch("twitter link"),
-            telegramUrl: watch("telegram link"),
-            websiteUrl: watch("website link"),
+            twitterUrl: watch("twitter"),
+            telegramUrl: watch("telegram"),
+            websiteUrl: watch("website"),
             marketCap: 0,
             createdBy: account.address,
             timestamp: new Date().toISOString(),
@@ -203,7 +204,7 @@ const Create: NextPage = () => {
       alert("Invalid description length!");
       return true;
     }
-    if (!watch("File")) {
+    if (!watch("Image")) {
       alert("Invalid input value!");
       return true;
     }
@@ -323,11 +324,29 @@ const Create: NextPage = () => {
         />
         <Inputform
           {...{
-            name: "File",
+            name: "Image",
             register,
             onChange: handleFileChange,
-            file: watch("File"),
+            file: watch("Image"),
             type: "file",
+          }}
+        />
+        <Inputform
+          {...{
+            viewName: "Raffle Prize",
+            maxLength: 10,
+            name: "prize",
+            register,
+            value: watch("prize"),
+          }}
+        />
+        <Inputform
+          {...{
+            viewName: "Mint Threshold For Raffle and DEX Listing",
+            name: "threshold",
+            register,
+            value: watch("threshold"),
+            type: "number",
           }}
         />
         <Inputform
@@ -351,25 +370,28 @@ const Create: NextPage = () => {
             <Inputform
               optional
               {...{
-                name: "twitter link",
+                viewName: "twitter link",
+                name: "twitter",
                 register,
-                value: watch("twitter link"),
+                value: watch("twitter"),
               }}
             />
             <Inputform
               optional
               {...{
-                name: "telegram link",
+                viewName: "telegram link",
+                name: "telegram",
                 register,
-                value: watch("telegram link"),
+                value: watch("telegram"),
               }}
             />
             <Inputform
               optional
               {...{
-                name: "website link",
+                viewName: "website link",
+                name: "website",
                 register,
-                value: watch("website link"),
+                value: watch("website"),
               }}
             />
           </>

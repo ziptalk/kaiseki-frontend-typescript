@@ -560,13 +560,16 @@ export default function Detail() {
           {/* token card */}
           <TokenCard {...tokenInfo} />
           {/* progress bar + desc */}
-          <div className="w-[450px] rounded-tr-[100px] bg-card  py-[13px] pl-[10px] pr-[66px]">
+          <div className="relative w-[450px] rounded-tr-[100px] bg-card  py-[13px] pl-[10px] pr-[66px]">
             <BondingCurveCard
               prog={Math.floor(bondingCurveProgress)}
               desc={
                 "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
               }
             />
+            <div className="absolute bottom-3 right-5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black">
+              ?
+            </div>
           </div>
         </div>
         <div className="mt-[30px] flex h-[50px] w-full bg-card">
