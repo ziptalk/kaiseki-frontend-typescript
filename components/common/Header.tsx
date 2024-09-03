@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   useAccountModal,
   useChainModal,
@@ -22,13 +22,18 @@ import {
 } from "@/global/projectConfig";
 import X from "@/public/icons/X_logo.svg";
 import Info from "@/public/icons/info.svg";
+import DownArrow from "@/public/icons/dwnArrow.svg";
+import Power from "@/public/icons/power.svg";
 import Telegram from "@/public/icons/telegram_logo.svg";
+import Copy from "@/public/icons/copy.svg";
+import { MypageModal } from "@/layout/home/MypageModal";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
   const { address, chainId, isConnected } = useAccount();
+  const [disconnectToggle, setDisconnectToggle] = useState(false);
 
   const [curMintValue, setCurMintValue] = useState("");
   const [curMintTic, setCurMintTic] = useState("");
@@ -54,6 +59,16 @@ const Header: FC = () => {
     localStorage.setItem("isFetchingCreate", "false");
   }, []);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setDisconnectToggle(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClick);
+    return () => window.removeEventListener("mousedown", handleClick);
+  }, [modalRef]);
   // MARK: - Detect chain change
   // TODO: Make this work.....
   // useEffect(() => {
@@ -251,7 +266,13 @@ const Header: FC = () => {
   //     window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
   //   }
   // };
-
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
   const handleUrlClick = (url: string) => {
     if (url) {
       window.open(url);
@@ -260,7 +281,7 @@ const Header: FC = () => {
 
   const WrongChainPopUpModal: FC = () => {
     return (
-      <div className="fixed z-[10000] h-screen w-screen bg-black bg-opacity-70">
+      <div className="fixed z-10 h-screen w-screen bg-black bg-opacity-70">
         <div className="absolute left-1/2 top-1/2 flex h-[206px] w-[535px] -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white">
           <div className="]">
             <h1 className="mb-[20px] text-2xl">Oops..wrong network 😞</h1>
@@ -289,13 +310,13 @@ const Header: FC = () => {
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
               <h1>
-                Memesino prevents rugs by making sure that all created tokens
+                Memeslot prevents rugs by making sure that all created tokens
                 are safe. Each coin on Memesino is a fair-launch with no presale
                 and no team allocation.
               </h1>
             </div>
 
-            <div className=" mb-[34px] h-[247px] gap-[20px]">
+            <div className="h-[335px] gap-[20px]">
               <h1 className="mb-[20px]">step 1 : pick a coin that you like</h1>
               <h1 className="mb-[20px]">
                 step 2 : buy the coin on the bonding curve
@@ -311,6 +332,10 @@ const Header: FC = () => {
               <h1 className="mb-[20px]">
                 step 5 : ${Math.floor((9000 * curReserveMarketPrice) / 1000)}k
                 of liquidity is then deposited in dragonswap and burned
+              </h1>
+              <h1 className="">
+                step 6 : Please make sure to include your telegram address so
+                that you can receive the raffle prize.
               </h1>
             </div>
 
@@ -343,8 +368,8 @@ const Header: FC = () => {
           </div>
         )} */}
 
-        <div className="flex h-full w-full items-center justify-between px-[30px]">
-          <div className="flex h-[40px] w-full items-center justify-between px-2 text-white">
+        <div className="flex h-full w-full items-center justify-between px-7">
+          <div className="flex h-[40px] w-full items-center justify-between px-1 text-white">
             <div className="flex h-full w-[300px] items-center justify-evenly gap-[30px]">
               <Link
                 href="/"
@@ -447,38 +472,53 @@ const Header: FC = () => {
                 </CreateAnimateWrapper>
               )}
             </div>
-            <div className="relative flex w-[300px] flex-row-reverse items-center">
+            <div
+              className="relative flex w-[300px] select-none flex-row-reverse items-center"
+              ref={modalRef}
+            >
               {address ? (
-                <button
-                  onClick={() => setAccountButtonModal(!accountButtonModal)}
-                  className="flex h-[40px] w-[180px]
-                  cursor-pointer
-                  items-center justify-center gap-[9px] rounded-[10px] border text-[12px] font-normal text-white"
-                >
-                  <Image
-                    src="/images/memesinoGhost.png"
-                    alt=""
-                    height={18}
-                    width={18}
-                  />
-                  {address?.substring(0, 7)}
-                  <Image
-                    src="/icons/dwnArrow.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    style={{ width: 18, height: 18 }}
-                  />
-                </button>
+                <div className="flex h-10 w-52 items-center justify-between rounded-lg border bg-[#252525] px-5 text-sm font-bold text-white">
+                  <div
+                    onClick={() => copyToClipboard(address)}
+                    className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] `}
+                  >
+                    <Image
+                      src="/images/memesinoGhost.png"
+                      alt=""
+                      height={16}
+                      width={18}
+                      className="h-[16px] w-[18px]"
+                    />
+                    <div
+                      className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-[#686868] text-[15px] text-white hover:text-[#9b9b9b]`}
+                      onClick={openAccountModal}
+                    >
+                      {disconnectToggle && "Disconnect"}
+                      <Power className={`ml-1 stroke-white`} />
+                    </div>
+                    {disconnectToggle || address?.substring(0, 6) + "..."}
+                    {disconnectToggle || <Copy />}
+                  </div>
+                  <div className="flex gap-2">
+                    <Power
+                      className={`cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
+                      onClick={() => setDisconnectToggle(true)}
+                    />
+                    <DownArrow
+                      onClick={() => setAccountButtonModal(!accountButtonModal)}
+                      className={`transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
+                    />
+                  </div>
+                </div>
               ) : (
                 <button
                   onClick={openConnectModal}
-                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border text-[12px] text-white"
+                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border bg-[#252525] text-[12px] text-white"
                 >
                   Connect Wallet
                 </button>
               )}
-              {accountButtonModal && (
+              {/* {accountButtonModal && (
                 <>
                   <div className="absolute right-[8px] top-[55px] h-[94px] w-[165px] rounded-[10px] border border-white bg-[#0E0E0E] px-[13px] py-[15px] text-center">
                     <div
@@ -495,7 +535,7 @@ const Header: FC = () => {
                     </div>
                   </div>
                 </>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -513,8 +553,15 @@ const Header: FC = () => {
               ))}
             </div>
           </div>
-        )} */}
+          )} */}
       </header>
+      {accountButtonModal && (
+        <MypageModal
+          {...{
+            setModal: setAccountButtonModal,
+          }}
+        />
+      )}
     </>
   );
 };

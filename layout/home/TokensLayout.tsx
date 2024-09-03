@@ -95,6 +95,7 @@ export const TokensLayout = () => {
                     ? setInfo(initialTokenInfo)
                     : setInfo({ ...card });
                 }}
+                className="w-[420px]"
               >
                 <HomeTokenCard {...card} clickedToken={info.tokenAddress} />
               </div>

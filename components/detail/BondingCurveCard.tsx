@@ -3,11 +3,16 @@ import { digital } from "@/fonts/font";
 
 interface BondingCurveCardTypes {
   prog: number;
-  desc: string;
+  desc?: string;
+  bgColor?: string;
 }
-const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
+const BondingCurveCard: FC<BondingCurveCardTypes> = ({
+  prog,
+  desc,
+  bgColor = "white",
+}) => {
   return (
-    <div className="bg-card flex w-[450px] flex-col rounded-[20px] rounded-tr-[100px] py-[13px] pl-[10px] pr-[66px]">
+    <div className="flex w-full flex-col rounded-[20px]">
       <div className="flex h-[21px] items-end gap-2">
         <div className="text-[13px] leading-[15px] text-[#FAFF00]">
           Bonding Curve Progress:{" "}
@@ -18,15 +23,17 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({ prog, desc }) => {
           {prog} %
         </div>
       </div>
-      <div className="mt-[5px] h-[6px] w-full rounded-full bg-white">
+      <div className={`mt-2 h-[6px] w-full rounded-full bg-${bgColor}`}>
         <div
           className="h-full rounded-full bg-primary"
           style={{ width: `${prog}%` }}
         />
       </div>
-      <p className="mt-[21px] h-[85px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
-        {desc}
-      </p>
+      {desc && (
+        <p className="mt-[21px] h-[85px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
+          {desc}
+        </p>
+      )}
     </div>
   );
 };

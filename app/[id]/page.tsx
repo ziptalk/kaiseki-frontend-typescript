@@ -560,12 +560,14 @@ export default function Detail() {
           {/* token card */}
           <TokenCard {...tokenInfo} />
           {/* progress bar + desc */}
-          <BondingCurveCard
-            prog={Math.floor(bondingCurveProgress)}
-            desc={
-              "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
-            }
-          />
+          <div className="w-[450px] rounded-tr-[100px] bg-card  py-[13px] pl-[10px] pr-[66px]">
+            <BondingCurveCard
+              prog={Math.floor(bondingCurveProgress)}
+              desc={
+                "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
+              }
+            />
+          </div>
         </div>
         <div className="mt-[30px] flex h-[50px] w-full bg-card">
           <Slider
@@ -640,7 +642,7 @@ export default function Detail() {
           />
         </div>
         <HolderDistributionLayout
-          {...{ distribution, creator: tokenInfo.createdBy }}
+          {...{ distribution, creator: tokenInfo.createdBy || "" }}
         />
       </div>
     </main>

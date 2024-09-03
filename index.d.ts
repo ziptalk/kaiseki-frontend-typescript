@@ -29,7 +29,7 @@ interface Event {
 interface TokenCardTypes {
   name: string;
   ticker: string;
-  createdBy: string;
+  createdBy?: string;
   marketCap: string;
   description: string;
   tokenAddress: string;
@@ -48,7 +48,7 @@ interface TradesCardType {
 
 interface TokenInfo {
   cid: string;
-  createdBy: string;
+  createdBy?: string;
   description: string;
   marketCap: string;
   name: string;

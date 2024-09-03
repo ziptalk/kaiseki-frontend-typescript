@@ -9,8 +9,8 @@ export const ModalRootWrapper = styled.div`
 
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.7);
-
-  z-index: 1000;
+  height: 100vh;
+  z-index: 20;
 `;
 
 export const ModalContentBox = styled.div`
