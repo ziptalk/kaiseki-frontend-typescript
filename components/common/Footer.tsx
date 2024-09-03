@@ -8,7 +8,7 @@ import Github from "@/public/icons/github_logo.svg";
 
 export const Footer = () => {
   return (
-    <div className="mt-[214px] flex h-[134px] items-center justify-between px-[280px]">
+    <div className="mt-[214px] flex h-[134px] items-center justify-between px-40">
       <div className="whitespace-pre text-[14px] text-[#F2D1E4]">
         memeslot | contract@memeslot.io{"\n"}memeslot Labs Inc.All rights
         reserved

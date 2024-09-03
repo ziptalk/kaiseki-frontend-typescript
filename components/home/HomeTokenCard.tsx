@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
+import { setCurStepsIntoState } from "@/utils/getCurve";
 
 export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
@@ -12,6 +13,18 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   clickedToken,
   cid,
 }) => {
+  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+
+  const fetchBondingCurveProgress = async () => {
+    setBondingCurveProgress(
+      (await setCurStepsIntoState({ tokenAddress })) || 0,
+    );
+  };
+
+  useEffect(() => {
+    fetchBondingCurveProgress();
+  }, [tokenAddress]);
+
   return (
     <div
       // href={tokenAddress ? tokenAddress : ""}
@@ -44,13 +57,15 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         >
           {marketCap}K
         </h1>
-        <div className="text-[12px] text-[#CFCFCF]">(13%)</div>
+        <div className="text-[12px] text-[#CFCFCF]">
+          ({bondingCurveProgress}%)
+        </div>
       </div>
       <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
         <div
           className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
           // style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
-          style={{ width: `${Math.floor(13)}%` }}
+          style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
         ></div>
       </div>
     </div>

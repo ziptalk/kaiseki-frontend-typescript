@@ -14,7 +14,7 @@ export const TradesLayout = ({
 }: TradesLayoutProps) => {
   const transformToTradesCardType = (event: any): TradesCardType => {
     return {
-      user: event.user.substring(0, 6),
+      user: event.user,
       isBuy: event.isMint,
       reserveAmount: event.reserveAmount
         ? (

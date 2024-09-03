@@ -6,7 +6,7 @@ export const TokenDesc = ({
   description,
 }: TokenInfo) => {
   return (
-    <div className="w-full overflow-scroll">
+    <div className="w-60">
       <h1 className="text-[15px] font-bold leading-none text-white">{name}</h1>
       <h1 className="text-[15px] font-bold leading-none text-white">
         [ticker: {ticker}]
@@ -31,9 +31,9 @@ export const TokenDesc = ({
           </>
         </div>
       )}
-      <div className="mt-1 overflow-scroll text-[13px] text-[#808080]">
+      <p className="mt-1 h-16 w-full overflow-scroll break-words text-[13px] text-[#808080]">
         {description}
-      </div>
+      </p>
     </div>
   );
 };

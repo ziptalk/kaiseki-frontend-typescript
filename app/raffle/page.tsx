@@ -33,7 +33,7 @@ export default function Raffle() {
     if (buttonClicked) {
       setTimeout(() => {
         setButtonClicked(false);
-      }, 3000);
+      }, 1000);
     }
   }, [buttonClicked]);
 
@@ -81,7 +81,7 @@ export default function Raffle() {
         <div className="main-inner h-[584px] w-[510px]">
           <MainTitle title="Join the Raffle!" />
           <div className="main-tokenarea h-[434px] w-[400px] flex-col">
-            <div className="flex h-[161px] gap-[10px] overflow-scroll">
+            <div className="flex h-[161px] gap-[10px]">
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
                 alt="Image from IPFS"
@@ -120,12 +120,12 @@ export default function Raffle() {
                     {kingMarketCap}K
                   </h1>
                 </div>
-                <div className="mt-[5px] text-[13px] text-[#808080] ">
+                <p className="show-scrollbar mt-[5px] h-16 overflow-scroll text-[13px] text-[#808080]">
                   {kingDesc}
-                </div>
+                </p>
               </div>
             </div>
-            <div className="mt-[10px]">
+            <div>
               <h1 className="text-[20px] font-bold text-[#D9D9D9] underline underline-offset-4">
                 Amount of Tokens
               </h1>

@@ -311,7 +311,6 @@ export const BuySellLayout = ({
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
     if (account.address == null) {
-      alert("Connect your wallet first!");
       setTradeModuleErrorMsg("Connect your wallet first!");
       return;
     }
@@ -386,7 +385,6 @@ export const BuySellLayout = ({
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
     if (account.address == null) {
-      alert("Connect your wallet first!");
       return;
     }
     if (isPending) return;
