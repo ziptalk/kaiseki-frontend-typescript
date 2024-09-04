@@ -102,10 +102,12 @@ export const BuySellLayout = ({
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchTokenDetailFromContract();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenAddress]);
 
   // listen event later
@@ -121,6 +123,7 @@ export const BuySellLayout = ({
         setUserReserveBalanceIntoState();
       }
     } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, tokenAddress]);
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {

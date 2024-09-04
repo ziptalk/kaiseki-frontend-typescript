@@ -37,7 +37,6 @@ export const Tradesection = ({
   raffle,
 }: TradesectionProps) => {
   const { isConnected } = useAccount();
-  console.log(isConnected);
   const { openConnectModal } = useConnectModal();
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75, 100];
