@@ -30,9 +30,9 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({
         />
       </div>
       {desc && (
-        <p className="mt-[21px] h-[85px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
+        <div className="mt-[21px] h-[90px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
           {desc}
-        </p>
+        </div>
       )}
     </div>
   );

@@ -25,8 +25,13 @@ const TradesCard: FC<TradesCardType> = ({
             alt=""
             style={{ width: 18, height: 18 }}
           />
-          <h1 className="text-[#9AFFC2]">
-            {user.length > 14 ? user.substring(0, 12) + "..." : user}
+          <h1
+            className="cursor-pointer text-[#9AFFC2] hover:underline"
+            onClick={() => {
+              window.open(`https://etherscan.io/address/${user}`);
+            }}
+          >
+            {user.length > 8 ? user.substring(0, 6) + "..." : user}
           </h1>
         </div>
         <h1
@@ -39,7 +44,14 @@ const TradesCard: FC<TradesCardType> = ({
             {item}
           </h1>
         ))}
-        <h1 className="w-[14%] overflow-scroll text-nowrap text-right">{tx}</h1>
+        <h1
+          className="w-[14%] cursor-pointer overflow-scroll text-nowrap text-right hover:underline"
+          onClick={() => {
+            window.open(`https://etherscan.io/tx/${tx}`);
+          }}
+        >
+          {tx.slice(0, 6) + "..." + tx.slice(-4)}
+        </h1>
       </div>
     </>
   );

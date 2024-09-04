@@ -35,7 +35,19 @@
 ::-webkit-scrollbar {
   display: none;
 }
+p::-webkit-scrollbar {
+  width: 5px;
+  height: 0px;
+  display: block;
+}
+p::-webkit-scrollbar-corner {
+  display: none;
+}
 
+::-webkit-scrollbar-thumb {
+  background: #8f8f8f;
+  border-radius: 5px 5px 5px 5px;
+}
 .neon-lime {
   color: #c5f900;
   text-shadow: 0 0 7px #c5f900;

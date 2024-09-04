@@ -102,10 +102,12 @@ export const BuySellLayout = ({
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     fetchTokenDetailFromContract();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenAddress]);
 
   // listen event later
@@ -121,6 +123,7 @@ export const BuySellLayout = ({
         setUserReserveBalanceIntoState();
       }
     } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, tokenAddress]);
 
   const updateMarketCapToServer = async (tokenAddress: any, marketCap: any) => {
@@ -311,7 +314,6 @@ export const BuySellLayout = ({
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
     if (account.address == null) {
-      alert("Connect your wallet first!");
       setTradeModuleErrorMsg("Connect your wallet first!");
       return;
     }
@@ -386,7 +388,6 @@ export const BuySellLayout = ({
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
     if (account.address == null) {
-      alert("Connect your wallet first!");
       return;
     }
     if (isPending) return;

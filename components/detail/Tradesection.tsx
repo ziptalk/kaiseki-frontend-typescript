@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ethers } from "ethers";
+import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 interface TradesectionProps {
   isBuy: boolean;
@@ -35,6 +36,8 @@ export const Tradesection = ({
   RESERVE_SYMBOL,
   raffle,
 }: TradesectionProps) => {
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75, 100];
     return (
@@ -89,7 +92,7 @@ export const Tradesection = ({
       {isBuy ? (
         <div
           onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-          className={`mt-[11px] flex cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-2 text-[12px] text-[#AEAEAE]`}
+          className={`mt-[11px] flex w-28 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
         >
           Switch to {memeTokenSymbol}
         </div>
@@ -184,7 +187,9 @@ export const Tradesection = ({
           </Link>
         </div>
       )}
-      <Button onClick={isBuy ? buy : sell}>Connect Wallet</Button>
+      <Button onClick={isConnected ? (isBuy ? buy : sell) : openConnectModal}>
+        {isConnected ? (isBuy ? "Buy" : "Sell") : "Connect Wallet"}
+      </Button>
     </form>
   );
 };
