@@ -62,45 +62,39 @@ export const RWATokenCard: FC = () => {
       });
   };
   return (
-    <div className="main-tokenarea mt-[10px] h-[120px] w-[390px]">
+    <div className="main-tokenarea mt-[10px] w-full md:h-[120px]">
       <img
         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
         alt="Image from IPFS"
-        className="h-[100px] w-[100px] border-black"
+        className="h-[66px] w-[66px] border-black md:h-[100px] md:w-[100px]"
       />
       <div className="flex w-full flex-col">
-        <h1 className="h-[17px] text-[15px] font-bold text-white">
+        <div className=" whitespace-pre break-words text-xs font-bold text-white md:text-base">
           {kingName}
-        </h1>
-        <h2 className="mt-[4px] h-[17px] text-[15px] font-bold text-white">
-          [ticker: {kingTicker}]
-        </h2>
-        <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
-          <h1 className="neon-lime text-[12px] text-[#C5F900]">created by: </h1>
+          {"\n"}
+          {`[ticker: ${kingTicker}]`}
+        </div>
+        <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
+          <div className="neon-lime text-[#C5F900]">created by: </div>
           <img
-            className="rounded-full"
+            className="h-2 w-2 rounded-full md:h-3 md:w-3"
             src="/images/memesinoGhost.png"
             alt=""
-            style={{ width: 12, height: 12 }}
           />
-          <h1 className="neon-lime text-[12px] text-[#C5F900]">
-            {kingCreator.length < 20
+          <div className="neon-lime text-[#C5F900]">
+            {kingCreator.length < 10
               ? kingCreator
-              : `${kingCreator.slice(0, 20)}...`}
-          </h1>
+              : `${kingCreator.slice(0, 7)}...`}
+          </div>
         </div>
-        <div className="flex h-[14px]  gap-[5px]">
-          <h1 className="text-xs text-[#FAFF00]">prize :</h1>
-          <h1
-            className={`${digital.variable} font-digital text-xs text-[#FAFF00]`}
-          >
-            {kingTicker}
-          </h1>
-        </div>
-        <div className={`raffle-typo ${anton.variable} font-anton`}>
+        <div className="text-xs text-[#FAFF00]">prize : {kingTicker}</div>
+        <div
+          className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
+        >
           {day} Day {hour.toString().padStart(2, "0")}:
-          {minute.toString().padStart(2, "0")}:
-          {second.toString().padStart(2, "0")} left!
+          {minute.toString().padStart(2, "0")}{" "}
+          {/* :{second.toString().padStart(2, "0")} */}
+          left!
         </div>
       </div>
     </div>
