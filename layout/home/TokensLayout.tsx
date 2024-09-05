@@ -22,6 +22,7 @@ export const TokensLayout = () => {
   const [pageNum, setPageNumber] = useState<number>(1);
   const [value, setValue] = useState<string>("");
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   const setPageNum = (num: number) => {
     setPageNumber(num);
@@ -140,16 +141,19 @@ export const TokensLayout = () => {
           />
         </div>
       </div>
-      {info.tokenAddress && (
-        // <BottomSheet
-        //   {...{
-        //     setAccessToken: setInfotoInitial,
-        //     accessToken: info.tokenAddress,
-        //   }}
-        // >
-        <BuySellLayout {...info} setInfo={setInfotoInitial} />
-        // </BottomSheet>
-      )}
+      {info.tokenAddress &&
+        (isMobile ? (
+          <BottomSheet
+            {...{
+              setUnVisible: setInfotoInitial,
+              visible: info.tokenAddress !== "",
+            }}
+          >
+            <BuySellLayout {...info} setInfo={setInfotoInitial} />
+          </BottomSheet>
+        ) : (
+          <BuySellLayout {...info} />
+        ))}
     </div>
   );
 };

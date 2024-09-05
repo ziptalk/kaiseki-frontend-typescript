@@ -17,7 +17,7 @@ export const CreateCard = ({
   description,
 }: CreateCardProps) => {
   return (
-    <div className="main-tokenarea w-[420px]">
+    <div className="main-tokenarea md:w-[420px]">
       {cid !== "" ? (
         <img
           src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -25,9 +25,12 @@ export const CreateCard = ({
           className="h-[120px] w-[120px]"
         />
       ) : (
-        <div className="h-[120px] w-[120px] bg-[#D9D9D9]" />
+        <img
+          src={`http://via.placeholder.com/120x120`}
+          className="h-[120px] w-[120px] bg-[#D9D9D9]"
+        />
       )}
-      <div className="flex w-[250px] flex-col gap-1 overflow-hidden">
+      <div className="flex min-w-40 flex-col gap-1 overflow-hidden">
         <h1 className="whitespace-pre-line text-base font-bold leading-none text-[#AEAEAE]">
           {name || "Name"}
           {"\n"}
@@ -58,7 +61,8 @@ export const CreateCard = ({
         </div>
 
         <div className=" w-full break-words text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-          {description || "Description"}
+          {description ||
+            "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription"}
         </div>
       </div>
     </div>

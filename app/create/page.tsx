@@ -14,6 +14,7 @@ import { stepPrices, stepRanges } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import Preview from "@/public/icons/Preview.svg";
+import Arrow from "@/public/icons/pagePre.svg";
 
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
 import { Inputform } from "@/components/common/Inputform";
@@ -288,10 +289,19 @@ const Create: NextPage = () => {
   };
 
   return (
-    <div className="flex w-screen flex-col items-center gap-6 bg-[#0E0E0E]">
-      <PageLinkButton href="/" prev className="w-1/2">
-        Back Home
-      </PageLinkButton>
+    <div className="relative flex w-screen flex-col items-center gap-6 bg-[#0E0E0E] p-5">
+      <div className="mx-auto mt-3 hidden w-full md:block md:w-[1151px]">
+        <PageLinkButton href={"/"} prev>
+          Back Home
+        </PageLinkButton>
+      </div>
+      <Arrow
+        fill="#AEAEAE"
+        className="absolute left-7 top-9 md:hidden"
+        width={30}
+        height={30}
+        onClick={() => router.push("/")}
+      />
       <Preview />
       <CreateCard
         {...{
@@ -304,7 +314,7 @@ const Create: NextPage = () => {
       />
       <form
         onSubmit={handleSubmit(createToken, onInvalid)}
-        className="flex flex-col gap-6"
+        className="flex w-full flex-col gap-3 md:gap-6"
       >
         <Inputform
           {...{

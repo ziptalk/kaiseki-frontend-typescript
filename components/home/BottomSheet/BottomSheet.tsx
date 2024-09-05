@@ -11,8 +11,10 @@ const Wrapper = styled(motion.div)`
 
   position: fixed;
   top: 57px;
-  width: 100%;
-  z-index: 101;
+  left: 0;
+  right: 0;
+  /* width: 100%; */
+  z-index: 100;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   height: ${BOTTOM_SHEET_HEIGHT}px;
@@ -26,29 +28,30 @@ const BottomSheetContent = styled.div`
 `;
 
 interface BottomSheetProps {
-  accessToken: string;
-  setAccessToken: () => void;
+  visible: boolean;
+  setUnVisible: () => void;
 }
 
 function BottomSheet({
   children,
-  accessToken,
-  setAccessToken,
+  visible,
+  setUnVisible,
 }: PropsWithChildren<BottomSheetProps>) {
-  const { sheet, content } = useBottomSheet({ setToken: setAccessToken });
+  const { sheet, content } = useBottomSheet({ setUnVisible });
 
   return (
-    <div
-      className="fixed left-0 top-0 z-[100] h-[100vh] w-[100vw] bg-[#00000050]"
-      onClick={setAccessToken}
-    >
-      {accessToken && (
-        <Wrapper ref={sheet} onClick={(e) => e.stopPropagation()}>
+    <>
+      <div
+        className="fixed left-0 top-0 z-[100] h-[100vh] w-[100vw] bg-[#00000050]"
+        onClick={setUnVisible}
+      />
+      {visible && (
+        <Wrapper ref={sheet}>
           {/* <Header /> */}
           <BottomSheetContent ref={content}>{children}</BottomSheetContent>
         </Wrapper>
       )}
-    </div>
+    </>
   );
 }
 

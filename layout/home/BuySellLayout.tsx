@@ -37,8 +37,15 @@ export const BuySellLayout = ({
 }: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
-  const isMobile = window !== undefined && window.innerWidth < 768;
+  const isMobile = typeof window !== undefined && window.innerWidth < 768;
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // MARK: - init ethers.js
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -564,26 +571,24 @@ export const BuySellLayout = ({
           View details
         </PageLinkButton>
         <XButton className="ml-auto md:hidden" onClick={setInfo} />
-        <div className="relative flex flex-col gap-[20px] bg-[#252525] pt-[10px] md:mt-[13px] md:h-[950px] md:w-[420px] md:p-[20px]">
-          <div className="flex gap-[20px]">
+        <div className="relative flex flex-col gap-3 bg-[#252525] pt-[10px] md:mt-[13px] md:h-[950px] md:w-[420px] md:gap-[20px] md:p-[20px]">
+          <div className="flex gap-3 md:gap-[20px]">
             <img
               src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
               alt="Image from IPFS"
-              className="flex-1 border-black"
+              className="h-[120px] w-[120px] border-black"
             />
-            <div className="flex-2">
-              <TokenDesc
-                {...{
-                  cid,
-                  createdBy,
-                  description,
-                  marketCap,
-                  name,
-                  ticker,
-                  tokenAddress,
-                }}
-              />
-            </div>
+            <TokenDesc
+              {...{
+                cid,
+                createdBy,
+                description,
+                marketCap,
+                name,
+                ticker,
+                tokenAddress,
+              }}
+            />
           </div>
           <div className="flex h-[50px] w-full bg-card">
             <Slider
@@ -622,8 +627,8 @@ export const BuySellLayout = ({
               ]}
             />
           </div>
-          <div className="hidden h-[250px] w-full bg-[#151527] p-[13px] md:block">
-            <div className="h-[210px] w-full">
+          <div className="hidden h-[270px] w-full bg-[#151527] p-[13px] md:block">
+            <div className="w-full">
               <div className="flex items-center gap-[7.15px]">
                 <img
                   src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -637,6 +642,19 @@ export const BuySellLayout = ({
               <TradingViewChart tokenAddress={tokenAddress} />
             </div>
           </div>
+          {isMobile && (
+            <div className="flex items-center justify-between gap-2 bg-[#1c1c1c] p-1">
+              <div className=" overflow-hidden overflow-ellipsis whitespace-nowrap text-xs text-[#aeaeae]">
+                Contract Address: {tokenAddress}
+              </div>
+              <button
+                onClick={() => copyToClipboard(tokenAddress)}
+                className="rounded-md border border-[#8f8f8f] bg-[#0e0e0e] px-2 py-1 text-xs font-bold text-white"
+              >
+                Copy
+              </button>
+            </div>
+          )}
           <Tradesection
             {...{
               isBuy,

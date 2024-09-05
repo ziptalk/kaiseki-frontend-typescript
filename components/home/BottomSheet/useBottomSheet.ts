@@ -13,7 +13,11 @@ interface BottomSheetMetrics {
   isContentAreaTouched: boolean;
 }
 
-export default function useBottomSheet({ setToken }: { setToken: () => void }) {
+export default function useBottomSheet({
+  setUnVisible,
+}: {
+  setUnVisible: () => void;
+}) {
   const sheet = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
 
@@ -105,7 +109,7 @@ export default function useBottomSheet({ setToken }: { setToken: () => void }) {
 
       if (currentSheetY > 250) {
         if (touchMove.movingDirection === "down") {
-          setToken();
+          setUnVisible();
         }
       } else {
         sheet.current!.style.setProperty("transform", "translateY(0)");

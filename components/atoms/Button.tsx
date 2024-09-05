@@ -18,7 +18,7 @@ export const Button = ({
   return (
     <button
       className={twMerge([
-        "flex h-[60px] w-full items-center justify-center rounded-[10px] text-[16px] font-bold text-white",
+        "flex h-9 w-full items-center justify-center rounded-[6px] text-sm font-bold text-white md:h-[60px] md:rounded-[10px] md:text-[16px]",
         variant === "gradiant"
           ? "button-shadow button-bg-primary"
           : "bg-[#950000]",
