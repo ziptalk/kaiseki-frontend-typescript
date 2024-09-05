@@ -530,7 +530,10 @@ const Header: FC = () => {
                   >
                     Connect Wallet
                   </button>
-                  <Wallet className="cursor-pointer md:hidden" />
+                  <Wallet
+                    className="cursor-pointer md:hidden"
+                    onClick={openConnectModal}
+                  />
                 </>
               )}
               {/* {accountButtonModal && (
