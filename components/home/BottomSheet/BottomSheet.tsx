@@ -3,8 +3,6 @@ import { BOTTOM_SHEET_HEIGHT } from "./BottomSheetOption";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import useBottomSheet from "./useBottomSheet";
-import Header from "./Header";
-
 const Wrapper = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -17,7 +15,7 @@ const Wrapper = styled(motion.div)`
   z-index: 100;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  height: ${BOTTOM_SHEET_HEIGHT}px;
+  height: ${BOTTOM_SHEET_HEIGHT * 1.5}px;
   background: #252525;
   transition: transform 200ms ease-out; /*바텀시트 애니메이션 속도*/
 `;
