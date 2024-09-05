@@ -46,7 +46,9 @@ export const SlotLayout = () => {
       >
         <h1 className="create-title">create new coin</h1>
         <div className="flex h-36 w-20 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
-          <Stick className={`fill-${isHovered ? "yellow-500" : "[#FF2626]"}`} />
+          <Stick
+            className={`${isHovered ? "fill-[#ffea00]" : "fill-[#FF2626]"}`}
+          />
         </div>
       </div>
       <div

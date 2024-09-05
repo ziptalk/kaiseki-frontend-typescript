@@ -13,6 +13,7 @@ import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { MAX_INT_256, BILLION } from "@/global/constants";
 import contracts from "@/global/contracts";
+import XButton from "@/public/icons/XButton.svg";
 
 import TradingViewChart from "@/components/common/TradingViewWidget";
 import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
@@ -32,9 +33,11 @@ export const BuySellLayout = ({
   name,
   ticker,
   tokenAddress,
+  setInfo,
 }: TokenInfo) => {
   const signer = useEthersSigner();
   const account = useAccount();
+  const isMobile = window !== undefined && window.innerWidth < 768;
 
   // MARK: - init ethers.js
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
@@ -552,29 +555,35 @@ export const BuySellLayout = ({
   // };
 
   return (
-    <div className="ml-[20px]">
-      <div className="sticky top-[80px] pb-[60px]">
-        <PageLinkButton href={tokenAddress} className="mt-[112px]">
+    <div className="md:ml-[20px]">
+      <div className="top-[80px] p-5 md:sticky md:p-0 md:pb-[60px]">
+        <PageLinkButton
+          href={tokenAddress}
+          className="mt-[112px] hidden md:flex"
+        >
           View details
         </PageLinkButton>
-        <div className="relative mt-[13px] flex h-[950px] w-[420px] flex-col gap-[20px] bg-[#252525] p-[20px] pt-[10px]">
+        <XButton className="ml-auto md:hidden" onClick={setInfo} />
+        <div className="relative flex flex-col gap-[20px] bg-[#252525] pt-[10px] md:mt-[13px] md:h-[950px] md:w-[420px] md:p-[20px]">
           <div className="flex gap-[20px]">
             <img
               src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
               alt="Image from IPFS"
-              className="h-[120px] w-[120px] border-black "
+              className="flex-1 border-black"
             />
-            <TokenDesc
-              {...{
-                cid,
-                createdBy,
-                description,
-                marketCap,
-                name,
-                ticker,
-                tokenAddress,
-              }}
-            />
+            <div className="flex-2">
+              <TokenDesc
+                {...{
+                  cid,
+                  createdBy,
+                  description,
+                  marketCap,
+                  name,
+                  ticker,
+                  tokenAddress,
+                }}
+              />
+            </div>
           </div>
           <div className="flex h-[50px] w-full bg-card">
             <Slider
@@ -613,7 +622,7 @@ export const BuySellLayout = ({
               ]}
             />
           </div>
-          <div className="h-[250px] w-full bg-[#151527] p-[13px]">
+          <div className="hidden h-[250px] w-full bg-[#151527] p-[13px] md:block">
             <div className="h-[210px] w-full">
               <div className="flex items-center gap-[7.15px]">
                 <img
@@ -645,8 +654,10 @@ export const BuySellLayout = ({
             }}
           />
           {/* <SellPercentageButton /> */}
-          <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
-          <div className="absolute bottom-3 right-5 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black">
+          {isMobile || (
+            <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+          )}
+          <div className="absolute bottom-3 right-5 hidden h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black md:flex">
             ?
           </div>
         </div>

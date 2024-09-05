@@ -54,6 +54,7 @@ interface TokenInfo {
   name: string;
   ticker: string;
   tokenAddress: string;
+  setInfo?: () => void;
 }
 
 interface FilteredData {

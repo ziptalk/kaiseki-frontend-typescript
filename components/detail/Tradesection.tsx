@@ -69,13 +69,13 @@ export const Tradesection = ({
     return (
       <div className="flex h-[50px] justify-between gap-[5px]">
         <Button
-          className={`h-full w-[210px] ${!isBuy && "bg-[#454545]"}`}
+          className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
           onClick={() => setIsBuy(true)}
         >
           Buy
         </Button>
         <Button
-          className={`h-full w-[210px] ${isBuy && "bg-[#454545]"}`}
+          className={`h-full flex-1 ${isBuy && "bg-[#454545]"}`}
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
@@ -187,9 +187,11 @@ export const Tradesection = ({
           </Link>
         </div>
       )}
-      <Button onClick={isConnected ? (isBuy ? buy : sell) : openConnectModal}>
-        {isConnected ? (isBuy ? "Buy" : "Sell") : "Connect Wallet"}
-      </Button>
+      {isConnected ? (
+        <Button submit>Place Trade</Button>
+      ) : (
+        <Button onClick={openConnectModal}>Connect Wallet</Button>
+      )}
     </form>
   );
 };
