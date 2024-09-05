@@ -71,67 +71,62 @@ export default function Raffle() {
       });
   };
   return (
-    <div className="mb-[154px]">
-      <div className="mx-auto mt-3 w-[1151px]">
+    <div className="p-2">
+      <div className="mx-auto mt-3 w-full md:w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home
         </PageLinkButton>
       </div>
-      <div className={"main mt-[10px] h-[644px] w-[1151px]"}>
-        <div className="main-inner h-[584px] w-[510px]">
+      <div className={"main mt-[10px] p-5 md:w-[1151px] md:px-80"}>
+        <div className="main-inner px-9 py-5 md:px-16 md:py-8">
           <MainTitle title="Join the Raffle!" />
-          <div className="main-tokenarea h-[434px] w-[400px] flex-col">
-            <div className="flex h-[161px] gap-[10px]">
+          <div className="main-tokenarea mt-4 flex-col">
+            <div className="flex gap-[10px] text-xs">
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
                 alt="Image from IPFS"
-                className="h-[100px] w-[100px] border-black"
+                className="h-16 w-16 border-black md:h-[100px] md:w-[100px]"
               />
-              <div className="flex w-full flex-col px-[10px]">
-                <h1 className="h-[17px] text-[15px] font-bold text-[#AEAEAE]">
+              <div className="flex w-full flex-col md:px-[10px]">
+                <div className="whitespace-pre font-bold text-white md:text-[15px]">
                   {kingName}
-                </h1>
-                <h2 className="h-[17px] text-[15px] font-bold text-[#AEAEAE]">
+                  {"\n"}
                   [ticker: {kingTicker}]
-                </h2>
+                </div>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
-                  <h1 className="neon-lime text-[12px] text-[#C5F900]">
-                    created by:{" "}
-                  </h1>
+                  <h1 className="neon-lime  text-[#C5F900]">created by: </h1>
                   <img
                     className="rounded-full"
                     src="/images/memesinoGhost.png"
                     alt=""
                     style={{ width: 12, height: 12 }}
                   />
-                  <h1 className="neon-lime mt-[5px] text-[12px] text-[#C5F900]">
+                  <div className="neon-lime text-[#C5F900]">
                     {kingCreator.length < 20
                       ? kingCreator
                       : `${kingCreator.slice(0, 20)}...`}
-                  </h1>
+                  </div>
                 </div>
                 <div className="mt-[3px] flex h-[14px] gap-[5px]">
-                  <h1 className="neon-yellow text-xs text-[#FAFF00]">
-                    market cap :
-                  </h1>
+                  <h1 className="neon-yellow text-[#FAFF00]">market cap :</h1>
                   <h1
-                    className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+                    className={`neon-yellow ${digital.variable} font-digital text-[#FAFF00]`}
                   >
                     {kingMarketCap}K
                   </h1>
                 </div>
-                <p className="show-scrollbar mt-[5px] h-16 overflow-scroll text-[13px] text-[#808080]">
+                <p className="show-scrollbar mt-[5px] h-8 overflow-scroll text-[10px] text-[#808080] md:h-16 md:text-[13px]">
                   {kingDesc}
                 </p>
               </div>
             </div>
             <div>
-              <h1 className="text-[20px] font-bold text-[#D9D9D9] underline underline-offset-4">
+              <h1 className="text-xs font-bold text-[#D9D9D9] underline underline-offset-4 md:mt-3 md:text-[20px]">
                 Amount of Tokens
               </h1>
-              <div className="relative mt-[20px] flex w-full items-center">
+              <div className="relative mt-3 flex w-full items-center md:mt-[20px]">
                 <input
-                  className="h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-white"
+                  className="h-10 w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] px-2 text-xs text-white md:h-[55px] md:px-[20px] md:text-base"
                   type="number"
                   // placeholder="0.00"
                   step="0.01"
@@ -142,16 +137,16 @@ export default function Raffle() {
                 <button
                   type="button"
                   onClick={() => setInputValue(200)}
-                  className="absolute right-0 mr-[20px] flex h-[30px] w-[52px] items-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[10px] text-[14px] text-white"
+                  className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
                 >
                   MAX
                 </button>
               </div>
-              <div className="mt-[10px] flex justify-between">
+              <div className="mt-[10px] flex justify-between gap-2">
                 {buttonValue.map((item, index) => (
                   <Button
                     key={index}
-                    className="h-[50px] w-[117px] rounded-[5px] bg-[#303030] text-[14px]"
+                    className="h-8 flex-1 rounded-[5px] bg-[#303030] text-xs md:h-[50px] md:text-[14px]"
                     onClick={item.onClick}
                   >
                     {item.value}%
@@ -160,14 +155,14 @@ export default function Raffle() {
               </div>
               {raffleEnd ? (
                 <Button
-                  className="mt-[30px] bg-[#2F2F2F]"
+                  className="mt-5 bg-[#2F2F2F] md:mt-[30px]"
                   onClick={() => setButtonClicked(true)}
                 >
                   Raffle has ended
                 </Button>
               ) : (
                 <Button
-                  className="mt-[30px]"
+                  className="mt-5 md:mt-[30px]"
                   onClick={() => setButtonClicked(true)}
                 >
                   Apply

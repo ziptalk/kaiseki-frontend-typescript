@@ -19,7 +19,7 @@ export const PageLinkButton = ({
     <Link
       href={href}
       className={twMerge([
-        "flex h-[24px] w-[114px] cursor-pointer items-center justify-center text-[16px] leading-3 text-[#AEAEAE]",
+        "my-2 flex w-28 cursor-pointer items-center justify-center text-xs leading-3 text-[#AEAEAE] md:h-[24px] md:w-[114px] md:text-[16px]",
         prev ? "mr-auto" : "ml-auto",
         className,
       ])}

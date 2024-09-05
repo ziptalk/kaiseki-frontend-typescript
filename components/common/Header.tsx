@@ -29,6 +29,7 @@ import Copy from "@/public/icons/copy.svg";
 import Wallet from "@/public/icons/wallet.svg";
 import { MypageModal } from "@/layout/home/MypageModal";
 import Slider from "./Slider";
+import BottomSheet from "../home/BottomSheet/BottomSheet";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -56,6 +57,7 @@ const Header: FC = () => {
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
   const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
@@ -71,6 +73,10 @@ const Header: FC = () => {
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
   }, [modalRef]);
+
+  const ModalOff = () => {
+    setAccountButtonModal(false);
+  };
   // MARK: - Detect chain change
   // TODO: Make this work.....
   // useEffect(() => {
@@ -511,7 +517,10 @@ const Header: FC = () => {
                       />
                     </div>
                   </div>
-                  <div className="h-6 w-6 cursor-pointer rounded-full border border-white bg-slate-400 md:hidden" />
+                  <div
+                    className="h-6 w-6 cursor-pointer rounded-full border border-white bg-slate-400 md:hidden"
+                    onClick={() => setAccountButtonModal(!accountButtonModal)}
+                  />
                 </>
               ) : (
                 <>
@@ -561,13 +570,38 @@ const Header: FC = () => {
           </div>
           )} */}
       </header>
-      {accountButtonModal && (
+      {/* {accountButtonModal && (
         <MypageModal
           {...{
             setModal: setAccountButtonModal,
           }}
         />
-      )}
+      )} */}
+
+      {accountButtonModal &&
+        (isMobile ? (
+          <BottomSheet
+            {...{
+              setUnVisible: ModalOff,
+              visible: accountButtonModal,
+            }}
+          >
+            <MypageModal
+              {...{
+                setModal: setAccountButtonModal,
+                openAccountModal,
+              }}
+            />
+          </BottomSheet>
+        ) : (
+          <ModalRootWrapper onClick={ModalOff}>
+            <MypageModal
+              {...{
+                setModal: setAccountButtonModal,
+              }}
+            />
+          </ModalRootWrapper>
+        ))}
       <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
         <Slider
           elements={[

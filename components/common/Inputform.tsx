@@ -27,8 +27,10 @@ export const Inputform = ({
   const sharedStyle =
     "mt-2 h-13 w-full rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none";
   return (
-    <div className="w-[484px]">
-      <div className="text-[16px] font-bold text-white">{viewName || name}</div>
+    <div className="w-full md:w-[484px]">
+      <div className="text-sm font-bold text-white md:text-[16px]">
+        {viewName || name}
+      </div>
       {type === "textarea" ? (
         <textarea
           className={`${sharedStyle} h-40 resize-none`}
@@ -66,7 +68,7 @@ export const Inputform = ({
       )}
       {type === "file" || optional || !maxLength || (
         <div
-          className={`text-right text-base font-light text-[#fff] ${comicNeue.variable} font-comicNeue`}
+          className={`text-right text-sm font-light text-[#AEAEAE] md:text-base ${comicNeue.variable} font-comicNeue`}
         >
           {value?.length}/{maxLength}
         </div>

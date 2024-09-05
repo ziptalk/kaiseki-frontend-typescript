@@ -41,28 +41,18 @@ export const Tradesection = ({
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75, 100];
     return (
-      <>
-        {/* <h1 className="text-sm text-white">{tradeModuleErrorMsg}</h1> */}
-        <div className="flex h-[20px] gap-[7px] text-[13px]">
+      <div className="flex items-center gap-2">
+        {percentages.map((percentage) => (
           <button
+            key={percentage}
             type="button"
-            className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-            // onClick={handleReset}
+            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
+            onClick={() => handlePercentage(percentage)}
           >
-            reset
+            {percentage}%
           </button>
-          {percentages.map((percentage) => (
-            <button
-              key={percentage}
-              type="button"
-              className="rounded-[4px] bg-[#202020] px-[8px] text-[#A8A8A8]"
-              onClick={() => handlePercentage(percentage)}
-            >
-              {percentage}%
-            </button>
-          ))}
-        </div>
-      </>
+        ))}
+      </div>
     );
   };
   const BuySellButtonSection: FC = () => {
@@ -87,18 +77,16 @@ export const Tradesection = ({
     );
   };
   return (
-    <form onSubmit={isBuy ? buy : sell} className="flex flex-col gap-[10px]">
+    <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
       <BuySellButtonSection />
-      {isBuy ? (
-        <div
-          onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
-          className={`mt-[11px] flex w-28 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
-        >
-          Switch to {memeTokenSymbol}
-        </div>
-      ) : (
-        <SellPercentageButton />
-      )}
+
+      <div
+        onClick={() => setIsInputInTokenAmount(!isInputInTokenAmount)}
+        className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
+      >
+        Switch to {memeTokenSymbol}
+      </div>
+
       {isInputInTokenAmount ? (
         <>
           <div className="relative flex w-full items-center">
@@ -124,7 +112,7 @@ export const Tradesection = ({
               <button
                 type="button"
                 onClick={() => handlePercentage(100)}
-                className="h-[30px] w-[52px] rounded-[4px] bg-[#0E0E0E] px-[8px] text-white"
+                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
               >
                 MAX
               </button>
@@ -177,7 +165,7 @@ export const Tradesection = ({
           </h1> */}
         </>
       )}
-
+      {isBuy || <SellPercentageButton />}
       {/*true == toggle module, false == percent for sell*/}
       {raffle && (
         <div className="text-[14px] text-white">
@@ -188,9 +176,17 @@ export const Tradesection = ({
         </div>
       )}
       {isConnected ? (
-        <Button submit>Place Trade</Button>
+        <Button submit className="mt-5 h-12" variant="gradiant">
+          Place Trade
+        </Button>
       ) : (
-        <Button onClick={openConnectModal}>Connect Wallet</Button>
+        <Button
+          onClick={openConnectModal}
+          className="mt-5 h-12"
+          variant="gradiant"
+        >
+          Connect Wallet
+        </Button>
       )}
     </form>
   );

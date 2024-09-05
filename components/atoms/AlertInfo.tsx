@@ -13,7 +13,7 @@ export const AlertInfo = ({ buttonClicked, success }: AlertInfoProps) => {
     buttonClicked && (
       <ModalRootWrapper>
         <div
-          className={`mx-auto mt-52 flex h-[100px] w-[484px] items-center justify-center rounded-[10px] bg-[#4F4F4F] text-[16px] font-bold text-white ${buttonClicked ? "opacity-100" : "opacity-0"} duration-1000`}
+          className={`mt-52 flex h-9 items-center justify-center rounded-[7px] bg-[#4F4F4F] text-[16px] text-xs font-bold text-white md:h-[100px] md:w-[484px] md:rounded-[10px] ${buttonClicked ? "opacity-100" : "opacity-0"} mx-5 duration-1000 md:mx-auto`}
         >
           {success ? <Complete /> : <Fail />}
           <div className="ml-3">
