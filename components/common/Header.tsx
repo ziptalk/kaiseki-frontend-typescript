@@ -26,7 +26,9 @@ import DownArrow from "@/public/icons/dwnArrow.svg";
 import Power from "@/public/icons/power.svg";
 import Telegram from "@/public/icons/telegram_logo.svg";
 import Copy from "@/public/icons/copy.svg";
+import Wallet from "@/public/icons/wallet.svg";
 import { MypageModal } from "@/layout/home/MypageModal";
+import Slider from "./Slider";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -351,7 +353,7 @@ const Header: FC = () => {
           </ModalContentBox>
         </ModalRootWrapper>
       )}
-      <header className="sticky left-0 top-0 z-[9999] flex h-[80px] w-screen bg-[#0E0E0E]">
+      <header className="sticky left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
         {/* {pathname == "/" && (
           <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
             <div className="h-full overflow-hidden">
@@ -368,33 +370,29 @@ const Header: FC = () => {
           </div>
         )} */}
 
-        <div className="flex h-full w-full items-center justify-between px-7">
-          <div className="flex h-[40px] w-full items-center justify-between px-1 text-white">
-            <div className="flex h-full w-[300px] items-center justify-evenly gap-[30px]">
+        <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
+          <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
+            <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">
               <Link
                 href="/"
-                className="flex h-[40px] items-center gap-[15px] rounded-full "
+                className="flex items-center gap-2 rounded-full md:h-[40px] md:gap-[15px] "
               >
-                <Image
+                <img
                   src="/images/memeLogo.png"
                   alt=""
-                  width={200}
-                  height={200}
-                  className="h-[29px] w-[26px]"
+                  className="h-6 w-6 md:h-[29px] md:w-[26px]"
                 />
-                <Image
+                <img
                   src="/images/Memeslot.png"
                   alt=""
-                  width={400}
-                  height={400}
-                  className="h-[28px] w-[94px]"
+                  className="h-6 w-20 md:h-[28px] md:w-[94px]"
                 />
               </Link>
 
-              <div className="flex gap-[30px]">
+              <div className="flex gap-3 md:gap-[30px]">
                 <Telegram
                   // fill={isHoveredTG ? "#5E5E5E" : "white"}
-                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
+                  className="h-4 w-4 cursor-pointer fill-[#5E5E5E] hover:fill-white"
                   onClick={() => handleUrlClick("https://t.me/memesinodotfun")}
                 />
                 <X
@@ -409,7 +407,7 @@ const Header: FC = () => {
                 />
               </div>
             </div>
-            <div className="flex h-[40px] items-center gap-[20px]">
+            <div className="hidden h-[40px] items-center gap-[20px] md:flex">
               {curMintUser && (
                 <MintAnimateWrapper
                   className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
@@ -425,7 +423,7 @@ const Header: FC = () => {
                   </div>
 
                   <h1 className="text-sm">
-                    {curMintUser} bought {curMintValue} SEI of
+                    {curMintUser} bought {curMintValue} ETH of
                   </h1>
                   <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
                     <h1 className="cursor-pointer text-sm hover:underline">
@@ -473,50 +471,58 @@ const Header: FC = () => {
               )}
             </div>
             <div
-              className="relative flex w-[300px] select-none flex-row-reverse items-center"
+              className="relative flex select-none flex-row-reverse items-center md:w-[300px]"
               ref={modalRef}
             >
               {address ? (
-                <div className="flex h-10 w-52 items-center justify-between rounded-lg border bg-[#252525] px-5 text-sm font-bold text-white">
-                  <div
-                    onClick={() => copyToClipboard(address)}
-                    className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
-                  >
-                    <Image
-                      src="/images/memesinoGhost.png"
-                      alt=""
-                      height={16}
-                      width={18}
-                      className="h-[16px] w-[18px]"
-                    />
+                <>
+                  <div className="hidden h-10 w-52 items-center justify-between rounded-lg border bg-[#252525] px-5 text-sm font-bold text-white md:flex">
                     <div
-                      className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-[#686868] text-[15px] text-white hover:text-[#9b9b9b]`}
-                      onClick={openAccountModal}
+                      onClick={() => copyToClipboard(address)}
+                      className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
                     >
-                      {disconnectToggle && "Disconnect"}
-                      <Power className={`ml-1 stroke-white`} />
+                      <Image
+                        src="/images/memesinoGhost.png"
+                        alt=""
+                        height={16}
+                        width={18}
+                        className="h-[16px] w-[18px]"
+                      />
+                      <div
+                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-[#686868] text-[15px] text-white hover:text-[#9b9b9b]`}
+                        onClick={openAccountModal}
+                      >
+                        {disconnectToggle && "Disconnect"}
+                        <Power className={`ml-1 stroke-white`} />
+                      </div>
+                      {disconnectToggle || address?.substring(0, 6) + "..."}
+                      {disconnectToggle || <Copy />}
                     </div>
-                    {disconnectToggle || address?.substring(0, 6) + "..."}
-                    {disconnectToggle || <Copy />}
+                    <div className="flex gap-2">
+                      <Power
+                        className={`cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
+                        onClick={() => setDisconnectToggle(true)}
+                      />
+                      <DownArrow
+                        onClick={() =>
+                          setAccountButtonModal(!accountButtonModal)
+                        }
+                        className={`transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
+                      />
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Power
-                      className={`cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
-                      onClick={() => setDisconnectToggle(true)}
-                    />
-                    <DownArrow
-                      onClick={() => setAccountButtonModal(!accountButtonModal)}
-                      className={`transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
-                    />
-                  </div>
-                </div>
+                  <div className="h-6 w-6 cursor-pointer rounded-full border border-white bg-slate-400 md:hidden" />
+                </>
               ) : (
-                <button
-                  onClick={openConnectModal}
-                  className="h-[40px] w-[180px] cursor-pointer rounded-[10px] border bg-[#252525] text-[12px] text-white"
-                >
-                  Connect Wallet
-                </button>
+                <>
+                  <button
+                    onClick={openConnectModal}
+                    className="hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border bg-[#252525] text-[12px] text-white md:block"
+                  >
+                    Connect Wallet
+                  </button>
+                  <Wallet className="cursor-pointer md:hidden" />
+                </>
               )}
               {/* {accountButtonModal && (
                 <>
@@ -562,6 +568,64 @@ const Header: FC = () => {
           }}
         />
       )}
+      <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
+        <Slider
+          elements={[
+            curMintCid && (
+              <MintAnimateWrapper
+                key={1}
+                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"} mr-2.5 shadow-md`}
+              >
+                <img
+                  src="/images/memesinoGhost.png"
+                  alt=""
+                  className="h-[18px] w-[18px] rounded-full"
+                />
+                <h1 className="text-sm">
+                  {curMintUser} bought {curMintValue} ETH of
+                </h1>
+                <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curMintTic}
+                  </h1>
+                </Link>
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                    alt="img"
+                  />
+                </div>
+              </MintAnimateWrapper>
+            ),
+            curCreateCid && (
+              <CreateAnimateWrapper
+                key={2}
+                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"} mr-2.5`}
+              >
+                <img
+                  src="/images/memesinoGhost.png"
+                  alt=""
+                  className="h-[18px] w-[18px] rounded-full"
+                />
+                <h1 className="text-sm">{curCreateUser} Created</h1>
+                <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curCreateTic}
+                  </h1>
+                </Link>
+
+                <h1 className="text-sm">on {curCreateTime}</h1>
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                    alt="img"
+                  />
+                </div>
+              </CreateAnimateWrapper>
+            ),
+          ]}
+        />
+      </div>
     </>
   );
 };

@@ -51,11 +51,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         </div>
       </div>
       <div className="flex items-center gap-[5px]">
-        <h1 className="neon-yellow text-xs text-[#FAFF00]">market cap :</h1>
+        <h1 className="neon-yellow text-xs text-[#FAFF00]">
+          Bonding Curve Progress :
+        </h1>
         <h1
           className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
         >
-          {marketCap}K
+          {Number(marketCap).toLocaleString()}K
         </h1>
         <div className="text-[12px] text-[#CFCFCF]">
           ({bondingCurveProgress}%)

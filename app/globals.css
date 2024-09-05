@@ -15,17 +15,17 @@
 
 @layer components {
   .main {
-    @apply mx-auto flex h-full w-[1150px] items-center justify-center gap-[60px] rounded-2xl border-2 border-secondary bg-primary shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-secondary;
+    @apply mx-auto flex h-full w-full items-center justify-center gap-[60px] rounded-3xl border-2 border-secondary bg-primary shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-secondary;
   }
   .main-inner {
-    @apply flex h-full w-full flex-col items-center justify-center gap-[20px] rounded-3xl border-2 border-white bg-black py-[20px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-white;
+    @apply flex h-full w-full flex-col items-center justify-center gap-[20px] rounded-lg border-2 border-white bg-black py-[20px] shadow-[0_0px_10px_rgba(0,0,0,0.5)] shadow-white;
   }
   .main-tokenarea {
     @apply flex h-full w-full justify-between gap-2.5 border border-dashed border-secondary bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525];
   }
 }
 
-.bg-primary {
+.button-bg-primary {
   background: linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%);
 }
 .button-shadow {
@@ -69,12 +69,15 @@ input::-webkit-inner-spin-button {
 }
 .wrapper {
   /* margin-bottom: 5%; */
+  height: 100%;
   overflow: hidden;
 }
 .wrapper .slide_container {
+  height: 100%;
   width: 520%;
 }
 .wrapper .slide_container .slide_wrapper {
+  height: 100%;
   display: flex;
   flex-wrap: nowrap;
 }
@@ -152,7 +155,6 @@ input::-webkit-inner-spin-button {
   font-family: var(--font-anton);
   -webkit-text-stroke-width: 0.4px;
   -webkit-text-stroke-color: #860000;
-  font-size: 18px;
   font-weight: 400;
   letter-spacing: -0.6px;
   background: linear-gradient(0deg, #fff 0%, #faff00 100%);
@@ -164,7 +166,6 @@ input::-webkit-inner-spin-button {
 .title-typo {
   font-family: var(--font-anton);
   -webkit-text-stroke: 0.7px #860000;
-  font-size: 30px;
   letter-spacing: -1px;
   background: linear-gradient(0deg, #fff 0%, #faff00 100%);
   background-clip: text;
@@ -175,7 +176,6 @@ input::-webkit-inner-spin-button {
 
 .title-shadow {
   font-family: var(--font-anton);
-  font-size: 30px;
   font-weight: 400;
   letter-spacing: -0.6px;
   color: transparent;
@@ -189,7 +189,6 @@ input::-webkit-inner-spin-button {
   border: 5px solid #e6180f;
   background: radial-gradient(50% 50% at 50% 50%, #d0140c 0%, #6a0a06 100%);
   box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.5) inset;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -211,4 +210,15 @@ input::-webkit-inner-spin-button {
 .progressStyle {
   background: linear-gradient(279deg, #e00900 1.93%, #a60d07 86.23%);
   color: #ffffff;
+}
+.trapezoid-icon {
+  display: inline-block;
+  width: 150px;
+  border-bottom: 20px solid black;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+}
+
+.gradiant-create-box {
+  background: radial-gradient(50% 50% at 50% 50%, #d0140c 0%, #6a0a06 100%);
 }

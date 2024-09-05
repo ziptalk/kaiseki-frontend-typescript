@@ -2,10 +2,9 @@ import { useState } from "react";
 interface DropdownProps {
   items: string[];
   placeholder: string;
-  width: number;
 }
 
-export const Dropdown = ({ items, placeholder, width }: DropdownProps) => {
+export const Dropdown = ({ items, placeholder }: DropdownProps) => {
   const [isDropdownView, setDropdownView] = useState(false);
   const [selectedItem, setSelectedItem] = useState(items[0]);
 
@@ -14,30 +13,21 @@ export const Dropdown = ({ items, placeholder, width }: DropdownProps) => {
   };
 
   return (
-    <div className="h-[50px]" style={{ width }}>
+    <div className="relative h-10 flex-1 md:h-[50px]">
       <button
         onClick={handleClickContainer}
-        className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#363636] text-[16px] text-[#AEAEAE]"
+        className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#363636] text-sm text-[#AEAEAE] md:text-base"
       >
         {placeholder}
         {selectedItem}
-        {isDropdownView ? (
-          <img
-            src="/icons/dwnArrow.svg"
-            alt="uparr"
-            className="ml-[10px] h-[14px] w-[16px] rotate-180"
-          />
-        ) : (
-          <img
-            src="/icons/dwnArrow.svg"
-            alt="downarr"
-            className="ml-[10px] h-[14px] w-[16px]"
-          />
-        )}
+        <img
+          src="/icons/dwnArrow.svg"
+          alt="uparr"
+          className={`ml-[10px] h-[14px] w-[16px] ${isDropdownView && "rotate-180"}`}
+        />
       </button>
       <div
-        className={`absolute mt-1 flex flex-col items-center justify-center rounded-[10px] bg-[#363636]`}
-        style={{ width }}
+        className={`absolute mt-1 flex w-full flex-col items-center justify-center rounded-[10px] bg-[#363636]`}
       >
         {isDropdownView &&
           items.map((li, i) => (
@@ -45,7 +35,6 @@ export const Dropdown = ({ items, placeholder, width }: DropdownProps) => {
               onClick={() => {
                 setSelectedItem(li);
                 setDropdownView(false);
-                console.log("selectedItem", selectedItem);
               }}
               key={i}
               className="w-full cursor-pointer rounded-[10px] px-[15px] py-[10px] text-center text-[#AEAEAE] hover:bg-[#2a2a2a]"

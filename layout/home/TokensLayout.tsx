@@ -5,8 +5,9 @@ import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import { BuySellLayout } from "./BuySellLayout";
 import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
+import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 
-const initialTokenInfo: TokenInfo = {
+export const initialTokenInfo: TokenInfo = {
   cid: "",
   createdBy: "",
   description: "",
@@ -43,39 +44,43 @@ export const TokensLayout = () => {
         console.log(error);
       });
   }
+
+  const setInfotoInitial = () => {
+    setInfo(initialTokenInfo);
+  };
   return (
-    <div className="mx-auto flex w-[1300px]">
+    <div className="mx-auto md:flex md:w-[1300px]">
       <div
-        className={`${info.tokenAddress ? "w-[860px]" : "w-full"} mt-[32px]`}
+        className={`${info.tokenAddress ? "md:w-[860px]" : "w-full"} mt-[32px]`}
       >
         <div className="text-xl text-white underline">Tokens</div>
-        <div className="mt-[20px] flex w-full gap-[20px]">
-          <Dropdown // sort dropdown
-            placeholder="sort : "
-            items={["created", "trending"]}
-            width={165}
-          />
-          <Dropdown // order dropdown
-            placeholder="order : "
-            items={["desc", "asc"]}
-            width={145}
-          />
+        <div className="mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:flex-row">
+          <div className="flex gap-5 md:w-[329px]">
+            <Dropdown // sort dropdown
+              placeholder="sort : "
+              items={["created", "trending"]}
+            />
+            <Dropdown // order dropdown
+              placeholder="order : "
+              items={["desc", "asc"]}
+            />
+          </div>
           <form
-            className="ml-auto flex gap-[10px]"
+            className="flex h-10 gap-[10px] md:ml-auto md:h-[50px] md:w-[420px]"
             onSubmit={(e) => {
               e.preventDefault();
               getData();
             }}
           >
             <input
-              className="h-[50px] w-[250px] rounded-[10px] border border-background bg-black px-[20px] text-white"
+              className="flex-[2] rounded-[10px] border border-background bg-black px-[20px] text-white"
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="search for token"
             />
             <button
-              className="h-[50px] w-[160px] rounded-[10px] bg-background font-bold text-white"
+              className="flex-1 rounded-[10px] bg-background font-bold text-white"
               type="submit"
             >
               search
@@ -83,7 +88,7 @@ export const TokensLayout = () => {
           </form>
         </div>
         <div
-          className={`mt-[20px] grid w-full ${info.tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  gap-[20px]`}
+          className={`mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:grid ${info.tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  md:gap-5`}
         >
           {tokenInfo ? (
             tokenInfo.map((card: any, index: any) => (
@@ -91,10 +96,10 @@ export const TokensLayout = () => {
                 key={index}
                 onMouseDown={() => {
                   info.tokenAddress && info.tokenAddress === card.tokenAddress
-                    ? setInfo(initialTokenInfo)
+                    ? setInfotoInitial()
                     : setInfo({ ...card });
                 }}
-                className="w-[420px]"
+                className="w-full md:w-[420px]"
               >
                 <HomeTokenCard {...card} clickedToken={info.tokenAddress} />
               </div>
@@ -135,7 +140,16 @@ export const TokensLayout = () => {
           />
         </div>
       </div>
-      {info.tokenAddress && <BuySellLayout {...info} />}
+      {info.tokenAddress && (
+        // <BottomSheet
+        //   {...{
+        //     setAccessToken: setInfotoInitial,
+        //     accessToken: info.tokenAddress,
+        //   }}
+        // >
+        <BuySellLayout {...info} setInfo={setInfotoInitial} />
+        // </BottomSheet>
+      )}
     </div>
   );
 };
