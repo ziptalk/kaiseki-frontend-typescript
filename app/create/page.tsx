@@ -370,7 +370,7 @@ const Create: NextPage = () => {
         />
         <div
           onClick={() => setIsMoreOptionsToggled(!isMoreOptionsToggled)}
-          className="flex cursor-pointer text-[#FF2626]"
+          className="flex cursor-pointer text-[#FF2626] md:w-[484px]"
         >
           <h1>more options&nbsp;</h1>
           <h1 className="text-white">{isMoreOptionsToggled ? "-" : "+"}</h1>
@@ -406,7 +406,7 @@ const Create: NextPage = () => {
             />
           </>
         )}
-        <Button>
+        <Button className="md:w-[484px]">
           {isLoading ? (
             <Image
               src="/icons/Loading.svg"
