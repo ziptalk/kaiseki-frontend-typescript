@@ -27,10 +27,11 @@ export const CreateCard = ({
       ) : (
         <img
           src={`http://via.placeholder.com/120x120`}
+          alt="Image from IPFS"
           className="h-[120px] w-[120px] bg-[#D9D9D9]"
         />
       )}
-      <div className="flex min-w-40 flex-col gap-1 overflow-hidden">
+      <div className="flex w-full flex-col gap-1 overflow-hidden">
         <h1 className="whitespace-pre-line text-base font-bold leading-none text-[#AEAEAE]">
           {name || "Name"}
           {"\n"}
@@ -61,8 +62,7 @@ export const CreateCard = ({
         </div>
 
         <div className=" w-full break-words text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-          {description ||
-            "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription"}
+          {description}
         </div>
       </div>
     </div>

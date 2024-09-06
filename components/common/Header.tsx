@@ -418,17 +418,13 @@ const Header: FC = () => {
                 <MintAnimateWrapper
                   className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
                 >
-                  <div className="h-[18px] w-[18px] rounded-full ">
-                    <Image
-                      src="/images/memesinoGhost.png"
-                      alt=""
-                      height={18}
-                      width={18}
-                      style={{ width: 18, height: 18 }}
-                    />
-                  </div>
+                  <img
+                    src="/images/memesinoGhost.png"
+                    alt=""
+                    className="h-4 w-4 rounded-full"
+                  />
 
-                  <h1 className="text-sm">
+                  <h1 className="whitespace-nowrap text-sm">
                     {curMintUser} bought {curMintValue} ETH of
                   </h1>
                   <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
@@ -436,43 +432,41 @@ const Header: FC = () => {
                       {curMintTic}
                     </h1>
                   </Link>
-                  <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
-                      alt="img"
-                    />
-                  </div>
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                    alt="img"
+                    className="h-4 w-4 rounded-full"
+                  />
                 </MintAnimateWrapper>
               )}
               {curCreateUser && (
                 <CreateAnimateWrapper
                   className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
                 >
-                  <div className="h-[18px] w-[18px] rounded-full ">
-                    <Image
-                      src="/images/memesinoGhost.png"
-                      alt=""
-                      height={18}
-                      width={18}
-                      style={{ width: 18, height: 18 }}
-                    />
+                  <img
+                    src="/images/memesinoGhost.png"
+                    alt=""
+                    className="h-4 w-4 rounded-full"
+                  />
+                  <div className="whitespace-nowrap text-sm">
+                    {curCreateUser} Created
                   </div>
-                  <h1 className="text-sm">{curCreateUser} Created</h1>
                   <Link
                     href={curCreateTokenAddress ? curCreateTokenAddress : ""}
                   >
-                    <h1 className="cursor-pointer text-sm hover:underline">
+                    <div className="cursor-pointer text-sm hover:underline">
                       {curCreateTic}
-                    </h1>
+                    </div>
                   </Link>
 
-                  <h1 className="text-sm">on {curCreateTime}</h1>
-                  <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
-                      alt="img"
-                    />
+                  <div className="whitespace-nowrap text-sm">
+                    on {curCreateTime}
                   </div>
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                    alt="img"
+                    className="h-4 w-4 rounded-full"
+                  />
                 </CreateAnimateWrapper>
               )}
             </div>

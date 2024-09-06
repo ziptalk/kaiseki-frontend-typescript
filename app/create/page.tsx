@@ -314,7 +314,7 @@ const Create: NextPage = () => {
       />
       <form
         onSubmit={handleSubmit(createToken, onInvalid)}
-        className="flex w-full flex-col gap-3 md:gap-6"
+        className="flex w-full flex-col items-center gap-3 md:gap-6"
       >
         <Inputform
           {...{
