@@ -627,8 +627,8 @@ export const BuySellLayout = ({
               ]}
             />
           </div>
-          <div className="hidden h-[270px] w-full bg-[#151527] p-[13px] md:block">
-            <div className="w-full">
+          <div className="h-[270px] w-full bg-[#151527] p-[13px] md:block">
+            <div className="h-56 w-full">
               <div className="flex items-center gap-[7.15px]">
                 <img
                   src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
