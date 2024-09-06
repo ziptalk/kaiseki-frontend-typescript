@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 export const TokenDesc = ({
   name,
   ticker,
   createdBy,
   description,
 }: TokenInfo) => {
-  const width = window && window.innerWidth;
-  const isMobile = width < 768;
+  // const width = window && window.innerWidth;
+  // const isMobile = width < 768;
+  const [width, setWidth] = useState(180);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowDimensions);
+
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
   return (
-    <div style={{ width: isMobile ? width - 180 : 240 }}>
+    <div style={{ width: width < 768 ? width - 180 : 240 }}>
       <h1 className="break-words text-[15px] font-bold leading-none text-white">
         {name}
       </h1>

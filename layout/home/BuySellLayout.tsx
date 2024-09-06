@@ -11,7 +11,7 @@ import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
-import { MAX_INT_256, BILLION } from "@/global/constants";
+import { BILLION } from "@/global/constants";
 import contracts from "@/global/contracts";
 import XButton from "@/public/icons/XButton.svg";
 
@@ -233,7 +233,6 @@ export const BuySellLayout = ({
         return;
       }
       const detail = await memeTokenContract.balanceOf(account.address);
-      // console.log(detail);
 
       setCurMemeTokenValue(String(ether(detail)));
     } catch (error) {
@@ -627,7 +626,7 @@ export const BuySellLayout = ({
               ]}
             />
           </div>
-          <div className="h-[270px] w-full bg-[#151527] p-[13px] md:block">
+          <div className="hidden h-[270px] w-full bg-[#151527] p-[13px] md:block">
             <div className="h-56 w-full">
               <div className="flex items-center gap-[7.15px]">
                 <img

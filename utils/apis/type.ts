@@ -13,3 +13,13 @@ export interface RaffleResponse {
   ];
   timestamp: string;
 }
+
+export interface TokenResponse {
+  cid: string;
+  marketCap: string;
+  token: string;
+  name: string;
+  symbol: string;
+  creator: string;
+  startDate: string;
+}

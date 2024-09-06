@@ -1,6 +1,4 @@
 import { baseAPI } from "./customapi";
-import { RaffleResponse } from "./type";
-
 export const TxlogsMintBurn = async () => {
   try {
     const response = await baseAPI.get("TxlogsMintBurn");
@@ -90,11 +88,12 @@ export const Raffle = async () => {
 
 export const RaffleEnter = async (data: {
   tokenAddress: string;
-  userAddress: string;
+  userAddress: `0x${string}` | undefined;
   tokenAmount: number;
 }) => {
   try {
     const response = await baseAPI.post("raffle-enter", data);
+    console.log("response", response);
     return response.data;
   } catch (error) {
     console.log("Error in raffle-enter API", error);

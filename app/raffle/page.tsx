@@ -1,33 +1,63 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { SERVER_ENDPOINT } from "@/global/projectConfig";
-import { digital } from "@/fonts/font";
 import { MainTitle } from "@/components/common/MainTitle";
 import { Button } from "@/components/atoms/Button";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { AlertInfo } from "@/components/atoms/AlertInfo";
+import { useSearchParams } from "next/navigation";
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
+import { ether, wei } from "@/utils/weiAndEther";
+import contracts from "@/global/contracts";
+import MCV2_MultiTokenReceiver from "@/abis/MCV2_MultiTokenReceiver.sol/MultiTokenReceiver.json";
+import IERC20_abi from "@/abis/MCV2_MultiTokenReceiver.sol/IERC20.json";
+import { useEthersSigner } from "@/utils/ethersSigner";
+import { RaffleEnter } from "@/utils/apis/apis";
 
 export default function Raffle() {
-  const [raffleEnd, setRaffleEnd] = useState(false);
-  const [buttonClicked, setButtonClicked] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [inputValue, setInputValue] = useState(0);
+  const signer = useEthersSigner();
+  const searchParams = useSearchParams();
+  const account = useAccount();
 
-  const buttonValue = [
-    {
-      value: 10,
-      onClick: () => setInputValue(10),
-    },
-    {
-      value: 50,
-      onClick: () => setInputValue(50),
-    },
-    {
-      value: 100,
-      onClick: () => setInputValue(100),
-    },
-  ];
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const [success, setSuccess] = useState(true);
+  const [inputValue, setInputValue] = useState(0);
+  const [width, setWidth] = useState(250);
+  const [curMemeTokenValue, setCurMemeTokenValue] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
+  const { abi: MCV2_MultiTokenABI } = MCV2_MultiTokenReceiver;
+  const { abi: erc20Abi } = IERC20_abi;
+  const provider = new ethers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
+  );
+
+  const memeTokenContract = new ethers.Contract(
+    searchParams.get("token") || "",
+    MCV2_TokenABI,
+    provider,
+  );
+
+  useEffect(() => {
+    console.log(curMemeTokenValue);
+  }, [curMemeTokenValue]);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
+
+  useEffect(() => {
+    setUserMemeTokenBalanceIntoState();
+  }, [account]);
 
   useEffect(() => {
     if (buttonClicked) {
@@ -37,39 +67,76 @@ export default function Raffle() {
     }
   }, [buttonClicked]);
 
-  const [kingName, setKingName] = useState("KingCat");
-  const [kingTicker, setKingTicker] = useState("KING");
-  const [kingCreator, setKingCreator] = useState("Me");
-  const [kingMarketCap, setKingMarketCap] = useState("0");
-  const [kingDesc, setKingDesc] = useState(
-    "Figma ipsum component variant main layer. Stroke opacity blur style bullet group library pencil content. Pencil effect underline pencil pixel follower.",
-  );
-  const [kingCid, setKingCid] = useState(
-    "QmeSwf4GCPw1TBpimcB5zoreCbgGL5fEo7kTfMjrNAXb3U",
-  );
+  const buttonValue = [
+    {
+      value: 25,
+      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.25)),
+    },
+    {
+      value: 50,
+      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.5)),
+    },
+    {
+      value: 75,
+      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.75)),
+    },
+  ];
 
-  // useEffect(() => {
-  //   getToTheMoonFromServer();
-  // }, []);
-
-  const getToTheMoonFromServer = () => {
-    fetch(`${SERVER_ENDPOINT}/ToTheMoon`) // Add this block
-      .then((response) => response.json())
-      .then((data) => {
-        if (data[0]) {
-          setKingName(data[0].name);
-          setKingTicker(data[0].symbol);
-          setKingCid(data[0].cid);
-          setKingCreator(data[0].creator);
-          setKingDesc(data[0].description);
-          setKingMarketCap(data[0].marketCap);
-        }
-        console.log({ tothemoon: data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const setUserMemeTokenBalanceIntoState = async () => {
+    try {
+      if (account.address == null) {
+        setCurMemeTokenValue(0);
+        return;
+      }
+      const detail = await memeTokenContract.balanceOf(account.address);
+      setCurMemeTokenValue(ether(detail));
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  async function depositTokens(tokenAddress: string, amount: number) {
+    setLoading(true);
+    try {
+      const multiTokenReceiverContract = new ethers.Contract(
+        contracts.MCV2_MultiToken, // MultiTokenReceiver 컨트랙트 주소
+        MCV2_MultiTokenABI, // MultiTokenReceiver ABI
+        signer, // 서명자 (signer)
+      );
+
+      // 먼저 토큰을 전송할 수 있도록 approve 호출
+      const tokenContract = new ethers.Contract(tokenAddress, erc20Abi, signer);
+      const txApprove = await tokenContract.approve(
+        contracts.MCV2_MultiToken,
+        BigInt(wei(Number(amount))),
+        // amount,
+      );
+      await txApprove.wait();
+
+      // deposit 함수 호출
+      const txDeposit = await multiTokenReceiverContract.deposit(
+        tokenAddress,
+        BigInt(wei(Number(amount))),
+        // amount,
+      );
+      await txDeposit.wait();
+      setSuccess(true);
+      setButtonClicked(true);
+
+      console.log(`Deposited ${amount} tokens to MultiTokenReceiver contract`);
+      await RaffleEnter({
+        tokenAddress: searchParams.get("token") || "",
+        tokenAmount: inputValue,
+        userAddress: account.address,
+      });
+    } catch (err) {
+      setSuccess(false);
+      setButtonClicked(true);
+      console.log(err);
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="p-2">
       <div className="mx-auto mt-3 w-full md:w-[1151px]">
@@ -83,40 +150,41 @@ export default function Raffle() {
           <div className="main-tokenarea mt-4 flex-col">
             <div className="flex gap-[10px] text-xs">
               <img
-                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${kingCid}`}
+                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${searchParams.get("cid")}`}
                 alt="Image from IPFS"
                 className="h-16 w-16 border-black md:h-[100px] md:w-[100px]"
               />
-              <div className="flex w-full flex-col md:px-[10px]">
+              <div
+                className="flex flex-col md:px-[10px]"
+                style={{ width: width < 768 ? width - 250 : 240 }}
+              >
                 <div className="whitespace-pre font-bold text-white md:text-[15px]">
-                  {kingName}
+                  {searchParams.get("name")}
                   {"\n"}
-                  [ticker: {kingTicker}]
+                  [ticker: {searchParams.get("symbol")}]
                 </div>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
-                  <h1 className="neon-lime  text-[#C5F900]">created by: </h1>
+                  <h1 className="neon-lime  whitespace-nowrap text-[#C5F900]">
+                    created by:{" "}
+                  </h1>
                   <img
                     className="rounded-full"
                     src="/images/memesinoGhost.png"
                     alt=""
                     style={{ width: 12, height: 12 }}
                   />
-                  <div className="neon-lime text-[#C5F900]">
-                    {kingCreator.length < 20
-                      ? kingCreator
-                      : `${kingCreator.slice(0, 20)}...`}
+                  <div className="neon-lime w-full truncate text-[#C5F900]">
+                    {/* {searchParams.get("creator").length < 20
+                      ? searchParams.get("creator")
+                      : `${searchParams.get("creator").slice(0, 20)}...`} */}
+                    {searchParams.get("creator")}
                   </div>
                 </div>
-                <div className="mt-[3px] flex h-[14px] gap-[5px]">
-                  <h1 className="neon-yellow text-[#FAFF00]">market cap :</h1>
-                  <h1
-                    className={`neon-yellow ${digital.variable} font-digital text-[#FAFF00]`}
-                  >
-                    {kingMarketCap}K
-                  </h1>
-                </div>
-                <p className="show-scrollbar mt-[5px] h-8 overflow-scroll text-[10px] text-[#808080] md:h-16 md:text-[13px]">
-                  {kingDesc}
+                <h1 className="neon-yellow text-[#FAFF00]">
+                  prize: {searchParams.get("symbol")}
+                </h1>
+                <p className="show-scrollbar mt-[5px] h-8 overflow-scroll break-words text-[10px] text-[#808080] md:h-16 md:text-[13px]">
+                  {searchParams.get("cid")}
                 </p>
               </div>
             </div>
@@ -128,15 +196,13 @@ export default function Raffle() {
                 <input
                   className="h-10 w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] px-2 text-xs text-white md:h-[55px] md:px-[20px] md:text-base"
                   type="number"
-                  // placeholder="0.00"
-                  step="0.01"
                   name="inputValue"
                   value={inputValue}
-                  // onChange={handleInputChange}
+                  onChange={(e) => setInputValue(Number(e.target.value))}
                 />
                 <button
                   type="button"
-                  onClick={() => setInputValue(200)}
+                  onClick={() => setInputValue(curMemeTokenValue)}
                   className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
                 >
                   MAX
@@ -153,21 +219,30 @@ export default function Raffle() {
                   </Button>
                 ))}
               </div>
-              {raffleEnd ? (
-                <Button
-                  className="mt-5 bg-[#2F2F2F] md:mt-[30px]"
-                  onClick={() => setButtonClicked(true)}
-                >
-                  Raffle has ended
-                </Button>
-              ) : (
-                <Button
-                  className="mt-5 md:mt-[30px]"
-                  onClick={() => setButtonClicked(true)}
-                >
-                  Apply
-                </Button>
-              )}
+
+              <Button
+                className="mt-5 md:mt-[30px]"
+                onClick={() => {
+                  if (inputValue > curMemeTokenValue) {
+                    setSuccess(false);
+                    setButtonClicked(true);
+                  } else {
+                    depositTokens(searchParams.get("token") || "", inputValue);
+                  }
+                }}
+              >
+                {loading ? (
+                  <Image
+                    src="/icons/Loading.svg"
+                    alt="loading Icon"
+                    height={24}
+                    width={24}
+                    className="animate-spin"
+                  />
+                ) : (
+                  "Apply"
+                )}
+              </Button>
             </div>
           </div>
         </div>
