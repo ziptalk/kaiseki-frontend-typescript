@@ -626,18 +626,19 @@ export const BuySellLayout = ({
               ]}
             />
           </div>
-          <div className="hidden h-[270px] w-full bg-[#151527] p-[13px] md:block">
-            <div className="h-56 w-full">
-              <div className="flex items-center gap-[7.15px]">
-                <img
-                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                  alt="Image from IPFS"
-                  className="h-[28.5px] w-[28.5px] border-black "
-                />
-                <p className="inline-block text-[14.3px] text-white">
-                  {name} ($ {ticker}) / ETH
-                </p>
-              </div>
+          <div className="hidden h-[250px] w-full bg-[#151527] p-[13px] md:block">
+            <div className="flex items-center gap-[7.15px]">
+              <img
+                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                alt="Image from IPFS"
+                className="h-[20.5px] w-[28.5px] border-black "
+              />
+              <p className="inline-block text-[14.3px] text-white">
+                {name.length > 20 ? name.slice(0, 17) + "..." : name} (${" "}
+                {ticker}) / ETH
+              </p>
+            </div>
+            <div className="h-[210px] border-black ">
               <TradingViewChart tokenAddress={tokenAddress} />
             </div>
           </div>

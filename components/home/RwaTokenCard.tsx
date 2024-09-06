@@ -24,7 +24,6 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
       clearInterval(interval);
     };
   }, [time]);
-
   return (
     <div className="main-tokenarea mt-[10px] w-full md:h-[120px]">
       <img
@@ -39,19 +38,21 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           {`[ticker: ${props.symbol}]`}
         </div>
         <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
-          <div className="neon-lime text-[#C5F900]">created by: </div>
+          <div className="neon-lime whitespace-nowrap text-[#C5F900]">
+            created by:{" "}
+          </div>
           <img
             className="h-2 w-2 rounded-full md:h-3 md:w-3"
             src="/images/memesinoGhost.png"
             alt=""
           />
-          <div className="neon-lime text-[#C5F900]">
-            {props.creator.length < 10
-              ? props.creator
-              : `${props.creator.slice(0, 7)}...`}
+          <div className="neon-lime truncate text-[#C5F900]">
+            {props.creator}
           </div>
         </div>
-        <div className="text-xs text-[#FAFF00]">prize : {props.symbol}</div>
+        <div className="text-xs text-[#FAFF00]">
+          prize : {props.rafflePrize}
+        </div>
         <div
           className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
         >

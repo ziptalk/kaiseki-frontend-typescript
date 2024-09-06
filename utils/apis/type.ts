@@ -1,25 +1,16 @@
 export interface RaffleResponse {
   message: string;
-  tokens: [
-    {
-      cid: string;
-      marketCap: string;
-      token: string;
-      name: string;
-      symbol: string;
-      creator: string;
-      startDate: string;
-    },
-  ];
+  tokens: TokenResponse[];
   timestamp: string;
 }
 
 export interface TokenResponse {
   cid: string;
-  marketCap: string;
+  rafflePrize: string;
   token: string;
   name: string;
   symbol: string;
   creator: string;
+  description: string;
   startDate: string;
 }

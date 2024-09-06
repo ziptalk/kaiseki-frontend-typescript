@@ -68,15 +68,6 @@ export const TokensLatest = async () => {
   }
 };
 
-export const HomeTokenInfo = async (params: { page: number }) => {
-  try {
-    const response = await baseAPI.get("toTheMoon", { params });
-    return response.data;
-  } catch (error) {
-    console.log("Error in ToTheMoon API", error);
-  }
-};
-
 export const Raffle = async () => {
   try {
     const response = await baseAPI.get("raffle");

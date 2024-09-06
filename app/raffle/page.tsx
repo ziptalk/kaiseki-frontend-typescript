@@ -161,7 +161,7 @@ export default function Raffle() {
                 <div className="whitespace-pre font-bold text-white md:text-[15px]">
                   {searchParams.get("name")}
                   {"\n"}
-                  [ticker: {searchParams.get("symbol")}]
+                  [ticker: {searchParams.get("rafflePrize")}]
                 </div>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
                   <h1 className="neon-lime  whitespace-nowrap text-[#C5F900]">
@@ -181,10 +181,10 @@ export default function Raffle() {
                   </div>
                 </div>
                 <h1 className="neon-yellow text-[#FAFF00]">
-                  prize: {searchParams.get("symbol")}
+                  prize: {searchParams.get("rafflePrize")}
                 </h1>
                 <p className="show-scrollbar mt-[5px] h-8 overflow-scroll break-words text-[10px] text-[#808080] md:h-16 md:text-[13px]">
-                  {searchParams.get("cid")}
+                  {searchParams.get("description")}
                 </p>
               </div>
             </div>

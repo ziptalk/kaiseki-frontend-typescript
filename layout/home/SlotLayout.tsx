@@ -10,7 +10,6 @@ import { MainTitle } from "@/components/common/MainTitle";
 import Stick from "@/public/icons/stick.svg";
 import { Raffle } from "@/utils/apis/apis";
 import { RaffleResponse } from "@/utils/apis/type";
-import { start } from "repl";
 
 export const SlotLayout = () => {
   const router = useRouter();
@@ -48,11 +47,13 @@ export const SlotLayout = () => {
               raffleData.tokens &&
               raffleData.tokens[page - 1] && {
                 cid: raffleData.tokens[page - 1].cid,
-                marketCap: raffleData.tokens[page - 1].marketCap,
+                rafflePrize: raffleData.tokens[page - 1].rafflePrize,
                 token: raffleData.tokens[page - 1].token,
                 name: raffleData.tokens[page - 1].name,
                 symbol: raffleData.tokens[page - 1].symbol,
                 creator: raffleData.tokens[page - 1].creator,
+                description: raffleData.tokens[page - 1].description,
+                startDate: raffleData.tokens[page - 1].startDate,
               },
           }}
           className="flex w-full flex-col items-center gap-5"
@@ -80,7 +81,7 @@ export const SlotLayout = () => {
             }}
           />
           <h1 className="text-sm text-white md:text-base">
-            {page}/{totalPage}
+            {page}/{totalPage || 0}
           </h1>
           <Arrow
             fill={page < totalPage ? "white" : "#AEAEAE"}
