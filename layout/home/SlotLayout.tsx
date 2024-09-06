@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RWATokenCard } from "@/components/home/RwaTokenCard";
 import { SlotSection } from "@/components/home/SlotSection";
 import Link from "next/link";
@@ -8,10 +8,25 @@ import { useRouter } from "next/navigation";
 import Arrow from "@/public/icons/leftArrowCircle.svg";
 import { MainTitle } from "@/components/common/MainTitle";
 import Stick from "@/public/icons/stick.svg";
+import { Raffle } from "../mypage/Raffle";
 
 export const SlotLayout = () => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
+  const [data, setData] = useState<any>(null);
+
+  const getToTheMoonData = async () => {
+    const response = await Raffle();
+    setData(response);
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
+    getToTheMoonData();
+  }, []);
 
   return (
     <div className="main w-full flex-col p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5">
