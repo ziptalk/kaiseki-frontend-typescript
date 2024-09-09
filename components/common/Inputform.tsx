@@ -53,6 +53,7 @@ export const Inputform = ({
         <div className={sharedStyle + " flex items-center justify-between"}>
           <input
             type={type ? type : `text`}
+            step={0.01}
             className="h-full w-full bg-transparent text-white outline-none"
             {...register(name, { maxLength, onChange })}
           />

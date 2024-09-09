@@ -21,6 +21,7 @@ import { Inputform } from "@/components/common/Inputform";
 import { Button } from "@/components/atoms/Button";
 import { CreateCard } from "@/components/detail/CreateCard";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
+import { StoreCidAndTokenAddress } from "@/utils/apis/apis";
 
 export interface HookFormTypes {
   Name: string;
@@ -38,7 +39,7 @@ const Create: NextPage = () => {
   const signer = useEthersSigner();
   const account = useAccount();
   const router = useRouter();
-  const { register, handleSubmit, watch, setValue } = useForm<HookFormTypes>({
+  const { register, handleSubmit, watch } = useForm<HookFormTypes>({
     defaultValues: {
       Name: "",
       Ticker: "",
@@ -91,34 +92,21 @@ const Create: NextPage = () => {
 
   // MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (createdTokenAddress: any) => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/storeCidAndTokenAddress`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cid,
-            name: watch("Name"),
-            ticker: watch("Ticker"),
-            tokenAddress: createdTokenAddress,
-            description: watch("Description"),
-            twitterUrl: watch("twitter"),
-            telegramUrl: watch("telegram"),
-            websiteUrl: watch("website"),
-            marketCap: 0,
-            createdBy: account.address,
-            timestamp: new Date().toISOString(),
-          }),
-        },
-      );
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await StoreCidAndTokenAddress({
+      cid,
+      tokenAddress: createdTokenAddress,
+      description: watch("Description"),
+      twitterUrl: watch("twitter") || "",
+      telegramUrl: watch("telegram") || "",
+      websiteUrl: watch("website") || "",
+      name: watch("Name"),
+      ticker: watch("Ticker"),
+      createdBy: account.address,
+      threshold: parseInt(watch("threshold")),
+      rafflePrize: watch("prize"),
+      timestamp: new Date().toISOString(),
+    });
+    console.log(response);
   };
 
   const uploadFileToPinata = async (fileToUpload: File) => {
