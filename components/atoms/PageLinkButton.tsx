@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import Arrow from "@/public/icons/pagePre.svg";
 
 interface PageLinkButtonProps {
-  href: string;
+  href: any;
   className?: string;
   prev?: boolean;
 }

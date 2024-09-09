@@ -30,7 +30,7 @@ interface TokenCardTypes {
   name: string;
   ticker: string;
   createdBy?: string;
-  marketCap: string;
+  marketCap?: string;
   description: string;
   tokenAddress: string;
   clickedToken?: string;
@@ -50,7 +50,7 @@ interface TokenInfo {
   cid: string;
   createdBy?: string;
   description: string;
-  marketCap: string;
+  marketCap?: string;
   name: string;
   ticker: string;
   tokenAddress: string;

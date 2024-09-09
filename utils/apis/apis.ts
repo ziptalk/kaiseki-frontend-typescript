@@ -1,7 +1,14 @@
 import { baseAPI } from "./customapi";
-export const TxlogsMintBurn = async () => {
+export const TxlogsMintBurn = async (
+  tokenAddress: string,
+  params?: {
+    itemCount: number;
+  },
+) => {
   try {
-    const response = await baseAPI.get("TxlogsMintBurn");
+    const response = await baseAPI.get(`TxlogsMintBurn/${tokenAddress}`, {
+      params,
+    });
     return response.data;
   } catch (error) {
     console.log("Error in TxlogsMintBurn API", error);
@@ -40,6 +47,8 @@ export const StoreCidAndTokenAddress = async (data: {
   ticker: string;
   marketCap: number;
   createdBy: string;
+  threshold: number;
+  rafflePrize: string;
   timestamp: string;
 }) => {
   try {
