@@ -480,7 +480,10 @@ export const Tradesection = ({
       <div className="flex h-[50px] justify-between gap-[5px]">
         <Button
           className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
-          onClick={() => setIsBuy(true)}
+          onClick={() => {
+            setIsBuy(true);
+            setInputValue("0");
+          }}
         >
           Buy
         </Button>
@@ -489,6 +492,7 @@ export const Tradesection = ({
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
+            setInputValue("0");
           }}
         >
           Sell
