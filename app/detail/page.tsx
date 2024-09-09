@@ -50,7 +50,7 @@ export default function Detail() {
     ticker: searchParams.get("ticker") || "",
     tokenAddress: searchParams.get("tokenAddress") || "",
   });
-  const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
+  // const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
   );
@@ -62,12 +62,8 @@ export default function Detail() {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
-      fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer(
-        tokenInfo.tokenAddress,
-        setTXLogs20FromServer,
-        TXLogsFromServer,
-      );
+      // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+      fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogs20FromServer);
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
@@ -123,31 +119,21 @@ export default function Detail() {
     }
   };
 
-  const fetchTXLogsFromServer = async (
-    tokenAddress: string,
-    setEventsFromDB: any,
-  ) => {
-    const response = await TxlogsMintBurn(tokenAddress);
-    setEventsFromDB(response);
-  };
+  // const fetchTXLogsFromServer = async (
+  //   tokenAddress: string,
+  //   setEventsFromDB: any,
+  // ) => {
+  //   const response = await TxlogsMintBurn(tokenAddress);
+  //   setEventsFromDB(response);
+  // };
 
   const fetch20TXLogsFromServer = async (
     tokenAddress: any,
     setEventsFromDB: any,
-    eventsFromDB: any,
   ) => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}?itemCount=20`,
-      );
-      const data = await response.json();
-      const filteredData = filterEventsByToken(data);
-      if (filteredData.length !== eventsFromDB?.length) {
-        setEventsFromDB(filteredData);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await TxlogsMintBurn(tokenAddress, { itemCount: 20 });
+    console.log("response", response);
+    setEventsFromDB(filterEventsByToken(response));
   };
 
   const checkMetaMaskInstalled = () => {
