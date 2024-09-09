@@ -13,7 +13,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { ModalContentBox, ModalRootWrapper } from "./Modal";
-import { MODAL_VISIBLE_STORAGE_KEY } from "@/global/constants";
 
 import {
   PROJECT_CHAIN_ID,

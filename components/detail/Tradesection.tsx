@@ -19,7 +19,6 @@ import contracts from "@/global/contracts";
 interface TradesectionProps {
   memeTokenSymbol: string;
   RESERVE_SYMBOL: string;
-  raffle?: boolean;
   tokenAddress: string;
 }
 
@@ -27,7 +26,6 @@ export const Tradesection = ({
   tokenAddress,
   memeTokenSymbol,
   RESERVE_SYMBOL,
-  raffle,
 }: TradesectionProps) => {
   const account = useAccount();
   const signer = useEthersSigner();
@@ -604,14 +602,14 @@ export const Tradesection = ({
       )}
       <SellPercentageButton />
       {/*true == toggle module, false == percent for sell*/}
-      {raffle && (
+      {/* {raffle && (
         <div className="text-[14px] text-white">
           {"Raffle has already progressed! -> "}
           <Link href={"#"} className="underline">
             Join the Raffle!
           </Link>
         </div>
-      )}
+      )} */}
       {isConnected ? (
         <Button submit className="mt-5 h-12" variant="gradiant">
           Place Trade
