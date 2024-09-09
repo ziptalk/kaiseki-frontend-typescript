@@ -28,9 +28,7 @@ export default function Detail() {
 
   // MARK: - init ethers.js
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
   const bondContract = new ethers.Contract(
     contracts.MCV2_Bond,

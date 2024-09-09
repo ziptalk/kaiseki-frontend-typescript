@@ -32,10 +32,7 @@ export default function Raffle() {
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_MultiTokenABI } = MCV2_MultiTokenReceiver;
   const { abi: erc20Abi } = IERC20_abi;
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
-
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const memeTokenContract = new ethers.Contract(
     searchParams.get("token") || "",
     MCV2_TokenABI,

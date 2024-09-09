@@ -10,7 +10,12 @@ import { FieldErrors, set, useForm } from "react-hook-form";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
-import { stepPrices, stepRanges } from "@/global/createValue";
+import {
+  stepPrices,
+  stepRanges,
+  maxSupply,
+  creationFee,
+} from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import Preview from "@/public/icons/Preview.svg";
@@ -51,9 +56,7 @@ const Create: NextPage = () => {
   });
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
@@ -69,15 +72,15 @@ const Create: NextPage = () => {
 
   // TODO - Change creation fee later
   // const creationFeeInWei = ethers.parseEther("3.5");
-  const creationFeeInWei = ethers.parseEther("0.007");
+  // const creationFeeInWei = ethers.parseEther("0.007");
+
   const [isLoading, setIsLoading] = useState(false);
   const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
 
-  useEffect(() => {
-    console.log({ cid });
-  }, [cid]);
+  console.log(creationFee);
+
   // Get data from server for check dup
   useEffect(() => {
     fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
@@ -252,7 +255,7 @@ const Create: NextPage = () => {
           stepPrices: stepPrices,
         },
         {
-          value: creationFeeInWei.toString(),
+          value: creationFee.toString(),
         },
       );
       await receipt.wait();

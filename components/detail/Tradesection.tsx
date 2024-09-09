@@ -41,9 +41,7 @@ export const Tradesection = ({
 
   const [inputValue, setInputValue] = useState("");
 
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -122,14 +120,6 @@ export const Tradesection = ({
     return result;
   };
   const sellhandlePercentage = (percentage: number) => {
-    console.log(curMemeTokenValue, priceForNextMint);
-    console.log(
-      (Number(
-        BigInt(parseFloat(curMemeTokenValue)) * BigInt(priceForNextMint),
-      ) *
-        percentage) /
-        100,
-    );
     if (isInputInTokenAmount) {
       const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
       setInputValue(Math.floor(value).toString());
