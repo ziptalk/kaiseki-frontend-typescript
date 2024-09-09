@@ -1,17 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import MCV2_TokenArtifact from "@/abis/MCV2_Token.sol/MCV2_Token.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import TokenCard from "@/components/detail/TokenCard";
 
-import { ether, wei } from "@/utils/weiAndEther";
-import { useEthersSigner } from "@/utils/ethersSigner";
-import { MAX_INT_256, BILLION } from "@/global/constants";
+import { BILLION } from "@/global/constants";
 import contracts from "@/global/contracts";
 
 import TradingViewChart from "@/components/common/TradingViewWidget";

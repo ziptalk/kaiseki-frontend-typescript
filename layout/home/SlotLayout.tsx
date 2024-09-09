@@ -74,7 +74,7 @@ export const SlotLayout = () => {
         {/* move to prev/next raffle */}
         <div className="flex items-center gap-3 md:gap-5">
           <Arrow
-            fill={page > 0 ? "#AEAEAE" : "white"}
+            fill={page > 1 ? "white" : "#AEAEAE"}
             className="cursor-pointer"
             onClick={() => {
               if (page > 1) setPage(page - 1);
