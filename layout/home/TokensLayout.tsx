@@ -20,7 +20,7 @@ export const initialTokenInfo: TokenInfo = {
 export const TokensLayout = () => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNumber] = useState<number>(1);
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string | undefined>(undefined);
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
   const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
     undefined,

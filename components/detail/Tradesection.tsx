@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
@@ -244,12 +243,14 @@ export const Tradesection = ({
   const handleBuyMaxinMeme = async (percentage: number) => {
     await setUserMemeTokenBalanceIntoState();
     const res = await getMintTokenForReserve(
-      BigInt(
-        (Number(ethers.parseEther(curUserReserveBalance)) * percentage) / 100,
-      ),
+      ethers.parseEther(curUserReserveBalance),
     );
 
-    setInputValue(String(res.displayValue));
+    setInputValue(
+      (
+        Math.floor(Number(String(res.displayValue)) / 100) * percentage
+      ).toString(),
+    );
   };
 
   // MARK: - Sell

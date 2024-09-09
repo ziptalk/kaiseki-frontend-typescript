@@ -22,6 +22,8 @@ import { Button } from "@/components/atoms/Button";
 import { CreateCard } from "@/components/detail/CreateCard";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { StoreCidAndTokenAddress } from "@/utils/apis/apis";
+import { wei } from "@/utils/weiAndEther";
+import { BILLION } from "@/global/constants";
 
 export interface HookFormTypes {
   Name: string;
@@ -67,7 +69,7 @@ const Create: NextPage = () => {
 
   // TODO - Change creation fee later
   // const creationFeeInWei = ethers.parseEther("3.5");
-  const creationFeeInWei = ethers.parseEther("0.0007");
+  const creationFeeInWei = ethers.parseEther("0.007");
   const [isLoading, setIsLoading] = useState(false);
   const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
@@ -102,6 +104,10 @@ const Create: NextPage = () => {
       name: watch("Name"),
       ticker: watch("Ticker"),
       createdBy: account.address,
+      marketCap:
+        Number(ethers.formatEther(stepPrices[0].toString())) *
+        Number(ethers.formatEther(stepRanges[0].toString())) *
+        BILLION,
       threshold: parseInt(watch("threshold")),
       rafflePrize: watch("prize"),
       timestamp: new Date().toISOString(),

@@ -105,10 +105,12 @@ export default function Detail() {
       const mcap = (
         Number(ethers.formatEther(price.toString())) * BILLION
       ).toFixed(2);
+      console.log({ price });
       console.log("this is mcap" + mcap);
       const response = await axios.get(
         `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
       );
+      console.log(response.data.price, mcap);
       const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
       await ChangeMcap({
         tokenAddress: tokenInfo.tokenAddress,

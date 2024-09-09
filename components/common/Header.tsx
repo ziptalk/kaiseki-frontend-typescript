@@ -320,9 +320,9 @@ const Header: FC = () => {
             <div className="mb-[34px] h-[111px] gap-[20px]">
               <h1 className="mb-[20px] text-2xl">How it works</h1>
               <h1>
-                Memeslot prevents rugs by making sure that all created tokens
-                are safe. Each coin on Memesino is a fair-launch with no presale
-                and no team allocation.
+                RWE prevents rugs by making sure that all created tokens are
+                safe. Each coin on RWE is a fair-launch with no presale and no
+                team allocation.
               </h1>
             </div>
 
@@ -401,13 +401,11 @@ const Header: FC = () => {
                 <Telegram
                   // fill={isHoveredTG ? "#5E5E5E" : "white"}
                   className="h-4 w-4 cursor-pointer fill-[#5E5E5E] hover:fill-white"
-                  onClick={() => handleUrlClick("https://t.me/memesinodotfun")}
+                  onClick={() => handleUrlClick("https://t.me/rwe_bet")}
                 />
                 <X
                   className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
-                  onClick={() =>
-                    handleUrlClick("https://twitter.com/memesinodotfun")
-                  }
+                  onClick={() => handleUrlClick("https://twitter.com/rwe_bet")}
                 />
                 <Info
                   className="cursor-pointer fill-[#5E5E5E] hover:fill-white"

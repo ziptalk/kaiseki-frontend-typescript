@@ -45,6 +45,7 @@ export const StoreCidAndTokenAddress = async (data: {
   websiteUrl: string;
   name: string;
   ticker: string;
+  marketCap: number;
   createdBy: `0x${string}` | undefined;
   threshold: number;
   rafflePrize: string;
