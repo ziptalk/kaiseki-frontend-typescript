@@ -144,19 +144,10 @@ export const Tradesection = ({
       setInputValue(value.toFixed(10).toString());
     }
   };
-  const buyhandlePercentage = (percentage: number) => {
-    const value =
-      (Number(
-        ethers.parseEther(curUserReserveBalance) / BigInt(priceForNextMint),
-      ) *
-        percentage) /
-      1000;
-    const valueCurUser = (Number(curUserReserveBalance) * percentage) / 100;
-
-    setInputValue(
-      isInputInTokenAmount ? value.toString() : valueCurUser.toString(),
-    );
-  };
+  // const buyhandlePercentage = (percentage: number) => {
+  //   const value = Number(handleBuyMaxinMeme()) * (percentage / 100);
+  //   setInputValue(value.toString());
+  // };
   const getTotalMemetokenAmount = async () => {
     try {
       const supply = await memeTokenContract.totalSupply();
@@ -250,10 +241,12 @@ export const Tradesection = ({
       setInputValue(curUserReserveBalance.substring(0, 5));
     }
   };
-  const handleBuyMaxinMeme = async () => {
+  const handleBuyMaxinMeme = async (percentage: number) => {
     await setUserMemeTokenBalanceIntoState();
     const res = await getMintTokenForReserve(
-      ethers.parseEther(curUserReserveBalance),
+      BigInt(
+        (Number(ethers.parseEther(curUserReserveBalance)) * percentage) / 100,
+      ),
     );
 
     setInputValue(String(res.displayValue));
@@ -456,7 +449,7 @@ export const Tradesection = ({
   };
 
   const SellPercentageButton: FC = () => {
-    const percentages = [25, 50, 75, 100];
+    const percentages = [25, 50, 75];
     return (
       <div className="flex items-center gap-2">
         {percentages.map((percentage) => (
@@ -468,7 +461,7 @@ export const Tradesection = ({
               () =>
                 isBuy
                   ? isInputInTokenAmount
-                    ? buyhandlePercentage(percentage)
+                    ? handleBuyMaxinMeme(percentage)
                     : handleBuyMaxInReserve(percentage)
                   : sellhandlePercentage(percentage)
               // ? buyhandlePercentage(percentage)
@@ -542,7 +535,7 @@ export const Tradesection = ({
                 type="button"
                 onClick={() => {
                   if (isInputInTokenAmount) {
-                    handleBuyMaxinMeme();
+                    handleBuyMaxinMeme(100);
                   } else {
                     handleBuyMaxInReserve();
                   }
