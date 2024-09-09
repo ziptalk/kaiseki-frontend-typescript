@@ -111,8 +111,11 @@ const Header: FC = () => {
       fetch(`${SERVER_ENDPOINT}/tokens/latest`)
         .then((response) => response.json())
         .then((data) => {
-          const newCreateTic = data.latestCreatedToken.ticker.substring(0, 5);
-          const newCreateUser = data.latestCreatedToken.creator.substring(0, 5);
+          const newCreateTic = data.latestCreatedToken.ticker?.substring(0, 5);
+          const newCreateUser = data.latestCreatedToken.creator?.substring(
+            0,
+            5,
+          );
           const newCreateCid = data.latestCreatedToken.cid;
           const newCreateTokenAddress = data.latestCreatedToken.tokenAddress;
           const date = new Date(data.latestCreatedToken.createdAt);
@@ -123,8 +126,8 @@ const Header: FC = () => {
             2,
             "0",
           )}/${String(date.getFullYear()).slice(-2)}`;
-          const newMintTic = data.latestMintedToken.ticker.substring(0, 5);
-          const newMintUser = data.latestMintedToken.user.substring(0, 5);
+          const newMintTic = data.latestMintedToken.ticker?.substring(0, 5);
+          const newMintUser = data.latestMintedToken.user?.substring(0, 5);
           const newMintCid = data.latestMintedToken.cid;
           const newMintValue = Number(
             ethers.formatEther(data.latestMintedToken.reserveAmount),
@@ -384,14 +387,14 @@ const Header: FC = () => {
                 className="flex items-center gap-2 rounded-full md:h-[40px] md:gap-[15px] "
               >
                 <img
-                  src="/images/memeLogo.png"
+                  src="/icons/logo_icon.svg"
                   alt=""
-                  className="h-6 w-6 md:h-[29px] md:w-[26px]"
+                  className="h-6 w-6 md:h-[40px] md:w-[40px]"
                 />
                 <img
-                  src="/images/Memeslot.png"
+                  src="/icons/RWE.svg"
                   alt=""
-                  className="h-6 w-20 md:h-[28px] md:w-[94px]"
+                  className="h-6 w-20 md:h-[30px] md:w-[86px]"
                 />
               </Link>
 
@@ -500,14 +503,20 @@ const Header: FC = () => {
                     </div>
                     <div className="flex gap-2">
                       <Power
-                        className={`cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
+                        width={18}
+                        height={18}
+                        viewBox="0 0 18 18"
+                        className={`h-[18px] w-[18px] cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
                         onClick={() => setDisconnectToggle(true)}
                       />
                       <DownArrow
                         onClick={() =>
                           setAccountButtonModal(!accountButtonModal)
                         }
-                        className={`transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
+                        width={18}
+                        height={18}
+                        viewBox="0 0 18 18"
+                        className={`h-[18px] w-[18px] transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
                       />
                     </div>
                   </div>

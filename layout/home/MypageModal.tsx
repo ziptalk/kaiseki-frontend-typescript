@@ -1,5 +1,4 @@
 import React from "react";
-import { ModalRootWrapper } from "@/components/common/Modal";
 import Xbutton from "@/public/icons/XButton.svg";
 import Power from "@/public/icons/big_power.svg";
 import TradeArr from "@/public/icons/trade-arr.svg";
@@ -29,7 +28,7 @@ export const MypageModal = ({
 
   return (
     <div
-      className="z-50 h-full select-none rounded-t-lg border-white bg-[#252525] p-5 md:absolute md:right-8 md:top-[80px] md:h-auto md:w-96 md:rounded-[10px] md:border"
+      className="z-50 h-full select-none overflow-hidden rounded-t-lg border-white bg-[#252525] p-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="ml-auto flex w-14 cursor-pointer justify-end gap-2.5">
@@ -56,7 +55,7 @@ export const MypageModal = ({
           </div>
         ))}
       </div>
-      <div className="mt-7">{TabContents[tabIndex]}</div>
+      <div className="my-7 h-full overflow-scroll">{TabContents[tabIndex]}</div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { RWATokenCard } from "@/components/home/RwaTokenCard";
 import { SlotSection } from "@/components/home/SlotSection";
 import Link from "next/link";
@@ -8,46 +8,87 @@ import { useRouter } from "next/navigation";
 import Arrow from "@/public/icons/leftArrowCircle.svg";
 import { MainTitle } from "@/components/common/MainTitle";
 import Stick from "@/public/icons/stick.svg";
-import { Raffle } from "../mypage/Raffle";
+import { Raffle } from "@/utils/apis/apis";
+import { RaffleResponse } from "@/utils/apis/type";
 
 export const SlotLayout = () => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  const [data, setData] = useState<any>(null);
+  const [raffleData, setRaffleData] = useState<RaffleResponse | null>(null);
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
-  const getToTheMoonData = async () => {
+  const getRaffle = async () => {
     const response = await Raffle();
-    setData(response);
+    setRaffleData(response);
   };
+  useEffect(() => {
+    if (raffleData) {
+      setTotalPage(Number(raffleData.message.slice(27, 29)));
+    }
+  }, [raffleData]);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    if (totalPage) setPage(1);
+  }, [totalPage]);
 
   useEffect(() => {
-    getToTheMoonData();
+    getRaffle();
   }, []);
 
   return (
     <div className="main w-full flex-col p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5">
-      <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px]">
+      <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14">
         {/* raffle section */}
         <Link
-          href="/raffle"
+          href={{
+            pathname: "/raffle",
+            query: raffleData &&
+              raffleData.tokens &&
+              raffleData.tokens[page - 1] && {
+                cid: raffleData.tokens[page - 1].cid,
+                rafflePrize: raffleData.tokens[page - 1].rafflePrize,
+                token: raffleData.tokens[page - 1].token,
+                name: raffleData.tokens[page - 1].name,
+                symbol: raffleData.tokens[page - 1].symbol,
+                creator: raffleData.tokens[page - 1].creator,
+                description: raffleData.tokens[page - 1].description,
+                startDate: raffleData.tokens[page - 1].startDate,
+              },
+          }}
           className="flex w-full flex-col items-center gap-5"
         >
-          <MainTitle title="Raffle is ready!" />
-          <RWATokenCard />
+          <MainTitle
+            title={
+              raffleData && raffleData.tokens
+                ? "Raffle is ready!"
+                : "Loading..."
+            }
+          />
+          {raffleData && raffleData.tokens && raffleData.tokens[page - 1] && (
+            <RWATokenCard props={raffleData.tokens[page - 1]} />
+          )}
           <SlotSection />
         </Link>
 
         {/* move to prev/next raffle */}
         <div className="flex items-center gap-3 md:gap-5">
-          <Arrow fill={"#AEAEAE"} className="cursor-pointer" />
-          <h1 className="text-sm text-white md:text-base">1/1</h1>
           <Arrow
-            fill={"#AEAEAE"}
+            fill={page > 0 ? "#AEAEAE" : "white"}
+            className="cursor-pointer"
+            onClick={() => {
+              if (page > 1) setPage(page - 1);
+            }}
+          />
+          <h1 className="text-sm text-white md:text-base">
+            {page}/{totalPage || 0}
+          </h1>
+          <Arrow
+            fill={page < totalPage ? "white" : "#AEAEAE"}
             className="rotate-180 transform cursor-pointer"
+            onClick={() => {
+              if (page < totalPage) setPage(page + 1);
+            }}
           />
         </div>
       </div>

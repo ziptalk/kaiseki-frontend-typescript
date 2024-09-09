@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 import { arial } from "@/fonts/font";
 import Header from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
+import { Suspense } from "react";
 
 export default function RootLayout({
   children,
@@ -27,11 +28,13 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${arial.variable} bg-[#0E0E0E] font-arial`}
       >
-        <Provider>
-          <Header />
-          {children}
-          <Footer />
-        </Provider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Provider>
+            <Header />
+            {children}
+            <Footer />
+          </Provider>
+        </Suspense>
       </body>
     </html>
   );

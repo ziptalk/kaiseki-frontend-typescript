@@ -25,6 +25,7 @@ import Slider from "@/components/common/Slider";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import { TradesLayout } from "@/layout/detail/TradesLayout";
 import { HolderDistributionLayout } from "@/layout/detail/HolderDistrubutionLayout";
+import { setCurStepsIntoState } from "@/utils/getCurve";
 
 export default function Detail() {
   const signer = useEthersSigner();
@@ -622,21 +623,13 @@ export default function Detail() {
 
       {/* right side */}
       <div>
-        <div className="mt-[38px] h-[290px] w-[470px] bg-[#252525] p-[20px]">
+        <div className="mt-[38px] h-[310px] w-[470px] bg-[#252525] p-[20px]">
           <Tradesection
             {...{
-              isBuy,
-              setIsBuy,
-              setIsInputInTokenAmount,
-              isInputInTokenAmount,
-              inputValue,
-              handleInputChange,
-              handlePercentage,
-              buy,
-              sell,
               memeTokenSymbol: tokenInfo.ticker,
               priceForNextMint,
               RESERVE_SYMBOL,
+              tokenAddress,
             }}
           />
         </div>

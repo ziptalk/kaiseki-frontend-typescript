@@ -6,7 +6,7 @@ import { BuySellLayout } from "./BuySellLayout";
 import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
-
+import { Search } from "@/utils/apis/apis";
 export const initialTokenInfo: TokenInfo = {
   cid: "",
   createdBy: "",
@@ -22,33 +22,45 @@ export const TokensLayout = () => {
   const [pageNum, setPageNumber] = useState<number>(1);
   const [value, setValue] = useState<string>("");
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
+    undefined,
+  );
+  const [order, setOrder] = useState<"asc" | "desc" | undefined>(undefined);
 
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowDimensions);
+
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
   const setPageNum = (num: number) => {
     setPageNumber(num);
     setInfo(initialTokenInfo);
   };
   useEffect(() => {
-    getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNum]);
+    setHomeTokens();
+  }, [pageNum, sort, order]);
 
-  function getData() {
-    fetch(
-      `${SERVER_ENDPOINT}/search?page=${pageNum}${value && "?keyword=" + value}`,
-    ) // Add this block
-      .then((response) => response.json())
-      .then((data) => {
-        setTokenInfo(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  const setHomeTokens = async () => {
+    const response = await Search({
+      page: pageNum,
+      keyword: value,
+      sort,
+      order,
+    });
+    setTokenInfo(response);
+  };
 
   const setInfotoInitial = () => {
     setInfo(initialTokenInfo);
   };
+
   return (
     <div className="mx-auto md:flex md:w-[1300px]">
       <div
@@ -56,21 +68,27 @@ export const TokensLayout = () => {
       >
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:flex-row">
-          <div className="flex gap-5 md:w-[329px]">
+          <div className="flex gap-5 md:w-[420px]">
             <Dropdown // sort dropdown
               placeholder="sort : "
-              items={["created", "trending"]}
+              items={["createdAt", "currentSupply"]}
+              setItem={(value) => {
+                setSort(value);
+              }}
             />
             <Dropdown // order dropdown
               placeholder="order : "
               items={["desc", "asc"]}
+              setItem={(value) => {
+                setOrder(value);
+              }}
             />
           </div>
           <form
             className="flex h-10 gap-[10px] md:ml-auto md:h-[50px] md:w-[420px]"
             onSubmit={(e) => {
               e.preventDefault();
-              getData();
+              setHomeTokens();
             }}
           >
             <input
@@ -142,7 +160,7 @@ export const TokensLayout = () => {
         </div>
       </div>
       {info.tokenAddress &&
-        (isMobile ? (
+        (width < 768 ? (
           <BottomSheet
             {...{
               setUnVisible: setInfotoInitial,

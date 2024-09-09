@@ -1,10 +1,11 @@
 import { useState } from "react";
 interface DropdownProps {
-  items: string[];
+  items: any[];
   placeholder: string;
+  setItem: (item: any) => void;
 }
 
-export const Dropdown = ({ items, placeholder }: DropdownProps) => {
+export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
   const [isDropdownView, setDropdownView] = useState(false);
   const [selectedItem, setSelectedItem] = useState(items[0]);
 
@@ -34,6 +35,7 @@ export const Dropdown = ({ items, placeholder }: DropdownProps) => {
             <div
               onClick={() => {
                 setSelectedItem(li);
+                setItem(li);
                 setDropdownView(false);
               }}
               key={i}
