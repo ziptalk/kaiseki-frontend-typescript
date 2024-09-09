@@ -22,6 +22,10 @@ export const TokensLayout = () => {
   const [pageNum, setPageNumber] = useState<number>(1);
   const [value, setValue] = useState<string>("");
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
+  const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
+    undefined,
+  );
+  const [order, setOrder] = useState<"asc" | "desc" | undefined>(undefined);
 
   const [width, setWidth] = useState(0);
 
@@ -41,10 +45,15 @@ export const TokensLayout = () => {
   };
   useEffect(() => {
     setHomeTokens();
-  }, [pageNum]);
+  }, [pageNum, sort, order]);
 
   const setHomeTokens = async () => {
-    const response = await Search({ page: pageNum, keyword: value });
+    const response = await Search({
+      page: pageNum,
+      keyword: value,
+      sort,
+      order,
+    });
     setTokenInfo(response);
   };
 
@@ -59,14 +68,20 @@ export const TokensLayout = () => {
       >
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:flex-row">
-          <div className="flex gap-5 md:w-[329px]">
+          <div className="flex gap-5 md:w-[420px]">
             <Dropdown // sort dropdown
               placeholder="sort : "
-              items={["created", "trending"]}
+              items={["createdAt", "currentSupply"]}
+              setItem={(value) => {
+                setSort(value);
+              }}
             />
             <Dropdown // order dropdown
               placeholder="order : "
               items={["desc", "asc"]}
+              setItem={(value) => {
+                setOrder(value);
+              }}
             />
           </div>
           <form

@@ -23,6 +23,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
 
   useEffect(() => {
     fetchBondingCurveProgress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenAddress]);
 
   return (

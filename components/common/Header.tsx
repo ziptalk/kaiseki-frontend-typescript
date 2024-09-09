@@ -387,14 +387,14 @@ const Header: FC = () => {
                 className="flex items-center gap-2 rounded-full md:h-[40px] md:gap-[15px] "
               >
                 <img
-                  src="/images/memeLogo.png"
+                  src="/icons/logo_icon.svg"
                   alt=""
-                  className="h-6 w-6 md:h-[29px] md:w-[26px]"
+                  className="h-6 w-6 md:h-[40px] md:w-[40px]"
                 />
                 <img
-                  src="/images/Memeslot.png"
+                  src="/icons/RWE.svg"
                   alt=""
-                  className="h-6 w-20 md:h-[28px] md:w-[94px]"
+                  className="h-6 w-20 md:h-[30px] md:w-[86px]"
                 />
               </Link>
 
