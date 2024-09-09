@@ -504,15 +504,19 @@ export const Tradesection = ({
     <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
       <BuySellButtonSection />
 
-      <div
-        onClick={() => {
-          setIsInputInTokenAmount(!isInputInTokenAmount);
-          handleReset();
-        }}
-        className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
-      >
-        Switch to {isInputInTokenAmount ? "ETH" : memeTokenSymbol}
-      </div>
+      {isBuy ? (
+        <div
+          onClick={() => {
+            setIsInputInTokenAmount(!isInputInTokenAmount);
+            handleReset();
+          }}
+          className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
+        >
+          Switch to {isInputInTokenAmount ? "ETH" : memeTokenSymbol}
+        </div>
+      ) : (
+        <div className="h-5"></div>
+      )}
 
       {isInputInTokenAmount ? (
         <>
@@ -539,10 +543,10 @@ export const Tradesection = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (isInputInTokenAmount) {
+                  if (isBuy) {
                     handleBuyMaxinMeme(100);
                   } else {
-                    handleBuyMaxInReserve();
+                    sellhandlePercentage(100);
                   }
                 }}
                 className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
