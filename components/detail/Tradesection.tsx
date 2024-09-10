@@ -243,12 +243,13 @@ export const Tradesection = ({
     }
     if (isPending) return;
     await setUserMemeTokenBalanceIntoState();
-    if (
-      ether(BigInt(Math.floor(Number(inputValue)))) > Number(curMemeTokenValue)
-    ) {
+    if (BigInt(Math.floor(Number(inputValue))) > Number(curMemeTokenValue)) {
       // setTradeModuleErrorMsg(
       //   `Insufficient balance : You have ${curMemeTokenValue} ${memeTokenName}`,
       // );
+      alert(
+        `Insufficient balance: You have ${curMemeTokenValue} ${memeTokenSymbol}`,
+      );
       return;
     }
 
