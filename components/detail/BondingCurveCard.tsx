@@ -3,18 +3,18 @@ import { digital } from "@/fonts/font";
 
 interface BondingCurveCardTypes {
   prog: number;
-  desc?: string;
+  home?: boolean;
   bgColor?: string;
 }
 const BondingCurveCard: FC<BondingCurveCardTypes> = ({
   prog,
-  desc,
+  home = false,
   bgColor = "white",
 }) => {
   return (
     <div className="flex w-full flex-col rounded-[20px]">
       <div className="flex h-[21px] items-end gap-2">
-        <div className="text-[13px] leading-[15px] text-[#FAFF00]">
+        <div className="text-sm leading-[15px] text-[#FAFF00]">
           Bonding Curve Progress:{" "}
         </div>
         <div
@@ -29,9 +29,17 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({
           style={{ width: `${prog}%` }}
         />
       </div>
-      {desc && (
+      {home ? (
+        <div className="mt-[21px] h-[90px] overflow-scroll text-[13px] leading-[18px] text-[#AEAEAE]">
+          {
+            "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
+          }
+        </div>
+      ) : (
         <div className="mt-[21px] h-[90px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
-          {desc}
+          {
+            "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
+          }
         </div>
       )}
     </div>

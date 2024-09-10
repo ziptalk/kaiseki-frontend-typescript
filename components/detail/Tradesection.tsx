@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { stepPrices, stepRanges } from "@/global/createValue";
+import { RESERVE_SYMBOL } from "@/global/projectConfig";
 
 import { ErrorDecoder } from "ethers-decode-error";
 import { ethers } from "ethers";
@@ -17,14 +18,12 @@ import { useEthersSigner } from "@/utils/ethersSigner";
 import contracts from "@/global/contracts";
 interface TradesectionProps {
   memeTokenSymbol: string;
-  RESERVE_SYMBOL: string;
   tokenAddress: string;
 }
 
 export const Tradesection = ({
   tokenAddress,
   memeTokenSymbol,
-  RESERVE_SYMBOL,
 }: TradesectionProps) => {
   const account = useAccount();
   const signer = useEthersSigner();
@@ -38,8 +37,9 @@ export const Tradesection = ({
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  const [maxBuyAmount, setMaxBuyAmount] = useState(0);
 
-  const [inputValue, setInputValue] = useState("0");
+  const [inputValue, setInputValue] = useState(0);
 
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
@@ -120,18 +120,8 @@ export const Tradesection = ({
     return result;
   };
   const sellhandlePercentage = (percentage: number) => {
-    if (isInputInTokenAmount) {
-      const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
-      setInputValue(Math.floor(value).toString());
-    } else {
-      const value =
-        (Number(
-          BigInt(parseFloat(curMemeTokenValue)) / BigInt(priceForNextMint),
-        ) *
-          percentage) /
-        100;
-      setInputValue(value.toFixed(10).toString());
-    }
+    const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
+    setInputValue(Number(value.toFixed(5)));
   };
   // const buyhandlePercentage = (percentage: number) => {
   //   const value = Number(handleBuyMaxinMeme()) * (percentage / 100);
@@ -170,10 +160,9 @@ export const Tradesection = ({
     }
   };
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
-    console.log({ inputValue });
     const reserveAmount = curUserReserveBalance
       ? curUserReserveBalance
-      : ethers.parseEther(inputValue);
+      : ethers.parseEther(inputValue.toString());
 
     let currentSupply = await getTotalMemetokenAmount(); // current total supply
     console.log("currentSupply :" + currentSupply);
@@ -222,14 +211,14 @@ export const Tradesection = ({
   };
 
   const handleReset = () => {
-    setInputValue("0");
+    setInputValue(0);
   };
   const handleBuyMaxInReserve = (percentage?: number) => {
     if (percentage) {
       const value = (Number(curUserReserveBalance) * percentage) / 100;
-      setInputValue(value.toString().substring(0, 5));
+      setInputValue(value);
     } else {
-      setInputValue(curUserReserveBalance.substring(0, 5));
+      setInputValue(Number(curUserReserveBalance.substring(0, 5)));
     }
   };
   const handleBuyMaxinMeme = async (percentage: number) => {
@@ -237,11 +226,10 @@ export const Tradesection = ({
     const res = await getMintTokenForReserve(
       ethers.parseEther(curUserReserveBalance),
     );
+    setMaxBuyAmount(Number(String(res.displayValue)));
 
     setInputValue(
-      (
-        Math.floor(Number(String(res.displayValue)) / 100) * percentage
-      ).toString(),
+      Math.floor(Number(String(res.displayValue)) / 100) * percentage,
     );
   };
 
@@ -250,9 +238,7 @@ export const Tradesection = ({
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const inputValue = formData.get("inputValue") as string;
-    const BigIntValue = isInputInTokenAmount
-      ? BigInt(wei(Number(inputValue)))
-      : BigInt(wei(Math.floor(Number(inputValue)) * Number(curMemeTokenValue)));
+    const BigIntValue = BigInt(wei(Number(inputValue)));
     if (account.address == null) {
       return;
     }
@@ -440,7 +426,34 @@ export const Tradesection = ({
       console.log(error);
     }
   };
-
+  const EthSetButton = () => {
+    const eths = [
+      { name: "reset", eth: 0 },
+      { name: "0.01 ETH", eth: 0.01 },
+      { name: "0.05 ETH", eth: 0.05 },
+      { name: "0.1 ETH", eth: 0.1 },
+    ];
+    return (
+      <div className="flex items-center gap-2">
+        {eths.map((eth, i) => (
+          <button
+            key={i}
+            type="button"
+            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
+            onClick={() => {
+              if (eth.eth === 0) {
+                setInputValue(0);
+                return;
+              }
+              setInputValue(Number((inputValue + eth.eth).toFixed(2)));
+            }}
+          >
+            {eth.name}
+          </button>
+        ))}
+      </div>
+    );
+  };
   const SellPercentageButton: FC = () => {
     const percentages = [25, 50, 75];
     return (
@@ -453,9 +466,7 @@ export const Tradesection = ({
             onClick={
               () =>
                 isBuy
-                  ? isInputInTokenAmount
-                    ? handleBuyMaxinMeme(percentage)
-                    : handleBuyMaxInReserve(percentage)
+                  ? handleBuyMaxinMeme(percentage)
                   : sellhandlePercentage(percentage)
               // ? buyhandlePercentage(percentage)
               // : sellhandlePercentage(percentage)
@@ -474,7 +485,7 @@ export const Tradesection = ({
           className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
           onClick={() => {
             setIsBuy(true);
-            setInputValue("0");
+            setInputValue(0);
           }}
         >
           Buy
@@ -484,7 +495,7 @@ export const Tradesection = ({
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
-            setInputValue("0");
+            setInputValue(0);
           }}
         >
           Sell
@@ -504,7 +515,7 @@ export const Tradesection = ({
           }}
           className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
         >
-          Switch to {isInputInTokenAmount ? "ETH" : memeTokenSymbol}
+          Switch to {isInputInTokenAmount ? "ETH" : "$" + memeTokenSymbol}
         </div>
       ) : (
         <div className="h-5"></div>
@@ -517,10 +528,9 @@ export const Tradesection = ({
               className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
               type="number"
               placeholder="Enter the amount"
-              step="0.01"
               name="inputValue"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue(Number(e.target.value))}
             />
             <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
               {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
@@ -560,20 +570,18 @@ export const Tradesection = ({
           {/*input amount == RESERVE_SYMBOL*/}
           <div className="relative flex w-full items-center">
             <input
-              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
+              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
               type="number"
               placeholder="Enter the amount"
-              step="0.01"
               name="inputValue"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue(Number(e.target.value))}
             />
+            <div className="absolute left-2 h-[30px] w-[30px] rounded-full">
+              <Image src="/icons/eth_base.svg" alt="" height={30} width={30} />
+            </div>
             <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-              <div className="h-[24px] w-[24px] rounded-full">
-                <Image src="/icons/SeiLogo.svg" alt="" height={24} width={24} />
-              </div>
-
-              <h1 className="mt-1 text-[15px] font-bold text-white">
+              <h1 className="text-[15px] font-bold text-white">
                 {RESERVE_SYMBOL}
               </h1>
             </div>
@@ -594,7 +602,15 @@ export const Tradesection = ({
           </h1> */}
         </>
       )}
-      <SellPercentageButton />
+      {isBuy ? (
+        isInputInTokenAmount ? (
+          <SellPercentageButton />
+        ) : (
+          <EthSetButton />
+        )
+      ) : (
+        <SellPercentageButton />
+      )}
       {/*true == toggle module, false == percent for sell*/}
       {/* {raffle && (
         <div className="text-[14px] text-white">

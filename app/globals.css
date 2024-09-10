@@ -23,10 +23,38 @@
   .main-tokenarea {
     @apply flex h-full w-full justify-between gap-2.5 border border-dashed border-secondary bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525];
   }
+  .tokenarea-background {
+    border: 1px dashed var(--red-linear, #e00900);
+    background: linear-gradient(
+      183deg,
+      rgba(224, 9, 0, 0.3) 2.23%,
+      rgba(166, 13, 7, 0.3) 97.87%
+    );
+  }
+}
+
+.connect-wallet {
+  color: #faff00;
+  text-align: center;
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #ff2626;
+  font-family: Arial;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .button-bg-primary {
   background: linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%);
+}
+.tokenarea-background {
+  border: 1px dashed var(--red-linear, #e00900);
+  background: linear-gradient(
+    183deg,
+    rgba(224, 9, 0, 0.3) 2.23%,
+    rgba(166, 13, 7, 0.3) 97.87%
+  );
 }
 .button-shadow {
   box-shadow: 1.936px 1.936px 3.872px 0px rgba(0, 0, 0, 0.08);

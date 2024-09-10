@@ -8,11 +8,22 @@ export const ModalRootWrapper = styled.div`
   bottom: 0;
 
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #0e0e0ecc;
   height: 100vh;
   z-index: 50;
 `;
+export const ModalRootWrapperWallet = styled.div`
+  position: fixed; // 포지션 픽스, 화면이 스크롤되더라도 고정되기 위함
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
+  width: 100vw;
+  background-color: #0e0e0ecc;
+  height: 100vh;
+  z-index: 30;
+`;
 export const ModalContentBox = styled.div`
   width: 600px;
   padding: 25px 60px;
@@ -33,5 +44,4 @@ export const ModalContentBox = styled.div`
   background: #1e1e1e;
   text-align: center;
   color: white;
-  /* z-index: 1000; */
 `;

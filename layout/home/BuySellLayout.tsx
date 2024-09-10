@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import XButton from "@/public/icons/XButton.svg";
 
 import TradingViewChart from "@/components/common/TradingViewWidget";
-import { RESERVE_SYMBOL } from "@/global/projectConfig";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import Slider from "@/components/common/Slider";
@@ -154,7 +153,6 @@ export const BuySellLayout = ({
           <Tradesection
             {...{
               memeTokenSymbol: ticker,
-              RESERVE_SYMBOL,
               tokenAddress,
             }}
           />
@@ -162,9 +160,9 @@ export const BuySellLayout = ({
           {isMobile || (
             <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
           )}
-          <div className="absolute bottom-3 right-5 hidden h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black md:flex">
+          {/* <div className="absolute bottom-3 right-5 hidden h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black md:flex">
             ?
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

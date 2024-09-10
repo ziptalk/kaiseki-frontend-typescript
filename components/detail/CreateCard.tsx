@@ -33,12 +33,10 @@ export const CreateCard = ({
       )}
       <div className="flex w-full flex-col gap-1 overflow-hidden">
         <h1 className="whitespace-pre-line text-base font-bold leading-none text-[#AEAEAE]">
-          {name || "Name"}
-          {"\n"}
-          [ticker: {ticker || "ticker"}]
+          {name || "Name"} [ticker: {ticker || "ticker"}]
         </h1>
         <div className="flex items-center gap-1">
-          <p className="neon-lime text-xs text-[#C5F900] ">Created by:</p>
+          <p className="text-xs text-[#C5F900] ">Created by:</p>
           <Image
             className="rounded-full"
             src="/images/memesinoGhost.png"
@@ -47,17 +45,15 @@ export const CreateCard = ({
             height={12}
             style={{ width: 12, height: 12 }}
           />
-          <p className="neon-lime text-xs text-[#C5F900] ">{address}</p>
+          <p className="text-xs text-[#C5F900] ">{address}</p>
         </div>
 
         <div className="flex">
-          <p className="neon-yellow text-xs text-[#FAFF00]">
-            Market cap:&nbsp;
-          </p>
+          <p className="text-sm text-[#FAFF00]">Market cap:&nbsp;</p>
           <p
-            className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+            className={`${digital.variable} font-digital text-base text-[#FAFF00]`}
           >
-            0.00K
+            12K
           </p>
         </div>
 

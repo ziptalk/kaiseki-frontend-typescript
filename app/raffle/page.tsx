@@ -60,7 +60,7 @@ export default function Raffle() {
     if (buttonClicked) {
       setTimeout(() => {
         setButtonClicked(false);
-      }, 1000);
+      }, 2000);
     }
   }, [buttonClicked]);
 
@@ -155,13 +155,13 @@ export default function Raffle() {
                 className="flex flex-col md:px-[10px]"
                 style={{ width: width < 768 ? width - 250 : 240 }}
               >
-                <div className="whitespace-pre font-bold text-white md:text-[15px]">
+                <div className="whitespace-pre font-bold text-[#AEAEAE] md:text-[15px]">
                   {searchParams.get("name")}
                   {"\n"}
                   [ticker: {searchParams.get("rafflePrize")}]
                 </div>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
-                  <h1 className="neon-lime  whitespace-nowrap text-[#C5F900]">
+                  <h1 className="whitespace-nowrap text-[#C5F900]">
                     created by:{" "}
                   </h1>
                   <img
@@ -170,14 +170,14 @@ export default function Raffle() {
                     alt=""
                     style={{ width: 12, height: 12 }}
                   />
-                  <div className="neon-lime w-full truncate text-[#C5F900]">
+                  <div className="w-full truncate text-[#C5F900]">
                     {/* {searchParams.get("creator").length < 20
                       ? searchParams.get("creator")
                       : `${searchParams.get("creator").slice(0, 20)}...`} */}
                     {searchParams.get("creator")}
                   </div>
                 </div>
-                <h1 className="neon-yellow text-[#FAFF00]">
+                <h1 className="text-[#FAFF00]">
                   prize: {searchParams.get("rafflePrize")}
                 </h1>
                 <p className="show-scrollbar mt-[5px] h-8 overflow-scroll break-words text-[10px] text-[#808080] md:h-16 md:text-[13px]">
@@ -186,7 +186,7 @@ export default function Raffle() {
               </div>
             </div>
             <div>
-              <h1 className="text-xs font-bold text-[#D9D9D9] underline underline-offset-4 md:mt-3 md:text-[20px]">
+              <h1 className="text-xs font-bold text-[#D9D9D9] underline underline-offset-4 md:mt-3 md:text-base">
                 Amount of Tokens
               </h1>
               <div className="relative mt-3 flex w-full items-center md:mt-[20px]">
@@ -205,7 +205,7 @@ export default function Raffle() {
                   MAX
                 </button>
               </div>
-              <div className="mt-[10px] flex justify-between gap-2">
+              <div className="mt-[10px] flex justify-between gap-2 md:gap-3">
                 {buttonValue.map((item, index) => (
                   <Button
                     key={index}

@@ -12,7 +12,11 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
-import { ModalContentBox, ModalRootWrapper } from "./Modal";
+import {
+  ModalContentBox,
+  ModalRootWrapper,
+  ModalRootWrapperWallet,
+} from "./Modal";
 
 import {
   PROJECT_CHAIN_ID,
@@ -361,7 +365,7 @@ const Header: FC = () => {
           </ModalContentBox>
         </ModalRootWrapper>
       )}
-      <header className="sticky left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
+      <header className="left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
         {/* {pathname == "/" && (
           <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
             <div className="h-full overflow-hidden">
@@ -526,7 +530,7 @@ const Header: FC = () => {
                 <>
                   <button
                     onClick={openConnectModal}
-                    className="hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border bg-[#252525] text-[12px] text-white md:block"
+                    className="connect-wallet hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border  bg-[#252525] md:block"
                   >
                     Connect Wallet
                   </button>
@@ -597,13 +601,13 @@ const Header: FC = () => {
             />
           </BottomSheet>
         ) : (
-          <ModalRootWrapper onClick={ModalOff}>
+          <ModalRootWrapperWallet onClick={ModalOff}>
             <MypageModal
               {...{
                 setModal: setAccountButtonModal,
               }}
             />
-          </ModalRootWrapper>
+          </ModalRootWrapperWallet>
         ))}
       <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
         <Slider

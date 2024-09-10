@@ -17,6 +17,14 @@ export const SlotLayout = () => {
   const [raffleData, setRaffleData] = useState<RaffleResponse | null>(null);
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [stickColor, setStickColor] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStickColor(!stickColor);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [stickColor]);
 
   const getRaffle = async () => {
     const response = await Raffle();
@@ -103,7 +111,7 @@ export const SlotLayout = () => {
         <h1 className="create-title">create new coin</h1>
         <div className="flex h-36 w-20 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
           <Stick
-            className={`${isHovered ? "fill-[#ffea00]" : "fill-[#FF2626]"}`}
+            className={`${isHovered ? "fill-[#ffea00]" : stickColor ? `fill-[#FF2626]` : `fill-[#ffea00]`}`}
           />
         </div>
       </div>
@@ -112,7 +120,9 @@ export const SlotLayout = () => {
         onClick={() => router.push("/create")}
       >
         <div className="trapezoid-icon absolute top-[10px] rounded-full" />
-        <Stick className="absolute top-[-75px] fill-[#FF2626]" />
+        <Stick
+          className={`absolute top-[-75px] ${stickColor ? `fill-[#FF2626]` : `fill-[#ffea00]`}`}
+        />
         <img src="images/rectangle-create.png" alt="" className="w-full" />
         <div className="gradiant-create-box h-14 w-full" />
         <div className="create-title absolute bottom-4">create new coin</div>

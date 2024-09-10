@@ -29,7 +29,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   return (
     <div
       // href={tokenAddress ? tokenAddress : ""}
-      className={`h-full w-full cursor-pointer bg-[#252525] from-[#A60D0799] to-[#E0090099] p-[10px] ${tokenAddress === clickedToken && "md:bg-gradient-to-t"} md:hover:bg-gradient-to-t`}
+      className={`h-full w-full cursor-pointer bg-[#252525] p-[10px] ${tokenAddress === clickedToken && "md:tokenarea-background"} md:hover:tokenarea-background border border-transparent`}
     >
       <div className={`flex ${createdBy && "h-[148px]"} gap-[10px]`}>
         <img
@@ -52,17 +52,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         </div>
       </div>
       <div className="flex items-center gap-[5px]">
-        <h1 className="neon-yellow text-xs text-[#FAFF00]">
-          Bonding Curve Progress :
-        </h1>
+        <h1 className="text-sm text-[#FAFF00]">Market cap :</h1>
         <h1
-          className={`neon-yellow ${digital.variable} font-digital text-xs text-[#FAFF00]`}
+          className={`${digital.variable} font-digital text-lg leading-[14px] text-[#FAFF00]`}
         >
           {Number(marketCap).toLocaleString()}K
         </h1>
-        <div className="text-[12px] text-[#CFCFCF]">
-          ({bondingCurveProgress}%)
-        </div>
+        <div className="text-sm text-[#CFCFCF]">({bondingCurveProgress}%)</div>
       </div>
       <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
         <div

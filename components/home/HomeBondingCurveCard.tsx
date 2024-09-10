@@ -16,10 +16,12 @@ const HomeBondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
             style={{ width: `${prog}%` }}
           ></div>
         </div>
-        <h1 className="h-[75px] overflow-hidden leading-tight text-[#6A6A6A]">
-          Once the bonding curve progress hits 100%, all the liquidity from the
-          bonding curve will be deposited into dragonswap and burned.
-          Progression increases as the price rises.
+        <h1 className="h-[72px] overflow-hidden text-xs leading-tight text-[#6A6A6A]">
+          There are 800,000,000 still available for sale in the bonding curve
+          and there are 0 TRX in the bonding curve. When the market cap
+          reaches $ 78,960.73 all the liquidity from the bonding curve will be
+          deposited into Sunswap and burned. Progression increases as the price
+          goes up.
         </h1>
       </div>
     </>
