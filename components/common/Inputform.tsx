@@ -70,7 +70,7 @@ export const Inputform = ({
       )}
       {type === "file" || optional || !maxLength || (
         <div
-          className={`text-right text-sm font-light ${value!.length > maxLength ? "text-[#FF2626]" : "text-[#AEAEAE]"} md:text-base ${comicNeue.variable} font-comicNeue`}
+          className={`text-right text-sm font-light ${value && value.length > maxLength ? "text-[#FF2626]" : "text-[#AEAEAE]"} md:text-base ${comicNeue.variable} font-comicNeue`}
         >
           {value?.length}
           <div className="inline text-[#AEAEAE]">/{maxLength}</div>
