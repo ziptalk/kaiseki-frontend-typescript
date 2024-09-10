@@ -39,7 +39,7 @@ export const Tradesection = ({
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("0");
 
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
@@ -170,11 +170,13 @@ export const Tradesection = ({
     }
   };
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
+    console.log({ inputValue });
     const reserveAmount = curUserReserveBalance
       ? curUserReserveBalance
       : ethers.parseEther(inputValue);
 
     let currentSupply = await getTotalMemetokenAmount(); // current total supply
+    console.log("currentSupply :" + currentSupply);
     const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);

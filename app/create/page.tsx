@@ -75,25 +75,25 @@ const Create: NextPage = () => {
   // const creationFeeInWei = ethers.parseEther("0.007");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [tickers, setTickers] = useState([]);
+  // const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
 
-  console.log(creationFee);
+  // console.log(creationFee);
 
   // Get data from server for check dup
-  useEffect(() => {
-    fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
-      .then((response) => response.json())
-      .then((data) => {
-        // ticker 값만 추출하여 새로운 배열 생성
-        const tickerValues = data.map((item: any) => item.ticker);
-        setTickers(tickerValues);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // ticker 값만 추출하여 새로운 배열 생성
+  //       const tickerValues = data.map((item: any) => item.ticker);
+  //       setTickers(tickerValues);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   // MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (createdTokenAddress: any) => {
@@ -171,7 +171,7 @@ const Create: NextPage = () => {
   };
 
   const isInvalidInput = async (): Promise<boolean> => {
-    const matchingTicker = tickers.find((t) => t === watch("Ticker"));
+    // const matchingTicker = tickers.find((t) => t === watch("Ticker"));
 
     if (account.status === "disconnected") {
       alert("Connect your wallet first!");
@@ -179,13 +179,15 @@ const Create: NextPage = () => {
     }
     // TODO - Make this able later
     // if (await isUserGotMoreThanCreationFee()) {
-    //   alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
+    //   alert(
+    //     `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
+    //   );
     //   return true;
     // }
-    if (matchingTicker) {
-      alert("Ticker already exists!");
-      return true;
-    }
+    // if (matchingTicker) {
+    //   alert("Ticker already exists!");
+    //   return true;
+    // }
     if (!watch("Name") || !watch("Ticker")) {
       alert("Invalid input value!");
       return true;
