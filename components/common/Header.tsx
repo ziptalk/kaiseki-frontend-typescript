@@ -593,6 +593,7 @@ const Header: FC = () => {
               {...{
                 setModal: setAccountButtonModal,
                 openAccountModal,
+                userAddress: address,
               }}
             />
           </BottomSheet>
@@ -601,6 +602,7 @@ const Header: FC = () => {
             <MypageModal
               {...{
                 setModal: setAccountButtonModal,
+                userAddress: address,
               }}
             />
           </ModalRootWrapperWallet>

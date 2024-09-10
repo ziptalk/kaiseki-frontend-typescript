@@ -3,15 +3,15 @@ import Image from "next/image";
 import { UsersTrades } from "@/utils/apis/apis";
 import { ethers } from "ethers";
 
-export const Trade = () => {
+export const Trade = ({
+  userAddress,
+}: {
+  userAddress: `0x${string}` | undefined;
+}) => {
   const [values, setValues] = useState<any[]>([]);
 
   const fetchValues = async () => {
-    setValues(
-      filterEventsByToken(
-        await UsersTrades("0x47b724B39a47ab0989B5d8c443C2AFE459a7e289"),
-      ),
-    );
+    setValues(filterEventsByToken(await UsersTrades(userAddress)));
   };
   useEffect(() => {
     console.log(values);
@@ -89,7 +89,7 @@ export const Trade = () => {
                       style={{ width: 12, height: 12 }}
                     />
                     {value.tokenCreator &&
-                      value.tokenCreator.slice(0, 10) + "..."}
+                      value.tokenCreator.slice(0, 6) + "..."}
                   </div>
                 ) : (
                   <div className="flex items-center gap-1 text-sm text-[#AEAEAE]">
@@ -110,19 +110,21 @@ export const Trade = () => {
               {value.isMint ? (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    -{ethers.formatEther(value.amountMinted)} {value.ticker}
+                    -{Number(ethers.formatEther(value.reserveAmount))} ETH
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    {ethers.formatEther(value.reserveAmount)} ETH
+                    {Number(ethers.formatEther(value.amountMinted))}{" "}
+                    {value.tokenName}
                   </div>
                 </>
               ) : (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    {value.value1} ETH
+                    -{Number(ethers.formatEther(value.amountBurned))}{" "}
+                    {value.tokenName}
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    -{value.reserveAmount} {value.ticker}
+                    {Number(ethers.formatEther(value.refundAmount))} ETH
                   </div>
                 </>
               )}

@@ -138,7 +138,7 @@ export const RaffleTelegramId = async (data: {
   }
 };
 
-export const UsersTrades = async (userAddress: string) => {
+export const UsersTrades = async (userAddress: `0x${string}` | undefined) => {
   try {
     const response = await baseAPI.get(`users/${userAddress}/trades`);
     return response.data;
@@ -147,7 +147,9 @@ export const UsersTrades = async (userAddress: string) => {
   }
 };
 
-export const UsersTotalAssets = async (userAddress: string) => {
+export const UsersTotalAssets = async (
+  userAddress: `0x${string}` | undefined,
+) => {
   try {
     const response = await baseAPI.get(`users/${userAddress}/totalAssets`);
     return response.data;
@@ -156,7 +158,7 @@ export const UsersTotalAssets = async (userAddress: string) => {
   }
 };
 
-export const UsersMemes = async (userAddress: string) => {
+export const UsersMemes = async (userAddress: `0x${string}` | undefined) => {
   try {
     const response = await baseAPI.get(`users/${userAddress}/memes`);
     return response.data;

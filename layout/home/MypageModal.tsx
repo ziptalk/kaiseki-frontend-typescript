@@ -10,11 +10,13 @@ import { MyMeme } from "../mypage/MyMeme";
 interface MypageModalProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   openAccountModal?: () => void;
+  userAddress: `0x${string}` | undefined;
 }
 
 export const MypageModal = ({
   setModal,
   openAccountModal,
+  userAddress,
 }: MypageModalProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -22,7 +24,7 @@ export const MypageModal = ({
   const TabContents = [
     <Tokens key="Tokens" />,
     <Raffle key="Raffle" />,
-    <Trade key="Trade" />,
+    <Trade key="Trade" {...{ userAddress }} />,
     <MyMeme key="MyMeme" />,
   ];
 
