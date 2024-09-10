@@ -47,7 +47,7 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
         className={`flex flex-col`}
         style={{ width: width < 768 ? width - 230 : 270 }}
       >
-        <div className=" whitespace-pre break-words text-xs font-bold text-white md:text-sm">
+        <div className="whitespace-pre break-words text-xs font-bold text-white md:text-sm">
           {props.name}
           {"\n"}
           {`[ticker: ${props.symbol}]`}
@@ -58,11 +58,11 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           </div>
           <img
             className="h-2 w-2 rounded-full md:h-3 md:w-3"
-            src="/images/memesinoGhost.png"
+            src="/icons/bomb.svg"
             alt=""
           />
           <div className="neon-lime truncate text-[#C5F900]">
-            {props.creator}
+            {width < 768 ? props.creator.slice(0, 6) : props.creator}
           </div>
         </div>
         <div className="text-xs text-[#FAFF00]">

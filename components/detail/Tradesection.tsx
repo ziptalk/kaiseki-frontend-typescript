@@ -40,7 +40,7 @@ export const Tradesection = ({
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
@@ -79,14 +79,6 @@ export const Tradesection = ({
     signer,
   );
 
-  function isNumberKey(e: any) {
-    var charCode = e.which ? e.which : e.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
-  }
-
   useEffect(() => {
     const checkMetaMaskInstalled = () => {
       if (!window.ethereum) {
@@ -113,10 +105,10 @@ export const Tradesection = ({
     } catch {
       console.log("error");
     }
-  }, [account?.address]);
+  }, [account?.address, tokenAddress]);
 
   useEffect(() => {
-    setInputValue(0);
+    setInputValue("");
   }, [tokenAddress]);
 
   const subtractTenPercent = (value: any) => {
@@ -125,8 +117,9 @@ export const Tradesection = ({
     return result;
   };
   const sellhandlePercentage = (percentage: number) => {
+    console.log("curMemeTokenValue :" + curMemeTokenValue);
     const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
-    setInputValue(Number(value.toFixed(5)));
+    setInputValue(Math.floor(value).toString());
   };
   // const buyhandlePercentage = (percentage: number) => {
   //   const value = Number(handleBuyMaxinMeme()) * (percentage / 100);
@@ -216,14 +209,14 @@ export const Tradesection = ({
   };
 
   const handleReset = () => {
-    setInputValue(0);
+    setInputValue("");
   };
   const handleBuyMaxInReserve = (percentage?: number) => {
     if (percentage) {
       const value = (Number(curUserReserveBalance) * percentage) / 100;
-      setInputValue(value);
+      setInputValue(value.toString());
     } else {
-      setInputValue(Number(curUserReserveBalance.substring(0, 5)));
+      setInputValue(curUserReserveBalance.substring(0, 5));
     }
   };
   const handleBuyMaxinMeme = async (percentage: number) => {
@@ -232,14 +225,18 @@ export const Tradesection = ({
       ethers.parseEther(curUserReserveBalance),
     );
     // setMaxBuyAmount(Number(String(res.displayValue)));
-    setInputValue((Number(String(res.displayValue)) * percentage) / 100);
+    setInputValue(
+      ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
+    );
   };
 
   // MARK: - Sell
   const sell = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const inputValue = formData.get("inputValue") as string;
+    if (inputValue === "" || inputValue === "0") {
+      alert("Please enter the amount");
+      return;
+    }
     const BigIntValue = BigInt(wei(Number(inputValue)));
     if (account.address == null) {
       return;
@@ -301,6 +298,11 @@ export const Tradesection = ({
 
       // Prints "Invalid swap with token contract address 0xabcd."
       console.log("Custom error reason:", decodedError);
+      if (decodedError.name === "CALL_EXCEPTION") {
+        alert("You don't have enough balance");
+      } else if (decodedError.name === "ACTION_REJECTED") {
+        alert("User rejected the transaction");
+      }
       console.error("Error while burning:", error);
 
       // setTradeModuleErrorMsg("ERR");
@@ -311,8 +313,6 @@ export const Tradesection = ({
   // MARK: - Buy
   const buy = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const inputValue = formData.get("inputValue") as string;
     if (account.address == null) {
       // setTradeModuleErrorMsg("Connect your wallet first!");
       return;
@@ -383,6 +383,8 @@ export const Tradesection = ({
         alert("You don't have enough balance");
       } else if (decodedError.name === "ACTION_REJECTED") {
         alert("User rejected the transaction");
+      } else {
+        alert("You don't have enough balance");
       }
       console.error("Error while minting:", error);
       console.error(error);
@@ -421,7 +423,7 @@ export const Tradesection = ({
   const setPriceForNextMintIntoState = async () => {
     try {
       if (account.address == null) {
-        setCurMemeTokenValue("0");
+        setCurMemeTokenValue("");
         return;
       }
 
@@ -448,10 +450,10 @@ export const Tradesection = ({
             className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
             onClick={() => {
               if (eth.eth === 0) {
-                setInputValue(0);
+                setInputValue("");
                 return;
               }
-              setInputValue(Number((inputValue + eth.eth).toFixed(10)));
+              setInputValue((Number(inputValue) + eth.eth).toFixed(10));
             }}
           >
             {eth.name}
@@ -470,15 +472,26 @@ export const Tradesection = ({
             type="button"
             className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
             onClick={
-              () =>
-                isBuy
-                  ? handleBuyMaxinMeme(percentage)
-                  : sellhandlePercentage(percentage)
+              () => {
+                if (isBuy) {
+                  if (percentage === 0) {
+                    setInputValue("");
+                  } else {
+                    handleBuyMaxinMeme(percentage);
+                  }
+                } else {
+                  if (percentage === 0) {
+                    setInputValue("");
+                  } else {
+                    sellhandlePercentage(percentage);
+                  }
+                }
+              }
               // ? buyhandlePercentage(percentage)
               // : sellhandlePercentage(percentage)
             }
           >
-            {percentage == 0 ? "reset" : percentage + "%"}
+            {percentage === 0 ? "reset" : percentage + "%"}
           </button>
         ))}
       </div>
@@ -491,7 +504,7 @@ export const Tradesection = ({
           className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
           onClick={() => {
             setIsBuy(true);
-            setInputValue(0);
+            setInputValue("");
           }}
         >
           Buy
@@ -501,7 +514,7 @@ export const Tradesection = ({
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
-            setInputValue(0);
+            setInputValue("");
           }}
         >
           Sell
@@ -536,7 +549,12 @@ export const Tradesection = ({
               placeholder="Enter the amount"
               name="inputValue"
               value={inputValue}
-              onChange={(e) => setInputValue(Number(e.target.value))}
+              onChange={(e) => {
+                setInputValue(Number(e.target.value).toFixed());
+                if (e.target.value === "0") {
+                  setInputValue("");
+                }
+              }}
             />
             <img
               src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -588,7 +606,7 @@ export const Tradesection = ({
               placeholder="Enter the amount"
               name="inputValue"
               value={inputValue}
-              onChange={(e) => setInputValue(Number(e.target.value))}
+              onChange={(e) => setInputValue(e.target.value)}
             />
             <div className="absolute left-2 h-[30px] w-[30px] rounded-full">
               <Image src="/icons/eth_base.svg" alt="" height={30} width={30} />
@@ -607,7 +625,7 @@ export const Tradesection = ({
               <button
                 type="button"
                 onClick={() => {
-                  setInputValue(Number(curUserReserveBalance.substring(0, 10)));
+                  setInputValue(curUserReserveBalance.substring(0, 10));
                 }}
                 className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
               >
