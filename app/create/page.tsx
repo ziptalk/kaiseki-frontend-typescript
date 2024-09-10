@@ -10,7 +10,12 @@ import { FieldErrors, set, useForm } from "react-hook-form";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
-import { stepPrices, stepRanges } from "@/global/createValue";
+import {
+  stepPrices,
+  stepRanges,
+  maxSupply,
+  creationFee,
+} from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import Preview from "@/public/icons/Preview.svg";
@@ -51,9 +56,7 @@ const Create: NextPage = () => {
   });
 
   // MARK: - ethers init
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const errorDecoder = ErrorDecoder.create([MCV2_BondABI]);
   const bondWriteContract = new ethers.Contract(
@@ -69,28 +72,28 @@ const Create: NextPage = () => {
 
   // TODO - Change creation fee later
   // const creationFeeInWei = ethers.parseEther("3.5");
-  const creationFeeInWei = ethers.parseEther("0.007");
+  // const creationFeeInWei = ethers.parseEther("0.007");
+
   const [isLoading, setIsLoading] = useState(false);
-  const [tickers, setTickers] = useState([]);
+  // const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
 
-  useEffect(() => {
-    console.log({ cid });
-  }, [cid]);
+  // console.log(creationFee);
+
   // Get data from server for check dup
-  useEffect(() => {
-    fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
-      .then((response) => response.json())
-      .then((data) => {
-        // ticker 값만 추출하여 새로운 배열 생성
-        const tickerValues = data.map((item: any) => item.ticker);
-        setTickers(tickerValues);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       // ticker 값만 추출하여 새로운 배열 생성
+  //       const tickerValues = data.map((item: any) => item.ticker);
+  //       setTickers(tickerValues);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   // MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (createdTokenAddress: any) => {
@@ -168,7 +171,7 @@ const Create: NextPage = () => {
   };
 
   const isInvalidInput = async (): Promise<boolean> => {
-    const matchingTicker = tickers.find((t) => t === watch("Ticker"));
+    // const matchingTicker = tickers.find((t) => t === watch("Ticker"));
 
     if (account.status === "disconnected") {
       alert("Connect your wallet first!");
@@ -176,13 +179,15 @@ const Create: NextPage = () => {
     }
     // TODO - Make this able later
     // if (await isUserGotMoreThanCreationFee()) {
-    //   alert(`You must have at least 3.5 ${RESERVE_SYMBOL} to create a token.`);
+    //   alert(
+    //     `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
+    //   );
     //   return true;
     // }
-    if (matchingTicker) {
-      alert("Ticker already exists!");
-      return true;
-    }
+    // if (matchingTicker) {
+    //   alert("Ticker already exists!");
+    //   return true;
+    // }
     if (!watch("Name") || !watch("Ticker")) {
       alert("Invalid input value!");
       return true;
@@ -252,7 +257,7 @@ const Create: NextPage = () => {
           stepPrices: stepPrices,
         },
         {
-          value: creationFeeInWei.toString(),
+          value: creationFee.toString(),
         },
       );
       await receipt.wait();

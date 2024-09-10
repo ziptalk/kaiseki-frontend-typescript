@@ -39,11 +39,9 @@ export const Tradesection = ({
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState("0");
 
-  const provider = new ethers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-  );
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -122,14 +120,6 @@ export const Tradesection = ({
     return result;
   };
   const sellhandlePercentage = (percentage: number) => {
-    console.log(curMemeTokenValue, priceForNextMint);
-    console.log(
-      (Number(
-        BigInt(parseFloat(curMemeTokenValue)) * BigInt(priceForNextMint),
-      ) *
-        percentage) /
-        100,
-    );
     if (isInputInTokenAmount) {
       const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
       setInputValue(Math.floor(value).toString());
@@ -180,11 +170,13 @@ export const Tradesection = ({
     }
   };
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
+    console.log({ inputValue });
     const reserveAmount = curUserReserveBalance
       ? curUserReserveBalance
       : ethers.parseEther(inputValue);
 
     let currentSupply = await getTotalMemetokenAmount(); // current total supply
+    console.log("currentSupply :" + currentSupply);
     const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);

@@ -62,6 +62,7 @@ export const Inputform = ({
       ) : (
         <input
           type={type ? type : `text`}
+          autoComplete="off"
           className={sharedStyle}
           placeholder={optional ? "(optional)" : ""}
           {...register(name, { maxLength, onChange })}

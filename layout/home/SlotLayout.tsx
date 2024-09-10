@@ -81,7 +81,7 @@ export const SlotLayout = () => {
             }}
           />
           <h1 className="text-sm text-white md:text-base">
-            {page}/{totalPage || 0}
+            {page} / {totalPage || 0}
           </h1>
           <Arrow
             fill={page < totalPage ? "white" : "#AEAEAE"}

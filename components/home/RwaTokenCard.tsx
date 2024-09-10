@@ -8,6 +8,18 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowDimensions);
+
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,7 +43,10 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
         alt="Image from IPFS"
         className="h-[66px] w-[66px] border-black md:h-[100px] md:w-[100px]"
       />
-      <div className="flex w-full flex-col">
+      <div
+        className={`flex flex-col`}
+        style={{ width: width < 768 ? width - 230 : 270 }}
+      >
         <div className=" whitespace-pre break-words text-xs font-bold text-white md:text-sm">
           {props.name}
           {"\n"}
@@ -58,8 +73,7 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
         >
           {day} Day {hour.toString().padStart(2, "0")}:
           {minute.toString().padStart(2, "0")} :
-          {second.toString().padStart(2, "0")}
-          left!
+          {second.toString().padStart(2, "0")} left!
         </div>
       </div>
     </div>
