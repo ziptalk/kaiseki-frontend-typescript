@@ -50,7 +50,7 @@ export const SlotLayout = () => {
         {/* raffle section */}
         <Link
           href={{
-            pathname: "/raffle",
+            pathname: raffleData && raffleData.tokens && "/raffle",
             query: raffleData &&
               raffleData.tokens &&
               raffleData.tokens[page - 1] && {
