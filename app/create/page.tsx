@@ -280,7 +280,20 @@ const Create: NextPage = () => {
   const routeToDetailPageAfterMint = async (createdTokenAddress: string) => {
     // await getNextMintPrice(createdTokenAddress);
     // setIsModalVisible(true);
-    router.push(`/${createdTokenAddress}`);
+    // href={{
+    //   pathname: "/detail",
+    //   query: {
+    //     cid,
+    //     tokenAddress,
+    //     name,
+    //     ticker,
+    //     createdBy,
+    //     description,
+    //   },
+    // }}
+    router.push(
+      `/detail?cid=${cid}&tokenAddress=${createdTokenAddress}&name=${watch("Name")}&ticker=${watch("Ticker")}&createdBy=${account.address}&description=${watch("Description")}`,
+    );
   };
 
   const onInvalid = async () => {
@@ -343,7 +356,7 @@ const Create: NextPage = () => {
         <Inputform
           {...{
             viewName: "Raffle Prize",
-            maxLength: 10,
+            maxLength: 50,
             name: "prize",
             register,
             value: watch("prize"),

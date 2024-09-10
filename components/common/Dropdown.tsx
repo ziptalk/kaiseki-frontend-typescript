@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DownArrow from "@/public/icons/dwnArrow.svg";
 interface DropdownProps {
   items: any[];
   placeholder: string;
@@ -21,10 +22,8 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
       >
         {placeholder}
         {selectedItem}
-        <img
-          src="/icons/dwnArrow.svg"
-          alt="uparr"
-          className={`ml-[10px] h-[14px] w-[16px] ${isDropdownView && "rotate-180"}`}
+        <DownArrow
+          className={`ml-[10px] h-[14px] w-[16px] ${isDropdownView && "rotate-180"} fill-[#AEAEAE]`}
         />
       </button>
       <div
