@@ -28,7 +28,7 @@ export const MypageModal = ({
 
   return (
     <div
-      className="z-50 h-full select-none overflow-hidden rounded-t-lg border-white bg-[#252525] p-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
+      className="z-50 h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] p-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="ml-auto flex w-14 cursor-pointer justify-end gap-2.5">
@@ -38,11 +38,15 @@ export const MypageModal = ({
       <h1 className="text-4xl font-bold leading-9 text-white">
         ${"13,121,342.12"}
       </h1>
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-2 flex items-center">
         <TradeArr
-          className={`${false ? "fill-[#86BF77]" : "rotate-180 fill-red-500"}`}
+          className={`${true ? "fill-[#86BF77]" : "rotate-180 fill-red-500"} h-4 w-4`}
         />
-        <div className="text-lg text-[#7D7D7D]">$0.02(2.4%)</div>
+        <div
+          className={`${true ? "text-[#86BF77]" : "text-red-500"} text-base`}
+        >
+          $0.02(2.4%)
+        </div>
       </div>
       <div className="mt-9 flex gap-5 text-lg font-bold text-[#7D7D7D]">
         {Tabs.map((tab, index) => (

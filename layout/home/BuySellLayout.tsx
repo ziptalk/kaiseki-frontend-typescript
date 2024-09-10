@@ -154,6 +154,7 @@ export const BuySellLayout = ({
             {...{
               memeTokenSymbol: ticker,
               tokenAddress,
+              cid,
             }}
           />
           {/* <SellPercentageButton /> */}

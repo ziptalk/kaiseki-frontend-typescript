@@ -45,11 +45,13 @@ export const Tokens = () => {
           </div>
           <div className="text-right">
             <div className="text-base font-bold text-white">${value.price}</div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <TradeArr
-                className={`${false ? "fill-[#86BF77]" : "rotate-180 fill-red-500"}`}
+                className={`${true ? "fill-[#86BF77]" : "rotate-180 fill-red-500"} h-4 w-4`}
               />
-              <div className="text-base text-[#7D7D7D]">
+              <div
+                className={`${true ? "text-[#86BF77]" : "text-red-500"} text-base`}
+              >
                 {value.percentage}%
               </div>
             </div>

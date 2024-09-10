@@ -30,6 +30,7 @@ import Power from "@/public/icons/power.svg";
 import Telegram from "@/public/icons/telegram_logo.svg";
 import Copy from "@/public/icons/copy.svg";
 import Wallet from "@/public/icons/wallet.svg";
+import Bomb from "@/public/icons/bomb.svg";
 import { MypageModal } from "@/layout/home/MypageModal";
 import Slider from "./Slider";
 import BottomSheet from "../home/BottomSheet/BottomSheet";
@@ -480,24 +481,18 @@ const Header: FC = () => {
             >
               {address ? (
                 <>
-                  <div className="hidden h-10 w-52 items-center justify-between rounded-lg border bg-[#252525] px-5 text-sm font-bold text-white md:flex">
+                  <div className="z-40 hidden h-10 w-52 items-center justify-between rounded-lg border border-secondary px-5 text-sm font-bold text-[#FAFF00] md:flex">
                     <div
                       onClick={() => copyToClipboard(address)}
-                      className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
+                      className={`flex cursor-pointer items-center gap-2 stroke-transparent  hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
                     >
-                      <Image
-                        src="/images/memesinoGhost.png"
-                        alt=""
-                        height={16}
-                        width={18}
-                        className="h-[16px] w-[18px]"
-                      />
+                      <Bomb className="h-[16px] w-[18px] stroke-none" />
                       <div
-                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-[#686868] text-[15px] text-white hover:text-[#9b9b9b]`}
+                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} text-third stroke-third right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary text-[15px] hover:stroke-black hover:text-black`}
                         onClick={openAccountModal}
                       >
                         {disconnectToggle && "Disconnect"}
-                        <Power className={`ml-1 stroke-white`} />
+                        <Power className={`ml-1`} />
                       </div>
                       {disconnectToggle || address?.substring(0, 6) + "..."}
                       {disconnectToggle || <Copy />}
@@ -507,18 +502,19 @@ const Header: FC = () => {
                         width={18}
                         height={18}
                         viewBox="0 0 18 18"
-                        className={`h-[18px] w-[18px] cursor-pointer stroke-[#6B6B6B] hover:stroke-white`}
+                        className={`hover:stroke-third h-[18px] w-[18px] cursor-pointer stroke-secondary`}
                         onClick={() => setDisconnectToggle(true)}
                       />
-                      <DownArrow
+                      <div
+                        className="flex h-[18px] w-[18px] cursor-pointer items-center justify-center"
                         onClick={() =>
                           setAccountButtonModal(!accountButtonModal)
                         }
-                        width={18}
-                        height={18}
-                        viewBox="0 0 18 18"
-                        className={`h-[18px] w-[18px] transform ${accountButtonModal && "rotate-180"} cursor-pointer hover:stroke-white`}
-                      />
+                      >
+                        <DownArrow
+                          className={`transform ${accountButtonModal && "rotate-180"} hover:fill-third fill-secondary`}
+                        />
+                      </div>
                     </div>
                   </div>
                   <div
@@ -530,7 +526,7 @@ const Header: FC = () => {
                 <>
                   <button
                     onClick={openConnectModal}
-                    className="connect-wallet hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border  bg-[#252525] md:block"
+                    className="connect-wallet hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border  md:block"
                   >
                     Connect Wallet
                   </button>

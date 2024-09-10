@@ -12,6 +12,7 @@ const config: Config = {
       colors: {
         primary: "var(--primary)",
         secondary: "var(--secondary)",
+        third: "var(--third)",
         basic: "var(--basic)",
         background: "var(--background)",
         card: "var(--card)",

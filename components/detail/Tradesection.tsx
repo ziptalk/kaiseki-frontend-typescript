@@ -19,11 +19,13 @@ import contracts from "@/global/contracts";
 interface TradesectionProps {
   memeTokenSymbol: string;
   tokenAddress: string;
+  cid: string;
 }
 
 export const Tradesection = ({
   tokenAddress,
   memeTokenSymbol,
+  cid,
 }: TradesectionProps) => {
   const account = useAccount();
   const signer = useEthersSigner();
@@ -113,6 +115,12 @@ export const Tradesection = ({
       console.log("error");
     }
   }, [account?.address]);
+
+  useEffect(() => {
+    if (curUserReserveBalance) {
+    }
+    console.log("curUserReserveBalance :" + curUserReserveBalance);
+  }, [curUserReserveBalance]);
 
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
@@ -226,11 +234,8 @@ export const Tradesection = ({
     const res = await getMintTokenForReserve(
       ethers.parseEther(curUserReserveBalance),
     );
-    setMaxBuyAmount(Number(String(res.displayValue)));
-
-    setInputValue(
-      Math.floor(Number(String(res.displayValue)) / 100) * percentage,
-    );
+    // setMaxBuyAmount(Number(String(res.displayValue)));
+    setInputValue((Number(String(res.displayValue)) * percentage) / 100);
   };
 
   // MARK: - Sell
@@ -377,9 +382,13 @@ export const Tradesection = ({
 
       // Prints "Invalid swap with token contract address 0xabcd."
       console.log("Custom error reason:", decodedError);
+      if (decodedError.name === "CALL_EXCEPTION") {
+        alert("You don't have enough balance");
+      } else if (decodedError.name === "ACTION_REJECTED") {
+        alert("User rejected the transaction");
+      }
       console.error("Error while minting:", error);
       console.error(error);
-      // setTradeModuleErrorMsg(error.code);
     }
     await setUserMemeTokenBalanceIntoState();
   };
@@ -429,9 +438,9 @@ export const Tradesection = ({
   const EthSetButton = () => {
     const eths = [
       { name: "reset", eth: 0 },
-      { name: "0.01 ETH", eth: 0.01 },
-      { name: "0.05 ETH", eth: 0.05 },
-      { name: "0.1 ETH", eth: 0.1 },
+      { name: "+ 0.01 ETH", eth: 0.01 },
+      { name: "+ 0.1 ETH", eth: 0.1 },
+      { name: "+ 1 ETH", eth: 1 },
     ];
     return (
       <div className="flex items-center gap-2">
@@ -445,7 +454,7 @@ export const Tradesection = ({
                 setInputValue(0);
                 return;
               }
-              setInputValue(Number((inputValue + eth.eth).toFixed(2)));
+              setInputValue(Number((inputValue + eth.eth).toFixed(10)));
             }}
           >
             {eth.name}
@@ -455,7 +464,7 @@ export const Tradesection = ({
     );
   };
   const SellPercentageButton: FC = () => {
-    const percentages = [25, 50, 75];
+    const percentages = [0, 25, 50, 75];
     return (
       <div className="flex items-center gap-2">
         {percentages.map((percentage) => (
@@ -472,7 +481,7 @@ export const Tradesection = ({
               // : sellhandlePercentage(percentage)
             }
           >
-            {percentage}%
+            {percentage == 0 ? "reset" : percentage + "%"}
           </button>
         ))}
       </div>
@@ -525,12 +534,19 @@ export const Tradesection = ({
         <>
           <div className="relative flex w-full items-center">
             <input
-              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[20px] text-[#FFFFFF]"
+              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
               value={inputValue}
               onChange={(e) => setInputValue(Number(e.target.value))}
+            />
+            <img
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              alt=""
+              height={30}
+              width={30}
+              className="absolute left-2 h-[30px] w-[30px] rounded-full"
             />
             <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
               {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
@@ -580,10 +596,26 @@ export const Tradesection = ({
             <div className="absolute left-2 h-[30px] w-[30px] rounded-full">
               <Image src="/icons/eth_base.svg" alt="" height={30} width={30} />
             </div>
+
             <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
-              <h1 className="text-[15px] font-bold text-white">
-                {RESERVE_SYMBOL}
-              </h1>
+              {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
+              <img
+                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                alt="img"
+              />
+            </div>
+            <h1 className="mt-1 text-[15px] font-bold text-white">
+              {memeTokenSymbol}
+            </h1> */}
+              <button
+                type="button"
+                onClick={() => {
+                  setInputValue(Number(curUserReserveBalance.substring(0, 10)));
+                }}
+                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
+              >
+                MAX
+              </button>
             </div>
           </div>
           {/* <h1 className="text-[#B8B8B8]"> */}

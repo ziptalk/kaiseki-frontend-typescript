@@ -6,6 +6,7 @@
   :root {
     --primary: #950000;
     --secondary: #faff00;
+    --third: #ff2626;
     --basic: #0e0e0e;
     --background: #ff20f6;
     --input-stroke: #8f8f8f;
@@ -36,13 +37,15 @@
 .connect-wallet {
   color: #faff00;
   text-align: center;
-  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-width: 0.5px;
   -webkit-text-stroke-color: #ff2626;
   font-family: Arial;
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  border-radius: 10px;
+  border: 1px solid #faff00;
 }
 
 .button-bg-primary {

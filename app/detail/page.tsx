@@ -283,6 +283,7 @@ export default function Detail() {
               memeTokenSymbol: tokenInfo.ticker,
               RESERVE_SYMBOL,
               tokenAddress: tokenInfo.tokenAddress,
+              cid: tokenInfo.cid,
             }}
           />
         </div>

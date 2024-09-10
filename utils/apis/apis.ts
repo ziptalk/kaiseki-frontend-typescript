@@ -137,3 +137,30 @@ export const RaffleTelegramId = async (data: {
     console.log("Error in raffle-telegramId API", error);
   }
 };
+
+export const UsersTrades = async (userAddress: string) => {
+  try {
+    const response = await baseAPI.get(`users/${userAddress}/trades`);
+    return response.data;
+  } catch (error) {
+    console.log("Error in users-trades API", error);
+  }
+};
+
+export const UsersTotalAssets = async (userAddress: string) => {
+  try {
+    const response = await baseAPI.get(`users/${userAddress}/totalAssets`);
+    return response.data;
+  } catch (error) {
+    console.log("Error in users-total-assets API", error);
+  }
+};
+
+export const UsersMemes = async (userAddress: string) => {
+  try {
+    const response = await baseAPI.get(`users/${userAddress}/memes`);
+    return response.data;
+  } catch (error) {
+    console.log("Error in users-memes API", error);
+  }
+};
