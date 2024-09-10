@@ -110,21 +110,21 @@ export const Trade = ({
               {value.isMint ? (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    -{Number(ethers.formatEther(value.reserveAmount))} ETH
+                    - {Number(ethers.formatEther(value.reserveAmount))} ETH
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    {Number(ethers.formatEther(value.amountMinted))}{" "}
+                    + {Number(ethers.formatEther(value.amountMinted))}{" "}
                     {value.tokenName}
                   </div>
                 </>
               ) : (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    -{Number(ethers.formatEther(value.amountBurned))}{" "}
+                    - {Number(ethers.formatEther(value.amountBurned))}{" "}
                     {value.tokenName}
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    {Number(ethers.formatEther(value.refundAmount))} ETH
+                    + {Number(ethers.formatEther(value.refundAmount))} ETH
                   </div>
                 </>
               )}

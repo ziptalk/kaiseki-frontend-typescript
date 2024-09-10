@@ -39,7 +39,6 @@ export const Tradesection = ({
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [maxBuyAmount, setMaxBuyAmount] = useState(0);
 
   const [inputValue, setInputValue] = useState(0);
 
@@ -117,10 +116,8 @@ export const Tradesection = ({
   }, [account?.address]);
 
   useEffect(() => {
-    if (curUserReserveBalance) {
-    }
-    console.log("curUserReserveBalance :" + curUserReserveBalance);
-  }, [curUserReserveBalance]);
+    setInputValue(0);
+  }, [tokenAddress]);
 
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
