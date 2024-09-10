@@ -67,15 +67,18 @@ export default function Raffle() {
   const buttonValue = [
     {
       value: 25,
-      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.25)),
+      onClick: () =>
+        setInputValue(Number((curMemeTokenValue * 0.25).toFixed(5))),
     },
     {
       value: 50,
-      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.5)),
+      onClick: () =>
+        setInputValue(Number((curMemeTokenValue * 0.5).toFixed(5))),
     },
     {
       value: 75,
-      onClick: () => setInputValue(Math.trunc(curMemeTokenValue * 0.75)),
+      onClick: () =>
+        setInputValue(Number((curMemeTokenValue * 0.75).toFixed(5))),
     },
   ];
 
@@ -199,7 +202,9 @@ export default function Raffle() {
                 />
                 <button
                   type="button"
-                  onClick={() => setInputValue(curMemeTokenValue)}
+                  onClick={() =>
+                    setInputValue(Number(curMemeTokenValue.toFixed(5)))
+                  }
                   className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
                 >
                   MAX
