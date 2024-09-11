@@ -10,14 +10,17 @@ import { MainTitle } from "@/components/common/MainTitle";
 import Stick from "@/public/icons/stick.svg";
 import { Raffle } from "@/utils/apis/apis";
 import { RaffleResponse } from "@/utils/apis/type";
+import { useAccount } from "wagmi";
 
 export const SlotLayout = () => {
   const router = useRouter();
+  const account = useAccount();
   const [isHovered, setIsHovered] = useState(false);
   const [raffleData, setRaffleData] = useState<RaffleResponse | null>(null);
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [stickColor, setStickColor] = useState(true);
+  const [href, setHref] = useState("/");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,12 +33,38 @@ export const SlotLayout = () => {
     const response = await Raffle();
     setRaffleData(response);
   };
+
   useEffect(() => {
     console.log("raffleData", raffleData);
-    if (raffleData && raffleData.tokens) {
-      setTotalPage(raffleData.tokens.length);
+    if (raffleData && raffleData.result && raffleData.result.tokens) {
+      setTotalPage(raffleData.result.tokens.length);
     }
   }, [raffleData]);
+
+  useEffect(() => {
+    if (raffleData?.result) {
+      for (let i = 0; i < raffleData.winner.raffles.length; i++) {
+        if (
+          raffleData.winner.raffles[i].tokenAddress ===
+            raffleData.result.tokens[page - 1].token &&
+          raffleData.winner.raffles[i].winnerAddress === account.address
+        ) {
+          setHref("/raffle/check");
+          return;
+        } else if (
+          raffleData.winner.raffles[i].tokenAddress ===
+          raffleData.result.tokens[page - 1].token
+        ) {
+          setHref("/raffle/fail");
+          return;
+        } else {
+          setHref("/raffle");
+        }
+      }
+    } else {
+      setHref("/");
+    }
+  }, [page]);
 
   useEffect(() => {
     if (totalPage) setPage(1);
@@ -51,32 +80,34 @@ export const SlotLayout = () => {
         {/* raffle section */}
         <Link
           href={{
-            pathname: raffleData && raffleData.tokens && "/raffle",
+            pathname: href,
             query: raffleData &&
-              raffleData.tokens &&
-              raffleData.tokens[page - 1] && {
-                cid: raffleData.tokens[page - 1].cid,
-                rafflePrize: raffleData.tokens[page - 1].rafflePrize,
-                token: raffleData.tokens[page - 1].token,
-                name: raffleData.tokens[page - 1].name,
-                symbol: raffleData.tokens[page - 1].symbol,
-                creator: raffleData.tokens[page - 1].creator,
-                description: raffleData.tokens[page - 1].description,
-                startDate: raffleData.tokens[page - 1].startDate,
+              raffleData.result.tokens &&
+              raffleData.result.tokens[page - 1] && {
+                cid: raffleData.result.tokens[page - 1].cid,
+                rafflePrize: raffleData.result.tokens[page - 1].rafflePrize,
+                token: raffleData.result.tokens[page - 1].token,
+                name: raffleData.result.tokens[page - 1].name,
+                symbol: raffleData.result.tokens[page - 1].symbol,
+                creator: raffleData.result.tokens[page - 1].creator,
+                description: raffleData.result.tokens[page - 1].description,
+                startDate: raffleData.result.tokens[page - 1].startDate,
               },
           }}
           className="flex w-full flex-col items-center gap-5"
         >
           <MainTitle
             title={
-              raffleData && raffleData.tokens
+              raffleData && raffleData.result.tokens
                 ? "Raffle is ready!"
                 : "Loading..."
             }
           />
-          {raffleData && raffleData.tokens && raffleData.tokens[page - 1] && (
-            <RWATokenCard props={raffleData.tokens[page - 1]} />
-          )}
+          {raffleData &&
+            raffleData.result.tokens &&
+            raffleData.result.tokens[page - 1] && (
+              <RWATokenCard props={raffleData.result.tokens[page - 1]} />
+            )}
           <SlotSection />
         </Link>
 

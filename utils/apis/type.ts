@@ -1,7 +1,13 @@
 export interface RaffleResponse {
-  message: string;
-  tokens: TokenResponse[];
-  timestamp: string;
+  result: { message: string; tokens: TokenResponse[] };
+  winner: {
+    message: string;
+    raffles: {
+      raffleEndTime: string;
+      tokenAddress: string;
+      winnerAddress: string;
+    }[];
+  };
 }
 
 export interface TokenResponse {

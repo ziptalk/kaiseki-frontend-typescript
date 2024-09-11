@@ -71,9 +71,11 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
         <div
           className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
         >
-          {day} Day {hour.toString().padStart(2, "0")}:
-          {minute.toString().padStart(2, "0")} :
-          {second.toString().padStart(2, "0")} left!
+          {time - new Date().getTime() > 0
+            ? `${day} Day ${hour.toString().padStart(2, "0")}:
+          ${minute.toString().padStart(2, "0")} :
+          ${second.toString().padStart(2, "0")} left!`
+            : "Check Winner!"}
         </div>
       </div>
     </div>

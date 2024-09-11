@@ -68,6 +68,10 @@ const Header: FC = () => {
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
+    if (localStorage.getItem("FirstVisit") === null) {
+      localStorage.setItem("FirstVisit", "true");
+      setIsInfoModalActive(true);
+    }
   }, []);
 
   const modalRef = useRef<HTMLDivElement>(null);
@@ -190,6 +194,18 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (createAnimationTrigger) {
+      console.log({
+        // newCreateTic,
+        curCreateTic,
+        // newCreateUser,
+        curCreateUser,
+        // newCreateCid,
+        curCreateCid,
+        // formattedDate,
+        curCreateTime,
+        // newCreateTokenAddress,
+        curCreateTokenAddress,
+      });
       const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
       return () => clearTimeout(timeout);
     }
@@ -430,11 +446,11 @@ const Header: FC = () => {
                   <h1 className="whitespace-nowrap text-sm">
                     {curMintUser} bought {curMintValue} ETH of
                   </h1>
-                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
-                    <h1 className="cursor-pointer text-sm hover:underline">
-                      {curMintTic}
-                    </h1>
-                  </Link>
+                  {/* <Link href={curMintTokenAddress ? curMintTokenAddress : ""}> */}
+                  {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
+                  {curMintTic}
+                  {/* </h1> */}
+                  {/* </Link> */}
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
@@ -450,13 +466,13 @@ const Header: FC = () => {
                   <div className="whitespace-nowrap text-sm">
                     {curCreateUser} Created
                   </div>
-                  <Link
+                  {/* <Link
                     href={curCreateTokenAddress ? curCreateTokenAddress : ""}
-                  >
-                    <div className="cursor-pointer text-sm hover:underline">
-                      {curCreateTic}
-                    </div>
-                  </Link>
+                  > */}
+                  {/* <div className="cursor-pointer text-sm hover:underline"> */}
+                  {curCreateTic}
+                  {/* </div> */}
+                  {/* </Link> */}
 
                   <div className="whitespace-nowrap text-sm">
                     on {curCreateTime}
@@ -633,11 +649,11 @@ const Header: FC = () => {
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} ETH of
                 </h1>
-                <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
-                  <h1 className="cursor-pointer text-sm hover:underline">
-                    {curMintTic}
-                  </h1>
-                </Link>
+                {/* <Link href={curMintTokenAddress ? curMintTokenAddress : ""}> */}
+                {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
+                {curMintTic}
+                {/* </h1> */}
+                {/* </Link> */}
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
@@ -653,11 +669,11 @@ const Header: FC = () => {
               >
                 <BombCreate width={24} height={24} />
                 <h1 className="text-sm">{curCreateUser} Created</h1>
-                <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
-                  <h1 className="cursor-pointer text-sm hover:underline">
-                    {curCreateTic}
-                  </h1>
-                </Link>
+                {/* <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}> */}
+                {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
+                {curCreateTic}
+                {/* </h1> */}
+                {/* </Link> */}
 
                 <h1 className="text-sm">on {curCreateTime}</h1>
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
