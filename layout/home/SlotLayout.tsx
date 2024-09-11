@@ -42,7 +42,12 @@ export const SlotLayout = () => {
   }, [raffleData]);
 
   useEffect(() => {
-    if (raffleData?.result) {
+    console.log("href", href);
+  }, [href]);
+
+  useEffect(() => {
+    if (raffleData?.result.tokens.length) {
+      setHref("/raffle");
       for (let i = 0; i < raffleData.winner.raffles.length; i++) {
         if (
           raffleData.winner.raffles[i].tokenAddress ===
@@ -59,12 +64,13 @@ export const SlotLayout = () => {
           return;
         } else {
           setHref("/raffle");
+          return;
         }
       }
     } else {
       setHref("/");
     }
-  }, [page]);
+  }, [page, raffleData]);
 
   useEffect(() => {
     if (totalPage) setPage(1);
