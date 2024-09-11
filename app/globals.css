@@ -181,7 +181,9 @@ input::-webkit-inner-spin-button {
     transform: translateX(-200%);
   }
 }
-
+input {
+  outline: none;
+}
 .raffle-typo {
   font-family: var(--font-anton);
   -webkit-text-stroke-width: 0.4px;

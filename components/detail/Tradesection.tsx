@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, use } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";
@@ -79,19 +79,20 @@ export const Tradesection = ({
     signer,
   );
 
+  const checkMetaMaskInstalled = () => {
+    if (!window.ethereum) {
+      return false;
+    }
+    return true;
+  };
+  const checkAccountAddressInitialized = (address: any) => {
+    if (!address) {
+      return false;
+    }
+    return true;
+  };
   useEffect(() => {
-    const checkMetaMaskInstalled = () => {
-      if (!window.ethereum) {
-        return false;
-      }
-      return true;
-    };
-    const checkAccountAddressInitialized = (address: any) => {
-      if (!address) {
-        return false;
-      }
-      return true;
-    };
+    setInputValue("");
     try {
       if (
         checkMetaMaskInstalled() &&
@@ -106,10 +107,6 @@ export const Tradesection = ({
       console.log("error");
     }
   }, [account?.address, tokenAddress]);
-
-  useEffect(() => {
-    setInputValue("");
-  }, [tokenAddress]);
 
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
@@ -211,14 +208,7 @@ export const Tradesection = ({
   const handleReset = () => {
     setInputValue("");
   };
-  const handleBuyMaxInReserve = (percentage?: number) => {
-    if (percentage) {
-      const value = (Number(curUserReserveBalance) * percentage) / 100;
-      setInputValue(value.toString());
-    } else {
-      setInputValue(curUserReserveBalance.substring(0, 5));
-    }
-  };
+
   const handleBuyMaxinMeme = async (percentage: number) => {
     await setUserMemeTokenBalanceIntoState();
     const res = await getMintTokenForReserve(
@@ -290,11 +280,11 @@ export const Tradesection = ({
         account.address,
       );
       console.log("Burn detail:", burnDetail);
+      alert("Trade successful, check your wallet");
       // await setCurStepsIntoState();
       // setTradeModuleErrorMsg("Success");
-      setIsPending(false);
+      window.location.reload();
     } catch (error) {
-      setIsPending(false);
       const decodedError = await errorDecoder.decode(error);
 
       // Prints "Invalid swap with token contract address 0xabcd."
@@ -308,7 +298,7 @@ export const Tradesection = ({
 
       // setTradeModuleErrorMsg("ERR");
     }
-    await setUserMemeTokenBalanceIntoState();
+    setIsPending(false);
   };
 
   // MARK: - Buy
@@ -331,6 +321,9 @@ export const Tradesection = ({
         BigInt(Math.floor(Number(inputValue))),
         BigInt(priceForNextMint),
         Number(ethers.parseEther(curUserReserveBalance)),
+      );
+      alert(
+        `Insufficient balance: You have ${curUserReserveBalance} ${RESERVE_SYMBOL}`,
       );
       return;
     }
@@ -371,11 +364,11 @@ export const Tradesection = ({
       );
 
       console.log("Mint detail:", mintDetail);
+      alert("Trade successful, check your wallet");
       // await setCurStepsIntoState();
       // setTradeModuleErrorMsg("Success");
-      setIsPending(false);
+      window.location.reload();
     } catch (error: any) {
-      setIsPending(false);
       const decodedError = await errorDecoder.decode(error);
 
       // Prints "Invalid swap with token contract address 0xabcd."
@@ -385,12 +378,12 @@ export const Tradesection = ({
       } else if (decodedError.name === "ACTION_REJECTED") {
         alert("User rejected the transaction");
       } else {
-        alert("You don't have enough balance");
+        alert("Unknown error");
       }
       console.error("Error while minting:", error);
       console.error(error);
     }
-    await setUserMemeTokenBalanceIntoState();
+    setIsPending(false);
   };
 
   const setUserMemeTokenBalanceIntoState = async () => {
@@ -670,7 +663,17 @@ export const Tradesection = ({
       )} */}
       {isConnected ? (
         <Button submit className="mt-5 h-12" variant="gradiant">
-          Place Trade
+          {isPending ? (
+            <Image
+              src="/icons/Loading.svg"
+              alt="loading Icon"
+              height={24}
+              width={24}
+              className="animate-spin"
+            />
+          ) : (
+            "Place Trade"
+          )}
         </Button>
       ) : (
         <Button

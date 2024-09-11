@@ -13,10 +13,10 @@ export const Footer = () => {
         RWE | contract@rwe.io{"\n"}RWE Labs Inc.All rights reserved
       </div>
       <div className="flex items-center gap-[12px]">
-        <X className="cursor-pointer fill-[#F2D1E4] hover:fill-white" />
+        {/* <X className="cursor-pointer fill-[#F2D1E4] hover:fill-white" />
         <Telegram className="cursor-pointer fill-[#F2D1E4] hover:fill-white" />
         <Medium className="cursor-pointer fill-[#F2D1E4] hover:fill-white" />
-        <Github className="cursor-pointer fill-[#F2D1E4] hover:fill-white" />
+        <Github className="cursor-pointer fill-[#F2D1E4] hover:fill-white" /> */}
       </div>
     </div>
   );

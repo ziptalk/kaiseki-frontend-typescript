@@ -34,6 +34,9 @@ import Bomb from "@/public/icons/bomb.svg";
 import { MypageModal } from "@/layout/home/MypageModal";
 import Slider from "./Slider";
 import BottomSheet from "../home/BottomSheet/BottomSheet";
+import BombCreate from "@/public/icons/bomb_create.svg";
+import BombBuy from "@/public/icons/bomb_buy.svg";
+import BombSold from "@/public/icons/bomb_sold.svg";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -421,14 +424,9 @@ const Header: FC = () => {
             <div className="hidden h-[40px] items-center gap-[20px] md:flex">
               {curMintUser && (
                 <MintAnimateWrapper
-                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
+                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
                 >
-                  <img
-                    src="/images/memesinoGhost.png"
-                    alt=""
-                    className="h-4 w-4 rounded-full"
-                  />
-
+                  <BombBuy width={24} height={24} />
                   <h1 className="whitespace-nowrap text-sm">
                     {curMintUser} bought {curMintValue} ETH of
                   </h1>
@@ -446,13 +444,9 @@ const Header: FC = () => {
               )}
               {curCreateUser && (
                 <CreateAnimateWrapper
-                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                  className={`flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
                 >
-                  <img
-                    src="/images/memesinoGhost.png"
-                    alt=""
-                    className="h-4 w-4 rounded-full"
-                  />
+                  <BombCreate width={24} height={24} />
                   <div className="whitespace-nowrap text-sm">
                     {curCreateUser} Created
                   </div>
@@ -474,6 +468,26 @@ const Header: FC = () => {
                   />
                 </CreateAnimateWrapper>
               )}
+              {/* {curMintUser && (
+                <MintAnimateWrapper
+                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
+                >
+                  <BombSold className="h-4 w-4" />
+                  <h1 className="whitespace-nowrap text-sm">
+                    {curMintUser} bought {curMintValue} ETH of
+                  </h1>
+                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                    <h1 className="cursor-pointer text-sm hover:underline">
+                      {curMintTic}
+                    </h1>
+                  </Link>
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                    alt="img"
+                    className="h-4 w-4 rounded-full"
+                  />
+                </MintAnimateWrapper>
+              )} */}
             </div>
             <div
               className="relative flex select-none flex-row-reverse items-center md:w-[300px]"
@@ -488,7 +502,7 @@ const Header: FC = () => {
                     >
                       <Bomb className="h-[16px] w-[18px] stroke-none" />
                       <div
-                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} text-third stroke-third right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary text-[15px] hover:stroke-black hover:text-black`}
+                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:stroke-black hover:text-black`}
                         onClick={openAccountModal}
                       >
                         {disconnectToggle && "Disconnect"}
@@ -502,7 +516,7 @@ const Header: FC = () => {
                         width={18}
                         height={18}
                         viewBox="0 0 18 18"
-                        className={`hover:stroke-third h-[18px] w-[18px] cursor-pointer stroke-secondary`}
+                        className={`h-[18px] w-[18px] cursor-pointer stroke-secondary hover:stroke-third`}
                         onClick={() => setDisconnectToggle(true)}
                       />
                       <div
@@ -512,7 +526,7 @@ const Header: FC = () => {
                         }
                       >
                         <DownArrow
-                          className={`transform ${accountButtonModal && "rotate-180"} hover:fill-third fill-secondary`}
+                          className={`transform ${accountButtonModal && "rotate-180"} fill-secondary hover:fill-third`}
                         />
                       </div>
                     </div>
@@ -613,13 +627,9 @@ const Header: FC = () => {
             curMintCid && (
               <MintAnimateWrapper
                 key={1}
-                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"} mr-2.5 shadow-md`}
+                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"} mr-2.5 shadow-md`}
               >
-                <img
-                  src="/images/memesinoGhost.png"
-                  alt=""
-                  className="h-[18px] w-[18px] rounded-full"
-                />
+                <BombBuy width={24} height={24} />
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} ETH of
                 </h1>
@@ -639,13 +649,9 @@ const Header: FC = () => {
             curCreateCid && (
               <CreateAnimateWrapper
                 key={2}
-                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"} mr-2.5`}
+                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#00FFE0] px-[7px] text-[#00FFE0] ${createAnimationTrigger && "animate"} mr-2.5`}
               >
-                <img
-                  src="/images/memesinoGhost.png"
-                  alt=""
-                  className="h-[18px] w-[18px] rounded-full"
-                />
+                <BombCreate width={24} height={24} />
                 <h1 className="text-sm">{curCreateUser} Created</h1>
                 <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
                   <h1 className="cursor-pointer text-sm hover:underline">
@@ -699,49 +705,48 @@ const shake = keyframes`
   }
 `;
 
-const colorReversePink = keyframes`
+const colorReverseBuy = keyframes`
   0%, 100% {
     background:#0E0E0E;
-    box-shadow: 0px 0px 8px 0px #FA00FF;
-    color: #FA00FF;
+    box-shadow: 0px 0px 8px 0px #83ff80;
+    color: #83ff80;
   }
   15%, 85% {
-    background:#FA00FF;
-    box-shadow: 0px 0px 8px 0px #FA00FF;
+    background:#83ff80;
+    box-shadow: 0px 0px 8px 0px #83ff80;
     color: white;
   }
 `;
-const colorReverseMint = keyframes`
+const colorReverseCreate = keyframes`
   0%, 100% {
     background:#0E0E0E;
-    box-shadow: 0px 0px 8px 0px #09ffd3;
-    color: #09ffd3;
+    box-shadow: 0px 0px 8px 0px #00FFE0;
+    color: #00FFE0;
   }
   15%, 85% {
-    background:#B3FFF6;
-    box-shadow: 0px 0px 8px 0px #FA00FF;
-    border: 1px solid #fa00ff;
-    color: #FA00FF;
+    background:#00FFE0;
+    box-shadow: 0px 0px 8px 0px #00FFE0;
+    color: white;
   }
 `;
 
 const MintAnimateWrapper = styled.div`
   background: #0e0e0e;
-  box-shadow: 0px 0px 8px 0px #fa00ff;
-  color: #fa00ff;
+  box-shadow: 0px 0px 8px 0px #83ff80;
+  color: #83ff80;
 
   &.animate {
     animation:
       ${shake} 250ms 0s 3,
-      ${colorReversePink} 1s 0s;
+      ${colorReverseBuy} 1s 0s;
   }
 `;
 
 const CreateAnimateWrapper = styled.div`
-  box-shadow: 0px 0px 8px 0px #09ffd3;
-  color: #09ffd3;
+  box-shadow: 0px 0px 8px 0px #00ffe0;
+  color: #00ffe0;
 
   &.animate {
-    animation: ${colorReverseMint} 1s 0s;
+    animation: ${colorReverseCreate} 1s 0s;
   }
 `;

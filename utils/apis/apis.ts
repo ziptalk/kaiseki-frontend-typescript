@@ -126,7 +126,7 @@ export const User = async (params: { address: string }) => {
 };
 
 export const RaffleTelegramId = async (data: {
-  winnerAddress: string;
+  winnerAddress: `0x${string}` | undefined;
   tokenAddress: string;
   telegramId: string;
 }) => {

@@ -13,9 +13,7 @@ export const Trade = ({
   const fetchValues = async () => {
     setValues(filterEventsByToken(await UsersTrades(userAddress)));
   };
-  useEffect(() => {
-    console.log(values);
-  }, [values]);
+
   const filterEventsByToken = (data: any): Event[] => {
     try {
       const filteredMintEvents = data.mintEvents.map((event: any) => ({
@@ -44,7 +42,7 @@ export const Trade = ({
     fetchValues();
   }, []);
   return (
-    <div>
+    <div className="pb-10">
       {values.map((value, idx) => (
         <div key={idx} className="flex flex-col gap-2.5">
           {/* <div className="text-base font-semibold text-white">
@@ -110,21 +108,36 @@ export const Trade = ({
               {value.isMint ? (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    - {Number(ethers.formatEther(value.reserveAmount))} ETH
+                    -{" "}
+                    {Number(ethers.formatEther(value.reserveAmount)) <
+                    0.00000001
+                      ? Number(ethers.formatEther(value.reserveAmount))
+                      : Number(ethers.formatEther(value.reserveAmount)).toFixed(
+                          8,
+                        )}{" "}
+                    ETH
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    + {Number(ethers.formatEther(value.amountMinted))}{" "}
+                    +{" "}
+                    {Math.floor(Number(ethers.formatEther(value.amountMinted)))}{" "}
                     {value.tokenName}
                   </div>
                 </>
               ) : (
                 <>
                   <div className="text-sm text-[#8F8F8F]">
-                    - {Number(ethers.formatEther(value.amountBurned))}{" "}
+                    -{" "}
+                    {Math.floor(Number(ethers.formatEther(value.amountBurned)))}{" "}
                     {value.tokenName}
                   </div>
                   <div className="text-sm text-[#EDF102]">
-                    + {Number(ethers.formatEther(value.refundAmount))} ETH
+                    +{" "}
+                    {Number(ethers.formatEther(value.refundAmount)) < 0.00000001
+                      ? Number(ethers.formatEther(value.refundAmount))
+                      : Number(ethers.formatEther(value.refundAmount)).toFixed(
+                          8,
+                        )}{" "}
+                    ETH
                   </div>
                 </>
               )}

@@ -20,12 +20,18 @@ export const MypageModal = ({
 }: MypageModalProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
 
-  const Tabs = ["Token", "Raffle", "Trade", "My meme"];
+  const Tabs = [
+    // "Token",
+    //  "Raffle",
+    "Trade",
+    // "My meme"
+  ];
+
   const TabContents = [
-    <Tokens key="Tokens" />,
-    <Raffle key="Raffle" />,
+    // <Tokens key="Tokens" />,
+    // <Raffle key="Raffle" />,
     <Trade key="Trade" {...{ userAddress }} />,
-    <MyMeme key="MyMeme" />,
+    // <MyMeme key="MyMeme" />,
   ];
 
   return (

@@ -151,9 +151,9 @@ const Create: NextPage = () => {
       }
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
-        console.log(balanceWei);
+        // console.log(balanceWei);
         const balanceEther = ethers.formatEther(balanceWei);
-        console.log(balanceEther);
+        // console.log(balanceEther);
         return balanceEther;
       }
     } catch (error) {
@@ -163,7 +163,7 @@ const Create: NextPage = () => {
 
   const isUserGotMoreThanCreationFee = async () => {
     const value = await getUserReserveBalance();
-    if (parseFloat(value!) >= 3.5) {
+    if (parseFloat(value!) >= 0.0015) {
       return false;
     } else {
       return true;
@@ -178,12 +178,12 @@ const Create: NextPage = () => {
       return true;
     }
     // TODO - Make this able later
-    // if (await isUserGotMoreThanCreationFee()) {
-    //   alert(
-    //     `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
-    //   );
-    //   return true;
-    // }
+    if (await isUserGotMoreThanCreationFee()) {
+      alert(
+        `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
+      );
+      return true;
+    }
     // if (matchingTicker) {
     //   alert("Ticker already exists!");
     //   return true;

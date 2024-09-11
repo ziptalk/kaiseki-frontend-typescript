@@ -31,8 +31,9 @@ export const SlotLayout = () => {
     setRaffleData(response);
   };
   useEffect(() => {
-    if (raffleData) {
-      setTotalPage(Number(raffleData.message.slice(27, 29)));
+    console.log("raffleData", raffleData);
+    if (raffleData && raffleData.tokens) {
+      setTotalPage(raffleData.tokens.length);
     }
   }, [raffleData]);
 

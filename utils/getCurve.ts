@@ -4,9 +4,7 @@ import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 
 const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 
-const provider = new ethers.JsonRpcProvider(
-  process.env.NEXT_PUBLIC_RPC_SEPOLIA,
-);
+const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
 
 const bondContract = new ethers.Contract(
   contracts.MCV2_Bond,

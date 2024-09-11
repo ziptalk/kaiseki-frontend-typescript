@@ -1,28 +1,38 @@
 import React from "react";
 import Complete from "@/public/icons/complete.svg";
 import Fail from "@/public/icons/fail.svg";
-import { ModalRootWrapper } from "../common/Modal";
+import { ModalRootWrapperAllert } from "../common/Modal";
 
 interface AlertInfoProps {
   buttonClicked: boolean;
   success: boolean;
+  successMessage?: string;
+  failMessage?: string;
 }
 
-export const AlertInfo = ({ buttonClicked, success }: AlertInfoProps) => {
+export const AlertInfo = ({
+  buttonClicked,
+  success,
+  successMessage,
+  failMessage,
+}: AlertInfoProps) => {
   return (
     buttonClicked && (
-      <ModalRootWrapper>
+      <ModalRootWrapperAllert>
         <div
-          className={`mt-52 flex h-9 items-center justify-center rounded-[7px] bg-[#4F4F4F] text-xs font-bold text-white md:h-[100px] md:w-[484px] md:rounded-[10px] md:text-[18px] ${buttonClicked ? "opacity-100" : "opacity-0"} mx-5 duration-1000 md:mx-auto`}
+          className={`mx-auto inline-block h-9 items-center justify-center rounded-[7px] bg-[#4F4F4F] p-5 text-xs font-bold text-white md:mt-52 md:h-[100px] md:rounded-[10px] md:text-[18px]`}
         >
-          {success ? <Complete /> : <Fail />}
-          <div className="ml-3">
-            {success
-              ? "Raffle has been successfully completed!"
-              : "Raffle did not run properly. Please try again."}
+          <div className="flex h-full w-full items-center justify-center">
+            {success ? <Complete /> : <Fail />}
+            <div className="ml-3">
+              {success
+                ? successMessage || "Raffle has been successfully completed!"
+                : failMessage ||
+                  "Raffle did not run properly. Please try again."}
+            </div>
           </div>
         </div>
-      </ModalRootWrapper>
+      </ModalRootWrapperAllert>
     )
   );
 };
