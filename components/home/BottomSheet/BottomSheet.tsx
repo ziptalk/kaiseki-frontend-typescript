@@ -42,6 +42,9 @@ function BottomSheet({
       <div
         className="fixed left-0 top-0 z-[100] h-[100vh] w-[100vw] bg-[#00000050]"
         onClick={setUnVisible}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
       />
       {visible && (
         <Wrapper ref={sheet}>

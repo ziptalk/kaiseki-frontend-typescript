@@ -46,8 +46,13 @@ export const BuySellLayout = ({
   }, [tokenAddress]);
 
   return (
-    <div className="md:ml-[20px]">
-      <div className="top-[80px] p-5 md:sticky md:p-0 md:pb-[60px]">
+    <div
+      className="md:ml-[20px]"
+      onMouseDown={(e) => {
+        e.stopPropagation();
+      }}
+    >
+      <div className="top-[80px] p-5 md:p-0 md:pb-[60px]">
         <PageLinkButton
           href={{
             pathname: "/detail",

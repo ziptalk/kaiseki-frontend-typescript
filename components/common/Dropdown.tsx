@@ -15,7 +15,12 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
   };
 
   return (
-    <div className="relative h-10 flex-1 md:h-[50px]">
+    <div
+      className="relative h-10 flex-1 md:h-[50px]"
+      onMouseDown={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <button
         onClick={handleClickContainer}
         className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#363636] text-sm text-[#AEAEAE] md:text-base"

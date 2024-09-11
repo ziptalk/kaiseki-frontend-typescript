@@ -62,7 +62,12 @@ export const TokensLayout = () => {
   };
 
   return (
-    <div className="mx-auto md:flex md:w-[1300px]">
+    <div
+      className="mx-auto md:flex md:w-[1300px]"
+      onMouseDown={() => {
+        setInfotoInitial();
+      }}
+    >
       <div
         className={`${info.tokenAddress ? "md:w-[860px]" : "w-full"} mt-[32px]`}
       >
@@ -90,6 +95,9 @@ export const TokensLayout = () => {
               e.preventDefault();
               setHomeTokens();
             }}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
           >
             <input
               className="flex-[2] rounded-[10px] border border-background bg-black px-[20px] text-white"
@@ -113,7 +121,8 @@ export const TokensLayout = () => {
             tokenInfo.map((card: any, index: any) => (
               <div
                 key={index}
-                onMouseDown={() => {
+                onMouseDown={(e) => {
+                  e.stopPropagation();
                   info.tokenAddress && info.tokenAddress === card.tokenAddress
                     ? setInfotoInitial()
                     : setInfo({ ...card });
@@ -127,7 +136,12 @@ export const TokensLayout = () => {
             <p className="text-white">No token information available.</p>
           )}
         </div>
-        <div className="mt-[40px] flex w-full items-center justify-center gap-[20px] ">
+        <div
+          className="mt-[40px] flex w-full items-center justify-center gap-[20px] "
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <PageFirst
             className="cursor-pointer"
             fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}

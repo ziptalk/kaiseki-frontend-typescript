@@ -44,29 +44,23 @@ export const SlotSection = ({ cid }: { cid: string }) => {
   ];
 
   const [isSpinning, setIsSpinning] = useState([true, true, true]);
-  const [slots] = useState([0, 3, 6]);
 
   useEffect(() => {
     const stopTimers = [
-      setTimeout(() => stopSlot(0), 1150), // 첫 번째 슬롯 3초 후 멈춤
-      setTimeout(() => stopSlot(1), 3100), // 두 번째 슬롯 4초 후 멈춤
-      setTimeout(() => stopSlot(2), 3900), // 세 번째 슬롯 5초 후 멈춤
+      setTimeout(() => stopSlot(0), 1150),
+      setTimeout(() => stopSlot(1), 3100),
+      setTimeout(() => stopSlot(2), 3900),
     ];
 
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
-  }, []);
+  }, [cid]);
 
   const stopSlot = (slotIndex: number) => {
     setIsSpinning((prevState) => {
       const newState = [...prevState];
-      newState[slotIndex] = false; // 해당 슬롯 멈춤
+      newState[slotIndex] = false;
       return newState;
     });
-    // setSlots((prevState) => {
-    //   const newSlots = [...prevState];
-    //   newSlots[slotIndex] = Math.floor(Math.random() * images.length);
-    //   return newSlots;
-    // });
   };
 
   return (
@@ -90,8 +84,8 @@ const SlotColumn: FC<{
           isSpinning || idx === 1
             ? "top-[-38px]"
             : idx === 6
-              ? "top-[-318px]"
-              : "top-[-597px]"
+              ? "top-[-315px]"
+              : "top-[-593px]"
         } ${idx === 1 ? "delay-150" : idx === 3 ? "delay-300" : "delay-450"}`}
       >
         {images.map((image, index) => (
@@ -117,24 +111,23 @@ const SlotColumn: FC<{
         }
 
         .spinning {
-          animation: spin 7s linear forwards; // 5초 동안 돌아가고 마지막 위치에서 멈춤
+          animation: spin 7s linear forwards;
         }
 
         .stopped {
-          animation: none; // 멈춘 상태에서는 애니메이션 없음
+          animation: none;
         }
 
         .slot-image {
           margin: 10px 0;
         }
 
-        /* 슬롯이 자연스럽게 멈추는 애니메이션 */
         @keyframes spin {
           0% {
             transform: translateY(0);
           }
           100% {
-            transform: translateY(-1000px); // 무한 스크롤을 위해 큰 값으로 설정
+            transform: translateY(-1000px);
           }
         }
       `}</style>
