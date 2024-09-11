@@ -168,8 +168,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       candlestickSeries.applyOptions({
         priceFormat: {
           type: "price",
-          precision: 6,
-          minMove: 0.000001,
+          precision: 10,
+          minMove: 0.0000000001,
         },
       });
 
