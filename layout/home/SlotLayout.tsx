@@ -84,7 +84,46 @@ export const SlotLayout = () => {
   useEffect(() => {
     getRaffle();
   }, []);
+  const RotatingImage = () => {
+    return (
+      <div className="absolute top-[-75px] flex items-center justify-center">
+        <div className="rotating-image-container">
+          <Stick className="fill-[#FF2626]" />
+        </div>
 
+        <style jsx>{`
+          .rotating-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .rotating-image-container {
+            transform-origin: bottom center;
+            animation: rotate 1s infinite ease-in-out;
+          }
+
+          @keyframes rotate {
+            0% {
+              transform: rotate(0deg);
+            }
+            25% {
+              transform: rotate(-30deg);
+            }
+            50% {
+              transform: rotate(0deg);
+            }
+            75% {
+              transform: rotate(30deg);
+            }
+            100% {
+              transform: rotate(0deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  };
   return (
     <div className="main w-full flex-col p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5">
       <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14">
@@ -169,7 +208,8 @@ export const SlotLayout = () => {
         onClick={() => router.push("/create")}
       >
         <div className="trapezoid-icon absolute top-[10px] rounded-full" />
-        <Stick className={`absolute top-[-75px] fill-[#FF2626]`} />
+        {/* <Stick className={` fill-[#FF2626]`} /> */}
+        <RotatingImage />
         <img src="images/rectangle-create.png" alt="" className="w-full" />
         <div className="gradiant-create-box h-14 w-full" />
         <div className="create-title absolute bottom-4">create new coin</div>

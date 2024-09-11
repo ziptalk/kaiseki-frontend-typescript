@@ -341,35 +341,41 @@ const Header: FC = () => {
           onClick={() => setIsInfoModalActive(!isInfoModalActive)}
         >
           <ModalContentBox onClick={(e) => e.stopPropagation()}>
-            <div className="mb-[34px] h-[111px] gap-[20px]">
-              <h1 className="mb-[20px] text-2xl">How it works</h1>
-              <h1>
+            <div className="mb-5 md:mb-[34px]">
+              <h1 className="mb-5 text-sm font-bold md:mb-5 md:text-2xl">
+                How it works
+              </h1>
+              <h1 className="text-xs md:text-[18px]">
                 RWE prevents rugs by making sure that all created tokens are
                 safe. Each coin on RWE is a fair-launch with no presale and no
                 team allocation.
               </h1>
             </div>
 
-            <div className="h-[335px] gap-[20px]">
-              <h1 className="mb-[20px]">step 1 : pick a coin that you like</h1>
-              <h1 className="mb-[20px]">
-                step 2 : buy the coin on the bonding curve
+            <div className="mb-5 flex flex-col gap-[18px] md:mb-[34px] md:gap-[25px]">
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 1</b> : pick a coin that you like
               </h1>
-              <h1 className="mb-[20px]">
-                step 3 : sell at any time to lock in your profits or losses
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 2</b> : buy the coin on the bonding curve
               </h1>
-              <h1 className="mb-[20px]">
-                step 4 : when enough people buy on the bonding curve it reaches
-                a market cap of $
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 3</b> : sell at any time to lock in your profits or
+                losses
+              </h1>
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 4</b> : when enough people buy on the bonding curve it
+                reaches a market cap of $
                 {Math.floor((60660 * curReserveMarketPrice) / 1000)}k
               </h1>
-              <h1 className="mb-[20px]">
-                step 5 : ${Math.floor((9000 * curReserveMarketPrice) / 1000)}k
-                of liquidity is then deposited in dragonswap and burned
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 5</b> : $
+                {Math.floor((9000 * curReserveMarketPrice) / 1000)}k of
+                liquidity is then deposited in dragonswap and burned
               </h1>
-              <h1 className="">
-                step 6 : Please make sure to include your telegram address so
-                that you can receive the raffle prize.
+              <h1 className="text-xs md:text-[18px]">
+                <b>step 6</b> : Please make sure to include your telegram
+                address so that you can receive the raffle prize.
               </h1>
             </div>
 
@@ -378,7 +384,7 @@ const Header: FC = () => {
                 e.stopPropagation();
                 setIsInfoModalActive(!isInfoModalActive);
               }}
-              className="h-[53px] w-full rounded-[10px] border hover:border-[#FAFF00] hover:text-[#FAFF00]"
+              className="h-[46px] w-full rounded-[10px] border text-sm font-bold hover:border-[#FAFF00] hover:text-[#FAFF00] md:h-[53px] md:text-xl"
             >
               Let&apos;s start
             </button>

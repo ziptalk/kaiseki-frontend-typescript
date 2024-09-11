@@ -46,7 +46,6 @@ export const ModalContentBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 34px;
 
   position: absolute;
   left: 50%;
@@ -58,4 +57,8 @@ export const ModalContentBox = styled.div`
   background: #1e1e1e;
   text-align: center;
   color: white;
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 25px 20px;
+  }
 `;
