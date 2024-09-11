@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: { domains: ["sapphire-tough-louse-440.mypinata.cloud"] },
   reactStrictMode: true,
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");

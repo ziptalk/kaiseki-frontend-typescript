@@ -47,7 +47,9 @@
   border-radius: 10px;
   border: 1px solid #faff00;
 }
-
+.active {
+  filter: drop-shadow(0 0 10px red);
+}
 .button-bg-primary {
   background: linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%);
 }

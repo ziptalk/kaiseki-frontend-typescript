@@ -106,31 +106,37 @@ export const SlotLayout = () => {
           {raffleData &&
             raffleData.result.tokens &&
             raffleData.result.tokens[page - 1] && (
-              <RWATokenCard props={raffleData.result.tokens[page - 1]} />
+              <>
+                <RWATokenCard props={raffleData.result.tokens[page - 1]} />
+                <SlotSection cid={raffleData.result.tokens[page - 1].cid} />
+              </>
             )}
-          <SlotSection />
         </Link>
 
         {/* move to prev/next raffle */}
-        <div className="flex items-center gap-3 md:gap-5">
-          <Arrow
-            fill={page > 1 ? "white" : "#AEAEAE"}
-            className="cursor-pointer"
-            onClick={() => {
-              if (page > 1) setPage(page - 1);
-            }}
-          />
-          <h1 className="text-sm text-white md:text-base">
-            {page} / {totalPage || 0}
-          </h1>
-          <Arrow
-            fill={page < totalPage ? "white" : "#AEAEAE"}
-            className="rotate-180 transform cursor-pointer"
-            onClick={() => {
-              if (page < totalPage) setPage(page + 1);
-            }}
-          />
-        </div>
+        {raffleData &&
+          raffleData.result.tokens &&
+          raffleData.result.tokens[page - 1] && (
+            <div className="flex items-center gap-3 md:gap-5">
+              <Arrow
+                fill={page > 1 ? "white" : "#AEAEAE"}
+                className="cursor-pointer"
+                onClick={() => {
+                  if (page > 1) setPage(page - 1);
+                }}
+              />
+              <h1 className="text-sm text-white md:text-base">
+                {page} / {totalPage || 0}
+              </h1>
+              <Arrow
+                fill={page < totalPage ? "white" : "#AEAEAE"}
+                className="rotate-180 transform cursor-pointer"
+                onClick={() => {
+                  if (page < totalPage) setPage(page + 1);
+                }}
+              />
+            </div>
+          )}
       </div>
 
       {/* create new coin */}
