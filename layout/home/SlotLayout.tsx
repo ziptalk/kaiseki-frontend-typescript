@@ -152,9 +152,7 @@ export const SlotLayout = () => {
         onClick={() => router.push("/create")}
       >
         <div className="trapezoid-icon absolute top-[10px] rounded-full" />
-        <Stick
-          className={`absolute top-[-75px] ${stickColor ? `fill-[#FF2626]` : `fill-[#ffea00]`}`}
-        />
+        <Stick className={`absolute top-[-75px] fill-[#FF2626]`} />
         <img src="images/rectangle-create.png" alt="" className="w-full" />
         <div className="gradiant-create-box h-14 w-full" />
         <div className="create-title absolute bottom-4">create new coin</div>

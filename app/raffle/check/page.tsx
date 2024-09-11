@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MainTitle } from "@/components/common/MainTitle";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { useSearchParams } from "next/navigation";
@@ -17,6 +17,13 @@ export default function Raffle() {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [success, setSuccess] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [gifOn, setGifOn] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setGifOn(false);
+    }, 1000);
+  }, []);
 
   const onButtonClick = async () => {
     const result = await RaffleTelegramId({
@@ -38,6 +45,13 @@ export default function Raffle() {
 
   return (
     <div className="p-2">
+      {gifOn && (
+        <img
+          src="/images/congratulation.gif"
+          alt="congrats"
+          className="fixed h-full w-full"
+        />
+      )}
       <div className="mx-auto mt-3 w-full md:w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home
