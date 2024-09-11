@@ -46,7 +46,12 @@ export const SlotLayout = () => {
   }, [href]);
 
   useEffect(() => {
-    if (raffleData?.result.tokens.length) {
+    if (
+      raffleData &&
+      raffleData.result &&
+      raffleData.result.tokens &&
+      raffleData.result.tokens.length
+    ) {
       setHref("/raffle");
       for (let i = 0; i < raffleData.winner.raffles.length; i++) {
         if (

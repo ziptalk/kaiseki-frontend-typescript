@@ -51,9 +51,20 @@ export const SlotSection = ({ cid }: { cid: string }) => {
       setTimeout(() => stopSlot(1), 3100),
       setTimeout(() => stopSlot(2), 3900),
     ];
-
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
   }, [cid]);
+
+  // useEffect(() => {
+  //   if (
+  //     isSpinning[0] === false &&
+  //     isSpinning[1] === false &&
+  //     isSpinning[2] === false
+  //   ) {
+  //     setTimeout(() => {
+  //       setIsSpinning([true, true, true]);
+  //     }, 1000);
+  //   }
+  // }, [isSpinning]);
 
   const stopSlot = (slotIndex: number) => {
     setIsSpinning((prevState) => {
@@ -84,9 +95,9 @@ const SlotColumn: FC<{
           isSpinning || idx === 1
             ? "top-[-38px]"
             : idx === 6
-              ? "top-[-315px]"
-              : "top-[-593px]"
-        } ${idx === 1 ? "delay-150" : idx === 3 ? "delay-300" : "delay-450"}`}
+              ? "top-[-318px]"
+              : "top-[-597px]"
+        }`}
       >
         {images.map((image, index) => (
           <Image
