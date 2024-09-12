@@ -14,7 +14,7 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
-  const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmQicKWFQ9Trb7nuUPHjdguN5DckueMHjYndTxURaKRXHu`;
+  const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`;
   const images1 = [
     { src: "/dump/WIF.png", alt: "Dog" },
     { src: cidImg, alt: "RWA" },
