@@ -24,7 +24,7 @@ export default function Raffle() {
 
   const [buttonClicked, setButtonClicked] = useState(false);
   const [success, setSuccess] = useState(true);
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState("");
   const [width, setWidth] = useState(250);
   const [curMemeTokenValue, setCurMemeTokenValue] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -57,6 +57,14 @@ export default function Raffle() {
   }, [account]);
 
   useEffect(() => {
+    if (inputValue === "0") {
+      setInputValue("");
+    } else {
+      setInputValue(Number(inputValue).toFixed());
+    }
+  }, [inputValue]);
+
+  useEffect(() => {
     if (buttonClicked) {
       setTimeout(() => {
         setButtonClicked(false);
@@ -67,18 +75,15 @@ export default function Raffle() {
   const buttonValue = [
     {
       value: 25,
-      onClick: () =>
-        setInputValue(Number((curMemeTokenValue * 0.25).toFixed(5))),
+      onClick: () => setInputValue((curMemeTokenValue * 0.25).toFixed()),
     },
     {
       value: 50,
-      onClick: () =>
-        setInputValue(Number((curMemeTokenValue * 0.5).toFixed(5))),
+      onClick: () => setInputValue((curMemeTokenValue * 0.5).toFixed()),
     },
     {
       value: 75,
-      onClick: () =>
-        setInputValue(Number((curMemeTokenValue * 0.75).toFixed(5))),
+      onClick: () => setInputValue((curMemeTokenValue * 0.75).toFixed()),
     },
   ];
 
@@ -126,7 +131,7 @@ export default function Raffle() {
       console.log(`Deposited ${amount} tokens to MultiTokenReceiver contract`);
       await RaffleEnter({
         tokenAddress: searchParams.get("token") || "",
-        tokenAmount: inputValue,
+        tokenAmount: Number(inputValue),
         userAddress: account.address,
       });
     } catch (err) {
@@ -197,14 +202,13 @@ export default function Raffle() {
                   className="h-10 w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] px-2 text-xs text-white md:h-[55px] md:px-[20px] md:text-base"
                   type="number"
                   name="inputValue"
+                  placeholder="0"
                   value={inputValue}
-                  onChange={(e) => setInputValue(Number(e.target.value))}
+                  onChange={(e) => setInputValue(e.target.value)}
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    setInputValue(Number(curMemeTokenValue.toFixed(5)))
-                  }
+                  onClick={() => setInputValue(curMemeTokenValue.toFixed())}
                   className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
                 >
                   MAX
@@ -225,11 +229,14 @@ export default function Raffle() {
               <Button
                 className="mt-5 md:mt-[30px]"
                 onClick={() => {
-                  if (inputValue > curMemeTokenValue) {
+                  if (Number(inputValue) > curMemeTokenValue) {
                     setSuccess(false);
                     setButtonClicked(true);
                   } else {
-                    depositTokens(searchParams.get("token") || "", inputValue);
+                    depositTokens(
+                      searchParams.get("token") || "",
+                      Number(inputValue),
+                    );
                   }
                 }}
               >

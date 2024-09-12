@@ -153,11 +153,11 @@ const SlotColumn: FC<{
         }
 
         .spinning {
-          animation: spin 7s linear forwards;
+          animation: spin-slot 7s linear forwards;
         }
 
         .spinning-mobile {
-          animation: spin 20s linear forwards;
+          animation: spin-slot 20s linear forwards;
         }
 
         .stopped {
@@ -168,7 +168,7 @@ const SlotColumn: FC<{
           margin: 10px 0;
         }
 
-        @keyframes spin {
+        @keyframes spin-slot {
           0% {
             transform: translateY(0);
           }
