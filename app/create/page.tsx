@@ -312,9 +312,7 @@ const Create: NextPage = () => {
     //     description,
     //   },
     // }}
-    router.push(
-      `/detail?cid=${cid}&tokenAddress=${createdTokenAddress}&name=${watch("Name")}&ticker=${watch("Ticker")}&createdBy=${account.address}&description=${watch("Description")}`,
-    );
+    router.push(`/`);
   };
 
   const onInvalid = async () => {

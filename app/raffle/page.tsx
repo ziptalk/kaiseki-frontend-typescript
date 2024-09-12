@@ -40,10 +40,6 @@ export default function Raffle() {
   );
 
   useEffect(() => {
-    console.log(curMemeTokenValue);
-  }, [curMemeTokenValue]);
-
-  useEffect(() => {
     setWidth(window.innerWidth);
     const updateWindowDimensions = () => {
       setWidth(window.innerWidth);
@@ -59,10 +55,8 @@ export default function Raffle() {
   useEffect(() => {
     if (inputValue === "0") {
       setInputValue("");
-    } else {
-      setInputValue(Number(inputValue).toFixed());
     }
-  }, [inputValue]);
+  }, []);
 
   useEffect(() => {
     if (buttonClicked) {
@@ -131,7 +125,7 @@ export default function Raffle() {
       console.log(`Deposited ${amount} tokens to MultiTokenReceiver contract`);
       await RaffleEnter({
         tokenAddress: searchParams.get("token") || "",
-        tokenAmount: Number(inputValue),
+        tokenAmount: Number(Number(inputValue).toFixed()),
         userAddress: account.address,
       });
     } catch (err) {
