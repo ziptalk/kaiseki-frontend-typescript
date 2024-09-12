@@ -90,6 +90,10 @@ export const SlotLayout = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, [raffleData]);
+
+  useEffect(() => {
+    getRaffle();
+  }, []);
   const RotatingImage = () => {
     return (
       <div className="absolute top-[-75px] flex items-center justify-center">

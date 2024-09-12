@@ -87,6 +87,7 @@ export default function Raffle() {
         setCurMemeTokenValue(0);
         return;
       }
+      console.log(account.address);
       const detail = await memeTokenContract.balanceOf(account.address);
       setCurMemeTokenValue(ether(detail));
     } catch (error) {
