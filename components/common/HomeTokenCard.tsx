@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 import BondingCurveCard from "../detail/BondingCurveCard";
-
+import { setCurStepsIntoState } from "@/utils/getCurve";
 export const MyPageTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
@@ -10,6 +10,14 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   tokenAddress,
   cid,
 }) => {
+  const [curve, setCurve] = useState(0);
+
+  const getCurve = async () => {
+    setCurve((await setCurStepsIntoState({ tokenAddress })) || 0);
+  };
+  useEffect(() => {
+    getCurve();
+  }, [tokenAddress]);
   return (
     <div className={`w-full bg-[#252525] md:hover:bg-[#2C2C2C]`}>
       <div className={`flex h-20 gap-[10px]`}>
@@ -32,7 +40,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
         </div>
       </div>
       <div className="mt-4 w-full">
-        <BondingCurveCard prog={Math.floor(10)} bgColor="[#454545]" my />
+        <BondingCurveCard prog={Math.floor(curve)} bgColor="[#454545]" my />
       </div>
     </div>
   );
