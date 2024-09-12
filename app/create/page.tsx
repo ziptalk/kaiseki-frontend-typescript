@@ -200,12 +200,13 @@ const Create: NextPage = () => {
       alert("Invalid input value!");
       return true;
     }
-    if (parseInt(watch("threshold")) < 0.01) {
-      alert("Invalid input value!");
+    if (Number(watch("threshold")) < 0.01) {
+      console.log("threshold: " + parseInt(watch("threshold")));
+      alert("Invalid input value!1");
       return true;
     }
     if (!watch("prize")) {
-      alert("Invalid input value!");
+      alert("Invalid input value!2");
       return true;
     }
     if (!watch("Name") || !watch("Ticker")) {

@@ -21,15 +21,15 @@ import { TradesLayout } from "@/layout/detail/TradesLayout";
 import { HolderDistributionLayout } from "@/layout/detail/HolderDistrubutionLayout";
 import {
   ChangeMcap,
+  FindTokenByAddress,
   HolderDistribution,
   TxlogsMintBurn,
 } from "@/utils/apis/apis";
-import { useSearchParams } from "next/navigation";
+import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
 
-export default function Detail() {
-  const searchParams = useSearchParams();
+export default function Detail({ params }: { params: { id: string } }) {
   const account = useAccount();
-
+  console.log(params.id);
   const [volume, setvolume] = useState<string>("0");
 
   // MARK: - init ethers.js
@@ -42,15 +42,13 @@ export default function Detail() {
     provider,
   );
 
-  const [tokenInfo] = useState<TokenInfo>({
-    cid: searchParams.get("cid") || "",
-    createdBy: searchParams.get("createdBy") || "",
-    description: searchParams.get("description") || "",
-    marketCap: searchParams.get("marketCap") || "",
-    name: searchParams.get("name") || "",
-    ticker: searchParams.get("ticker") || "",
-    tokenAddress: searchParams.get("tokenAddress") || "",
-  });
+  const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
+
+  const getTokenInfo = async () => {
+    const response = setTokenInfo(await FindTokenByAddress(params.id));
+    console.log(response);
+    return response;
+  };
   // const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
@@ -62,17 +60,18 @@ export default function Detail() {
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
       // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+      fetch20TXLogsFromServer(tokenInfo ? params.id : "", setTXLogsFromServer);
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
+    getTokenInfo();
     fetchTokenDetailFromContract();
     fetchHolderDistributionFromServer();
     // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-    fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+    fetch20TXLogsFromServer(tokenInfo ? params.id : "", setTXLogsFromServer);
     // fetchHomeTokenInfoFromServer();
   }, []);
 
@@ -113,7 +112,7 @@ export default function Detail() {
   const fetchHolderDistributionFromServer = async () => {
     try {
       const data = await HolderDistribution();
-      const filteredData = filterDataByOuterKey(data, tokenInfo.tokenAddress);
+      const filteredData = filterDataByOuterKey(data, params.id);
       setDistribution(filteredData);
     } catch (error) {
       console.log(error);
@@ -122,7 +121,7 @@ export default function Detail() {
 
   const fetchTokenDetailFromContract = async () => {
     try {
-      const detail = await bondContract.getDetail(tokenInfo.tokenAddress);
+      const detail = await bondContract.getDetail(params.id);
       const price = detail.info.priceForNextMint;
       console.log("currentSupply :" + detail.info.currentSupply);
       const mcap = (
@@ -136,7 +135,7 @@ export default function Detail() {
       console.log(response.data.price, mcap);
       const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
       await ChangeMcap({
-        tokenAddress: tokenInfo.tokenAddress,
+        tokenAddress: params.id,
         marketCap: Number(marketCapInUSD),
       });
     } catch (error) {
@@ -177,13 +176,9 @@ export default function Detail() {
   const setCurStepsIntoState = async () => {
     try {
       // Fetch the steps using the getSteps function from the contract
-      const steps: BondStep[] = await bondContract.getSteps(
-        tokenInfo.tokenAddress,
-      );
+      const steps: BondStep[] = await bondContract.getSteps(params.id);
       // console.log("Fetched steps:", steps);
-      const targetPrice = await bondContract.priceForNextMint(
-        tokenInfo.tokenAddress,
-      );
+      const targetPrice = await bondContract.priceForNextMint(params.id);
 
       // Extract the step prices into a new array
       const stepPrices: bigint[] = steps.map((step) => step.price);
@@ -245,7 +240,16 @@ export default function Detail() {
         </PageLinkButton>
         <div className="mt-[10px] flex justify-between">
           {/* token card */}
-          <TokenCard {...tokenInfo} />
+          <TokenCard
+            {...{
+              name: tokenInfo.name,
+              cid: tokenInfo.cid,
+              ticker: tokenInfo.ticker,
+              createdBy: tokenInfo.creator,
+              description: tokenInfo.description,
+              tokenAddress: params.id,
+            }}
+          />
           {/* progress bar + desc */}
           <div className="relative w-[450px] rounded-tr-[100px] bg-card  py-[13px] pl-[10px] pr-[66px]">
             <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
@@ -287,7 +291,7 @@ export default function Detail() {
         <div className="mt-[30px] h-[372px] w-full">
           <TradingViewChart
             {...{
-              tokenAddress: tokenInfo.tokenAddress,
+              tokenAddress: params.id,
             }}
           />
         </div>
@@ -308,13 +312,13 @@ export default function Detail() {
             {...{
               memeTokenSymbol: tokenInfo.ticker,
               RESERVE_SYMBOL,
-              tokenAddress: tokenInfo.tokenAddress,
+              tokenAddress: params.id,
               cid: tokenInfo.cid,
             }}
           />
         </div>
         <HolderDistributionLayout
-          {...{ distribution, creator: tokenInfo.createdBy || "" }}
+          {...{ distribution, creator: tokenInfo.creator || "" }}
         />
       </div>
     </main>

@@ -50,18 +50,7 @@ export const BuySellLayout = ({
     >
       <div className="top-[80px] p-5 md:p-0 md:pb-[60px]">
         <PageLinkButton
-          href={{
-            pathname: "/detail",
-            query: {
-              cid,
-              tokenAddress,
-              name,
-              ticker,
-              createdBy,
-              description,
-              marketCap,
-            },
-          }}
+          href={tokenAddress}
           className="mt-[112px] hidden md:flex"
         >
           View details

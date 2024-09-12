@@ -38,7 +38,7 @@ export const MypageModal = ({
     // <Tokens key="Tokens" />,
     // <Raffle key="Raffle" />,
     <Trade key="Trade" {...{ userAddress }} />,
-    <MyMeme key="MyMeme" {...{ userAddress }} />,
+    <MyMeme key="MyMeme" {...{ userAddress, setModal }} />,
   ];
 
   const copyToClipboard = async (text: string) => {

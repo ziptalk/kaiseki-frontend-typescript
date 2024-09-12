@@ -4,8 +4,10 @@ import React from "react";
 
 export const MyMeme = ({
   userAddress,
+  setModal,
 }: {
   userAddress: `0x${string}` | undefined;
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [MyMemes, setMyMemes] = React.useState([]);
 
@@ -27,6 +29,8 @@ export const MyMeme = ({
             description: meme.description,
             tokenAddress: meme.tokenAddress,
             cid: meme.cid,
+
+            setModal,
           }}
           key={index}
         />

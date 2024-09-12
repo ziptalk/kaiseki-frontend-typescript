@@ -35,6 +35,8 @@ interface TokenCardTypes {
   tokenAddress: string;
   clickedToken?: string;
   cid: string;
+
+  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TradesCardType {
