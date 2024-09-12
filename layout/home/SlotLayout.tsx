@@ -47,13 +47,24 @@ export const SlotLayout = () => {
 
   useEffect(() => {
     if (
+      page &&
       raffleData &&
       raffleData.result &&
       raffleData.result.tokens &&
       raffleData.result.tokens.length
     ) {
       setHref("/raffle");
-      for (let i = 0; i < raffleData.winner.raffles.length; i++) {
+      for (
+        let i = 0;
+        raffleData.winner.raffles && i < raffleData.winner.raffles.length;
+        i++
+      ) {
+        console.log(
+          raffleData.winner.raffles[i].tokenAddress,
+          raffleData.result.tokens[page - 1].token,
+          raffleData.winner.raffles[i].tokenAddress ===
+            raffleData.result.tokens[page - 1].token,
+        );
         if (
           raffleData.winner.raffles[i].tokenAddress ===
             raffleData.result.tokens[page - 1].token &&
@@ -66,9 +77,6 @@ export const SlotLayout = () => {
           raffleData.result.tokens[page - 1].token
         ) {
           setHref("/raffle/fail");
-          return;
-        } else {
-          setHref("/raffle");
           return;
         }
       }

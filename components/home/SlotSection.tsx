@@ -2,6 +2,18 @@ import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 
 export const SlotSection = ({ cid }: { cid: string }) => {
+  const [width, setWidth] = useState(180);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowDimensions);
+
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
   const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`;
   const images1 = [
     { src: "/dump/WIF.png", alt: "Dog" },
@@ -47,24 +59,12 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
   useEffect(() => {
     const stopTimers = [
-      setTimeout(() => stopSlot(0), 1150),
-      setTimeout(() => stopSlot(1), 3100),
-      setTimeout(() => stopSlot(2), 3900),
+      setTimeout(() => stopSlot(0), width < 768 ? 1650 : 1150),
+      setTimeout(() => stopSlot(1), width < 768 ? 2800 : 3100),
+      setTimeout(() => stopSlot(2), width < 768 ? 5600 : 3900),
     ];
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
   }, [cid]);
-
-  // useEffect(() => {
-  //   if (
-  //     isSpinning[0] === false &&
-  //     isSpinning[1] === false &&
-  //     isSpinning[2] === false
-  //   ) {
-  //     setTimeout(() => {
-  //       setIsSpinning([true, true, true]);
-  //     }, 1000);
-  //   }
-  // }, [isSpinning]);
 
   const stopSlot = (slotIndex: number) => {
     setIsSpinning((prevState) => {
@@ -88,29 +88,60 @@ const SlotColumn: FC<{
   isSpinning: boolean;
   idx: number;
 }> = ({ images, isSpinning, idx }) => {
+  const [width, setWidth] = useState(180);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", updateWindowDimensions);
+
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
       <div
-        className={`slot-container ${isSpinning ? "spinning" : "stopped"} ${
+        className={`slot-container ${isSpinning ? (width < 768 ? "spinning-mobile" : "spinning") : "stopped"} ${
           isSpinning || idx === 1
-            ? "top-[-38px]"
+            ? width < 768
+              ? "top-[-5px]"
+              : "top-[-38px]"
             : idx === 6
-              ? "top-[-318px]"
-              : "top-[-597px]"
+              ? width < 768
+                ? "top-[-145px]"
+                : "top-[-318px]"
+              : width < 768
+                ? "top-[-285px]"
+                : "top-[-597px]"
         }`}
       >
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            src={image.src}
-            alt={image.alt}
-            width={40}
-            height={40}
-            className={`slot-image mt-4 ${
-              !isSpinning && index === idx ? "active" : ""
-            }`}
-          />
-        ))}
+        {images.map((image, index) =>
+          width < 768 ? (
+            <Image
+              key={index}
+              src={image.src}
+              alt={image.alt}
+              width={20}
+              height={20}
+              className={`slot-image mt-2 ${
+                !isSpinning && index === idx ? "active" : ""
+              }`}
+            />
+          ) : (
+            <Image
+              key={index}
+              src={image.src}
+              alt={image.alt}
+              width={40}
+              height={40}
+              className={`slot-image mt-4 ${
+                !isSpinning && index === idx ? "active" : ""
+              }`}
+            />
+          ),
+        )}
       </div>
       <style jsx>{`
         .slot-container {
@@ -123,6 +154,10 @@ const SlotColumn: FC<{
 
         .spinning {
           animation: spin 7s linear forwards;
+        }
+
+        .spinning-mobile {
+          animation: spin 20s linear forwards;
         }
 
         .stopped {

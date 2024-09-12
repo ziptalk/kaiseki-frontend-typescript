@@ -46,7 +46,7 @@ const Create: NextPage = () => {
   const signer = useEthersSigner();
   const account = useAccount();
   const router = useRouter();
-  const { register, handleSubmit, watch } = useForm<HookFormTypes>({
+  const { register, handleSubmit, watch, setValue } = useForm<HookFormTypes>({
     defaultValues: {
       Name: "",
       Ticker: "",
@@ -143,6 +143,14 @@ const Create: NextPage = () => {
     }
   };
 
+  const handleThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // if (Number(e.target.value) !== 0 && Number(e.target.value) < 0.01) {
+    //   setValue("threshold", "");
+    // } else {
+    setValue("threshold", e.target.value);
+    // }
+  };
+
   // MARK: - Validation
   const getUserReserveBalance = async () => {
     try {
@@ -188,6 +196,18 @@ const Create: NextPage = () => {
     //   alert("Ticker already exists!");
     //   return true;
     // }
+    if (!watch("threshold")) {
+      alert("Invalid input value!");
+      return true;
+    }
+    if (parseInt(watch("threshold")) < 0.01) {
+      alert("Invalid input value!");
+      return true;
+    }
+    if (!watch("prize")) {
+      alert("Invalid input value!");
+      return true;
+    }
     if (!watch("Name") || !watch("Ticker")) {
       alert("Invalid input value!");
       return true;
@@ -368,9 +388,24 @@ const Create: NextPage = () => {
             name: "threshold",
             register,
             value: watch("threshold"),
+            onChange: handleThresholdChange,
             type: "number",
           }}
         />
+        {/* <div
+          className={
+            "h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none"
+          }
+        >
+          <input
+            type="number"
+            step={0.01}
+            placeholder={"The minimum value allowed is 0.01 ETH"}
+            className="h-full w-full bg-transparent text-white outline-none"
+            {...register("threshold", { onChange: () => {} })}
+          />
+          <div className="text-sm font-bold">ETH</div>
+        </div> */}
         <Inputform
           {...{
             name: "Description",

@@ -493,7 +493,7 @@ export const Tradesection = ({
   };
   const BuySellButtonSection: FC = () => {
     return (
-      <div className="flex h-[50px] justify-between gap-[5px]">
+      <div className="flex h-10 justify-between gap-[5px] md:h-[50px]">
         <Button
           className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
           onClick={() => {

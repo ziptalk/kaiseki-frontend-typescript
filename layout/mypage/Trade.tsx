@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { UsersTrades } from "@/utils/apis/apis";
 import { ethers } from "ethers";
+import { MyTradeResponse } from "@/utils/apis/type";
 
 export const Trade = ({
   userAddress,
@@ -14,7 +15,7 @@ export const Trade = ({
     setValues(filterEventsByToken(await UsersTrades(userAddress)));
   };
 
-  const filterEventsByToken = (data: any): Event[] => {
+  const filterEventsByToken = (data: MyTradeResponse): any[] => {
     try {
       const filteredMintEvents = data.mintEvents.map((event: any) => ({
         ...event,
@@ -42,9 +43,12 @@ export const Trade = ({
     fetchValues();
   }, []);
   return (
-    <div className="pb-10">
+    <div className="overflow-scroll pb-10">
       {values.map((value, idx) => (
-        <div key={idx} className="flex flex-col gap-2.5">
+        <div
+          key={idx}
+          className="flex flex-col gap-2.5 px-5 md:hover:bg-[#404040]"
+        >
           {/* <div className="text-base font-semibold text-white">
             {dateValue.date}
           </div> */}
@@ -53,7 +57,11 @@ export const Trade = ({
               <div>
                 {value.isMint ? (
                   <div className="relative h-10 w-10">
-                    <div className="absolute left-0 top-0 h-6 w-6 rounded-full bg-[#5D5D5D]" />
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${value.cid}`}
+                      alt="Image from IPFS"
+                      className="absolute left-0 top-0 h-6 w-6 rounded-full bg-[#5D5D5D]"
+                    />
                     <img
                       src="/icons/base.svg"
                       alt="base"
@@ -67,7 +75,11 @@ export const Trade = ({
                       alt="base"
                       className="absolute left-0 top-0 h-6 w-6 rounded-full bg-[#5D5D5D]"
                     />
-                    <div className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-[#5D5D5D]" />
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${value.cid}`}
+                      alt="Image from IPFS"
+                      className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-[#5D5D5D]"
+                    />
                   </div>
                 )}
               </div>
@@ -120,7 +132,7 @@ export const Trade = ({
                   <div className="text-sm text-[#EDF102]">
                     +{" "}
                     {Math.floor(Number(ethers.formatEther(value.amountMinted)))}{" "}
-                    {value.tokenName}
+                    {value.ticker}
                   </div>
                 </>
               ) : (
@@ -128,7 +140,7 @@ export const Trade = ({
                   <div className="text-sm text-[#8F8F8F]">
                     -{" "}
                     {Math.floor(Number(ethers.formatEther(value.amountBurned)))}{" "}
-                    {value.tokenName}
+                    {value.ticker}
                   </div>
                   <div className="text-sm text-[#EDF102]">
                     +{" "}

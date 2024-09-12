@@ -50,14 +50,16 @@ export const Inputform = ({
           />
         </div>
       ) : type === "number" ? (
-        <div className={sharedStyle + " flex items-center justify-between"}>
+        <div
+          className={`h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none ${value !== "" && Number(value) < 0.01 ? "border-[#FF2626]" : "border-[#8F8F8F]"}`}
+        >
           <input
             type={type ? type : `text`}
             step={0.01}
             placeholder={
               type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
             }
-            className="h-full w-full bg-transparent text-white outline-none"
+            className={`"h-full w-full bg-transparent  outline-none ${value !== "" && Number(value) < 0.01 ? "text-[#FF2626]" : "text-white"}`}
             {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">ETH</div>

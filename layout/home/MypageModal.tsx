@@ -2,6 +2,8 @@ import React from "react";
 import Xbutton from "@/public/icons/XButton.svg";
 import Power from "@/public/icons/big_power.svg";
 import TradeArr from "@/public/icons/trade-arr.svg";
+import Bomb from "@/public/icons/bomb.svg";
+import Copy from "@/public/icons/copy.svg";
 import { Tokens } from "../mypage/Tokens";
 import { Raffle } from "../mypage/Raffle";
 import { Trade } from "../mypage/Trade";
@@ -34,19 +36,38 @@ export const MypageModal = ({
     // <MyMeme key="MyMeme" />,
   ];
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
   return (
     <div
-      className="z-50 h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] p-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
+      className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="ml-auto flex w-14 cursor-pointer justify-end gap-2.5">
-        <Power onClick={openAccountModal} className="md:hidden" />
-        <Xbutton onClick={() => setModal(false)} />
+      <div className="mr-5 flex w-full items-center justify-between">
+        <div
+          className="ml-5 flex cursor-pointer items-center gap-1 stroke-secondary text-secondary active:stroke-black active:text-black md:hidden"
+          onMouseDown={() => copyToClipboard(userAddress || "")}
+        >
+          <Bomb />
+          <div className="text-[15px]">
+            {userAddress?.slice(0, 6) + "..." + userAddress?.slice(-4)}
+          </div>
+          <Copy />
+        </div>
+        <div className="ml-auto mr-5 flex cursor-pointer gap-2.5">
+          <Power onClick={openAccountModal} className="md:hidden" />
+          <Xbutton onClick={() => setModal(false)} />
+        </div>
       </div>
-      <h1 className="text-4xl font-bold leading-9 text-white">
+      <h1 className="ml-5 mt-5 text-4xl font-bold leading-9 text-white">
         ${"13,121,342.12"}
       </h1>
-      <div className="mt-2 flex items-center">
+      <div className="ml-5 mt-2 flex items-center">
         <TradeArr
           className={`${true ? "fill-[#86BF77]" : "rotate-180 fill-red-500"} h-4 w-4`}
         />
@@ -56,7 +77,7 @@ export const MypageModal = ({
           $0.02(2.4%)
         </div>
       </div>
-      <div className="mt-9 flex gap-5 text-lg font-bold text-[#7D7D7D]">
+      <div className="ml-5 mt-9 flex gap-5 text-lg font-bold text-[#7D7D7D]">
         {Tabs.map((tab, index) => (
           <div
             key={index}

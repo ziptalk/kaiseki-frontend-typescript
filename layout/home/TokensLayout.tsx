@@ -1,10 +1,8 @@
 import { Dropdown } from "@/components/common/Dropdown";
 import React, { useEffect, useState } from "react";
-import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import { BuySellLayout } from "./BuySellLayout";
 import PagePre from "@/public/icons/pagePre.svg";
-import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 import { Search } from "@/utils/apis/apis";
 export const initialTokenInfo: TokenInfo = {
@@ -106,14 +104,14 @@ export const TokensLayout = () => {
             }}
           >
             <input
-              className="flex-[2] rounded-[10px] border border-background bg-black px-[20px] text-white"
+              className="flex-[2] rounded-[10px] border border-background bg-black px-[20px] text-white placeholder:text-[#808080] md:text-[15px]"
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="search for token"
             />
             <button
-              className="flex-1 rounded-[10px] bg-background font-bold text-white"
+              className="flex-1 rounded-[10px] bg-[#FF20F6] font-bold text-white hover:bg-[#DA00D1]"
               type="submit"
             >
               search
@@ -148,13 +146,6 @@ export const TokensLayout = () => {
             e.stopPropagation();
           }}
         >
-          <PageFirst
-            className="cursor-pointer"
-            fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
-            onClick={() => {
-              if (pageNum > 1) setPageNum(1);
-            }}
-          />
           <PagePre
             className="cursor-pointer"
             fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
@@ -164,13 +155,6 @@ export const TokensLayout = () => {
           />
           <div className=" text-[16px] text-[#909090]">{pageNum}</div>
           <PagePre
-            className="translate rotate-180 cursor-pointer"
-            fill={`${tokenInfo && tokenInfo.length === 12 ? "#909090" : "#3F3F3F"}`}
-            onClick={() => {
-              if (tokenInfo && tokenInfo.length === 12) setPageNum(pageNum + 1);
-            }}
-          />
-          <PageFirst
             className="translate rotate-180 cursor-pointer"
             fill={`${tokenInfo && tokenInfo.length === 12 ? "#909090" : "#3F3F3F"}`}
             onClick={() => {

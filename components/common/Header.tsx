@@ -64,7 +64,16 @@ const Header: FC = () => {
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
   const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const [width, setWidth] = useState(250);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
   useEffect(() => {
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
@@ -618,7 +627,7 @@ const Header: FC = () => {
       )} */}
 
       {accountButtonModal &&
-        (isMobile ? (
+        (width < 768 ? (
           <BottomSheet
             {...{
               setUnVisible: ModalOff,

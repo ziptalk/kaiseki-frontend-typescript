@@ -21,7 +21,7 @@ export const TokenDesc = ({
   }, []);
   return (
     <div style={{ width: width < 768 ? width - 180 : 240 }}>
-      <h1 className="truncate whitespace-pre break-words text-[15px] font-bold leading-5 text-white">
+      <h1 className="truncate whitespace-pre break-words text-[15px] font-bold leading-5 text-[#AEAEAE]">
         {name}
         {"\n"}
         [ticker: {ticker}]

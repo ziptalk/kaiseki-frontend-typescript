@@ -20,3 +20,24 @@ export interface TokenResponse {
   description: string;
   startDate: string;
 }
+
+export interface MyTradeResponse {
+  burnEvents: {
+    amountBurned: string;
+    cid: string;
+    refundAmount: string;
+    ticker: string;
+    timestamp: string;
+    tokenCreator: string;
+    tokenName: string;
+  }[];
+  mintEvents: {
+    amountMinted: string;
+    cid: string;
+    reserveAmount: string;
+    ticker: string;
+    timestamp: string;
+    tokenCreator: string;
+    tokenName: string;
+  }[];
+}

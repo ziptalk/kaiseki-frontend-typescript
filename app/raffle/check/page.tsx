@@ -22,7 +22,7 @@ export default function Raffle() {
   useEffect(() => {
     setTimeout(() => {
       setGifOn(false);
-    }, 1000);
+    }, 2000);
   }, []);
 
   const onButtonClick = async () => {
