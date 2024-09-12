@@ -62,6 +62,12 @@
   );
 }
 .button-shadow {
+  background: linear-gradient(
+    230deg,
+    #ff57f8 -22.44%,
+    #f00 76.28%,
+    #ff002e 104.03%
+  );
   box-shadow: 1.936px 1.936px 3.872px 0px rgba(0, 0, 0, 0.08);
 }
 

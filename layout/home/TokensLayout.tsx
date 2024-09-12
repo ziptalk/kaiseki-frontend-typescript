@@ -76,14 +76,20 @@ export const TokensLayout = () => {
           <div className="flex gap-5 md:w-[420px]">
             <Dropdown // sort dropdown
               placeholder="sort : "
-              items={["createdAt", "currentSupply"]}
+              items={[
+                { item: "created", value: "createdAt" },
+                { item: "market cap", value: "currentSupply" },
+              ]}
               setItem={(value) => {
                 setSort(value);
               }}
             />
             <Dropdown // order dropdown
               placeholder="order : "
-              items={["desc", "asc"]}
+              items={[
+                { item: "desc", value: "desc" },
+                { item: "asc", value: "asc" },
+              ]}
               setItem={(value) => {
                 setOrder(value);
               }}

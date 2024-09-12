@@ -679,7 +679,7 @@ export const Tradesection = ({
         <Button
           onClick={openConnectModal}
           className="mt-5 h-12"
-          variant="gradiant"
+          variant="default"
         >
           Connect Wallet
         </Button>

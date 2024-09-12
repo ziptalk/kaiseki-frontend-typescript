@@ -430,15 +430,15 @@ const Header: FC = () => {
               <div className="flex gap-3 md:gap-[30px]">
                 <Telegram
                   // fill={isHoveredTG ? "#5E5E5E" : "white"}
-                  className="h-4 w-4 cursor-pointer fill-[#5E5E5E] hover:fill-white"
+                  className="h-4 w-4 cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
                   onClick={() => handleUrlClick("https://t.me/rwe_bet")}
                 />
                 <X
-                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
+                  className="cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
                   onClick={() => handleUrlClick("https://twitter.com/rwe_bet")}
                 />
                 <Info
-                  className="cursor-pointer fill-[#5E5E5E] hover:fill-white"
+                  className="cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
                   onClick={() => setIsInfoModalActive(!isInfoModalActive)}
                 />
               </div>

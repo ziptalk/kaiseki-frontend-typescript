@@ -1,14 +1,15 @@
 import { useState } from "react";
 import DownArrow from "@/public/icons/dwnArrow.svg";
+import Selected from "@/public/icons/selected.svg";
 interface DropdownProps {
-  items: any[];
+  items: { item: string; value: string }[];
   placeholder: string;
   setItem: (item: any) => void;
 }
 
 export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
   const [isDropdownView, setDropdownView] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(items[0]);
+  const [selectedItem, setSelectedItem] = useState(items[0].item);
 
   const handleClickContainer = () => {
     setDropdownView(!isDropdownView);
@@ -38,14 +39,17 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
           items.map((li, i) => (
             <div
               onClick={() => {
-                setSelectedItem(li);
-                setItem(li);
+                setSelectedItem(li.item);
+                setItem(li.value);
                 setDropdownView(false);
               }}
               key={i}
-              className="w-full cursor-pointer rounded-[10px] px-[15px] py-[10px] text-center text-[#AEAEAE] hover:bg-[#2a2a2a]"
+              className="relative w-full cursor-pointer rounded-[10px] px-[15px] py-[10px] text-center text-[#AEAEAE] hover:bg-[#2a2a2a]"
             >
-              {li}
+              {selectedItem === li.item && (
+                <Selected className="absolute left-8 top-3" />
+              )}
+              <div className="ml-4">{li.item}</div>
             </div>
           ))}
       </div>

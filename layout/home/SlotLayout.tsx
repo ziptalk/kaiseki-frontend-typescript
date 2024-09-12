@@ -108,13 +108,13 @@ export const SlotLayout = () => {
               transform: rotate(0deg);
             }
             25% {
-              transform: rotate(-30deg);
+              transform: rotate(-45deg);
             }
             50% {
               transform: rotate(0deg);
             }
             75% {
-              transform: rotate(30deg);
+              transform: rotate(45deg);
             }
             100% {
               transform: rotate(0deg);

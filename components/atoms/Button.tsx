@@ -19,9 +19,7 @@ export const Button = ({
     <button
       className={twMerge([
         "flex h-9 w-full items-center justify-center rounded-[6px] text-sm font-bold text-white md:h-[50px] md:rounded-[10px] md:text-[16px]",
-        variant === "gradiant"
-          ? "button-shadow button-bg-primary"
-          : "bg-[#950000]",
+        variant === "gradiant" ? "button-shadow" : "bg-[#950000]",
         className,
       ])}
       onClick={onClick}
