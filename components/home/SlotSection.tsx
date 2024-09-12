@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 
 export const SlotSection = ({ cid }: { cid: string }) => {
-  const [width, setWidth] = useState(180);
+  const [width, setWidth] = useState(1000);
 
   useEffect(() => {
     setWidth(window.innerWidth);
