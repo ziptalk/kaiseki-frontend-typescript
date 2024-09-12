@@ -14,7 +14,7 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
-  const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`;
+  const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmQicKWFQ9Trb7nuUPHjdguN5DckueMHjYndTxURaKRXHu`;
   const images1 = [
     { src: "/dump/WIF.png", alt: "Dog" },
     { src: cidImg, alt: "RWA" },
@@ -59,12 +59,12 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
   useEffect(() => {
     const stopTimers = [
-      setTimeout(() => stopSlot(0), width < 768 ? 1650 : 1150),
-      setTimeout(() => stopSlot(1), width < 768 ? 2800 : 3100),
-      setTimeout(() => stopSlot(2), width < 768 ? 5600 : 3900),
+      setTimeout(() => stopSlot(0), width < 768 ? 1600 : 1050),
+      setTimeout(() => stopSlot(1), width < 768 ? 2700 : 3000),
+      setTimeout(() => stopSlot(2), width < 768 ? 5500 : 3800),
     ];
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
-  }, [cid]);
+  }, [cid, width]);
 
   const stopSlot = (slotIndex: number) => {
     setIsSpinning((prevState) => {

@@ -164,6 +164,7 @@ export const SlotLayout = () => {
                 <SlotSection cid={raffleData.result.tokens[page - 1].cid} />
               </>
             )}
+          <SlotSection cid={""} />
         </Link>
 
         {/* move to prev/next raffle */}
