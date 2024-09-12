@@ -52,7 +52,7 @@ export const TokensLayout = () => {
       sort,
       order,
     });
-    setTokenInfo(response);
+    setTokenInfo(response.tokens);
   };
 
   const setInfotoInitial = () => {
@@ -121,7 +121,7 @@ export const TokensLayout = () => {
         <div
           className={`mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:grid ${info.tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  md:gap-5`}
         >
-          {tokenInfo ? (
+          {tokenInfo !== null ? (
             tokenInfo.map((card: any, index: any) => (
               <div
                 key={index}

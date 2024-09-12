@@ -21,7 +21,7 @@ export const setCurStepsIntoState = async ({
     // Fetch the steps using the getSteps function from the contract
     const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
     const targetPrice = await bondContract.priceForNextMint(tokenAddress);
-    // console.log("targetPrice:", targetPrice);
+    console.log("targetPrice:", targetPrice);
 
     // Extract the step prices into a new array
     const stepPrices: bigint[] = steps.map((step) => step.price);

@@ -1,9 +1,5 @@
-import React from "react";
-
 import { useEffect, useState } from "react";
-
 import XButton from "@/public/icons/XButton.svg";
-
 import TradingViewChart from "@/components/common/TradingViewWidget";
 import { TokenDesc } from "@/components/common/TokenDesc";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
@@ -63,6 +59,7 @@ export const BuySellLayout = ({
               ticker,
               createdBy,
               description,
+              marketCap,
             },
           }}
           className="mt-[112px] hidden md:flex"
@@ -104,12 +101,6 @@ export const BuySellLayout = ({
                   className="mr-10 bg-transparent"
                   desc={marketCap + " ETH"}
                   key={"Marketcap"}
-                />,
-                <ModuleInfo
-                  title="Virtual Liquidity"
-                  className="mr-10 bg-transparent"
-                  desc={"$112.77k"}
-                  key={"Virtual Liquidity"}
                 />,
                 <ModuleInfo
                   title="24H Volume"

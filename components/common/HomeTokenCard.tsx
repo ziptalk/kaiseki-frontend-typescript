@@ -11,7 +11,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   cid,
 }) => {
   return (
-    <div className={`w-full cursor-pointer bg-[#252525] md:hover:bg-[#2C2C2C]`}>
+    <div className={`w-full bg-[#252525] md:hover:bg-[#2C2C2C]`}>
       <div className={`flex h-20 gap-[10px]`}>
         <img
           src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}

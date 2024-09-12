@@ -35,15 +35,10 @@ export const SlotLayout = () => {
   };
 
   useEffect(() => {
-    console.log("raffleData", raffleData);
     if (raffleData && raffleData.result && raffleData.result.tokens) {
       setTotalPage(raffleData.result.tokens.length);
     }
   }, [raffleData]);
-
-  useEffect(() => {
-    console.log("href", href);
-  }, [href]);
 
   useEffect(() => {
     if (

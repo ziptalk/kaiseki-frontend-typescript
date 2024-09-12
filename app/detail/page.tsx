@@ -19,12 +19,18 @@ import Slider from "@/components/common/Slider";
 import { ModuleInfo } from "@/components/common/ModuleInfo";
 import { TradesLayout } from "@/layout/detail/TradesLayout";
 import { HolderDistributionLayout } from "@/layout/detail/HolderDistrubutionLayout";
-import { ChangeMcap, TxlogsMintBurn } from "@/utils/apis/apis";
+import {
+  ChangeMcap,
+  HolderDistribution,
+  TxlogsMintBurn,
+} from "@/utils/apis/apis";
 import { useSearchParams } from "next/navigation";
 
 export default function Detail() {
   const searchParams = useSearchParams();
   const account = useAccount();
+
+  const [volume, setvolume] = useState<string>("0");
 
   // MARK: - init ethers.js
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -40,6 +46,7 @@ export default function Detail() {
     cid: searchParams.get("cid") || "",
     createdBy: searchParams.get("createdBy") || "",
     description: searchParams.get("description") || "",
+    marketCap: searchParams.get("marketCap") || "",
     name: searchParams.get("name") || "",
     ticker: searchParams.get("ticker") || "",
     tokenAddress: searchParams.get("tokenAddress") || "",
@@ -48,16 +55,14 @@ export default function Detail() {
   const [distribution, setDistribution] = useState<FilteredData | undefined>(
     undefined,
   );
-  const [TXLogs20FromServer, setTXLogs20FromServer] = useState<any[] | null>(
-    null,
-  );
+  const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
       // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogs20FromServer);
+      fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
@@ -65,8 +70,33 @@ export default function Detail() {
 
   useEffect(() => {
     fetchTokenDetailFromContract();
+    fetchHolderDistributionFromServer();
+    // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+    fetch20TXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
     // fetchHomeTokenInfoFromServer();
   }, []);
+
+  useEffect(() => {
+    var value = 0;
+    console.log(TXLogsFromServer);
+    TXLogsFromServer?.map((item) => {
+      if (
+        new Date(item.blockTimestamp).getTime() <
+        new Date().getTime() - 24 * 60 * 60 * 1000
+      )
+        return;
+      if (item.isMint) {
+        value +=
+          Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
+          10000;
+      } else {
+        value +=
+          Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
+          10000;
+      }
+    });
+    setvolume(value.toFixed(5));
+  }, [TXLogsFromServer]);
 
   // listen event later
   useEffect(() => {
@@ -82,8 +112,7 @@ export default function Detail() {
 
   const fetchHolderDistributionFromServer = async () => {
     try {
-      const response = await fetch(`${SERVER_ENDPOINT}/HolderDistribution`);
-      const data = await response.json();
+      const data = await HolderDistribution();
       const filteredData = filterDataByOuterKey(data, tokenInfo.tokenAddress);
       setDistribution(filteredData);
     } catch (error) {
@@ -127,8 +156,7 @@ export default function Detail() {
     tokenAddress: any,
     setEventsFromDB: any,
   ) => {
-    const response = await TxlogsMintBurn(tokenAddress, { itemCount: 20 });
-    console.log("response", response);
+    const response = await TxlogsMintBurn(tokenAddress);
     setEventsFromDB(filterEventsByToken(response));
   };
 
@@ -228,31 +256,25 @@ export default function Detail() {
             elements={[
               <ModuleInfo
                 title="Price"
-                className="mr-10 bg-transparent"
+                className="mr-20 bg-transparent"
                 desc={12345.12 + " ETH"}
                 percentage="+7.31%"
                 key={"price"}
               />,
               <ModuleInfo
                 title="Marketcap"
-                className="mr-10 bg-transparent"
+                className="mr-20 bg-transparent"
                 desc={tokenInfo.marketCap + " ETH"}
                 key={"Marketcap"}
               />,
               <ModuleInfo
-                title="Virtual Liquidity"
-                className="mr-10 bg-transparent"
-                desc={"$112.77k"}
-                key={"Virtual Liquidity"}
-              />,
-              <ModuleInfo
                 title="24H Volume"
-                className="mr-10 bg-transparent"
-                desc={12345.12 + " ETH"}
+                className="mr-20 bg-transparent"
+                desc={volume + " ETH"}
                 key={"24H Volume"}
               />,
               <ModuleInfo
-                className="mr-10 bg-transparent"
+                className="mr-20 bg-transparent"
                 title="Token Created"
                 desc={"47M"}
                 key={"Token Created"}
@@ -263,14 +285,18 @@ export default function Detail() {
 
         {/* trading view chart */}
         <div className="mt-[30px] h-[372px] w-full">
-          <TradingViewChart tokenAddress={tokenInfo.tokenAddress} />
+          <TradingViewChart
+            {...{
+              tokenAddress: tokenInfo.tokenAddress,
+            }}
+          />
         </div>
 
         {/* past trading record */}
         <TradesLayout
           {...{
             memeTokenSymbol: tokenInfo.ticker,
-            TXLogs20FromServer,
+            TXLogsFromServer: TXLogsFromServer?.slice(0, 20),
           }}
         />
       </div>

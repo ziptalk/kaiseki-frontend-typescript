@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Xbutton from "@/public/icons/XButton.svg";
 import Power from "@/public/icons/big_power.svg";
-import TradeArr from "@/public/icons/trade-arr.svg";
 import Bomb from "@/public/icons/bomb.svg";
 import Copy from "@/public/icons/copy.svg";
 import { Tokens } from "../mypage/Tokens";
 import { Raffle } from "../mypage/Raffle";
 import { Trade } from "../mypage/Trade";
 import { MyMeme } from "../mypage/MyMeme";
+import { UsersTotalAssets } from "@/utils/apis/apis";
 
 interface MypageModalProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +21,11 @@ export const MypageModal = ({
   userAddress,
 }: MypageModalProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [totalAsset, setTotalAsset] = React.useState(0.0);
+
+  useEffect(() => {
+    getAsset();
+  }, []);
 
   const Tabs = [
     // "Token",
@@ -43,6 +48,12 @@ export const MypageModal = ({
       console.error("Failed to copy: ", err);
     }
   };
+
+  const getAsset = async () => {
+    const response = await UsersTotalAssets(userAddress);
+    setTotalAsset(response.totalValue);
+  };
+
   return (
     <div
       className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
@@ -65,9 +76,9 @@ export const MypageModal = ({
         </div>
       </div>
       <h1 className="ml-5 mt-5 text-4xl font-bold leading-9 text-white">
-        ${"13,121,342.12"}
+        $ {totalAsset}
       </h1>
-      <div className="ml-5 mt-2 flex items-center">
+      {/* <div className="ml-5 mt-2 flex items-center">
         <TradeArr
           className={`${true ? "fill-[#86BF77]" : "rotate-180 fill-red-500"} h-4 w-4`}
         />
@@ -76,7 +87,7 @@ export const MypageModal = ({
         >
           $0.02(2.4%)
         </div>
-      </div>
+      </div> */}
       <div className="ml-5 mt-9 flex gap-5 text-lg font-bold text-[#7D7D7D]">
         {Tabs.map((tab, index) => (
           <div

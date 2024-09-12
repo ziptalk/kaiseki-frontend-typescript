@@ -5,12 +5,12 @@ import TradesCard from "@/components/detail/TradesCard";
 
 interface TradesLayoutProps {
   memeTokenSymbol: string;
-  TXLogs20FromServer: any | null;
+  TXLogsFromServer: any | null;
 }
 
 export const TradesLayout = ({
   memeTokenSymbol,
-  TXLogs20FromServer,
+  TXLogsFromServer,
 }: TradesLayoutProps) => {
   const transformToTradesCardType = (event: any): TradesCardType => {
     return {
@@ -63,8 +63,8 @@ export const TradesLayout = ({
         </div>
         <hr className="my-[10px] rounded-full border-[1.5px] border-[#313131]" />
         <div className="flex flex-col gap-[2px]">
-          {TXLogs20FromServer ? (
-            TXLogs20FromServer.map((event: any, idx: number) => {
+          {TXLogsFromServer ? (
+            TXLogsFromServer.map((event: any, idx: number) => {
               const cardProps = transformToTradesCardType(event);
               return <TradesCard key={idx} {...cardProps} />;
             })
