@@ -114,9 +114,8 @@ export const Tradesection = ({
     return result;
   };
   const sellhandlePercentage = (percentage: number) => {
-    console.log("curMemeTokenValue :" + curMemeTokenValue);
-    const value = (parseFloat(curMemeTokenValue) * percentage) / 100;
-    setInputValue(Math.floor(value).toString());
+    const value = (Math.floor(Number(curMemeTokenValue)) * percentage) / 100;
+    setInputValue(value.toFixed());
   };
   // const buyhandlePercentage = (percentage: number) => {
   //   const value = Number(handleBuyMaxinMeme()) * (percentage / 100);

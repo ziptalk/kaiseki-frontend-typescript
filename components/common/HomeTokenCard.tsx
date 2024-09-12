@@ -11,14 +11,14 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   cid,
 }) => {
   return (
-    <div className={`w-full bg-[#252525] p-[10px] md:h-[215px]`}>
+    <div className={`w-full cursor-pointer bg-[#252525] md:hover:bg-[#2C2C2C]`}>
       <div className={`flex h-20 gap-[10px]`}>
         <img
           src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
           alt="Image from IPFS"
           className={`h-[80px] w-[80px] border-black`}
         />
-        <div className={`text h-full w-[270px] overflow-scroll px-[10px] `}>
+        <div className={`text h-full w-full overflow-hidden px-[10px]`}>
           <TokenDesc
             {...{
               cid,
@@ -31,8 +31,8 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
           />
         </div>
       </div>
-      <div className="w-full">
-        <BondingCurveCard prog={Math.floor(10)} bgColor="[#454545]" />
+      <div className="mt-4 w-full">
+        <BondingCurveCard prog={Math.floor(10)} bgColor="[#454545]" my />
       </div>
     </div>
   );

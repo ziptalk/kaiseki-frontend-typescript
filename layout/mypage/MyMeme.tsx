@@ -1,20 +1,36 @@
 import { MyPageTokenCard } from "@/components/common/HomeTokenCard";
+import { UsersMemes } from "@/utils/apis/apis";
 import React from "react";
 
-export const MyMeme = () => {
+export const MyMeme = ({
+  userAddress,
+}: {
+  userAddress: `0x${string}` | undefined;
+}) => {
+  const [MyMemes, setMyMemes] = React.useState([]);
+
+  const getMyMemes = async () => {
+    setMyMemes(await UsersMemes(userAddress));
+  };
+
+  React.useEffect(() => {
+    getMyMemes();
+  }, []);
+
   return (
-    <div>
-      <MyPageTokenCard
-        {...{
-          name: "Meme",
-          ticker: "F1T",
-          marketCap: "100.001",
-          description: "Meme",
-          tokenAddress: "F1T",
-          clickedToken: "",
-          cid: "QmeSwf4GCPw1TBpimcB5zoreCbgGL5fEo7kTfMjrNAXb3U",
-        }}
-      />
+    <div className="flex flex-col gap-8 px-5">
+      {MyMemes.map((meme: any, index) => (
+        <MyPageTokenCard
+          {...{
+            name: meme.name,
+            ticker: meme.ticker,
+            description: meme.description,
+            tokenAddress: meme.tokenAddress,
+            cid: meme.cid,
+          }}
+          key={index}
+        />
+      ))}
     </div>
   );
 };

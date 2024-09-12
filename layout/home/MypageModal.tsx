@@ -26,14 +26,14 @@ export const MypageModal = ({
     // "Token",
     //  "Raffle",
     "Trade",
-    // "My meme"
+    "My meme",
   ];
 
   const TabContents = [
     // <Tokens key="Tokens" />,
     // <Raffle key="Raffle" />,
     <Trade key="Trade" {...{ userAddress }} />,
-    // <MyMeme key="MyMeme" />,
+    <MyMeme key="MyMeme" {...{ userAddress }} />,
   ];
 
   const copyToClipboard = async (text: string) => {
@@ -88,7 +88,9 @@ export const MypageModal = ({
           </div>
         ))}
       </div>
-      <div className="my-7 h-full overflow-scroll">{TabContents[tabIndex]}</div>
+      <div className="my-2.5 h-full overflow-scroll">
+        {TabContents[tabIndex]}
+      </div>
     </div>
   );
 };
