@@ -3,8 +3,6 @@ import Xbutton from "@/public/icons/XButton.svg";
 import Power from "@/public/icons/big_power.svg";
 import Bomb from "@/public/icons/bomb.svg";
 import Copy from "@/public/icons/copy.svg";
-import { Tokens } from "../mypage/Tokens";
-import { Raffle } from "../mypage/Raffle";
 import { Trade } from "../mypage/Trade";
 import { MyMeme } from "../mypage/MyMeme";
 import { UsersTotalAssets } from "@/utils/apis/apis";

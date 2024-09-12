@@ -4,6 +4,7 @@ import BondingCurveCard from "../detail/BondingCurveCard";
 import { setCurStepsIntoState } from "@/utils/getCurve";
 // import Link from "next/link";
 // import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 export const MyPageTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
@@ -14,7 +15,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   setModal,
 }) => {
   const [curve, setCurve] = useState(0);
-  // const router = useRouter();
+  const router = useRouter();
 
   const getCurve = async () => {
     setCurve((await setCurStepsIntoState({ tokenAddress })) || 0);
@@ -24,10 +25,10 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   }, [tokenAddress]);
   return (
     <div
-      className={`w-full bg-[#252525] md:hover:bg-[#2C2C2C]`}
+      className={`w-full cursor-pointer bg-[#252525] md:hover:bg-[#2C2C2C]`}
       onMouseDown={() => {
         setModal && setModal(false);
-        // router.push(`/${tokenAddress}`);
+        router.push(`/${tokenAddress}`);
       }}
     >
       <div className={`flex h-20 gap-[10px]`}>
