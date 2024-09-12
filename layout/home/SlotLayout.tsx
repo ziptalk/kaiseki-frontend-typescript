@@ -85,8 +85,11 @@ export const SlotLayout = () => {
   }, [totalPage]);
 
   useEffect(() => {
-    getRaffle();
-  }, []);
+    const interval = setInterval(() => {
+      getRaffle();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [raffleData]);
   const RotatingImage = () => {
     return (
       <div className="absolute top-[-75px] flex items-center justify-center">
