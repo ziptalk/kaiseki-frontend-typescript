@@ -37,6 +37,7 @@ import BottomSheet from "../home/BottomSheet/BottomSheet";
 import BombCreate from "@/public/icons/bomb_create.svg";
 import BombBuy from "@/public/icons/bomb_buy.svg";
 import BombSold from "@/public/icons/bomb_sold.svg";
+import { TokensLatest } from "@/utils/apis/apis";
 
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
@@ -49,16 +50,23 @@ const Header: FC = () => {
   const [curMintTic, setCurMintTic] = useState("");
   const [curMintUser, setCurMintUser] = useState("");
   const [curMintCid, setCurMintCid] = useState("");
+  const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
   const [curCreateTic, setCurCreateTic] = useState("");
   const [curCreateUser, setCurCreateUser] = useState("");
   const [curCreateTime, setCurCreateTime] = useState("");
   const [curCreateCid, setCurCreateCid] = useState("");
   const [curCreateTokenAddress, setCurCreateTokenAddress] = useState("");
-  const [curMintTokenAddress, setCurMintTokenAddress] = useState("");
+  const [curBurnTic, setCurBurnTic] = useState("");
+  const [curBurnUser, setCurBurnUser] = useState("");
+  const [curBurnTime, setCurBurnTime] = useState("");
+  const [curBurnValue, setCurBurnValue] = useState("");
+  const [curBurnCid, setCurBurnCid] = useState("");
+  const [curBurnTokenAddress, setCurBurnTokenAddress] = useState("");
   const [accountButtonModal, setAccountButtonModal] = useState(false);
 
   const [mintAnimationTrigger, setMintAnimationTrigger] = useState(false);
   const [createAnimationTrigger, setCreateAnimationTrigger] = useState(false);
+  const [burnAnimationTrigger, setBurnAnimationTrigger] = useState(false);
   const [isWrongChain, setIsWrongChain] = useState(false);
 
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
@@ -128,37 +136,40 @@ const Header: FC = () => {
 
   const FetchLatestToken = async () => {
     try {
-      const response = await axios.get(`${SERVER_ENDPOINT}/tokens/latest`);
-      const newCreateTic = response.data.latestCreatedToken.ticker?.substring(
+      const response = await TokensLatest();
+      const newCreateTic = response.latestCreatedToken.ticker?.substring(0, 5);
+      const newCreateUser = response.latestCreatedToken.creator?.substring(
         0,
         5,
       );
-      const newCreateUser = response.data.latestCreatedToken.creator?.substring(
-        0,
-        5,
-      );
-      const newCreateCid = response.data.latestCreatedToken.cid;
-      const newCreateTokenAddress =
-        response.data.latestCreatedToken.tokenAddress;
-      const date = new Date(response.data.latestCreatedToken.createdAt);
+      const newCreateCid = response.latestCreatedToken.cid;
+      const newCreateTokenAddress = response.latestCreatedToken.tokenAddress;
+      const date = new Date(response.latestCreatedToken.createdAt);
       const formattedDate = `${String(date.getMonth() + 1).padStart(
         2,
         "0",
       )}/${String(date.getDate()).padStart(2, "0")}/${String(
         date.getFullYear(),
       ).slice(-2)}`;
-      const newMintTic = response.data.latestMintedToken.ticker?.substring(
-        0,
-        5,
-      );
-      const newMintUser = response.data.latestMintedToken.user?.substring(0, 5);
-      const newMintCid = response.data.latestMintedToken.cid;
+      const newMintTic = response.latestMintedToken.ticker?.substring(0, 5);
+      const newMintUser = response.latestMintedToken.user?.substring(0, 5);
+      const newMintCid = response.latestMintedToken.cid;
       const newMintValue = Number(
-        ethers.formatEther(response.data.latestMintedToken.reserveAmount),
+        ethers.formatEther(response.latestMintedToken.reserveAmount),
       )
         .toFixed(4)
         .toString();
-      const newMintTokenAddress = response.data.latestMintedToken.tokenAddress;
+      const newMintTokenAddress = response.latestMintedToken.tokenAddress;
+
+      const newBurnTic = response.latestBurnedToken.ticker?.substring(0, 5);
+      const newBurnUser = response.latestBurnedToken.user?.substring(0, 5);
+      const newBurnCid = response.latestBurnedToken.cid;
+      const newBurnValue = Number(
+        ethers.formatEther(response.latestBurnedToken.refundAmount),
+      )
+        .toFixed(4)
+        .toString();
+      const newBurnTokenAddress = response.latestBurnedToken.tokenAddress;
       if (
         newMintTic !== curMintTic ||
         newMintUser !== curMintUser ||
@@ -188,6 +199,21 @@ const Header: FC = () => {
         setCurCreateTokenAddress(newCreateTokenAddress);
         setCreateAnimationTrigger(true); // Trigger animation
       }
+      if (
+        newBurnTic !== curBurnTic ||
+        newBurnUser !== curBurnUser ||
+        newBurnCid !== curBurnCid ||
+        newBurnValue !== curBurnValue ||
+        newBurnTokenAddress !== curBurnTokenAddress
+      ) {
+        setCurBurnTic(newBurnTic);
+        setCurBurnUser(newBurnUser);
+        setCurBurnCid(newBurnCid);
+        setCurBurnTime(formattedDate);
+        setCurBurnValue(newBurnValue);
+        setCurBurnTokenAddress(newBurnTokenAddress);
+        setBurnAnimationTrigger(true); // Trigger animation
+      }
     } catch (error) {
       console.error(error);
     }
@@ -212,18 +238,18 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (createAnimationTrigger) {
-      console.log({
-        // newCreateTic,
-        curCreateTic,
-        // newCreateUser,
-        curCreateUser,
-        // newCreateCid,
-        curCreateCid,
-        // formattedDate,
-        curCreateTime,
-        // newCreateTokenAddress,
-        curCreateTokenAddress,
-      });
+      // console.log({
+      //   // newCreateTic,
+      //   curCreateTic,
+      //   // newCreateUser,
+      //   curCreateUser,
+      //   // newCreateCid,
+      //   curCreateCid,
+      //   // formattedDate,
+      //   curCreateTime,
+      //   // newCreateTokenAddress,
+      //   curCreateTokenAddress,
+      // });
       const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
       return () => clearTimeout(timeout);
     }
@@ -461,53 +487,84 @@ const Header: FC = () => {
                 />
               </div>
             </div>
-            <div className="hidden h-[40px] items-center gap-[20px] md:flex">
-              {curMintUser && (
-                <MintAnimateWrapper
-                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
-                >
-                  <BombBuy width={24} height={24} />
-                  <h1 className="whitespace-nowrap text-sm">
-                    {curMintUser} bought {curMintValue} ETH of
-                  </h1>
-                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
-                    <h1 className="cursor-pointer text-sm hover:underline">
-                      {curMintTic}
-                    </h1>
-                  </Link>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
-                    alt="img"
-                    className="h-4 w-4 rounded-full"
-                  />
-                </MintAnimateWrapper>
-              )}
-              {curCreateUser && (
-                <CreateAnimateWrapper
-                  className={`flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
-                >
-                  <BombCreate width={24} height={24} />
-                  <div className="whitespace-nowrap text-sm">
-                    {curCreateUser} Created
-                  </div>
-                  <Link
-                    href={curCreateTokenAddress ? curCreateTokenAddress : ""}
-                  >
-                    <div className="cursor-pointer text-sm hover:underline">
-                      {curCreateTic}
-                    </div>
-                  </Link>
+            <div className="hidden h-[40px] w-[700px] items-center md:inline">
+              <Slider
+                elements={[
+                  curMintUser && (
+                    <MintAnimateWrapper
+                      className={`mr-10 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
+                    >
+                      <BombBuy width={24} height={24} />
+                      <h1 className="whitespace-nowrap text-sm">
+                        {curMintUser} bought {curMintValue} ETH of
+                      </h1>
+                      <Link
+                        href={curMintTokenAddress ? curMintTokenAddress : ""}
+                      >
+                        <h1 className="cursor-pointer text-sm hover:underline">
+                          {curMintTic}
+                        </h1>
+                      </Link>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                        alt="img"
+                        className="h-4 w-4 rounded-full"
+                      />
+                    </MintAnimateWrapper>
+                  ),
+                  curCreateUser && (
+                    <CreateAnimateWrapper
+                      className={`mr-10 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                    >
+                      <BombCreate width={24} height={24} />
+                      <div className="whitespace-nowrap text-sm">
+                        {curCreateUser} Created
+                      </div>
+                      <Link
+                        href={
+                          curCreateTokenAddress ? curCreateTokenAddress : ""
+                        }
+                      >
+                        <div className="cursor-pointer text-sm hover:underline">
+                          {curCreateTic}
+                        </div>
+                      </Link>
 
-                  <div className="whitespace-nowrap text-sm">
-                    on {curCreateTime}
-                  </div>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
-                    alt="img"
-                    className="h-4 w-4 rounded-full"
-                  />
-                </CreateAnimateWrapper>
-              )}
+                      <div className="whitespace-nowrap text-sm">
+                        on {curCreateTime}
+                      </div>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                        alt="img"
+                        className="h-4 w-4 rounded-full"
+                      />
+                    </CreateAnimateWrapper>
+                  ),
+                  curBurnUser && (
+                    <BurnAnimateWrapper
+                      className={`mr-10 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
+                    >
+                      <BombSold width={24} height={24} />
+                      <div className="whitespace-nowrap text-sm">
+                        {curBurnUser} sold {curBurnValue} of
+                      </div>
+                      <Link
+                        href={curBurnTokenAddress ? curBurnTokenAddress : ""}
+                      >
+                        <div className="cursor-pointer text-sm hover:underline">
+                          {curBurnTic}
+                        </div>
+                      </Link>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curBurnCid}`}
+                        alt="img"
+                        className="h-4 w-4 rounded-full"
+                      />
+                    </BurnAnimateWrapper>
+                  ),
+                ]}
+              />
+
               {/* {curMintUser && (
                 <MintAnimateWrapper
                   className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
@@ -708,6 +765,26 @@ const Header: FC = () => {
                 </div>
               </CreateAnimateWrapper>
             ),
+            curBurnUser && (
+              <BurnAnimateWrapper
+                className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"} mr-2.5`}
+              >
+                <BombSold width={24} height={24} />
+                <div className="whitespace-nowrap text-sm">
+                  {curBurnUser} sold {curBurnValue} of
+                </div>
+                <Link href={curBurnTokenAddress ? curBurnTokenAddress : ""}>
+                  <div className="cursor-pointer text-sm hover:underline">
+                    {curBurnTic}
+                  </div>
+                </Link>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curBurnCid}`}
+                  alt="img"
+                  className="h-4 w-4 rounded-full"
+                />
+              </BurnAnimateWrapper>
+            ),
           ]}
         />
       </div>
@@ -769,7 +846,18 @@ const colorReverseCreate = keyframes`
     color: white;
   }
 `;
-
+const colorReverseBurn = keyframes`
+  0%, 100% {
+    background:#0E0E0E;
+    box-shadow: 0px 0px 8px 0px #fa00ff;
+    color: #fa00ff;
+  }
+  15%, 85% {
+    background:#fa00ff;
+    box-shadow: 0px 0px 8px 0px #fa00ff;
+    color: white;
+  }
+`;
 const MintAnimateWrapper = styled.div`
   background: #0e0e0e;
   box-shadow: 0px 0px 8px 0px #83ff80;
@@ -788,5 +876,13 @@ const CreateAnimateWrapper = styled.div`
 
   &.animate {
     animation: ${colorReverseCreate} 1s 0s;
+  }
+`;
+const BurnAnimateWrapper = styled.div`
+  box-shadow: 0px 0px 8px 0px #fa00ff;
+  color: #fa00ff;
+
+  &.animate {
+    animation: ${colorReverseBurn} 1s 0s;
   }
 `;
