@@ -1,30 +1,6 @@
 import { ethers } from "ethers";
 
 export const stepRanges = [
-  ethers.parseEther("8000000"),
-  ethers.parseEther("16000000"),
-  ethers.parseEther("24000000"),
-  ethers.parseEther("32000000"),
-  ethers.parseEther("40000000"),
-  ethers.parseEther("48000000"),
-  ethers.parseEther("56000000"),
-  ethers.parseEther("64000000"),
-  ethers.parseEther("72000000"),
-  ethers.parseEther("80000000"),
-  ethers.parseEther("88000000"),
-  ethers.parseEther("96000000"),
-  ethers.parseEther("104000000"),
-  ethers.parseEther("112000000"),
-  ethers.parseEther("120000000"),
-  ethers.parseEther("128000000"),
-  ethers.parseEther("136000000"),
-  ethers.parseEther("144000000"),
-  ethers.parseEther("152000000"),
-  ethers.parseEther("160000000"),
-  ethers.parseEther("168000000"),
-  ethers.parseEther("176000000"),
-  ethers.parseEther("184000000"),
-  ethers.parseEther("192000000"),
   ethers.parseEther("200000000"),
   ethers.parseEther("208000000"),
   ethers.parseEther("216000000"),
@@ -101,6 +77,31 @@ export const stepRanges = [
   ethers.parseEther("784000000"),
   ethers.parseEther("792000000"),
   ethers.parseEther("800000000"),
+  ethers.parseEther("808000000"),
+  ethers.parseEther("816000000"),
+  ethers.parseEther("824000000"),
+  ethers.parseEther("832000000"),
+  ethers.parseEther("840000000"),
+  ethers.parseEther("848000000"),
+  ethers.parseEther("856000000"),
+  ethers.parseEther("864000000"),
+  ethers.parseEther("872000000"),
+  ethers.parseEther("880000000"),
+  ethers.parseEther("888000000"),
+  ethers.parseEther("896000000"),
+  ethers.parseEther("904000000"),
+  ethers.parseEther("912000000"),
+  ethers.parseEther("920000000"),
+  ethers.parseEther("928000000"),
+  ethers.parseEther("936000000"),
+  ethers.parseEther("944000000"),
+  ethers.parseEther("952000000"),
+  ethers.parseEther("960000000"),
+  ethers.parseEther("968000000"),
+  ethers.parseEther("976000000"),
+  ethers.parseEther("984000000"),
+  ethers.parseEther("992000000"),
+  ethers.parseEther("1000000000"),
 ];
 
 export const stepPrices = [
@@ -229,7 +230,7 @@ export const creationFee = ethers.parseEther("0.0015");
 
 export const createStep = (threshold: number) => {
   const initialPrice = 0.000000000005;
-  let list = [];
+  let list = [ethers.parseEther("0")];
   const gap = (threshold / 8000000 - 100 * initialPrice) / 4950;
   for (let i = 0; i < 100; i++) {
     list.push(ethers.parseEther((initialPrice + i * gap).toFixed(14)));

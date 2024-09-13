@@ -27,11 +27,12 @@ export const setCurStepsIntoState = async ({
     const stepPrices: bigint[] = steps.map((step) => step.price);
 
     for (let i = 0; i < stepPrices.length; i++) {
-      // console.log("stepPrices[i]:" + stepPrices[i]);
-      // console.log("stepPrices.length:" + stepPrices.length);
+      console.log("stepPrices[i]:" + stepPrices[i]);
+      console.log("stepPrices.length:" + stepPrices.length);
 
       if (Number(stepPrices[i]) == Number(targetPrice)) {
-        return Math.floor((i / stepPrices.length) * 100);
+        console.log(i, stepPrices[i]);
+        return ((i + 1) / stepPrices.length) * 100;
       }
     }
 
