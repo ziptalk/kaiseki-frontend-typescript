@@ -25,7 +25,7 @@ export const setCurStepsIntoState = async ({
 
     // Extract the step prices into a new array
     const stepPrices: bigint[] = steps.map((step) => step.price);
-    // console.log("Extracted step prices:", stepPrices);
+    console.log("Extracted step prices:", stepPrices);
 
     for (let i = 0; i < stepPrices.length; i++) {
       // console.log("stepPrices[i]:" + stepPrices[i]);

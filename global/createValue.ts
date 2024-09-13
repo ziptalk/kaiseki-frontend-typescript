@@ -234,7 +234,5 @@ export const createStep = (threshold: number) => {
   for (let i = 0; i < 100; i++) {
     list.push(ethers.parseEther((initialPrice + i * gap).toFixed(14)));
   }
-  console.log(list);
-  console.log(stepPrices);
   return list;
 };

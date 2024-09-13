@@ -11,12 +11,7 @@ import { createStep } from "@/global/createValue";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
-import {
-  stepPrices,
-  stepRanges,
-  maxSupply,
-  creationFee,
-} from "@/global/createValue";
+import { stepRanges, maxSupply, creationFee } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import Preview from "@/public/icons/Preview.svg";
@@ -79,10 +74,7 @@ const Create: NextPage = () => {
   // const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
-  const [steps, setSteps] = useState<BigInt[]>();
-  useEffect(() => {
-    setSteps(createStep(0.01));
-  }, []);
+  const [steps, setSteps] = useState<BigInt[]>([]);
   // console.log(creationFee);
 
   // Get data from server for check dup
@@ -98,6 +90,9 @@ const Create: NextPage = () => {
   //       console.log(error);
   //     });
   // }, []);
+  useEffect(() => {
+    setSteps(createStep(Number(watch("threshold"))));
+  }, [watch("threshold")]);
 
   // MARK: - Upload to Server
   const sendCidAndTokenAddressToServer = async (createdTokenAddress: any) => {
@@ -112,7 +107,7 @@ const Create: NextPage = () => {
       ticker: watch("Ticker"),
       createdBy: account.address,
       marketCap:
-        Number(ethers.formatEther(stepPrices[0].toString())) *
+        Number(ethers.formatEther(steps[0].toString())) *
         Number(ethers.formatEther(stepRanges[0].toString())) *
         BILLION,
       threshold: parseInt(watch("threshold")),
@@ -269,7 +264,6 @@ const Create: NextPage = () => {
   const createToken = async (data: HookFormTypes) => {
     try {
       if (await isInvalidInput()) return;
-
       setIsLoading(true);
       const receipt = await bondWriteContract.createToken(
         { name: data.Name, symbol: data.Ticker },
@@ -320,6 +314,7 @@ const Create: NextPage = () => {
   };
 
   const onInvalid = async () => {
+    setSteps(createStep(Number(watch("threshold"))));
     if (await isInvalidInput()) return;
   };
 
