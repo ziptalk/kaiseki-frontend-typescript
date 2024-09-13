@@ -31,7 +31,7 @@ export const TokenDesc = ({
           <h1 className="text-nowrap ">created by: </h1>
           <img
             className="rounded-full"
-            src="/images/memesinoGhost.png"
+            src="/icons/bomb.svg"
             alt=""
             style={{ width: 12, height: 12 }}
           />

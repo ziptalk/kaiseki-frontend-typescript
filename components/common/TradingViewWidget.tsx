@@ -11,6 +11,16 @@ import { ethers } from "ethers";
 
 import { stepPrices, stepPrices800, stepRanges } from "@/global/createValue";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
+import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
+import contracts from "@/global/contracts";
+
+const { abi: MCV2_BondABI } = MCV2_BondArtifact;
+const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
+const bondContract = new ethers.Contract(
+  contracts.MCV2_Bond,
+  MCV2_BondABI,
+  provider,
+);
 
 type TradingViewChartProps = {
   tokenAddress: string;
@@ -57,7 +67,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       const filteredData = filterEventsByToken(data, tokenAddress);
 
       let curMintedToken = BigInt(0);
-      const sp = stepPrices;
+      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
+      const sp: bigint[] = steps.map((step) => step.price);
       const sr = stepRanges;
 
       const newChartData: BarData[] = [];
@@ -87,7 +98,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
           curMintedToken -= BigInt(event.amountBurned);
         }
 
-        const divValue = Math.floor(Number(curMintedToken / sr[0]));
+        const divValue = Math.floor(Number(curMintedToken) / Number(sr[0]));
 
         if (divValue >= 0) {
           const newDataPoint = {
@@ -95,7 +106,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
-                : 0.00000000033333,
+                : 0.000000000005,
             high: Number(ethers.formatEther(sp[divValue])),
             low: Number(ethers.formatEther(sp[divValue])),
             close: Number(ethers.formatEther(sp[divValue])),
@@ -178,16 +189,16 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       seriesRef.current = candlestickSeries;
 
       // Update data every 3 seconds
-      const intervalId = setInterval(fetchAndUpdateData, 3000);
+      //   const intervalId = setInterval(fetchAndUpdateData, 3000);
 
-      return () => {
-        clearInterval(intervalId);
-        if (chartRef.current) {
-          chartRef.current.remove();
-        }
-        seriesRef.current = null;
-        chartRef.current = null;
-      };
+      //   return () => {
+      //     clearInterval(intervalId);
+      //     if (chartRef.current) {
+      //       chartRef.current.remove();
+      //     }
+      //     seriesRef.current = null;
+      //     chartRef.current = null;
+      //   };
     }
   }, [ready]);
 

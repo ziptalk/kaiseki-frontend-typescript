@@ -35,6 +35,7 @@ interface TokenCardTypes {
   tokenAddress: string;
   clickedToken?: string;
   cid: string;
+  rafflePrize?: string;
 
   setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }

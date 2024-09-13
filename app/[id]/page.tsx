@@ -45,7 +45,7 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   const getTokenInfo = async () => {
     const response = setTokenInfo(await FindTokenByAddress(params.id));
-    console.log(response);
+    // console.log(response);
     return response;
   };
   // const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
@@ -247,6 +247,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               createdBy: tokenInfo.creator,
               description: tokenInfo.description,
               tokenAddress: params.id,
+              rafflePrize: tokenInfo.rafflePrize,
             }}
           />
           {/* progress bar + desc */}

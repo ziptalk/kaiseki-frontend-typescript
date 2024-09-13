@@ -7,6 +7,7 @@ const TokenCard: FC<TokenCardTypes> = ({
   ticker,
   createdBy,
   description,
+  rafflePrize,
 }) => {
   return (
     <div
@@ -25,14 +26,14 @@ const TokenCard: FC<TokenCardTypes> = ({
           className="h-[120px] w-[120px]"
         />
         <div className="h-[90px] w-[220px] text-[13px] font-normal leading-tight tracking-tight text-[#808080]">
-          <p className="h-[90px] overflow-scroll break-words text-[#6B6B6B]">
+          <p className="h-[80px] overflow-scroll break-words text-[#6B6B6B]">
             {description}
           </p>
           <div className="mt-[10px] flex items-center gap-[5px]">
             <h1 className="text-xs text-[#C5F900] ">Created by:</h1>
             <Image
               className="rounded-full"
-              src="/images/memesinoGhost.png"
+              src="/icons/bomb.svg"
               alt=""
               width={12}
               height={12}
@@ -42,6 +43,7 @@ const TokenCard: FC<TokenCardTypes> = ({
               {createdBy && createdBy.slice(0, 7)}
             </div>
           </div>
+          <h1 className="text-[#FAFF00]">prize: {rafflePrize}</h1>
         </div>
       </div>
     </div>
