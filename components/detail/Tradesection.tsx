@@ -184,7 +184,7 @@ export const Tradesection = ({
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
-      const supplyLeft = BigInt(stepRangeI) - currentSupply; // WEI, price per token (in Ether) in the current step
+      const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
       ); // ETH
@@ -426,9 +426,9 @@ export const Tradesection = ({
     try {
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
-        // console.log(balanceWei);
+        console.log({ balanceWei });
         const balanceEther = ethers.formatEther(balanceWei);
-        // console.log(balanceEther);
+        console.log({ balanceEther });
         setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {

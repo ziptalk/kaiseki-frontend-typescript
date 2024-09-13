@@ -487,7 +487,7 @@ const Header: FC = () => {
                 />
               </div>
             </div>
-            <div className="hidden h-[40px] w-[700px] items-center md:inline">
+            <div className="hidden h-[40px] w-1/2 items-center md:inline">
               <Slider
                 elements={[
                   curMintUser && (
