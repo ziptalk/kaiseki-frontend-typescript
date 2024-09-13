@@ -80,6 +80,10 @@ export const Tradesection = ({
     signer,
   );
 
+  useEffect(() => {
+    console.log(inputValue);
+  }, [inputValue]);
+
   const checkMetaMaskInstalled = () => {
     if (!window.ethereum) {
       return false;
@@ -555,6 +559,7 @@ export const Tradesection = ({
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
+              // step={1}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(Number(e.target.value).toFixed());

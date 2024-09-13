@@ -68,7 +68,6 @@ export interface TokenAllInfo {
   tokenAddress: string;
   twitterUrl: string;
   websiteUrl: string;
-  ticker: string;
   _id: string;
 }
 
@@ -98,6 +97,5 @@ export const TokenInfoInit: TokenAllInfo = {
   tokenAddress: "",
   twitterUrl: "",
   websiteUrl: "",
-  ticker: "",
   _id: "",
 };

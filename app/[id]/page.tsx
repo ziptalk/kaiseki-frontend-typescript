@@ -31,6 +31,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   const account = useAccount();
   console.log(params.id);
   const [volume, setvolume] = useState<string>("0");
+  const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
 
   // MARK: - init ethers.js
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -41,8 +42,6 @@ export default function Detail({ params }: { params: { id: string } }) {
     MCV2_BondABI,
     provider,
   );
-
-  const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
 
   const getTokenInfo = async () => {
     const response = setTokenInfo(await FindTokenByAddress(params.id));
@@ -244,7 +243,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             {...{
               name: tokenInfo.name,
               cid: tokenInfo.cid,
-              ticker: tokenInfo.ticker,
+              ticker: tokenInfo.symbol,
               createdBy: tokenInfo.creator,
               description: tokenInfo.description,
               tokenAddress: params.id,
@@ -299,7 +298,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         {/* past trading record */}
         <TradesLayout
           {...{
-            memeTokenSymbol: tokenInfo.ticker,
+            memeTokenSymbol: tokenInfo.symbol,
             TXLogsFromServer: TXLogsFromServer?.slice(0, 20),
           }}
         />
@@ -310,7 +309,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         <div className="mt-[38px] h-[310px] w-[470px] bg-[#252525] p-[20px]">
           <Tradesection
             {...{
-              memeTokenSymbol: tokenInfo.ticker,
+              memeTokenSymbol: tokenInfo.symbol,
               RESERVE_SYMBOL,
               tokenAddress: params.id,
               cid: tokenInfo.cid,

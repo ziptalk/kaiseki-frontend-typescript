@@ -75,6 +75,7 @@ const Header: FC = () => {
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
   useEffect(() => {
+    FetchLatestToken();
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
     if (localStorage.getItem("FirstVisit") === null) {
@@ -125,69 +126,77 @@ const Header: FC = () => {
     return () => clearInterval(interval);
   }, [chainId]);
 
+  const FetchLatestToken = async () => {
+    try {
+      const response = await axios.get(`${SERVER_ENDPOINT}/tokens/latest`);
+      const newCreateTic = response.data.latestCreatedToken.ticker?.substring(
+        0,
+        5,
+      );
+      const newCreateUser = response.data.latestCreatedToken.creator?.substring(
+        0,
+        5,
+      );
+      const newCreateCid = response.data.latestCreatedToken.cid;
+      const newCreateTokenAddress =
+        response.data.latestCreatedToken.tokenAddress;
+      const date = new Date(response.data.latestCreatedToken.createdAt);
+      const formattedDate = `${String(date.getMonth() + 1).padStart(
+        2,
+        "0",
+      )}/${String(date.getDate()).padStart(2, "0")}/${String(
+        date.getFullYear(),
+      ).slice(-2)}`;
+      const newMintTic = response.data.latestMintedToken.ticker?.substring(
+        0,
+        5,
+      );
+      const newMintUser = response.data.latestMintedToken.user?.substring(0, 5);
+      const newMintCid = response.data.latestMintedToken.cid;
+      const newMintValue = Number(
+        ethers.formatEther(response.data.latestMintedToken.reserveAmount),
+      )
+        .toFixed(4)
+        .toString();
+      const newMintTokenAddress = response.data.latestMintedToken.tokenAddress;
+      if (
+        newMintTic !== curMintTic ||
+        newMintUser !== curMintUser ||
+        newMintCid !== curMintCid ||
+        newMintValue !== curMintValue ||
+        newMintTokenAddress !== curMintTokenAddress
+      ) {
+        console.log("value changed!");
+        setCurMintTic(newMintTic);
+        setCurMintUser(newMintUser);
+        setCurMintCid(newMintCid);
+        setCurMintValue(newMintValue);
+        setCurMintTokenAddress(newMintTokenAddress);
+        setMintAnimationTrigger(true);
+      }
+      if (
+        newCreateTic !== curCreateTic ||
+        newCreateUser !== curCreateUser ||
+        newCreateCid !== curCreateCid ||
+        formattedDate !== curCreateTime ||
+        newCreateTokenAddress !== curCreateTokenAddress
+      ) {
+        setCurCreateTic(newCreateTic);
+        setCurCreateUser(newCreateUser);
+        setCurCreateCid(newCreateCid);
+        setCurCreateTime(formattedDate);
+        setCurCreateTokenAddress(newCreateTokenAddress);
+        setCreateAnimationTrigger(true); // Trigger animation
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // GNB data update
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch(`${SERVER_ENDPOINT}/tokens/latest`)
-        .then((response) => response.json())
-        .then((data) => {
-          const newCreateTic = data.latestCreatedToken.ticker?.substring(0, 5);
-          const newCreateUser = data.latestCreatedToken.creator?.substring(
-            0,
-            5,
-          );
-          const newCreateCid = data.latestCreatedToken.cid;
-          const newCreateTokenAddress = data.latestCreatedToken.tokenAddress;
-          const date = new Date(data.latestCreatedToken.createdAt);
-          const formattedDate = `${String(date.getMonth() + 1).padStart(
-            2,
-            "0",
-          )}/${String(date.getDate()).padStart(
-            2,
-            "0",
-          )}/${String(date.getFullYear()).slice(-2)}`;
-          const newMintTic = data.latestMintedToken.ticker?.substring(0, 5);
-          const newMintUser = data.latestMintedToken.user?.substring(0, 5);
-          const newMintCid = data.latestMintedToken.cid;
-          const newMintValue = Number(
-            ethers.formatEther(data.latestMintedToken.reserveAmount),
-          )
-            .toFixed(4)
-            .toString();
-          const newMintTokenAddress = data.latestMintedToken.tokenAddress;
-          if (
-            newMintTic !== curMintTic ||
-            newMintUser !== curMintUser ||
-            newMintCid !== curMintCid ||
-            newMintValue !== curMintValue ||
-            newMintTokenAddress !== curMintTokenAddress
-          ) {
-            console.log("value changed!");
-            setCurMintTic(newMintTic);
-            setCurMintUser(newMintUser);
-            setCurMintCid(newMintCid);
-            setCurMintValue(newMintValue);
-            setCurMintTokenAddress(newMintTokenAddress);
-            setMintAnimationTrigger(true);
-          }
-          if (
-            newCreateTic !== curCreateTic ||
-            newCreateUser !== curCreateUser ||
-            newCreateCid !== curCreateCid ||
-            formattedDate !== curCreateTime ||
-            newCreateTokenAddress !== curCreateTokenAddress
-          ) {
-            setCurCreateTic(newCreateTic);
-            setCurCreateUser(newCreateUser);
-            setCurCreateCid(newCreateCid);
-            setCurCreateTime(formattedDate);
-            setCurCreateTokenAddress(newCreateTokenAddress);
-            setCreateAnimationTrigger(true); // Trigger animation
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      FetchLatestToken();
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval); // Clean up the interval on unmount
@@ -461,11 +470,11 @@ const Header: FC = () => {
                   <h1 className="whitespace-nowrap text-sm">
                     {curMintUser} bought {curMintValue} ETH of
                   </h1>
-                  {/* <Link href={curMintTokenAddress ? curMintTokenAddress : ""}> */}
-                  {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
-                  {curMintTic}
-                  {/* </h1> */}
-                  {/* </Link> */}
+                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                    <h1 className="cursor-pointer text-sm hover:underline">
+                      {curMintTic}
+                    </h1>
+                  </Link>
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
@@ -481,13 +490,13 @@ const Header: FC = () => {
                   <div className="whitespace-nowrap text-sm">
                     {curCreateUser} Created
                   </div>
-                  {/* <Link
+                  <Link
                     href={curCreateTokenAddress ? curCreateTokenAddress : ""}
-                  > */}
-                  {/* <div className="cursor-pointer text-sm hover:underline"> */}
-                  {curCreateTic}
-                  {/* </div> */}
-                  {/* </Link> */}
+                  >
+                    <div className="cursor-pointer text-sm hover:underline">
+                      {curCreateTic}
+                    </div>
+                  </Link>
 
                   <div className="whitespace-nowrap text-sm">
                     on {curCreateTime}
