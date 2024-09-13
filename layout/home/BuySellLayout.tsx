@@ -143,9 +143,7 @@ export const BuySellLayout = ({
             }}
           />
           {/* <SellPercentageButton /> */}
-          {isMobile || (
-            <HomeBondingCurveCard prog={Math.floor(bondingCurveProgress)} />
-          )}
+          {isMobile || <HomeBondingCurveCard prog={bondingCurveProgress} />}
           {/* <div className="absolute bottom-3 right-5 hidden h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[#AEAEAE] text-black md:flex">
             ?
           </div> */}

@@ -211,7 +211,7 @@ export const Tradesection = ({
 
     const ttm = BigInt(ethers.parseEther(String(tokensToMint)));
     const fee = (ttm * BigInt(1)) / BigInt(100);
-    const totalTokensToMint = ttm - fee;
+    const totalTokensToMint = ttm;
     const contractInputValue = ethers.parseEther(
       ethers.formatEther(totalTokensToMint).split(".")[0],
     );
@@ -327,6 +327,11 @@ export const Tradesection = ({
     }
 
     if (isPending) return;
+    console.log(
+      BigInt(Math.floor(Number(inputValue))),
+      BigInt(priceForNextMint),
+      Number(ethers.parseEther(curUserReserveBalance)),
+    );
     if (
       BigInt(Math.floor(Number(inputValue))) * BigInt(priceForNextMint) >
       Number(ethers.parseEther(curUserReserveBalance))
@@ -334,11 +339,6 @@ export const Tradesection = ({
       // setTradeModuleErrorMsg(
       //   `Insufficient balance : You have ${curUserReserveBalance} ${RESERVE_SYMBOL}`,
       // );
-      console.log(
-        BigInt(Math.floor(Number(inputValue))),
-        BigInt(priceForNextMint),
-        Number(ethers.parseEther(curUserReserveBalance)),
-      );
       alert(
         `Insufficient balance: You have ${curUserReserveBalance} ${RESERVE_SYMBOL}`,
       );

@@ -69,6 +69,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       let curMintedToken = BigInt(0);
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       const sp: bigint[] = steps.map((step) => step.price);
+      console.log("sp:", sp);
       const sr = stepRanges;
 
       const newChartData: BarData[] = [];
@@ -100,16 +101,16 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
         const divValue = Math.floor(Number(curMintedToken) / Number(sr[0]));
 
-        if (divValue >= 0) {
+        if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
                 : 0.000000000005,
-            high: Number(ethers.formatEther(sp[divValue])),
-            low: Number(ethers.formatEther(sp[divValue])),
-            close: Number(ethers.formatEther(sp[divValue])),
+            high: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
+            low: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
+            close: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
           };
           newChartData.push(newDataPoint);
         }

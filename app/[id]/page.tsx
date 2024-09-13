@@ -26,12 +26,12 @@ import {
   TxlogsMintBurn,
 } from "@/utils/apis/apis";
 import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
+import { setCurStepsIntoState } from "@/utils/getCurve";
 
 export default function Detail({ params }: { params: { id: string } }) {
-  const account = useAccount();
-  console.log(params.id);
   const [volume, setvolume] = useState<string>("0");
   const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
+  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
   // MARK: - init ethers.js
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -42,7 +42,16 @@ export default function Detail({ params }: { params: { id: string } }) {
     MCV2_BondABI,
     provider,
   );
+  const fetchBondingCurveProgress = async () => {
+    setBondingCurveProgress(
+      (await setCurStepsIntoState({ tokenAddress: params.id })) || 0,
+    );
+  };
 
+  useEffect(() => {
+    fetchBondingCurveProgress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]);
   const getTokenInfo = async () => {
     const response = setTokenInfo(await FindTokenByAddress(params.id));
     // console.log(response);
@@ -53,7 +62,6 @@ export default function Detail({ params }: { params: { id: string } }) {
     undefined,
   );
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
-  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -76,6 +84,7 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     var value = 0;
+    var marketCap = 0;
     console.log(TXLogsFromServer);
     TXLogsFromServer?.map((item) => {
       if (
@@ -84,29 +93,20 @@ export default function Detail({ params }: { params: { id: string } }) {
       )
         return;
       if (item.isMint) {
+        marketCap += Number(ethers.formatEther(item.amountMinted));
         value +=
           Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
           10000;
       } else {
+        marketCap -= Number(ethers.formatEther(item.amountBurned));
         value +=
           Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
           10000;
       }
+      console.log(marketCap);
     });
     setvolume(value.toFixed(5));
   }, [TXLogsFromServer]);
-
-  // listen event later
-  useEffect(() => {
-    try {
-      if (
-        checkMetaMaskInstalled() &&
-        checkAccountAddressInitialized(account.address)
-      ) {
-        setCurStepsIntoState();
-      }
-    } catch {}
-  }, [account?.address]);
 
   const fetchHolderDistributionFromServer = async () => {
     try {
@@ -122,16 +122,12 @@ export default function Detail({ params }: { params: { id: string } }) {
     try {
       const detail = await bondContract.getDetail(params.id);
       const price = detail.info.priceForNextMint;
-      console.log("currentSupply :" + detail.info.currentSupply);
       const mcap = (
         Number(ethers.formatEther(price.toString())) * BILLION
       ).toFixed(2);
-      console.log({ price });
-      console.log("this is mcap" + mcap);
       const response = await axios.get(
         `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
       );
-      console.log(response.data.price, mcap);
       const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
       await ChangeMcap({
         tokenAddress: params.id,
@@ -170,31 +166,6 @@ export default function Detail({ params }: { params: { id: string } }) {
       return false;
     }
     return true;
-  };
-
-  const setCurStepsIntoState = async () => {
-    try {
-      // Fetch the steps using the getSteps function from the contract
-      const steps: BondStep[] = await bondContract.getSteps(params.id);
-      // console.log("Fetched steps:", steps);
-      const targetPrice = await bondContract.priceForNextMint(params.id);
-
-      // Extract the step prices into a new array
-      const stepPrices: bigint[] = steps.map((step) => step.price);
-
-      for (let i = 0; i < stepPrices.length; i++) {
-        // console.log("stepPrices[i]:" + stepPrices[i]);
-        // console.log("stepPrices.length:" + stepPrices.length);
-
-        if (Number(stepPrices[i]) == Number(targetPrice)) {
-          setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
-        }
-      }
-
-      // console.log("Extracted step prices:", stepPrices);
-    } catch (error: any) {
-      console.error("Error:", error);
-    }
   };
 
   const filterEventsByToken = (data: any): Event[] => {
@@ -252,7 +223,7 @@ export default function Detail({ params }: { params: { id: string } }) {
           />
           {/* progress bar + desc */}
           <div className="relative w-[450px] rounded-tr-[100px] bg-card  py-[13px] pl-[10px] pr-[66px]">
-            <BondingCurveCard prog={Math.floor(bondingCurveProgress)} />
+            <BondingCurveCard prog={bondingCurveProgress} />
           </div>
         </div>
         <div className="mt-[30px] flex h-[50px] w-full bg-card">
