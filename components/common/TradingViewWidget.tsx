@@ -9,7 +9,7 @@ import {
 } from "lightweight-charts";
 import { ethers } from "ethers";
 
-import { stepPrices, stepPrices800, stepRanges } from "@/global/createValue";
+import { stepRanges } from "@/global/createValue";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
@@ -69,7 +69,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       let curMintedToken = BigInt(0);
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       const sp: bigint[] = steps.map((step) => step.price);
-      console.log("sp:", sp);
       const sr = stepRanges;
 
       const newChartData: BarData[] = [];
@@ -78,10 +77,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         // 거래 내역이 없을 경우 기본 데이터 추가
         newChartData.push({
           time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-          open: 0.00000000033333,
-          high: 0.00000000033333,
-          low: 0.00000000033333,
-          close: 0.00000000033333,
+          open: 0.000000000005,
+          high: 0.000000000005,
+          low: 0.000000000005,
+          close: 0.000000000005,
         });
       }
       for (const event of filteredData) {
@@ -180,8 +179,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       candlestickSeries.applyOptions({
         priceFormat: {
           type: "price",
-          precision: 12,
-          minMove: 0.000000000001,
+          precision: 14,
+          minMove: 0.00000000000001,
         },
       });
 
