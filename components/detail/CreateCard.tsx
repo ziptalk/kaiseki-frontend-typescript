@@ -6,6 +6,7 @@ interface CreateCardProps {
   cid: string;
   name: string;
   ticker: string;
+  prize: string;
   address: string;
   description: string;
 }
@@ -13,6 +14,7 @@ export const CreateCard = ({
   cid,
   name,
   ticker,
+  prize,
   address,
   description,
 }: CreateCardProps) => {
@@ -49,12 +51,7 @@ export const CreateCard = ({
         </div>
 
         <div className="flex">
-          <p className="text-sm text-[#FAFF00]">Market cap:&nbsp;</p>
-          <p
-            className={`${digital.variable} font-digital text-base text-[#FAFF00]`}
-          >
-            12K
-          </p>
+          <p className="text-sm text-[#FAFF00]">Prize : {prize}</p>
         </div>
 
         <div className=" w-full break-words text-[13px] font-normal leading-tight tracking-tight text-[#808080]">

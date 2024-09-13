@@ -338,6 +338,7 @@ const Create: NextPage = () => {
           cid,
           name: watch("Name"),
           ticker: watch("Ticker"),
+          prize: watch("prize"),
           address: account.address?.substring(0, 6) || "unvalid",
           description: watch("Description"),
         }}
