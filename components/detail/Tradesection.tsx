@@ -232,6 +232,10 @@ export const Tradesection = ({
       ethers.parseEther(curUserReserveBalance),
     );
     // setMaxBuyAmount(Number(String(res.displayValue)));
+    if (res.displayValue === BigInt(0)) {
+      setInputValue("");
+      return;
+    }
     setInputValue(
       ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
     );
