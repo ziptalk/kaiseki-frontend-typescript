@@ -226,3 +226,15 @@ export const stepPrices800 = () => {
 };
 export const maxSupply = ethers.parseEther("1000000000");
 export const creationFee = ethers.parseEther("0.0015");
+
+export const createStep = (threshold: number) => {
+  const initialPrice = 0.000000000005;
+  let list = [];
+  const gap = (threshold / 8000000 - 100 * initialPrice) / 4950;
+  for (let i = 0; i < 100; i++) {
+    list.push(ethers.parseEther((initialPrice + i * gap).toFixed(14)));
+  }
+  console.log(list);
+  console.log(stepPrices);
+  return list;
+};

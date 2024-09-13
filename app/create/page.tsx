@@ -7,6 +7,7 @@ import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import { FieldErrors, set, useForm } from "react-hook-form";
+import { createStep } from "@/global/createValue";
 
 import { digital } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
@@ -78,7 +79,10 @@ const Create: NextPage = () => {
   // const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
-
+  const [steps, setSteps] = useState<BigInt[]>();
+  useEffect(() => {
+    setSteps(createStep(0.01));
+  }, []);
   // console.log(creationFee);
 
   // Get data from server for check dup
@@ -275,7 +279,7 @@ const Create: NextPage = () => {
           reserveToken: contracts.ReserveToken,
           maxSupply: ethers.parseEther("800000000"),
           stepRanges: stepRanges,
-          stepPrices: stepPrices,
+          stepPrices: steps,
         },
         {
           value: creationFee.toString(),

@@ -54,12 +54,6 @@ export const SlotLayout = () => {
         raffleData.winner.raffles && i < raffleData.winner.raffles.length;
         i++
       ) {
-        console.log(
-          raffleData.winner.raffles[i].tokenAddress,
-          raffleData.result.tokens[page - 1].token,
-          raffleData.winner.raffles[i].tokenAddress ===
-            raffleData.result.tokens[page - 1].token,
-        );
         if (
           raffleData.winner.raffles[i].tokenAddress ===
             raffleData.result.tokens[page - 1].token &&
@@ -159,7 +153,9 @@ export const SlotLayout = () => {
           <MainTitle
             title={
               raffleData && raffleData.result.tokens
-                ? "Raffle is ready!"
+                ? href === "/raffle/check" || href === "/raffle/fail"
+                  ? "Check Winner!"
+                  : "Raffle is ready!"
                 : "Loading..."
             }
           />
