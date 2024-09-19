@@ -80,10 +80,6 @@ export const Tradesection = ({
     signer,
   );
 
-  useEffect(() => {
-    console.log(inputValue);
-  }, [inputValue]);
-
   const checkMetaMaskInstalled = () => {
     if (!window.ethereum) {
       return false;
@@ -170,21 +166,19 @@ export const Tradesection = ({
     }
   };
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
-    const reserveAmount = curUserReserveBalance
-      ? curUserReserveBalance
-      : ethers.parseEther(inputValue);
+    const reserveAmount = curUserReserveBalance || BigInt(0); // WEI
 
-    let currentSupply = await getTotalMemetokenAmount(); // current total supply
-    console.log("currentSupply :" + currentSupply);
+    let currentSupply = (await getTotalMemetokenAmount()) || BigInt(0); // current total supply
+    // console.log("currentSupply :" + currentSupply);
     const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
     await setCurStepsIntoState();
-
-    for (let i = curStep; i < stepRanges.length; i++) {
+    // console.log("steps :" + steps);
+    for (let i = curStep; i < steps.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
-      const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
+      const supplyLeft = stepRangeI - BigInt(currentSupply); // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
       ); // ETH
@@ -232,6 +226,7 @@ export const Tradesection = ({
       ethers.parseEther(curUserReserveBalance),
     );
     // setMaxBuyAmount(Number(String(res.displayValue)));
+    // console.log("res.displayValue :" + res.displayValue);
     if (res.displayValue === BigInt(0)) {
       setInputValue("");
       return;
@@ -426,9 +421,9 @@ export const Tradesection = ({
     try {
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
-        console.log({ balanceWei });
+        // console.log({ balanceWei });
         const balanceEther = ethers.formatEther(balanceWei);
-        console.log({ balanceEther });
+        // console.log({ balanceEther });
         setCurUserReserveBalance(balanceEther);
       }
     } catch (error) {

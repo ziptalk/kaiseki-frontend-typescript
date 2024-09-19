@@ -199,17 +199,26 @@ const Create: NextPage = () => {
       alert("Invalid input value!");
       return true;
     }
-    if (Number(watch("threshold")) < 0.01) {
-      console.log("threshold: " + parseInt(watch("threshold")));
-      alert("Invalid input value!1");
+
+    if (
+      watch("threshold") !== "" &&
+      (Number(watch("threshold")) < 0.01 ||
+        (watch("threshold")?.includes(".") &&
+          watch("threshold")?.split(".")[1].length > 2))
+    ) {
+      alert("Invalid threshold");
       return true;
     }
     if (!watch("prize")) {
-      alert("Invalid input value!2");
+      alert("Invalid prize");
       return true;
     }
-    if (!watch("Name") || !watch("Ticker")) {
-      alert("Invalid input value!");
+    if (!watch("Name")) {
+      alert("Invalid Name!");
+      return true;
+    }
+    if (!watch("Ticker")) {
+      alert("Invalid Ticker!");
       return true;
     }
     if (watch("Name").length > 30) {

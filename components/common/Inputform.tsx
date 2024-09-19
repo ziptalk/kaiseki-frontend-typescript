@@ -51,7 +51,7 @@ export const Inputform = ({
         </div>
       ) : type === "number" ? (
         <div
-          className={`h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none ${value !== "" && Number(value) < 0.01 ? "border-[#FF2626]" : "border-[#8F8F8F]"}`}
+          className={`h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 outline-none ${value !== "" && (Number(value) < 0.01 || (value?.includes(".") && value?.split(".")[1].length > 2)) ? "border-[#FF2626] text-[#FF2626]" : "border-[#8F8F8F] text-white"}`}
         >
           <input
             type={type ? type : `text`}
@@ -59,7 +59,7 @@ export const Inputform = ({
             placeholder={
               type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
             }
-            className={`"h-full w-full bg-transparent  outline-none ${value !== "" && Number(value) < 0.01 ? "text-[#FF2626]" : "text-white"}`}
+            className={`"h-full w-full bg-transparent  outline-none`}
             {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">ETH</div>

@@ -9,7 +9,6 @@ import styled, { keyframes } from "styled-components";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import axios from "axios";
-import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -18,11 +17,7 @@ import {
   ModalRootWrapperWallet,
 } from "./Modal";
 
-import {
-  PROJECT_CHAIN_ID,
-  RESERVE_SYMBOL,
-  SERVER_ENDPOINT,
-} from "@/global/projectConfig";
+import { PROJECT_CHAIN_ID, RESERVE_SYMBOL } from "@/global/projectConfig";
 import X from "@/public/icons/X_logo.svg";
 import Info from "@/public/icons/info.svg";
 import DownArrow from "@/public/icons/dwnArrow.svg";
@@ -238,18 +233,6 @@ const Header: FC = () => {
 
   useEffect(() => {
     if (createAnimationTrigger) {
-      // console.log({
-      //   // newCreateTic,
-      //   curCreateTic,
-      //   // newCreateUser,
-      //   curCreateUser,
-      //   // newCreateCid,
-      //   curCreateCid,
-      //   // formattedDate,
-      //   curCreateTime,
-      //   // newCreateTokenAddress,
-      //   curCreateTokenAddress,
-      // });
       const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
       return () => clearTimeout(timeout);
     }
@@ -264,86 +247,11 @@ const Header: FC = () => {
       const response = await axios.get(
         `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
       );
-      // console.log("Reserve PRICE" + response.data.price);
       setCurReserveMarketPrice(response.data.price);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const MintEventCard: FC<EventCardTypes> = ({ user, value, ticker }) => {
-  //   return (
-  //     <EventWrapper>
-  //       {/* // <EventWrapper $itemN={index}> */}
-  //       <div className="flex h-[18px] w-full gap-[3px] ">
-  //         {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
-  //         <Image
-  //           width={18}
-  //           height={18}
-  //           className="rounded-full "
-  //           src="/images/Seiyan.png"
-  //           alt="user profile"
-  //         />
-  //         <h1 className="text-sm">{user} bought </h1>
-  //       </div>
-  //       <div className="flex h-[18px] w-full justify-end gap-[3px]">
-  //         <h1 className="text-sm">
-  //           {" "}
-  //           {value} {RESERVE_SYMBOL} of {ticker}
-  //         </h1>
-  //         <Image
-  //           width={18}
-  //           height={18}
-  //           className="rounded-full "
-  //           src="/images/Seiyan.png"
-  //           alt="user profile"
-  //         />
-  //       </div>
-  //     </EventWrapper>
-  //   );
-  // };
-
-  // const CreateEventCard: FC<EventCardTypes> = ({
-  //   index,
-  //   user,
-  //   ticker,
-  //   time,
-  // }) => {
-  //   return (
-  //     <EventWrapper $itemN={index}>
-  //       <div className="flex h-[18px] w-full gap-[3px] ">
-  //         {/* TODO: 유저 프로필 이미지 하드코딩중. 추후 해당 유저 프로필로 변경 필요 */}
-  //         <Image
-  //           width={18}
-  //           height={18}
-  //           className="rounded-full "
-  //           src="/images/Seiyan.png"
-  //           alt="user profile"
-  //         />
-  //         <h1 className="text-sm">{user} created </h1>
-  //       </div>
-  //       <div className="flex h-[18px] w-full justify-end gap-[3px]">
-  //         <h1 className="text-sm">
-  //           {ticker} on {time}
-  //         </h1>
-  //         <Image
-  //           width={18}
-  //           height={18}
-  //           className="rounded-full "
-  //           src="/images/Seiyan.png"
-  //           alt="user profile"
-  //         />
-  //       </div>
-  //     </EventWrapper>
-  //   );
-  // };
-
-  // const setModalVisible = () => {
-  //   if (!window.localStorage.getItem(MODAL_VISIBLE_STORAGE_KEY)) {
-  //     setIsInfoModalActive(true);
-  //     window.localStorage.setItem(MODAL_VISIBLE_STORAGE_KEY, "false");
-  //   }
-  // };
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -386,41 +294,39 @@ const Header: FC = () => {
         >
           <ModalContentBox onClick={(e) => e.stopPropagation()}>
             <div className="mb-5 md:mb-[34px]">
-              <h1 className="mb-5 text-sm font-bold md:mb-5 md:text-2xl">
+              <div className="mb-5 text-sm font-bold md:mb-5 md:text-2xl">
                 How it works
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
+              </div>
+              <div className="text-xs leading-6 md:text-[18px]">
                 RWE prevents rugs by making sure that all created tokens are
                 safe. Each coin on RWE is a fair-launch with no presale and no
                 team allocation.
-              </h1>
+              </div>
             </div>
 
             <div className="mb-5 flex flex-col gap-[18px] md:mb-[34px] md:gap-[25px]">
-              <h1 className="text-xs md:text-[18px]">
+              <div className="text-xs md:text-[18px]">
                 <b>step 1</b> : pick a coin that you like
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
+              </div>
+              <div className="text-xs md:text-[18px]">
                 <b>step 2</b> : buy the coin on the bonding curve
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
+              </div>
+              <div className="text-xs md:text-[18px]">
                 <b>step 3</b> : sell at any time to lock in your profits or
                 losses
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
-                <b>step 4</b> : when enough people buy on the bonding curve it
-                reaches a market cap of $
-                {Math.floor((60660 * curReserveMarketPrice) / 1000)}k
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
-                <b>step 5</b> : $
-                {Math.floor((9000 * curReserveMarketPrice) / 1000)}k of
-                liquidity is then deposited in dragonswap and burned
-              </h1>
-              <h1 className="text-xs md:text-[18px]">
-                <b>step 6</b> : Please make sure to include your telegram
-                address so that you can receive the raffle prize.
-              </h1>
+              </div>
+              <div className="text-xs md:text-[18px]">
+                <b>step 4</b> : once enough people buy, the coin reaches its set
+                market cap threshold
+              </div>
+              <div className="px-12 text-xs leading-6 md:text-[18px] ">
+                <b>step 5</b> : a portion of liquidity is deposited into DEX
+                (e.g., Uniswap) and burned
+              </div>
+              <div className="px-5 text-xs leading-6 md:text-[18px]">
+                <b>step 6</b> : enter your Telegram ID within 3 days of winning
+                to claim your prize
+              </div>
             </div>
 
             <button
@@ -436,22 +342,6 @@ const Header: FC = () => {
         </ModalRootWrapper>
       )}
       <header className="left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
-        {/* {pathname == "/" && (
-          <div className="absolute left-0 top-[130px] flex h-[80vh] w-[15vw] justify-center gap-[40px]  ">
-            <div className="h-full overflow-hidden">
-              {datas.map((card: any, index: any) => (
-                <MintEventCard
-                  key={index}
-                  value={card.val}
-                  ticker={card.tic}
-                  user={card.user}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-        )} */}
-
         <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
           <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
             <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">
@@ -564,27 +454,6 @@ const Header: FC = () => {
                   ),
                 ]}
               />
-
-              {/* {curMintUser && (
-                <MintAnimateWrapper
-                  className={`flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#FA00FF] px-[7px] text-[#FA00FF] ${mintAnimationTrigger && "animate"}`}
-                >
-                  <BombSold className="h-4 w-4" />
-                  <h1 className="whitespace-nowrap text-sm">
-                    {curMintUser} bought {curMintValue} ETH of
-                  </h1>
-                  <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
-                    <h1 className="cursor-pointer text-sm hover:underline">
-                      {curMintTic}
-                    </h1>
-                  </Link>
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
-                    alt="img"
-                    className="h-4 w-4 rounded-full"
-                  />
-                </MintAnimateWrapper>
-              )} */}
             </div>
             <div
               className="relative flex select-none flex-row-reverse items-center md:w-[300px]"
@@ -597,7 +466,12 @@ const Header: FC = () => {
                       onClick={() => copyToClipboard(address)}
                       className={`flex cursor-pointer items-center gap-2 stroke-transparent  hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
                     >
-                      <Bomb className="h-[16px] w-[18px] stroke-none" />
+                      <Bomb
+                        className="h-[24px] w-[24px] stroke-none"
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                      />
                       <div
                         className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:stroke-black hover:text-black`}
                         onClick={openAccountModal}
@@ -610,14 +484,14 @@ const Header: FC = () => {
                     </div>
                     <div className="flex gap-2">
                       <Power
-                        width={18}
-                        height={18}
-                        viewBox="0 0 18 18"
-                        className={`h-[18px] w-[18px] cursor-pointer stroke-secondary hover:stroke-third`}
+                        width={24}
+                        height={24}
+                        viewBox="0 0 24 24"
+                        className={`h-[24px] w-[24px] cursor-pointer stroke-secondary hover:stroke-third`}
                         onClick={() => setDisconnectToggle(true)}
                       />
                       <div
-                        className="flex h-[18px] w-[18px] cursor-pointer items-center justify-center"
+                        className="flex h-[24px] w-[24px] cursor-pointer items-center justify-center"
                         onClick={() =>
                           setAccountButtonModal(!accountButtonModal)
                         }
@@ -647,51 +521,10 @@ const Header: FC = () => {
                   />
                 </>
               )}
-              {/* {accountButtonModal && (
-                <>
-                  <div className="absolute right-[8px] top-[55px] h-[94px] w-[165px] rounded-[10px] border border-white bg-[#0E0E0E] px-[13px] py-[15px] text-center">
-                    <div
-                      onClick={openAccountModal}
-                      className="cursor-pointer border-b border-white pb-[10px] text-[15px]"
-                    >
-                      <h1>My account</h1>
-                    </div>
-                    <div
-                      onClick={openChainModal}
-                      className="cursor-pointer pt-[10px] text-[15px]"
-                    >
-                      <h1>Change network</h1>
-                    </div>
-                  </div>
-                </>
-              )} */}
             </div>
           </div>
         </div>
-        {/* {pathname == "/" && (
-          <div className="absolute right-0 top-[130px] flex h-[80vh] w-[15vw] justify-center ">
-            <div className="h-full overflow-hidden">
-              {createDatas.map((card: any, index: any) => (
-                <CreateEventCard
-                  key={index}
-                  time={card.time}
-                  ticker={card.tic}
-                  user={card.user}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-          )} */}
       </header>
-      {/* {accountButtonModal && (
-        <MypageModal
-          {...{
-            setModal: setAccountButtonModal,
-          }}
-        />
-      )} */}
-
       {accountButtonModal &&
         (width < 768 ? (
           <BottomSheet
@@ -730,11 +563,11 @@ const Header: FC = () => {
                 <h1 className="text-sm">
                   {curMintUser} bought {curMintValue} ETH of
                 </h1>
-                {/* <Link href={curMintTokenAddress ? curMintTokenAddress : ""}> */}
-                {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
-                {curMintTic}
-                {/* </h1> */}
-                {/* </Link> */}
+                <Link href={curMintTokenAddress ? curMintTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curMintTic}
+                  </h1>
+                </Link>
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
@@ -750,11 +583,11 @@ const Header: FC = () => {
               >
                 <BombCreate width={24} height={24} />
                 <h1 className="text-sm">{curCreateUser} Created</h1>
-                {/* <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}> */}
-                {/* <h1 className="cursor-pointer text-sm hover:underline"> */}
-                {curCreateTic}
-                {/* </h1> */}
-                {/* </Link> */}
+                <Link href={curCreateTokenAddress ? curCreateTokenAddress : ""}>
+                  <h1 className="cursor-pointer text-sm hover:underline">
+                    {curCreateTic}
+                  </h1>
+                </Link>
 
                 <h1 className="text-sm">on {curCreateTime}</h1>
                 <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
@@ -795,17 +628,6 @@ const Header: FC = () => {
 export default Header;
 
 const eventCardColors: string[] = ["9EFF00", "00FFFF", "FF20F6"];
-
-const EventWrapper = styled.div<{ $itemN?: number }>`
-  width: 182px;
-  height: 55px;
-  margin-bottom: 20px;
-  padding: 8px 15px;
-  border-radius: 8px;
-
-  background-color: ${({ $itemN }) =>
-    $itemN ? `#${eventCardColors[$itemN % 3]}` : "#0FF"};
-`;
 
 const shake = keyframes`
   0%, 100% {

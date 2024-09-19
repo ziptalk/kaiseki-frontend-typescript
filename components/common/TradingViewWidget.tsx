@@ -98,8 +98,9 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
           curMintedToken -= BigInt(event.amountBurned);
         }
 
-        const divValue = Math.floor(Number(curMintedToken) / Number(sr[0]));
-
+        const divValue = Math.floor(
+          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+        );
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,
@@ -107,9 +108,9 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
                 : 0.000000000005,
-            high: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
-            low: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
-            close: Number(ethers.formatEther(sp[divValue])) || 0.000000000005,
+            high: Number(ethers.formatEther(sp[divValue])),
+            low: Number(ethers.formatEther(sp[divValue])),
+            close: Number(ethers.formatEther(sp[divValue])),
           };
           newChartData.push(newDataPoint);
         }
@@ -142,6 +143,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
   useEffect(() => {
     // console.log(JSON.stringify(chartData, null, 2) + "chartdata");
+    console.log(chartData);
     if (chartData.length === 0) return;
     if (chartContainerRef.current) {
       const chartOptions: DeepPartial<ChartOptions> = {
@@ -174,13 +176,34 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
       const chart = createChart(chartContainerRef.current, chartOptions);
 
-      const candlestickSeries = chart.addCandlestickSeries();
+      const candlestickSeries = chart.addCandlestickSeries({
+        autoscaleInfoProvider: (original: any) => {
+          const res = original();
+          if (res !== null) {
+            console.log(res);
+            var minValue = chartData.reduce(
+              (min, p) => (p.open < min ? p.open : min),
+              chartData[0].open,
+            );
+            var maxValue = chartData.reduce(
+              (max, p) => (p.high > max ? p.high : max),
+              chartData[0].high,
+            );
+            console.log({ minValue, maxValue });
+            res.priceRange.minValue = minValue;
+            res.priceRange.maxValue = maxValue;
+            // res.priceRange.minValue -= 0.00000000001;
+            // res.priceRange.maxValue += 0.00000000001;
+          }
+          return res;
+        },
+      });
       candlestickSeries.setData(chartData);
       candlestickSeries.applyOptions({
         priceFormat: {
           type: "price",
-          precision: 14,
-          minMove: 0.00000000000001,
+          precision: 12,
+          minMove: 0.000000000001,
         },
       });
 
@@ -189,18 +212,18 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       seriesRef.current = candlestickSeries;
 
       // Update data every 3 seconds
-      //   const intervalId = setInterval(fetchAndUpdateData, 3000);
+      const intervalId = setInterval(fetchAndUpdateData, 3000);
 
-      //   return () => {
-      //     clearInterval(intervalId);
-      //     if (chartRef.current) {
-      //       chartRef.current.remove();
-      //     }
-      //     seriesRef.current = null;
-      //     chartRef.current = null;
-      //   };
+      return () => {
+        clearInterval(intervalId);
+        if (chartRef.current) {
+          chartRef.current.remove();
+        }
+        seriesRef.current = null;
+        chartRef.current = null;
+      };
     }
-  }, [ready]);
+  }, [ready, tokenAddress, chartData]);
 
   return (
     <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />

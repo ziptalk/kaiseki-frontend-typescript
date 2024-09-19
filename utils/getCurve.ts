@@ -28,7 +28,7 @@ export const setCurStepsIntoState = async ({
 
     for (let i = 0; i < stepPrices.length; i++) {
       if (Number(stepPrices[i]) == Number(targetPrice)) {
-        console.log(i, stepPrices[i]);
+        // console.log(i, stepPrices[i]);
         return Math.floor(((i + 1) / stepPrices.length) * 100);
       }
     }

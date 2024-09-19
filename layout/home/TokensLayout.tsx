@@ -76,7 +76,7 @@ export const TokensLayout = () => {
               placeholder="sort : "
               items={[
                 { item: "created", value: "createdAt" },
-                { item: "market cap", value: "currentSupply" },
+                { item: "popularity", value: "currentSupply" },
               ]}
               setItem={(value) => {
                 setSort(value);
