@@ -125,9 +125,16 @@ export const Tradesection = ({
     const result = BigInt(value) - tenPercent; // 10% 뺀 값 계산
     return result;
   };
-  const sellhandlePercentage = (percentage: number) => {
-    const value = (Math.floor(Number(curMemeTokenValue)) * percentage) / 100;
-    setInputValue(value.toFixed());
+  const sellhandlePercentage = (percentage?: number) => {
+    if (percentage === 0) {
+      setInputValue("");
+      return;
+    } else if (percentage) {
+      const value = (Math.floor(Number(curMemeTokenValue)) * percentage) / 100;
+      setInputValue(Math.floor(value).toString());
+    } else {
+      setInputValue(curMemeTokenValue);
+    }
   };
   // const buyhandlePercentage = (percentage: number) => {
   //   const value = Number(handleBuyMaxinMeme()) * (percentage / 100);
@@ -231,12 +238,12 @@ export const Tradesection = ({
       setInputValue("");
       return;
     }
-    if (!percentage) {
-      setInputValue(String(res.displayValue));
-    } else {
+    if (percentage) {
       setInputValue(
         ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
       );
+    } else {
+      setInputValue(String(res.displayValue));
     }
   };
 
@@ -594,7 +601,7 @@ export const Tradesection = ({
                   if (isBuy) {
                     handleBuyMaxinMeme();
                   } else {
-                    sellhandlePercentage(100);
+                    sellhandlePercentage();
                   }
                 }}
                 className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
