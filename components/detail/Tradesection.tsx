@@ -177,7 +177,10 @@ export const Tradesection = ({
 
     let currentSupply = (await getTotalMemetokenAmount()) || BigInt(0); // current total supply
     // console.log("currentSupply :" + currentSupply);
-    const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
+    const curStep =
+      Number(bondingCurveProgress.toFixed(0)) - 1 >= 0
+        ? Number(bondingCurveProgress.toFixed(0)) - 1
+        : 0;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
     await setCurStepsIntoState();
@@ -185,7 +188,13 @@ export const Tradesection = ({
     for (let i = curStep; i < steps.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
-      const supplyLeft = stepRangeI - BigInt(currentSupply); // WEI, price per token (in Ether) in the current step
+      let supplyLeft = BigInt(0);
+      console.log({ stepRangeI, currentSupply, i });
+      if (stepRangeI < BigInt(currentSupply)) {
+        BigInt(0);
+      } else {
+        supplyLeft = stepRangeI - BigInt(currentSupply);
+      } // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
       ); // ETH
@@ -234,10 +243,6 @@ export const Tradesection = ({
     );
     // setMaxBuyAmount(Number(String(res.displayValue)));
     // console.log("res.displayValue :" + res.displayValue);
-    if (res.displayValue === BigInt(0)) {
-      setInputValue("");
-      return;
-    }
     if (percentage) {
       setInputValue(
         ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
