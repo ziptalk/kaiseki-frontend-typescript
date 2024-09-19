@@ -29,10 +29,6 @@ export const TokensLayout = () => {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    console.log(tokenInfo);
-  }, [tokenInfo]);
-
-  useEffect(() => {
     setWidth(window.innerWidth);
     const updateWindowDimensions = () => {
       setWidth(window.innerWidth);

@@ -220,7 +220,7 @@ export const Tradesection = ({
     setInputValue("");
   };
 
-  const handleBuyMaxinMeme = async (percentage: number) => {
+  const handleBuyMaxinMeme = async (percentage?: number) => {
     await setUserMemeTokenBalanceIntoState();
     const res = await getMintTokenForReserve(
       ethers.parseEther(curUserReserveBalance),
@@ -231,9 +231,13 @@ export const Tradesection = ({
       setInputValue("");
       return;
     }
-    setInputValue(
-      ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
-    );
+    if (!percentage) {
+      setInputValue(String(res.displayValue));
+    } else {
+      setInputValue(
+        ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
+      );
+    }
   };
 
   // MARK: - Sell
@@ -588,7 +592,7 @@ export const Tradesection = ({
                 type="button"
                 onClick={() => {
                   if (isBuy) {
-                    handleBuyMaxinMeme(100);
+                    handleBuyMaxinMeme();
                   } else {
                     sellhandlePercentage(100);
                   }

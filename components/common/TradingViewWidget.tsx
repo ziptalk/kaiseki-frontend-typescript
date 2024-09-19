@@ -36,6 +36,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
   const [ready, setReady] = useState(false);
   const [getOnce, setGetOnce] = useState(false);
 
+  useEffect(() => {
+    fetchAndUpdateData();
+  }, [getOnce, tokenAddress]);
+
   function filterEventsByToken(data: any, token: any) {
     const filteredMintEvents = data.mintEvents.map((event: any) => ({
       ...event,
@@ -97,10 +101,11 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         } else {
           curMintedToken -= BigInt(event.amountBurned);
         }
-
+        console.log(curMintedToken);
         const divValue = Math.floor(
           Number(curMintedToken) / Number(ethers.parseEther("8000000")),
         );
+        console.log(divValue);
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,
@@ -113,6 +118,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             close: Number(ethers.formatEther(sp[divValue])),
           };
           newChartData.push(newDataPoint);
+          // console.log(newDataPoint);
         }
       }
 
@@ -136,10 +142,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    fetchAndUpdateData();
-  }, [getOnce, tokenAddress]);
 
   useEffect(() => {
     // console.log(JSON.stringify(chartData, null, 2) + "chartdata");
