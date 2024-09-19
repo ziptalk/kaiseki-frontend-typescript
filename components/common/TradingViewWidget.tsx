@@ -143,7 +143,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
   useEffect(() => {
     // console.log(JSON.stringify(chartData, null, 2) + "chartdata");
-    console.log(chartData);
     if (chartData.length === 0) return;
     if (chartContainerRef.current) {
       const chartOptions: DeepPartial<ChartOptions> = {
@@ -180,7 +179,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         autoscaleInfoProvider: (original: any) => {
           const res = original();
           if (res !== null) {
-            console.log(res);
             var minValue = chartData.reduce(
               (min, p) => (p.open < min ? p.open : min),
               chartData[0].open,
@@ -189,7 +187,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
               (max, p) => (p.high > max ? p.high : max),
               chartData[0].high,
             );
-            console.log({ minValue, maxValue });
             res.priceRange.minValue = minValue;
             res.priceRange.maxValue = maxValue;
             // res.priceRange.minValue -= 0.00000000001;

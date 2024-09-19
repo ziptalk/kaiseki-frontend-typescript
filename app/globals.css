@@ -126,11 +126,11 @@ input::-webkit-inner-spin-button {
   flex-wrap: nowrap;
 }
 .wrapper .slide_container .slide.original {
-  animation: 25s linear infinite normal none running infiniteAnimation1;
+  animation: 40s linear infinite normal none running infiniteAnimation1;
 }
 
 .wrapper .slide_container .slide.clone {
-  animation: 25s linear infinite infiniteAnimation2;
+  animation: 40s linear infinite infiniteAnimation2;
 }
 
 .wrapper .slide_container .slide.stop {

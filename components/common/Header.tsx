@@ -377,12 +377,15 @@ const Header: FC = () => {
                 />
               </div>
             </div>
-            <div className="hidden h-[40px] w-1/2 items-center md:inline">
+            <div
+              className={`ml-14 hidden h-[40px] items-center md:inline`}
+              style={{ width: `${width - 700}px` }}
+            >
               <Slider
                 elements={[
                   curMintUser && (
                     <MintAnimateWrapper
-                      className={`mr-10 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
+                      className={`mr-5 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
                     >
                       <BombBuy width={24} height={24} />
                       <h1 className="whitespace-nowrap text-sm">
@@ -398,13 +401,13 @@ const Header: FC = () => {
                       <img
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                         alt="img"
-                        className="h-4 w-4 rounded-full"
+                        className="h-6 w-6 rounded-full border border-red-500"
                       />
                     </MintAnimateWrapper>
                   ),
                   curCreateUser && (
                     <CreateAnimateWrapper
-                      className={`mr-10 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                      className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
                     >
                       <BombCreate width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -426,13 +429,13 @@ const Header: FC = () => {
                       <img
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
                         alt="img"
-                        className="h-4 w-4 rounded-full"
+                        className="h-6 w-6 rounded-full border border-red-500"
                       />
                     </CreateAnimateWrapper>
                   ),
                   curBurnUser && (
                     <BurnAnimateWrapper
-                      className={`mr-10 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
+                      className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
                     >
                       <BombSold width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -448,7 +451,79 @@ const Header: FC = () => {
                       <img
                         src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curBurnCid}`}
                         alt="img"
-                        className="h-4 w-4 rounded-full"
+                        className="h-6 w-6 rounded-full border border-red-500"
+                      />
+                    </BurnAnimateWrapper>
+                  ),
+                  curMintUser && (
+                    <MintAnimateWrapper
+                      className={`mr-5 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
+                    >
+                      <BombBuy width={24} height={24} />
+                      <h1 className="whitespace-nowrap text-sm">
+                        {curMintUser} bought {curMintValue} ETH of
+                      </h1>
+                      <Link
+                        href={curMintTokenAddress ? curMintTokenAddress : ""}
+                      >
+                        <h1 className="cursor-pointer text-sm hover:underline">
+                          {curMintTic}
+                        </h1>
+                      </Link>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
+                        alt="img"
+                        className="h-6 w-6 rounded-full border border-red-500"
+                      />
+                    </MintAnimateWrapper>
+                  ),
+                  curCreateUser && (
+                    <CreateAnimateWrapper
+                      className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                    >
+                      <BombCreate width={24} height={24} />
+                      <div className="whitespace-nowrap text-sm">
+                        {curCreateUser} Created
+                      </div>
+                      <Link
+                        href={
+                          curCreateTokenAddress ? curCreateTokenAddress : ""
+                        }
+                      >
+                        <div className="cursor-pointer text-sm hover:underline">
+                          {curCreateTic}
+                        </div>
+                      </Link>
+
+                      <div className="whitespace-nowrap text-sm">
+                        on {curCreateTime}
+                      </div>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
+                        alt="img"
+                        className="h-6 w-6 rounded-full border border-red-500"
+                      />
+                    </CreateAnimateWrapper>
+                  ),
+                  curBurnUser && (
+                    <BurnAnimateWrapper
+                      className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
+                    >
+                      <BombSold width={24} height={24} />
+                      <div className="whitespace-nowrap text-sm">
+                        {curBurnUser} sold {curBurnValue} of
+                      </div>
+                      <Link
+                        href={curBurnTokenAddress ? curBurnTokenAddress : ""}
+                      >
+                        <div className="cursor-pointer text-sm hover:underline">
+                          {curBurnTic}
+                        </div>
+                      </Link>
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curBurnCid}`}
+                        alt="img"
+                        className="h-6 w-6 rounded-full border border-red-500"
                       />
                     </BurnAnimateWrapper>
                   ),
@@ -568,7 +643,7 @@ const Header: FC = () => {
                     {curMintTic}
                   </h1>
                 </Link>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full border border-red-500">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curMintCid}`}
                     alt="img"
@@ -590,7 +665,7 @@ const Header: FC = () => {
                 </Link>
 
                 <h1 className="text-sm">on {curCreateTime}</h1>
-                <div className="h-[18px] w-[18px] overflow-hidden rounded-full">
+                <div className="h-[18px] w-[18px] overflow-hidden rounded-full border border-red-500">
                   <img
                     src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curCreateCid}`}
                     alt="img"
@@ -614,7 +689,7 @@ const Header: FC = () => {
                 <img
                   src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${curBurnCid}`}
                   alt="img"
-                  className="h-4 w-4 rounded-full"
+                  className="h-6 w-6 rounded-full border border-red-500"
                 />
               </BurnAnimateWrapper>
             ),

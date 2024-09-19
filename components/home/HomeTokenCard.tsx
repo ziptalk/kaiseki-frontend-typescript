@@ -7,18 +7,20 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
   createdBy,
-  marketCap,
+  rafflePrize,
   description,
   tokenAddress,
   clickedToken,
   cid,
 }) => {
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  const [marketCap, setMarketCap] = useState(0);
 
   const fetchBondingCurveProgress = async () => {
-    setBondingCurveProgress(
-      (await setCurStepsIntoState({ tokenAddress })) || 0,
-    );
+    await setCurStepsIntoState({ tokenAddress }).then((res) => {
+      setBondingCurveProgress(res?.curve || 0);
+      setMarketCap(res?.marketCap || 0);
+    });
   };
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
               cid,
               createdBy,
               description,
+              rafflePrize,
               marketCap,
               name,
               ticker,
@@ -56,7 +59,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         <h1
           className={`${digital.variable} font-digital text-lg leading-[14px] text-[#FAFF00]`}
         >
-          {Number(marketCap).toLocaleString()}K
+          {marketCap} ETH
         </h1>
         <div className="text-sm text-[#CFCFCF]">({bondingCurveProgress}%)</div>
       </div>

@@ -52,8 +52,9 @@ interface TradesCardType {
 interface TokenInfo {
   cid: string;
   createdBy?: string;
+  rafflePrize?: string;
   description: string;
-  marketCap?: string;
+  marketCap?: number;
   name: string;
   ticker: string;
   tokenAddress: string;

@@ -43,7 +43,7 @@ export const Trade = ({
     fetchValues();
   }, []);
   return (
-    <div className="overflow-scroll pb-10">
+    <div className="overflow-scroll">
       {values.map((value, idx) => (
         <div
           key={idx}

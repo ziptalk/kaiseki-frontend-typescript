@@ -59,9 +59,9 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
   useEffect(() => {
     const stopTimers = [
-      setTimeout(() => stopSlot(0), width < 768 ? 1600 : 1050),
-      setTimeout(() => stopSlot(1), width < 768 ? 2700 : 3000),
-      setTimeout(() => stopSlot(2), width < 768 ? 5500 : 3800),
+      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1050),
+      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 2950),
+      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3700),
     ];
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
   }, [cid, width]);
@@ -118,28 +118,37 @@ const SlotColumn: FC<{
         }`}
       >
         {images.map((image, index) =>
-          width < 768 ? (
-            <Image
+          width > 768 ? (
+            <div
               key={index}
-              src={image.src}
-              alt={image.alt}
-              width={20}
-              height={20}
-              className={`slot-image mt-2 ${
-                !isSpinning && index === idx ? "active" : ""
-              }`}
-            />
+              className="mt-4 flex min-h-10 w-10 items-center justify-center"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={40}
+                height={40}
+                className={`slot-image ${
+                  !isSpinning && index === idx ? "active" : ""
+                }`}
+              />
+            </div>
           ) : (
-            <Image
+            <div
               key={index}
-              src={image.src}
-              alt={image.alt}
-              width={40}
-              height={40}
-              className={`slot-image mt-4 ${
-                !isSpinning && index === idx ? "active" : ""
-              }`}
-            />
+              className="mt-2 flex min-h-5 w-5 items-center justify-center"
+            >
+              <Image
+                key={index}
+                src={image.src}
+                alt={image.alt}
+                width={20}
+                height={20}
+                className={`slot-image ${
+                  !isSpinning && index === idx ? "active" : ""
+                }`}
+              />
+            </div>
           ),
         )}
       </div>

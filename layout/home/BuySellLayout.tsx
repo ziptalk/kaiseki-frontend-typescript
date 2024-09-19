@@ -13,13 +13,16 @@ export const BuySellLayout = ({
   cid,
   createdBy,
   description,
-  marketCap,
+  rafflePrize,
+  // marketCap,
   name,
   ticker,
   tokenAddress,
   setInfo,
 }: TokenInfo) => {
   const isMobile = typeof window !== undefined && window.innerWidth < 768;
+  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  const [marketCap, setMarketCap] = useState(0);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -28,12 +31,12 @@ export const BuySellLayout = ({
       console.error(error);
     }
   };
-  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
 
   const fetchBondingCurveProgress = async () => {
-    setBondingCurveProgress(
-      (await setCurStepsIntoState({ tokenAddress })) || 0,
-    );
+    await setCurStepsIntoState({ tokenAddress }).then((res) => {
+      setBondingCurveProgress(res?.curve || 0);
+      setMarketCap(res?.marketCap || 0);
+    });
   };
 
   useEffect(() => {
@@ -67,8 +70,8 @@ export const BuySellLayout = ({
               {...{
                 cid,
                 createdBy,
+                rafflePrize,
                 description,
-                marketCap,
                 name,
                 ticker,
                 tokenAddress,

@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 export const MyPageTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
-  marketCap,
   description,
   tokenAddress,
   cid,
@@ -18,7 +17,9 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   const router = useRouter();
 
   const getCurve = async () => {
-    setCurve((await setCurStepsIntoState({ tokenAddress })) || 0);
+    await setCurStepsIntoState({ tokenAddress }).then((res) => {
+      setCurve(res?.curve || 0);
+    });
   };
   useEffect(() => {
     getCurve();
@@ -42,7 +43,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
             {...{
               cid,
               description,
-              marketCap,
+              // marketCap,
               name,
               ticker,
               tokenAddress,

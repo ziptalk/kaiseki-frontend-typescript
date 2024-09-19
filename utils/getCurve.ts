@@ -21,6 +21,7 @@ export const setCurStepsIntoState = async ({
     // Fetch the steps using the getSteps function from the contract
     const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
     const targetPrice = await bondContract.priceForNextMint(tokenAddress);
+    const detail = await bondContract.getDetail(tokenAddress);
     // console.log("targetPrice:", targetPrice);
 
     // Extract the step prices into a new array
@@ -28,8 +29,19 @@ export const setCurStepsIntoState = async ({
 
     for (let i = 0; i < stepPrices.length; i++) {
       if (Number(stepPrices[i]) == Number(targetPrice)) {
-        // console.log(i, stepPrices[i]);
-        return Math.floor(((i + 1) / stepPrices.length) * 100);
+        return {
+          curve: Math.floor(((i + 1) / stepPrices.length) * 100),
+          marketCap: Number(
+            ethers.formatEther(
+              targetPrice *
+                BigInt(
+                  Number(ethers.formatEther(detail.info.currentSupply)).toFixed(
+                    0,
+                  ),
+                ),
+            ),
+          ),
+        };
       }
     }
 
@@ -38,3 +50,28 @@ export const setCurStepsIntoState = async ({
     console.error("Error:", error);
   }
 };
+
+// export const fetchTokenDetailFromContract = async ({
+//   tokenAddress,
+// }: {
+//   tokenAddress: string;
+// }) => {
+//   try {
+//     const detail = await bondContract.getDetail(tokenAddress);
+//     console.log(detail);
+//     const price = detail.info.reserveBalance;
+//     const mcap = Number(ethers.formatEther(price.toString()));
+//     // const response = await axios.get(
+//     //   `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+//     // );
+//     // const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
+//     console.log(mcap);
+//     await ChangeMcap({
+//       tokenAddress: tokenAddress,
+//       marketCap: mcap,
+//     });
+//     return mcap;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

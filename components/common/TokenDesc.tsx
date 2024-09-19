@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 export const TokenDesc = ({
   name,
   ticker,
+  rafflePrize,
   createdBy,
   description,
 }: TokenInfo) => {
@@ -38,6 +39,7 @@ export const TokenDesc = ({
           <h1 className="truncate">{createdBy}</h1>
         </div>
       )}
+      <h1 className="text-sm text-[#FAFF00]">prize: {rafflePrize}</h1>
       <p className="h-14 overflow-scroll break-words text-[14px] text-[#CFCFCF] md:h-full md:w-full">
         {description}
       </p>

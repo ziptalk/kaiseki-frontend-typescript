@@ -9,7 +9,8 @@ export const initialTokenInfo: TokenInfo = {
   cid: "",
   createdBy: "",
   description: "",
-  marketCap: "",
+  rafflePrize: "",
+  marketCap: 0,
   name: "",
   ticker: "",
   tokenAddress: "",
@@ -26,6 +27,10 @@ export const TokensLayout = () => {
   const [order, setOrder] = useState<"asc" | "desc" | undefined>(undefined);
 
   const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    console.log(tokenInfo);
+  }, [tokenInfo]);
 
   useEffect(() => {
     setWidth(window.innerWidth);

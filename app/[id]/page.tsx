@@ -1,18 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import TokenCard from "@/components/detail/TokenCard";
 
-import { BILLION } from "@/global/constants";
-import contracts from "@/global/contracts";
-
 import TradingViewChart from "@/components/common/TradingViewWidget";
-import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
-import axios from "axios";
+import { RESERVE_SYMBOL } from "@/global/projectConfig";
 import { Tradesection } from "@/components/detail/Tradesection";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import Slider from "@/components/common/Slider";
@@ -20,7 +14,6 @@ import { ModuleInfo } from "@/components/common/ModuleInfo";
 import { TradesLayout } from "@/layout/detail/TradesLayout";
 import { HolderDistributionLayout } from "@/layout/detail/HolderDistrubutionLayout";
 import {
-  ChangeMcap,
   FindTokenByAddress,
   HolderDistribution,
   TxlogsMintBurn,
@@ -32,22 +25,14 @@ export default function Detail({ params }: { params: { id: string } }) {
   const [volume, setvolume] = useState<string>("0");
   const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  const [marketCap, setMarketCap] = useState(0);
 
-  // MARK: - init ethers.js
-  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
-
-  const bondContract = new ethers.Contract(
-    contracts.MCV2_Bond,
-    MCV2_BondABI,
-    provider,
-  );
   const fetchBondingCurveProgress = async () => {
-    setBondingCurveProgress(
-      (await setCurStepsIntoState({ tokenAddress: params.id })) || 0,
-    );
+    await setCurStepsIntoState({ tokenAddress: params.id }).then((res) => {
+      setBondingCurveProgress(res?.curve || 0);
+      setMarketCap(res?.marketCap || 0);
+    });
   };
-
   useEffect(() => {
     fetchBondingCurveProgress();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,7 +60,6 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     getTokenInfo();
-    fetchTokenDetailFromContract();
     fetchHolderDistributionFromServer();
     // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
     fetch20TXLogsFromServer(tokenInfo ? params.id : "", setTXLogsFromServer);
@@ -85,7 +69,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   useEffect(() => {
     var value = 0;
     var marketCap = 0;
-    console.log(TXLogsFromServer);
+    // console.log(TXLogsFromServer);
     TXLogsFromServer?.map((item) => {
       if (
         new Date(item.blockTimestamp).getTime() <
@@ -103,7 +87,7 @@ export default function Detail({ params }: { params: { id: string } }) {
           Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
           10000;
       }
-      console.log(marketCap);
+      // console.log(marketCap);
     });
     setvolume(value.toFixed(5));
   }, [TXLogsFromServer]);
@@ -113,26 +97,6 @@ export default function Detail({ params }: { params: { id: string } }) {
       const data = await HolderDistribution();
       const filteredData = filterDataByOuterKey(data, params.id);
       setDistribution(filteredData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchTokenDetailFromContract = async () => {
-    try {
-      const detail = await bondContract.getDetail(params.id);
-      const price = detail.info.priceForNextMint;
-      const mcap = (
-        Number(ethers.formatEther(price.toString())) * BILLION
-      ).toFixed(2);
-      const response = await axios.get(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
-      );
-      const marketCapInUSD = (response.data.price * Number(mcap)).toFixed(0);
-      await ChangeMcap({
-        tokenAddress: params.id,
-        marketCap: Number(marketCapInUSD),
-      });
     } catch (error) {
       console.log(error);
     }
@@ -154,19 +118,19 @@ export default function Detail({ params }: { params: { id: string } }) {
     setEventsFromDB(filterEventsByToken(response));
   };
 
-  const checkMetaMaskInstalled = () => {
-    if (!window.ethereum) {
-      return false;
-    }
-    return true;
-  };
+  // const checkMetaMaskInstalled = () => {
+  //   if (!window.ethereum) {
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const checkAccountAddressInitialized = (address: any) => {
-    if (!address) {
-      return false;
-    }
-    return true;
-  };
+  // const checkAccountAddressInitialized = (address: any) => {
+  //   if (!address) {
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const filterEventsByToken = (data: any): Event[] => {
     try {
@@ -239,7 +203,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               <ModuleInfo
                 title="Marketcap"
                 className="mr-20 bg-transparent"
-                desc={tokenInfo.marketCap + " ETH"}
+                desc={marketCap + " ETH"}
                 key={"Marketcap"}
               />,
               <ModuleInfo

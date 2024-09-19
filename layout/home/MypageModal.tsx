@@ -97,7 +97,7 @@ export const MypageModal = ({
           </div>
         ))}
       </div>
-      <div className="my-2.5 h-full overflow-scroll">
+      <div className="my-2.5  h-96 overflow-scroll pb-10">
         {TabContents[tabIndex]}
       </div>
     </div>
