@@ -116,7 +116,7 @@ export const Tradesection = ({
       const stepPrices: bigint[] = steps.map((step) => step.price);
       setSteps(stepPrices);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -459,7 +459,7 @@ export const Tradesection = ({
       setPriceForNextMint(detail);
       // console.log("NextMintPrice :" + detail);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
