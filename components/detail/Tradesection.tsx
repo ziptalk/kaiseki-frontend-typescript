@@ -146,8 +146,12 @@ export const Tradesection = ({
   // };
   const getTotalMemetokenAmount = async () => {
     try {
-      const supply = await memeTokenContract.totalSupply();
-      return supply;
+      while (true) {
+        const supply = await memeTokenContract.totalSupply();
+        if (supply) {
+          return supply;
+        }
+      }
     } catch (error: any) {
       console.error("Error:", error);
     }
@@ -193,6 +197,7 @@ export const Tradesection = ({
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
+      console.log({ i, stepRangeI, currentSupply });
       const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
