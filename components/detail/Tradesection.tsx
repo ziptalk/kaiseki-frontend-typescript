@@ -120,6 +120,10 @@ export const Tradesection = ({
     }
   };
 
+  const handleReset = () => {
+    setInputValue("");
+  };
+
   const subtractTenPercent = (value: any) => {
     const tenPercent = BigInt(value) / BigInt(10); // 10% 계산
     const result = BigInt(value) - tenPercent; // 10% 뺀 값 계산
@@ -173,28 +177,20 @@ export const Tradesection = ({
     }
   };
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
-    const reserveAmount = curUserReserveBalance || BigInt(0); // WEI
+    const reserveAmount = curUserReserveBalance
+      ? curUserReserveBalance
+      : ethers.parseEther(inputValue);
 
-    let currentSupply = (await getTotalMemetokenAmount()) || BigInt(0); // current total supply
-    // console.log("currentSupply :" + currentSupply);
-    const curStep =
-      Number(bondingCurveProgress.toFixed(0)) - 1 >= 0
-        ? Number(bondingCurveProgress.toFixed(0)) - 1
-        : 0;
+    let currentSupply = await getTotalMemetokenAmount(); // current total supply
+    const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
     await setCurStepsIntoState();
-    // console.log("steps :" + steps);
-    for (let i = curStep; i < steps.length; i++) {
+
+    for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
-      let supplyLeft = BigInt(0);
-      // console.log({ stepRangeI, currentSupply, i });
-      if (stepRangeI < BigInt(currentSupply)) {
-        BigInt(0);
-      } else {
-        supplyLeft = stepRangeI - BigInt(currentSupply);
-      } // WEI, price per token (in Ether) in the current step
+      const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
       ); // ETH
@@ -203,25 +199,27 @@ export const Tradesection = ({
 
       if (costPerToken === BigInt(0)) continue;
 
-      const maxTokensForReserve = BigInt(
-        (Number(reserveLeft) / Number(costPerToken)).toFixed(),
+      const maxTokensForReserve = Math.floor(
+        Number(reserveLeft) / Number(costPerToken),
       ); // Ether,  number of tokens that can be purchased with the remaining funds
 
       // Ether, Check if there is enough money to buy more than the remaining tokens in the current step
       if (maxTokensForReserve > supplyLeftInETH) {
         tokensToMint += supplyLeftInETH; // / Add all remaining tokens in the current step to the amount to tokensToMint
-        reserveLeft -= BigInt(Number(supplyLeftInETH) * Number(costPerToken));
+        reserveLeft -= BigInt(
+          Math.floor(Number(supplyLeftInETH) * Number(costPerToken)),
+        );
         currentSupply += supplyLeft;
       } else {
-        tokensToMint += maxTokensForReserve;
+        tokensToMint += BigInt(maxTokensForReserve);
         reserveLeft = BigInt(0);
         break;
       }
     }
 
     const ttm = BigInt(ethers.parseEther(String(tokensToMint)));
-    const fee = (ttm * BigInt(1)) / BigInt(100);
-    const totalTokensToMint = ttm;
+    const fee = reserveLeft ? BigInt(0) : (ttm * BigInt(1)) / BigInt(100);
+    const totalTokensToMint = ttm - fee;
     const contractInputValue = ethers.parseEther(
       ethers.formatEther(totalTokensToMint).split(".")[0],
     );
@@ -230,10 +228,6 @@ export const Tradesection = ({
     );
 
     return { displayValue, contractInputValue };
-  };
-
-  const handleReset = () => {
-    setInputValue("");
   };
 
   const handleBuyMaxinMeme = async (percentage?: number) => {
