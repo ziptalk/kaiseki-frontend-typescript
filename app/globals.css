@@ -100,6 +100,16 @@ input::-webkit-inner-spin-button {
   -moz-appearance: none;
   -webkit-appearance: none;
 }
+.preview-title {
+  color: #faff00;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: #ff2626;
+  font-family: var(--font-impact);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
 .animate-skillCardSlide {
   opacity: 0;
   animation: 1.5s;

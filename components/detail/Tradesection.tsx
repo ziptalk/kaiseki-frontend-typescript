@@ -182,7 +182,10 @@ export const Tradesection = ({
       : ethers.parseEther(inputValue);
 
     let currentSupply = await getTotalMemetokenAmount(); // current total supply
-    const curStep = Number(bondingCurveProgress.toFixed(0)) - 1;
+    const curStep =
+      Number(bondingCurveProgress.toFixed(0)) - 1 >= 0
+        ? Number(bondingCurveProgress.toFixed(0)) - 1
+        : 0;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
     await setCurStepsIntoState();
@@ -419,8 +422,9 @@ export const Tradesection = ({
         return;
       }
       const detail = await memeTokenContract.balanceOf(account.address);
+      console.log("detail :" + detail);
 
-      setCurMemeTokenValue(String(ether(detail)));
+      setCurMemeTokenValue(ether(detail).toFixed());
     } catch (error) {
       console.log(error);
     }

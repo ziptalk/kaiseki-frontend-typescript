@@ -104,24 +104,20 @@ export const BuySellLayout = ({
 
   useEffect(() => {
     var value = 0;
-    var marketCap = 0;
-    // console.log(TXLogsFromServer);
     TXLogsFromServer?.map((item) => {
       if (
-        new Date(item.blockTimestamp).getTime() <
+        new Date(item.blockTimestamp).getTime() >=
         new Date().getTime() - 24 * 60 * 60 * 1000
-      )
-        return;
-      if (item.isMint) {
-        marketCap += Number(ethers.formatEther(item.amountMinted));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
-          10000;
-      } else {
-        marketCap -= Number(ethers.formatEther(item.amountBurned));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
-          10000;
+      ) {
+        if (item.isMint) {
+          value +=
+            Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
+            10000;
+        } else {
+          value +=
+            Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
+            10000;
+        }
       }
       // console.log(marketCap);
     });

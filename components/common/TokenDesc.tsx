@@ -40,7 +40,7 @@ export const TokenDesc = ({
         </div>
       )}
       <h1 className="text-sm text-[#FAFF00]">prize: {rafflePrize}</h1>
-      <p className="h-14 overflow-scroll break-words text-[14px] text-[#CFCFCF] md:h-full md:w-full">
+      <p className="overflow-scroll break-words text-[14px] text-[#CFCFCF] md:h-14 md:w-full">
         {description}
       </p>
     </div>

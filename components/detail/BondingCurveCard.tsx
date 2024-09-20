@@ -39,7 +39,7 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({
             }
           </div>
         ) : (
-          <div className="mt-[21px] h-[90px] overflow-scroll text-[12px] leading-[18px] text-[#AEAEAE]">
+          <div className="mt-[21px] h-[90px] overflow-scroll text-[13px] leading-[18px] text-[#AEAEAE]">
             {
               "There are 800,000,000 still available for sale in the bonding curve and there are 0 TRX in the bonding curve. When the market cap reaches $ 78,960.73 all the liquidity from the bonding curve will be deposited into Sunswap and burned. Progression increases as the price goes up."
             }

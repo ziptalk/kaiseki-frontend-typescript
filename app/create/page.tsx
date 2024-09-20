@@ -9,7 +9,7 @@ import Image from "next/image";
 import { FieldErrors, set, useForm } from "react-hook-form";
 import { createStep } from "@/global/createValue";
 
-import { digital } from "@/fonts/font";
+import { digital, impact } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import { stepRanges, maxSupply, creationFee } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
@@ -221,6 +221,15 @@ const Create: NextPage = () => {
       alert("Invalid Ticker!");
       return true;
     }
+    if (!watch("Description")) {
+      alert("Invalid Description!");
+      return true;
+    }
+    if (!watch("Image")) {
+      alert("Invalid Image!");
+      return true;
+    }
+
     if (watch("Name").length > 30) {
       alert("Invalid name length!");
       return true;
@@ -296,7 +305,7 @@ const Create: NextPage = () => {
       await sendCidAndTokenAddressToServer(createdTokenAddress);
       setIsLoading(false);
 
-      routeToDetailPageAfterMint(createdTokenAddress);
+      routeToDetailPageAfterMint();
     } catch (error) {
       const decodedError = await errorDecoder.decode(error);
       console.log("Custom error reason:", decodedError);
@@ -305,20 +314,7 @@ const Create: NextPage = () => {
     }
   };
 
-  const routeToDetailPageAfterMint = async (createdTokenAddress: string) => {
-    // await getNextMintPrice(createdTokenAddress);
-    // setIsModalVisible(true);
-    // href={{
-    //   pathname: "/detail",
-    //   query: {
-    //     cid,
-    //     tokenAddress,
-    //     name,
-    //     ticker,
-    //     createdBy,
-    //     description,
-    //   },
-    // }}
+  const routeToDetailPageAfterMint = async () => {
     router.push(`/`);
   };
 
@@ -341,7 +337,10 @@ const Create: NextPage = () => {
         height={30}
         onClick={() => router.push("/")}
       />
-      <Preview />
+      {/* <Preview /> */}
+      <div className={`preview-title ${impact.variable} font-impact`}>
+        Preview
+      </div>
       <CreateCard
         {...{
           cid,

@@ -23,6 +23,7 @@ import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
 import { setCurStepsIntoState } from "@/utils/getCurve";
 import contracts from "@/global/contracts";
 import { BarData, UTCTimestamp } from "lightweight-charts";
+import Sorry from "@/public/icons/sorry.svg";
 
 export default function Detail({ params }: { params: { id: string } }) {
   const [volume, setvolume] = useState<string>("0");
@@ -37,6 +38,16 @@ export default function Detail({ params }: { params: { id: string } }) {
   });
   const [Chartdata, setChartData] = useState<BarData[]>();
   const [getOnce, setGetOnce] = useState(false);
+  const [width, setWidth] = useState(250);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
 
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
@@ -169,7 +180,6 @@ export default function Detail({ params }: { params: { id: string } }) {
             close: Number(ethers.formatEther(sp[divValue])),
           };
           newChartData.push(newDataPoint);
-          console.log(newDataPoint);
         }
       }
 
@@ -194,24 +204,21 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     var value = 0;
-    var marketCap = 0;
     // console.log(TXLogsFromServer);
     TXLogsFromServer?.map((item) => {
       if (
-        new Date(item.blockTimestamp).getTime() <
+        new Date(item.blockTimestamp).getTime() >=
         new Date().getTime() - 24 * 60 * 60 * 1000
-      )
-        return;
-      if (item.isMint) {
-        marketCap += Number(ethers.formatEther(item.amountMinted));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
-          10000;
-      } else {
-        marketCap -= Number(ethers.formatEther(item.amountBurned));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
-          10000;
+      ) {
+        if (item.isMint) {
+          value +=
+            Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
+            10000;
+        } else {
+          value +=
+            Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
+            10000;
+        }
       }
       // console.log(marketCap);
     });
@@ -301,7 +308,11 @@ export default function Detail({ params }: { params: { id: string } }) {
     }
     return {};
   };
-  return (
+  return width < 768 ? (
+    <main className="flex w-full items-center justify-center">
+      <Sorry />
+    </main>
+  ) : (
     <main className="flex w-full justify-center gap-[30px]">
       {/* left side */}
       <div className="w-[860px]">
@@ -371,7 +382,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         <TradesLayout
           {...{
             memeTokenSymbol: tokenInfo.symbol,
-            TXLogsFromServer: TXLogsFromServer?.slice(0, 20),
+            TXLogsFromServer: [...TXLogsFromServer]?.reverse().slice(0, 20),
           }}
         />
       </div>

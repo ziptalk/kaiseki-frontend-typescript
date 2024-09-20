@@ -31,14 +31,16 @@ export const setCurStepsIntoState = async ({
         return {
           curve: Math.floor(((i + 1) / stepPrices.length) * 100),
           marketCap: Number(
-            ethers.formatEther(
-              targetPrice *
-                BigInt(
-                  Number(ethers.formatEther(detail.info.currentSupply)).toFixed(
-                    0,
+            Number(
+              ethers.formatEther(
+                targetPrice *
+                  BigInt(
+                    Number(
+                      ethers.formatEther(detail.info.currentSupply),
+                    ).toFixed(0),
                   ),
-                ),
-            ),
+              ),
+            ).toFixed(5),
           ),
           tokenCreated:
             Number(ethers.formatEther(detail.info.currentSupply)) !== 0

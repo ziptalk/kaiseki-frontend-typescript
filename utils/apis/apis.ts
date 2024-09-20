@@ -170,7 +170,6 @@ export const UsersMemes = async (userAddress: `0x${string}` | undefined) => {
 export const FindTokenByAddress = async (tokenAddress: string) => {
   try {
     const response = await baseAPI.get(`findTokenByAddress/${tokenAddress}`);
-    console.log("response", response);
     return response.data;
   } catch (error) {
     console.log("Error in find-token-by-address API", error);
