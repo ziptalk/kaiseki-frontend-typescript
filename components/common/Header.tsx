@@ -68,11 +68,14 @@ const Header: FC = () => {
   const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
   const [width, setWidth] = useState(250);
-  if (accountButtonModal) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+
+  useEffect(() => {
+    if (accountButtonModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  },[accountButtonModal]);
 
   useEffect(() => {
     setWidth(window.innerWidth);
