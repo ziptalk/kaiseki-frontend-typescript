@@ -56,7 +56,7 @@ export default function Raffle() {
                 <div className="whitespace-pre font-bold text-[#AEAEAE] md:text-[15px]">
                   {searchParams.get("name")}
                   {"\n"}
-                  [ticker: {searchParams.get("rafflePrize")}]
+                  [ticker: {searchParams.get("symbol")}]
                 </div>
                 <div className="mt-[5px] flex h-[14px] items-center gap-[5px] ">
                   <h1 className="whitespace-nowrap text-[#C5F900]">
