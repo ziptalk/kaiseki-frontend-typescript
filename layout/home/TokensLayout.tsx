@@ -28,6 +28,13 @@ export const TokensLayout = () => {
   const [order, setOrder] = useState<"asc" | "desc" | undefined>(undefined);
 
   const [width, setWidth] = useState(0);
+  useEffect(() => {
+    if (info.tokenAddress && width < 768) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [info.tokenAddress, width]);
 
   useEffect(() => {
     setWidth(window.innerWidth);

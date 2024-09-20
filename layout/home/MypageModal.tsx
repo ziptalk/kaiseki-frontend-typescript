@@ -59,10 +59,10 @@ export const MypageModal = ({
     >
       <div className="mr-5 flex w-full items-center justify-between">
         <div
-          className="ml-5 flex cursor-pointer items-center gap-1 stroke-secondary text-secondary active:stroke-black active:text-black md:hidden"
+          className="ml-5 flex cursor-pointer items-center gap-1 stroke-secondary text-secondary active:stroke-red-500 active:text-red-500 md:hidden"
           onMouseDown={() => copyToClipboard(userAddress || "")}
         >
-          <Bomb />
+          <Bomb className="stroke-[#FF2626]" />
           <div className="text-[15px]">
             {userAddress?.slice(0, 6) + "..." + userAddress?.slice(-4)}
           </div>
@@ -74,7 +74,7 @@ export const MypageModal = ({
         </div>
       </div>
       <h1 className="ml-5 mt-5 text-4xl font-bold leading-9 text-white">
-        {totalAsset} ETH
+        ETH {totalAsset}
       </h1>
       {/* <div className="ml-5 mt-2 flex items-center">
         <TradeArr
@@ -97,7 +97,7 @@ export const MypageModal = ({
           </div>
         ))}
       </div>
-      <div className="my-2.5  h-96 overflow-scroll pb-10">
+      <div className="my-2.5 h-full overflow-scroll pb-10 md:h-96">
         {TabContents[tabIndex]}
       </div>
     </div>

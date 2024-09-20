@@ -94,37 +94,6 @@ export const SlotLayout = () => {
         <div className="rotating-image-container">
           <Stick className="fill-[#FF2626]" />
         </div>
-
-        <style jsx>{`
-          .rotating-image-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
-          .rotating-image-container {
-            transform-origin: bottom center;
-            animation: rotate 1s infinite ease-in-out;
-          }
-
-          @keyframes rotate {
-            0% {
-              transform: rotate(0deg);
-            }
-            25% {
-              transform: rotate(-45deg);
-            }
-            50% {
-              transform: rotate(0deg);
-            }
-            75% {
-              transform: rotate(45deg);
-            }
-            100% {
-              transform: rotate(0deg);
-            }
-          }
-        `}</style>
       </div>
     );
   };

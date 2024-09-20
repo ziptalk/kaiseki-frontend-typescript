@@ -302,3 +302,32 @@ input {
 .gradiant-create-box {
   background: radial-gradient(50% 50% at 50% 50%, #d0140c 0%, #6a0a06 100%);
 }
+
+.rotating-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rotating-image-container {
+  transform-origin: bottom center;
+  animation: rotate 2s infinite ease-in-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-45deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

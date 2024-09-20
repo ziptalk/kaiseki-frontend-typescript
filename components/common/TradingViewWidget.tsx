@@ -118,7 +118,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             close: Number(ethers.formatEther(sp[divValue])),
           };
           newChartData.push(newDataPoint);
-          console.log(newDataPoint);
+          // console.log(newDataPoint);
         }
       }
 

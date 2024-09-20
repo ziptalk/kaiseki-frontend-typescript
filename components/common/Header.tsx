@@ -547,7 +547,7 @@ const Header: FC = () => {
                   <div className="z-40 hidden h-10 items-center justify-between rounded-lg border border-secondary px-5 text-sm font-bold text-[#FAFF00] md:flex">
                     <div
                       onClick={() => copyToClipboard(address)}
-                      className={`flex cursor-pointer items-center gap-2 stroke-transparent  hover:stroke-[#6B6B6B] hover:text-[#6B6B6B] active:stroke-black active:text-black`}
+                      className={`flex cursor-pointer items-center gap-2 stroke-transparent  hover:stroke-red-500 hover:text-red-500 active:stroke-black active:text-black`}
                     >
                       <Bomb
                         className="h-[24px] w-[24px] stroke-none"

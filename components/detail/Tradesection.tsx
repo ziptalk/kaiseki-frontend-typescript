@@ -573,7 +573,7 @@ export const Tradesection = ({
         <>
           <div className="relative flex w-full items-center">
             <input
-              className="my-[10px] h-[50px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
+              className="my-[10px] h-[50px] w-full rounded border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
@@ -631,7 +631,7 @@ export const Tradesection = ({
           {/*input amount == RESERVE_SYMBOL*/}
           <div className="relative flex w-full items-center">
             <input
-              className="my-[10px] h-[50px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
+              className="my-[10px] h-[50px] w-full rounded border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
