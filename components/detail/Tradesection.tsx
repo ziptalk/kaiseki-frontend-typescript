@@ -193,7 +193,7 @@ export const Tradesection = ({
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
-      console.log({ i, stepRangeI, currentSupply });
+      // console.log({ i, stepRangeI, currentSupply });
       const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],
@@ -425,7 +425,7 @@ export const Tradesection = ({
         return;
       }
       const detail = await memeTokenContract.balanceOf(account.address);
-      console.log("detail :" + detail);
+      // console.log("detail :" + detail);
 
       setCurMemeTokenValue(ether(detail).toFixed());
     } catch (error) {

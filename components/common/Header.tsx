@@ -75,7 +75,7 @@ const Header: FC = () => {
     } else {
       document.body.style.overflow = "auto";
     }
-  },[accountButtonModal]);
+  }, [accountButtonModal]);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -556,14 +556,14 @@ const Header: FC = () => {
                         viewBox="0 0 24 24"
                       />
                       <div
-                        className={`absolute duration-1000 ${disconnectToggle ? "w-[120px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:stroke-black hover:text-black`}
+                        className={`absolute duration-1000 ${disconnectToggle ? "w-[130px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:stroke-black hover:text-black`}
                         onClick={openAccountModal}
                       >
                         {disconnectToggle && "Disconnect"}
                         <Power className={`ml-1`} />
                       </div>
-                      {disconnectToggle || address?.substring(0, 6) + "..."}
-                      {disconnectToggle || <Copy />}
+                      {address?.substring(0, 6) + "..."}
+                      {<Copy />}
                     </div>
                     <div className="flex gap-2">
                       <Power
