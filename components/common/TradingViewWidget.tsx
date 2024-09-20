@@ -62,20 +62,6 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
     return combinedEvents;
   }
 
-  const getStepsFromContract = async (tokenAddress: string) => {
-    try {
-      while (true) {
-        const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-        if (steps.length > 0) {
-          return steps;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
   const fetchAndUpdateData = async () => {
     try {
       const response = await fetch(
@@ -85,7 +71,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
       const filteredData = filterEventsByToken(data, tokenAddress);
 
       let curMintedToken = BigInt(0);
-      const steps: BondStep[] = await getStepsFromContract(tokenAddress);
+      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
       const sp: bigint[] = steps.map((step) => step.price);
       const sr = stepRanges;
 
