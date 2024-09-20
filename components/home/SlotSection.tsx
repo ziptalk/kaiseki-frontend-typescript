@@ -59,9 +59,9 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
   useEffect(() => {
     const stopTimers = [
-      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1050),
-      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 2950),
-      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3700),
+      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1200),
+      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 3200),
+      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3900),
     ];
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
   }, [cid, width]);
