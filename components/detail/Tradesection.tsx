@@ -240,7 +240,9 @@ export const Tradesection = ({
     );
     // setMaxBuyAmount(Number(String(res.displayValue)));
     // console.log("res.displayValue :" + res.displayValue);
-    if (percentage) {
+    if (res.displayValue < BigInt(0)) {
+      setInputValue("0");
+    } else if (percentage) {
       setInputValue(
         ((Number(String(res.displayValue)) * percentage) / 100).toFixed(),
       );
