@@ -38,7 +38,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   });
   const [Chartdata, setChartData] = useState<BarData[]>();
   const [getOnce, setGetOnce] = useState(false);
-  const [width, setWidth] = useState(250);
+  const [width, setWidth] = useState(1000);
 
   useEffect(() => {
     setWidth(window.innerWidth);
