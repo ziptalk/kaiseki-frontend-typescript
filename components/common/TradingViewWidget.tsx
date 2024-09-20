@@ -101,9 +101,11 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         } else {
           curMintedToken -= BigInt(event.amountBurned);
         }
-        const divValue = Math.floor(
-          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-        );
+
+        const divValue =
+          Math.floor(
+            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+          ) || 1;
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,
@@ -116,6 +118,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             close: Number(ethers.formatEther(sp[divValue])),
           };
           newChartData.push(newDataPoint);
+          console.log(newDataPoint);
         }
       }
 
