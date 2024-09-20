@@ -39,7 +39,9 @@ export const TokenDesc = ({
           <h1 className="truncate">{createdBy}</h1>
         </div>
       )}
-      <h1 className="text-sm text-[#FAFF00]">prize: {rafflePrize}</h1>
+      {rafflePrize && (
+        <h1 className="text-sm text-[#FAFF00]">prize: {rafflePrize}</h1>
+      )}
       <p className="overflow-scroll break-words text-[14px] text-[#CFCFCF] md:h-14 md:w-full">
         {description}
       </p>

@@ -10,6 +10,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   ticker,
   description,
   tokenAddress,
+  rafflePrize,
   cid,
   setModal,
 }) => {
@@ -44,6 +45,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
               cid,
               description,
               // marketCap,
+              rafflePrize,
               name,
               ticker,
               tokenAddress,

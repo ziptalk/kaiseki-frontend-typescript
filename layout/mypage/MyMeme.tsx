@@ -29,7 +29,7 @@ export const MyMeme = ({
             description: meme.description,
             tokenAddress: meme.tokenAddress,
             cid: meme.cid,
-
+            rafflePrize: meme.rafflePrize,
             setModal,
           }}
           key={index}
