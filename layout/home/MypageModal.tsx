@@ -74,7 +74,7 @@ export const MypageModal = ({
         </div>
       </div>
       <h1 className="ml-5 mt-5 text-4xl font-bold leading-9 text-white">
-        $ {totalAsset}
+        {totalAsset} ETH
       </h1>
       {/* <div className="ml-5 mt-2 flex items-center">
         <TradeArr

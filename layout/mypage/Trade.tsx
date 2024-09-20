@@ -3,6 +3,7 @@ import Image from "next/image";
 import { UsersTrades } from "@/utils/apis/apis";
 import { ethers } from "ethers";
 import { MyTradeResponse } from "@/utils/apis/type";
+import Link from "next/link";
 
 export const Trade = ({
   userAddress,
@@ -46,6 +47,7 @@ export const Trade = ({
     <div className="overflow-scroll">
       {values.map((value, idx) => (
         <div
+          // href={`${value.tokenAddress}`}
           key={idx}
           className="flex flex-col gap-2.5 px-5 md:hover:bg-[#404040]"
         >
