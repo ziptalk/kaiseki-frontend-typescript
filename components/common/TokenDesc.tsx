@@ -36,7 +36,9 @@ export const TokenDesc = ({
             alt=""
             style={{ width: 12, height: 12 }}
           />
-          <h1 className="truncate">{createdBy}</h1>
+          <h1 className="truncate">
+            {createdBy && createdBy.slice(0, 6) + "..."}
+          </h1>
         </div>
       )}
       {rafflePrize && (

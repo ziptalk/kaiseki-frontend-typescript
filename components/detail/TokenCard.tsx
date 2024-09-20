@@ -40,7 +40,7 @@ const TokenCard: FC<TokenCardTypes> = ({
               style={{ width: 12, height: 12 }}
             />
             <div className="text-xs text-[#C5F900] ">
-              {createdBy && createdBy.slice(0, 7)}
+              {createdBy && createdBy.slice(0, 6) + "..."}
             </div>
           </div>
           <h1 className="text-[#FAFF00]">prize: {rafflePrize}</h1>
