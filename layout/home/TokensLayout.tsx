@@ -19,6 +19,7 @@ export const initialTokenInfo: TokenInfo = {
 export const TokensLayout = () => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNumber] = useState<number>(1);
+  const [maxPage, setMaxPage] = useState<number>(1);
   const [value, setValue] = useState<string | undefined>(undefined);
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
   const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
@@ -54,6 +55,7 @@ export const TokensLayout = () => {
       order,
     });
     setTokenInfo(response.tokens);
+    setMaxPage(response.maxPage);
   };
 
   const setInfotoInitial = () => {
@@ -154,12 +156,22 @@ export const TokensLayout = () => {
               if (pageNum > 1) setPageNum(pageNum - 1);
             }}
           />
-          <div className=" text-[16px] text-[#909090]">{pageNum}</div>
+          {Array.from({ length: maxPage }, (_, i) => i + 1).map((page) => (
+            <div
+              key={page}
+              className={`cursor-pointer ${
+                page === pageNum ? "text-[#909090]" : "text-[#3F3F3F]"
+              }`}
+              onClick={() => setPageNum(page)}
+            >
+              {page}
+            </div>
+          ))}
           <PagePre
             className="translate rotate-180 cursor-pointer"
-            fill={`${tokenInfo && tokenInfo.length === 12 ? "#909090" : "#3F3F3F"}`}
+            fill={`${tokenInfo && pageNum < maxPage ? "#909090" : "#3F3F3F"}`}
             onClick={() => {
-              if (tokenInfo && tokenInfo.length === 12) setPageNum(pageNum + 1);
+              if (tokenInfo && pageNum < maxPage) setPageNum(pageNum + 1);
             }}
           />
         </div>

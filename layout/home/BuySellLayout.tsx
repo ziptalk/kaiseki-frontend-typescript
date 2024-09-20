@@ -293,7 +293,7 @@ export const BuySellLayout = ({
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
                 alt="Image from IPFS"
-                className="h-[20.5px] w-[28.5px] border-black "
+                className="h-[28.5px] w-[28.5px] border-black "
               />
               <p className="inline-block text-[14.3px] text-white">
                 {name.length > 20 ? name.slice(0, 17) + "..." : name} (${" "}
