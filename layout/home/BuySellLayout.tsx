@@ -32,14 +32,12 @@ export const BuySellLayout = ({
   const [marketCap, setMarketCap] = useState(0);
   const [TokenCreated, setTokenCreated] = useState(0);
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
-  const [Chartdata, setChartData] = useState<BarData>();
+  const [Chartdata, setChartData] = useState<BarData[]>();
   const [pricePercentage, setPricePercentage] = useState({
     price: 0,
     percentage: 0,
   });
   const [getOnce, setGetOnce] = useState(false);
-  const [ready, setReady] = useState(false);
-
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const bondContract = new ethers.Contract(
@@ -49,13 +47,17 @@ export const BuySellLayout = ({
   );
 
   useEffect(() => {
-    console.log(Chartdata);
-    setPricePercentage({
-      price: Chartdata?.close || 0,
-      percentage: Math.ceil(
-        ((Chartdata?.close || 0) / (Chartdata?.open || 0)) * 100 - 100,
-      ),
-    });
+    if (Chartdata) {
+      setPricePercentage({
+        price: Chartdata[Chartdata.length - 1]?.close || 0,
+        percentage: Math.ceil(
+          ((Chartdata[Chartdata.length - 1]?.close || 0) /
+            (Chartdata[Chartdata.length - 1]?.open || 0)) *
+            100 -
+            100,
+        ),
+      });
+    }
   }, [Chartdata]);
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export const BuySellLayout = ({
     fetchAndUpdateData();
     // fetchHomeTokenInfoFromServer();
   }, [getOnce, tokenAddress]);
+
   const fetch20TXLogsFromServer = async () => {
     const response = await TxlogsMintBurn(tokenAddress);
     setTXLogsFromServer(filterEventsByToken(response, tokenAddress));
@@ -92,8 +95,8 @@ export const BuySellLayout = ({
     const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
     combinedEvents.sort(
       (a, b) =>
-        new Date(b.blockTimestamp).getTime() -
-        new Date(a.blockTimestamp).getTime(),
+        new Date(a.blockTimestamp).getTime() -
+        new Date(b.blockTimestamp).getTime(),
     );
 
     return combinedEvents;
@@ -124,6 +127,7 @@ export const BuySellLayout = ({
     });
     setvolume(value.toFixed(5));
   }, [TXLogsFromServer]);
+
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -131,6 +135,7 @@ export const BuySellLayout = ({
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchBondingCurveProgress();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,43 +174,38 @@ export const BuySellLayout = ({
           close: 0.000000000005,
         });
       }
-      try {
-        for (const event of filteredData) {
-          const date = new Date(event.blockTimestamp);
-          let timestamp = (Math.floor(date.getTime() / 1000) -
-            9 * 60 * 60) as UTCTimestamp; // 한국 표준시 UTC로 변환하기 위해 마이너스
+      for (const event of filteredData) {
+        // console.log(event);
+        const date = new Date(event.blockTimestamp);
+        let timestamp = (Math.floor(date.getTime() / 1000) -
+          9 * 60 * 60) as UTCTimestamp; // 한국 표준시 UTC로 변환하기 위해 마이너스
 
-          // 동일한 타임스탬프를 가진 데이터 포인트가 있으면, 1초씩 증가시켜 유니크하게 만듭니다.
-          while (newChartData.some((entry) => entry.time === timestamp)) {
-            timestamp = (timestamp + 1) as UTCTimestamp;
-          }
-          if (event.isMint) {
-            curMintedToken += BigInt(event.amountMinted);
-          } else {
-            curMintedToken -= BigInt(event.amountBurned);
-          }
-
-          const divValue = Math.floor(
-            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-          );
-          // console.log(divValue);
-          if (divValue >= 0 && divValue < sp.length) {
-            const newDataPoint = {
-              time: timestamp,
-              open:
-                newChartData.length > 0
-                  ? newChartData[newChartData.length - 1].close
-                  : 0.000000000005,
-              high: Number(ethers.formatEther(sp[divValue])),
-              low: Number(ethers.formatEther(sp[divValue])),
-              close: Number(ethers.formatEther(sp[divValue])),
-            };
-            newChartData.push(newDataPoint);
-            // console.log(newDataPoint);s
-          }
+        // 동일한 타임스탬프를 가진 데이터 포인트가 있으면, 1초씩 증가시켜 유니크하게 만듭니다.
+        while (newChartData.some((entry) => entry.time === timestamp)) {
+          timestamp = (timestamp + 1) as UTCTimestamp;
         }
-      } catch (e) {
-        console.log(e);
+        if (event.isMint) {
+          curMintedToken += BigInt(event.amountMinted);
+        } else {
+          curMintedToken -= BigInt(event.amountBurned);
+        }
+
+        const divValue = Math.floor(
+          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+        );
+        if (divValue >= 0 && divValue < sp.length) {
+          const newDataPoint = {
+            time: timestamp,
+            open:
+              newChartData.length > 0
+                ? newChartData[newChartData.length - 1].close
+                : 0.000000000005,
+            high: Number(ethers.formatEther(sp[divValue])),
+            low: Number(ethers.formatEther(sp[divValue])),
+            close: Number(ethers.formatEther(sp[divValue])),
+          };
+          newChartData.push(newDataPoint);
+        }
       }
 
       // 데이터가 시간 순서대로 정렬되어 있는지 확인
@@ -217,7 +217,7 @@ export const BuySellLayout = ({
       // }
 
       // // chartData 상태 업데이트
-      // setChartData(newChartData);
+      setChartData(newChartData);
 
       if (newChartData.length >= 1) {
         setGetOnce(true);
@@ -268,7 +268,7 @@ export const BuySellLayout = ({
                   title="Price"
                   className="mr-10 bg-transparent"
                   desc={pricePercentage.price + " ETH"}
-                  percentage={pricePercentage.percentage + " %"}
+                  percentage={pricePercentage.percentage}
                   key={"price"}
                 />,
                 <ModuleInfo

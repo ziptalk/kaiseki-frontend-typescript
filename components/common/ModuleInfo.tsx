@@ -5,7 +5,7 @@ interface ModuleInfoProps {
   title: string;
   desc: string;
   className?: string;
-  percentage?: string;
+  percentage?: number;
 }
 
 export const ModuleInfo = ({
@@ -23,11 +23,13 @@ export const ModuleInfo = ({
     >
       <div className="text-[13px] text-[#AEAEAE]">
         {title}
-        <p
-          className={`${digital.variable} neon-yellow ml-[3px] inline font-digital text-[12px]`}
-        >
-          {percentage}
-        </p>
+        {percentage !== undefined && (
+          <p
+            className={`${digital.variable} neon-yellow ml-[3px] inline font-digital text-[12px]`}
+          >
+            {percentage < 0 ? `${percentage}%` : `+${percentage}%`}
+          </p>
+        )}
       </div>
       <div className="text-[14px] text-white">{desc}</div>
     </div>

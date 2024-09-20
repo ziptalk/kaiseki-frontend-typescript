@@ -35,7 +35,8 @@ export default function Detail({ params }: { params: { id: string } }) {
     price: 0,
     percentage: 0,
   });
-  const [Chartdata, setChartData] = useState<BarData>();
+  const [Chartdata, setChartData] = useState<BarData[]>();
+  const [getOnce, setGetOnce] = useState(false);
 
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
@@ -44,35 +45,6 @@ export default function Detail({ params }: { params: { id: string } }) {
     MCV2_BondABI,
     provider,
   );
-
-  useEffect(() => {
-    setPricePercentage({
-      price: Chartdata?.close || 0,
-      percentage: Math.ceil(
-        ((Chartdata?.close || 0) / (Chartdata?.open || 0)) * 100 - 100,
-      ),
-    });
-  }, [Chartdata]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchHolderDistributionFromServer();
-      // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer();
-      fetchAndUpdateData();
-    }, 5000); // Fetch every 5 seconds (adjust as needed)
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    getTokenInfo();
-    fetchHolderDistributionFromServer();
-    // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-    fetch20TXLogsFromServer();
-    fetchAndUpdateData();
-    // fetchHomeTokenInfoFromServer();
-  }, []);
 
   useEffect(() => {
     var value = 0;
@@ -99,6 +71,26 @@ export default function Detail({ params }: { params: { id: string } }) {
     });
     setvolume(value.toFixed(5));
   }, [TXLogsFromServer]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchHolderDistributionFromServer();
+      // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+      fetch20TXLogsFromServer();
+      fetchAndUpdateData();
+    }, 5000); // Fetch every 5 seconds (adjust as needed)
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    getTokenInfo();
+    fetchHolderDistributionFromServer();
+    // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
+    fetch20TXLogsFromServer();
+    fetchAndUpdateData();
+    // fetchHomeTokenInfoFromServer();
+  }, []);
 
   const fetchBondingCurveProgress = async () => {
     await setCurStepsIntoState({ tokenAddress: params.id }).then((res) => {
@@ -128,12 +120,34 @@ export default function Detail({ params }: { params: { id: string } }) {
       );
       const data = await response.json();
       const filteredData = filterEventsByToken(data);
+
       let curMintedToken = BigInt(0);
       const steps: BondStep[] = await bondContract.getSteps(params.id);
       const sp: bigint[] = steps.map((step) => step.price);
+      // const sr = stepRanges;
 
       const newChartData: BarData[] = [];
-      for (const event of filteredData.slice(-1)) {
+
+      if (filteredData.length == 0) {
+        // 거래 내역이 없을 경우 기본 데이터 추가
+        newChartData.push({
+          time: Math.floor(Date.now() / 1000) as UTCTimestamp,
+          open: 0.000000000005,
+          high: 0.000000000005,
+          low: 0.000000000005,
+          close: 0.000000000005,
+        });
+      }
+      for (const event of filteredData) {
+        // console.log(event);
+        const date = new Date(event.blockTimestamp);
+        let timestamp = (Math.floor(date.getTime() / 1000) -
+          9 * 60 * 60) as UTCTimestamp; // 한국 표준시 UTC로 변환하기 위해 마이너스
+
+        // 동일한 타임스탬프를 가진 데이터 포인트가 있으면, 1초씩 증가시켜 유니크하게 만듭니다.
+        while (newChartData.some((entry) => entry.time === timestamp)) {
+          timestamp = (timestamp + 1) as UTCTimestamp;
+        }
         if (event.isMint) {
           curMintedToken += BigInt(event.amountMinted);
         } else {
@@ -145,7 +159,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         );
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
-            time: new Date(event.blockTimestamp).getTime() as UTCTimestamp,
+            time: timestamp,
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
@@ -154,8 +168,24 @@ export default function Detail({ params }: { params: { id: string } }) {
             low: Number(ethers.formatEther(sp[divValue])),
             close: Number(ethers.formatEther(sp[divValue])),
           };
-          setChartData(newDataPoint);
+          newChartData.push(newDataPoint);
+          console.log(newDataPoint);
         }
+      }
+
+      // 데이터가 시간 순서대로 정렬되어 있는지 확인
+      newChartData.sort((a, b) => (a.time as number) - (b.time as number));
+
+      // 시리즈 데이터 업데이트
+      // if (seriesRef.current) {
+      //   seriesRef.current.setData(newChartData);
+      // }
+
+      // // chartData 상태 업데이트
+      setChartData(newChartData);
+
+      if (newChartData.length >= 1) {
+        setGetOnce(true);
       }
     } catch (error) {
       console.log(error);
@@ -224,6 +254,19 @@ export default function Detail({ params }: { params: { id: string } }) {
   //   }
   //   return true;
   // };
+  useEffect(() => {
+    if (Chartdata) {
+      setPricePercentage({
+        price: Chartdata[Chartdata.length - 1]?.close || 0,
+        percentage: Math.ceil(
+          ((Chartdata[Chartdata.length - 1]?.close || 0) /
+            (Chartdata[Chartdata.length - 1]?.open || 0)) *
+            100 -
+            100,
+        ),
+      });
+    }
+  }, [Chartdata]);
 
   const filterEventsByToken = (data: any): any[] => {
     try {
@@ -240,8 +283,8 @@ export default function Detail({ params }: { params: { id: string } }) {
       const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
       combinedEvents.sort(
         (a, b) =>
-          new Date(b.blockTimestamp).getTime() -
-          new Date(a.blockTimestamp).getTime(),
+          new Date(a.blockTimestamp).getTime() -
+          new Date(b.blockTimestamp).getTime(),
       );
 
       return combinedEvents;
@@ -290,26 +333,26 @@ export default function Detail({ params }: { params: { id: string } }) {
                 title="Price"
                 className="mr-10 bg-transparent"
                 desc={pricePercentage.price + " ETH"}
-                percentage={pricePercentage.percentage + " %"}
-                key={"price"}
+                percentage={pricePercentage.percentage}
+                key={"price-detail"}
               />,
               <ModuleInfo
                 title="Marketcap"
                 className="mr-20 bg-transparent"
                 desc={marketCap + " ETH"}
-                key={"Marketcap"}
+                key={"Marketcap-detail"}
               />,
               <ModuleInfo
                 title="24H Volume"
                 className="mr-20 bg-transparent"
                 desc={volume + " ETH"}
-                key={"24H Volume"}
+                key={"24H Volume-detail"}
               />,
               <ModuleInfo
                 className="mr-10 bg-transparent"
                 title="Token Created"
                 desc={TokenCreated + "K"}
-                key={"Token Created"}
+                key={"Token Created-detail"}
               />,
             ]}
           />

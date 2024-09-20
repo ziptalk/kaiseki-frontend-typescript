@@ -20,9 +20,9 @@ export const setCurStepsIntoState = async ({
   try {
     // Fetch the steps using the getSteps function from the contract
     const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-    const targetPrice = await bondContract.priceForNextMint(tokenAddress);
     const detail = await bondContract.getDetail(tokenAddress);
-
+    const targetPrice = detail.info.priceForNextMint;
+    // console.log({ detail });
     // Extract the step prices into a new array
     const stepPrices: bigint[] = steps.map((step) => step.price);
 
@@ -41,9 +41,13 @@ export const setCurStepsIntoState = async ({
             ),
           ),
           tokenCreated:
-            BigInt(
-              Number(ethers.formatEther(detail.info.currentSupply)).toFixed(0),
-            ) / BigInt(1000),
+            Number(ethers.formatEther(detail.info.currentSupply)) !== 0
+              ? BigInt(
+                  Number(ethers.formatEther(detail.info.currentSupply)).toFixed(
+                    0,
+                  ),
+                ) / BigInt(1000)
+              : 0,
         };
       }
     }

@@ -189,7 +189,7 @@ export const Tradesection = ({
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i];
       let supplyLeft = BigInt(0);
-      console.log({ stepRangeI, currentSupply, i });
+      // console.log({ stepRangeI, currentSupply, i });
       if (stepRangeI < BigInt(currentSupply)) {
         BigInt(0);
       } else {
@@ -446,6 +446,7 @@ export const Tradesection = ({
       console.log(error);
     }
   };
+
   const setPriceForNextMintIntoState = async () => {
     try {
       if (account.address == null) {
@@ -460,6 +461,7 @@ export const Tradesection = ({
       console.log(error);
     }
   };
+
   const EthSetButton = () => {
     const eths = [
       { name: "reset", eth: 0 },
@@ -570,7 +572,7 @@ export const Tradesection = ({
         <>
           <div className="relative flex w-full items-center">
             <input
-              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
+              className="my-[10px] h-[50px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
@@ -590,7 +592,7 @@ export const Tradesection = ({
               width={30}
               className="absolute left-2 h-[30px] w-[30px] rounded-full"
             />
-            <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+            <div className="absolute right-2 flex items-center gap-[5px]">
               {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -628,7 +630,7 @@ export const Tradesection = ({
           {/*input amount == RESERVE_SYMBOL*/}
           <div className="relative flex w-full items-center">
             <input
-              className="my-[8px] h-[55px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
+              className="my-[10px] h-[50px] w-full rounded-[10px] border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
@@ -639,7 +641,7 @@ export const Tradesection = ({
               <Image src="/icons/eth_base.svg" alt="" height={30} width={30} />
             </div>
 
-            <div className="absolute right-0 mr-[20px] flex items-center gap-[5px]">
+            <div className="absolute right-2 flex items-center gap-[5px]">
               {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
               <img
                 src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
@@ -654,7 +656,7 @@ export const Tradesection = ({
                 onClick={() => {
                   setInputValue(curUserReserveBalance.substring(0, 10));
                 }}
-                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
+                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-sm text-white"
               >
                 MAX
               </button>
