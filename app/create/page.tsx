@@ -1,29 +1,27 @@
 "use client";
-import { FC, use, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
 import { ethers } from "ethers";
 import { ErrorDecoder } from "ethers-decode-error";
 import { useAccount } from "wagmi";
 import Image from "next/image";
-import { FieldErrors, set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { createStep } from "@/global/createValue";
 
-import { digital, impact } from "@/fonts/font";
+import { impact } from "@/fonts/font";
 import { useEthersSigner } from "@/utils/ethersSigner";
-import { stepRanges, maxSupply, creationFee } from "@/global/createValue";
+import { stepRanges, creationFee } from "@/global/createValue";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
-import Preview from "@/public/icons/Preview.svg";
 import Arrow from "@/public/icons/pagePre.svg";
 
-import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
+import { RESERVE_SYMBOL } from "@/global/projectConfig";
 import { Inputform } from "@/components/common/Inputform";
 import { Button } from "@/components/atoms/Button";
 import { CreateCard } from "@/components/detail/CreateCard";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { StoreCidAndTokenAddress } from "@/utils/apis/apis";
-import { wei } from "@/utils/weiAndEther";
 import { BILLION } from "@/global/constants";
 
 export interface HookFormTypes {
@@ -66,30 +64,11 @@ const Create: NextPage = () => {
     provider,
   );
 
-  // TODO - Change creation fee later
-  // const creationFeeInWei = ethers.parseEther("3.5");
-  // const creationFeeInWei = ethers.parseEther("0.007");
-
   const [isLoading, setIsLoading] = useState(false);
-  // const [tickers, setTickers] = useState([]);
   const [cid, setCid] = useState("");
   const [isMoreOptionsToggled, setIsMoreOptionsToggled] = useState(false);
   const [steps, setSteps] = useState<BigInt[]>([]);
-  // console.log(creationFee);
 
-  // Get data from server for check dup
-  // useEffect(() => {
-  //   fetch(`${SERVER_ENDPOINT}/homeTokenInfo`)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       // ticker 값만 추출하여 새로운 배열 생성
-  //       const tickerValues = data.map((item: any) => item.ticker);
-  //       setTickers(tickerValues);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
   useEffect(() => {
     setSteps(createStep(Number(watch("threshold"))));
   }, [watch("threshold")]);
@@ -143,11 +122,7 @@ const Create: NextPage = () => {
   };
 
   const handleThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // if (Number(e.target.value) !== 0 && Number(e.target.value) < 0.01) {
-    //   setValue("threshold", "");
-    // } else {
     setValue("threshold", e.target.value);
-    // }
   };
 
   // MARK: - Validation
@@ -191,15 +166,10 @@ const Create: NextPage = () => {
       );
       return true;
     }
-    // if (matchingTicker) {
-    //   alert("Ticker already exists!");
-    //   return true;
-    // }
     if (!watch("threshold")) {
       alert("Invalid input value!");
       return true;
     }
-
     if (
       watch("threshold") !== "" &&
       (Number(watch("threshold")) < 0.01 ||
@@ -399,20 +369,6 @@ const Create: NextPage = () => {
             type: "number",
           }}
         />
-        {/* <div
-          className={
-            "h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none"
-          }
-        >
-          <input
-            type="number"
-            step={0.01}
-            placeholder={"The minimum value allowed is 0.01 ETH"}
-            className="h-full w-full bg-transparent text-white outline-none"
-            {...register("threshold", { onChange: () => {} })}
-          />
-          <div className="text-sm font-bold">ETH</div>
-        </div> */}
         <Inputform
           {...{
             name: "Description",

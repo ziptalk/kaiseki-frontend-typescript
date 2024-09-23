@@ -1,6 +1,7 @@
 import React from "react";
 import { comicNeue } from "@/fonts/font";
 import { UseFormRegister } from "react-hook-form";
+
 interface InputformProps {
   viewName?: string;
   name: string;
@@ -17,7 +18,6 @@ export const Inputform = ({
   viewName,
   name,
   maxLength,
-  register,
   type,
   value,
   file,
@@ -34,7 +34,7 @@ export const Inputform = ({
       {type === "textarea" ? (
         <textarea
           className={`${sharedStyle} h-40 resize-none`}
-          {...register(name, { maxLength })}
+          // {...register(name, { maxLength })}
         />
       ) : type === "file" ? (
         <div className={sharedStyle + " p-0"}>
@@ -46,7 +46,7 @@ export const Inputform = ({
             id={"upload"}
             className={"hidden"}
             placeholder={optional ? "(optional)" : ""}
-            {...register(name, { maxLength, onChange })}
+            // {...register(name, { maxLength, onChange })}
           />
         </div>
       ) : type === "number" ? (
@@ -60,7 +60,7 @@ export const Inputform = ({
               type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
             }
             className={`"h-full w-full bg-transparent  outline-none`}
-            {...register(name, { maxLength, onChange })}
+            // {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">ETH</div>
         </div>
@@ -70,7 +70,7 @@ export const Inputform = ({
           autoComplete="off"
           className={sharedStyle}
           placeholder={optional ? "(optional)" : ""}
-          {...register(name, { maxLength, onChange })}
+          // {...register(name, { maxLength, onChange })}
         />
       )}
       {type === "file" || optional || !maxLength || (

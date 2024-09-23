@@ -589,15 +589,6 @@ export const Tradesection = ({
               className="absolute left-2 h-[30px] w-[30px] rounded-full"
             />
             <div className="absolute right-2 flex items-center gap-[5px]">
-              {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-              <img
-                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                alt="img"
-              />
-            </div>
-            <h1 className="mt-1 text-[15px] font-bold text-white">
-              {memeTokenSymbol}
-            </h1> */}
               <button
                 type="button"
                 onClick={() => {
@@ -613,13 +604,6 @@ export const Tradesection = ({
               </button>
             </div>
           </div>
-          {/* <h1 className="text-[#B8B8B8]">
-          {ether(
-            BigInt(Math.floor(Number(inputValue))) *
-              BigInt(priceForNextMint),
-          )}
-          &nbsp;{RESERVE_SYMBOL}
-        </h1> */}
         </>
       ) : (
         <>
@@ -638,15 +622,6 @@ export const Tradesection = ({
             </div>
 
             <div className="absolute right-2 flex items-center gap-[5px]">
-              {/* <div className="h-[24px] w-[24px] overflow-hidden  rounded-full">
-              <img
-                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
-                alt="img"
-              />
-            </div>
-            <h1 className="mt-1 text-[15px] font-bold text-white">
-              {memeTokenSymbol}
-            </h1> */}
               <button
                 type="button"
                 onClick={() => {
@@ -658,20 +633,6 @@ export const Tradesection = ({
               </button>
             </div>
           </div>
-          {/* <h1 className="text-[#B8B8B8]"> */}
-          {/*RESERVE_SYMBOL value to memetoken*/}
-          {/* {inputValue &&
-              Number(
-                String(
-                  Math.floor(
-                    Number(
-                      ethers.parseEther(inputValue) / BigInt(priceForNextMint),
-                    ),
-                  ),
-                ),
-              )}
-            &nbsp;{memeTokenSymbol}
-          </h1> */}
         </>
       )}
       {isBuy ? (
@@ -683,15 +644,6 @@ export const Tradesection = ({
       ) : (
         <SellPercentageButton />
       )}
-      {/*true == toggle module, false == percent for sell*/}
-      {/* {raffle && (
-        <div className="text-[14px] text-white">
-          {"Raffle has already progressed! -> "}
-          <Link href={"#"} className="underline">
-            Join the Raffle!
-          </Link>
-        </div>
-      )} */}
       {isConnected ? (
         <Button submit className="mt-5 h-12" variant="gradiant">
           {isPending ? (
