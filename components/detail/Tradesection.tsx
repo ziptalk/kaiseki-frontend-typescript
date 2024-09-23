@@ -86,12 +86,14 @@ export const Tradesection = ({
     }
     return true;
   };
+
   const checkAccountAddressInitialized = (address: any) => {
     if (!address) {
       return false;
     }
     return true;
   };
+
   useEffect(() => {
     setInputValue("");
     try {
@@ -129,6 +131,7 @@ export const Tradesection = ({
     const result = BigInt(value) - tenPercent; // 10% 뺀 값 계산
     return result;
   };
+
   const sellhandlePercentage = (percentage?: number) => {
     if (percentage === 0) {
       setInputValue("");
@@ -147,31 +150,22 @@ export const Tradesection = ({
   const getTotalMemetokenAmount = async () => {
     try {
       const supply = await memeTokenContract.totalSupply();
-      return supply;
+      return supply || BigInt(0);
     } catch (error: any) {
       console.error("Error:", error);
     }
   };
+
   const setCurStepsIntoState = async () => {
     try {
-      // Fetch the steps using the getSteps function from the contract
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      // console.log("Fetched steps:", steps);
       const targetPrice = await bondContract.priceForNextMint(tokenAddress);
-
-      // Extract the step prices into a new array
       const stepPrices: bigint[] = steps.map((step) => step.price);
-
       for (let i = 0; i < stepPrices.length; i++) {
-        // console.log("stepPrices[i]:" + stepPrices[i]);
-        // console.log("stepPrices.length:" + stepPrices.length);
-
         if (Number(stepPrices[i]) == Number(targetPrice)) {
           setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
         }
       }
-
-      // console.log("Extracted step prices:", stepPrices);
     } catch (error: any) {
       console.error("Error:", error);
     }
@@ -179,7 +173,7 @@ export const Tradesection = ({
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
     const reserveAmount = curUserReserveBalance
       ? curUserReserveBalance
-      : ethers.parseEther(inputValue);
+      : ethers.parseEther(inputValue || "0");
 
     let currentSupply = await getTotalMemetokenAmount(); // current total supply
     const curStep =
@@ -192,7 +186,7 @@ export const Tradesection = ({
 
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
-      const stepRangeI = stepRanges[i];
+      const stepRangeI = stepRanges[i] || BigInt(0); // WEI, total supply in the current step
       // console.log({ i, stepRangeI, currentSupply });
       const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
@@ -409,6 +403,8 @@ export const Tradesection = ({
         alert("You don't have enough balance");
       } else if (decodedError.name === "ACTION_REJECTED") {
         alert("User rejected the transaction");
+      } else if (decodedError.type === "CustomError") {
+        alert("This Token is Ended");
       } else {
         alert("Unknown error");
       }
