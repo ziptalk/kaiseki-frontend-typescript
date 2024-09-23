@@ -215,7 +215,7 @@ export const Tradesection = ({
         );
         currentSupply += supplyLeft;
       } else {
-        tokensToMint += BigInt(maxTokensForReserve);
+        tokensToMint += BigInt(maxTokensForReserve || 0);
         reserveLeft = BigInt(0);
         break;
       }

@@ -54,7 +54,7 @@ export const MypageModal = ({
 
   return (
     <div
-      className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:absolute md:right-8 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
+      className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:absolute md:right-11 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="mr-5 flex w-full items-center justify-between">

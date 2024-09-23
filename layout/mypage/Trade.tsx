@@ -107,7 +107,7 @@ export const Trade = ({
                       created by :
                       <Image
                         className="rounded-full"
-                        src="/images/memesinoGhost.png"
+                        src="/icons/bomb.svg"
                         alt=""
                         width={12}
                         height={12}
