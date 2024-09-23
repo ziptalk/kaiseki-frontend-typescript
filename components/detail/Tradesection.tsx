@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, use } from "react";
+import React, { FC, useState, useEffect } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";

@@ -309,8 +309,11 @@ export default function Detail({ params }: { params: { id: string } }) {
     return {};
   };
   return width < 768 ? (
-    <main className="flex w-full items-center justify-center">
+    <main className="flex h-[70vh] w-[100vw] flex-col items-center justify-center gap-4">
       <Sorry />
+      <div className="w-[229px] text-center text-[15px] font-bold text-white">
+        The detail page is not available on mobile devices.
+      </div>
     </main>
   ) : (
     <main className="flex w-full justify-center gap-[30px]">
