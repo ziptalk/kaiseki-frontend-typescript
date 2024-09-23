@@ -64,7 +64,7 @@ export const Trade = ({
           >
             {newDate && (
               <div className="mt-5 px-5 text-base font-semibold text-white">
-                {value.timestamp}
+                {date.toDateString()}
               </div>
             )}
             <div className="flex items-center justify-between px-5 py-3 md:hover:bg-[#404040]">

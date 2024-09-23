@@ -547,7 +547,7 @@ const Header: FC = () => {
                   <div className="z-40 hidden h-10 items-center justify-between rounded-lg border border-secondary px-5 text-sm font-bold text-[#FAFF00] md:flex">
                     <div
                       onClick={() => copyToClipboard(address)}
-                      className={`flex cursor-pointer items-center gap-2 stroke-transparent  hover:stroke-red-500 hover:text-red-500 active:stroke-black active:text-black`}
+                      className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#FF2626] hover:text-[#FF2626] active:stroke-black active:text-black`}
                     >
                       <Bomb
                         className="h-[24px] w-[24px] stroke-none"
@@ -556,7 +556,7 @@ const Header: FC = () => {
                         viewBox="0 0 24 24"
                       />
                       <div
-                        className={`absolute duration-1000 ${disconnectToggle ? "w-[130px]" : "w-0"} right-10 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:stroke-black hover:text-black`}
+                        className={`absolute duration-1000 ${disconnectToggle ? "w-[130px]" : "w-0"} right-11 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:bg-[#FF2626] hover:stroke-secondary hover:text-secondary`}
                         onClick={openAccountModal}
                       >
                         {disconnectToggle && "Disconnect"}
