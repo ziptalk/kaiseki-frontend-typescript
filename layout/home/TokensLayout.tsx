@@ -6,6 +6,7 @@ import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 import { Search } from "@/utils/apis/apis";
+import Link from "next/link";
 export const initialTokenInfo: TokenInfo = {
   cid: "",
   createdBy: "",
@@ -56,6 +57,7 @@ export const TokensLayout = () => {
   const setPageNum = (num: number) => {
     setPageNumber(num);
     setInfo(initialTokenInfo);
+    window.scrollTo(0, width < 768 ? 300 : 650);
   };
 
   useEffect(() => {
@@ -86,10 +88,11 @@ export const TokensLayout = () => {
     >
       <div
         className={`${info.tokenAddress ? "md:w-[860px]" : "w-full"} mt-[32px]`}
+        id="tokens"
       >
         <div className="text-xl text-white underline">Tokens</div>
         <div className="mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:flex-row">
-          <div className="flex gap-5 md:w-[420px]">
+          <div className="flex gap-5 md:w-[420px]" id="dropdown">
             <Dropdown // sort dropdown
               placeholder="sort : "
               items={[

@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${arial.variable} bg-[#0E0E0E] font-arial`}
+        className={`${inter.className} ${arial.variable} scroll-smooth bg-[#0E0E0E] font-arial`}
       >
         <Suspense fallback={<div>Loading...</div>}>
           <Provider>
