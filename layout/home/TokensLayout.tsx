@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { HomeTokenCard } from "@/components/home/HomeTokenCard";
 import { BuySellLayout } from "./BuySellLayout";
 import PagePre from "@/public/icons/pagePre.svg";
+import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 import { Search } from "@/utils/apis/apis";
 export const initialTokenInfo: TokenInfo = {
@@ -20,6 +21,7 @@ export const TokensLayout = () => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
   const [pageNum, setPageNumber] = useState<number>(1);
   const [maxPage, setMaxPage] = useState<number>(1);
+  const [pagePer, setPagePer] = useState<number>(10);
   const [value, setValue] = useState<string | undefined>(undefined);
   const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
   const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
@@ -46,10 +48,16 @@ export const TokensLayout = () => {
 
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
+
+  useEffect(() => {
+    width < 768 ? setPagePer(5) : setPagePer(10);
+  }, [width]);
+
   const setPageNum = (num: number) => {
     setPageNumber(num);
     setInfo(initialTokenInfo);
   };
+
   useEffect(() => {
     setHomeTokens();
   }, [pageNum, sort, order]);
@@ -151,34 +159,66 @@ export const TokensLayout = () => {
           )}
         </div>
         <div
-          className="mt-[40px] flex w-full items-center justify-center gap-[20px] "
+          className="mt-[40px] flex w-full select-none items-center justify-center gap-[20px]"
           onMouseDown={(e) => {
             e.stopPropagation();
           }}
         >
-          <PagePre
+          <PageFirst
             className="cursor-pointer"
+            fill={`${pageNum > pagePer ? "#909090" : "#3F3F3F"}`}
+            onClick={() => {
+              if (pageNum > pagePer)
+                setPageNum(
+                  Math.floor((pageNum - pagePer) / pagePer) * pagePer + 1,
+                );
+            }}
+          />
+          <PagePre
+            className="mr-8 cursor-pointer"
             fill={`${pageNum > 1 ? "#909090" : "#3F3F3F"}`}
             onClick={() => {
               if (pageNum > 1) setPageNum(pageNum - 1);
             }}
           />
-          {Array.from({ length: maxPage }, (_, i) => i + 1).map((page) => (
-            <div
-              key={page}
-              className={`cursor-pointer ${
-                page === pageNum ? "text-[#909090]" : "text-[#3F3F3F]"
-              }`}
-              onClick={() => setPageNum(page)}
-            >
-              {page}
-            </div>
-          ))}
+          {Array.from({ length: pagePer }, (_, i) => {
+            if (pageNum < pagePer) {
+              return i + 1;
+            } else {
+              return i + 1 + Math.floor((pageNum - 1) / pagePer) * pagePer;
+            }
+          }).map(
+            (page) =>
+              page <= maxPage && (
+                <div
+                  key={page}
+                  className={`cursor-pointer ${
+                    page === pageNum ? "text-[#909090]" : "text-[#3F3F3F]"
+                  }`}
+                  onClick={() => setPageNum(page)}
+                >
+                  {page}
+                </div>
+              ),
+          )}
           <PagePre
-            className="translate rotate-180 cursor-pointer"
+            className="translate ml-8 rotate-180 cursor-pointer"
             fill={`${tokenInfo && pageNum < maxPage ? "#909090" : "#3F3F3F"}`}
             onClick={() => {
               if (tokenInfo && pageNum < maxPage) setPageNum(pageNum + 1);
+            }}
+          />
+          <PageFirst
+            className="translate rotate-180 cursor-pointer"
+            fill={`${tokenInfo && pageNum <= Math.floor(maxPage / pagePer) * pagePer ? "#909090" : "#3F3F3F"}`}
+            onClick={() => {
+              if (
+                tokenInfo &&
+                pageNum <= Math.floor(maxPage / pagePer) * pagePer
+              )
+                setPageNum(
+                  Math.floor((pageNum + pagePer) / pagePer) * pagePer + 1,
+                );
             }}
           />
         </div>

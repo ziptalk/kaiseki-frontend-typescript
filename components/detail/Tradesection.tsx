@@ -170,6 +170,7 @@ export const Tradesection = ({
       console.error("Error:", error);
     }
   };
+
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
     const reserveAmount = curUserReserveBalance
       ? curUserReserveBalance
@@ -182,7 +183,6 @@ export const Tradesection = ({
         : 0;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
-    await setCurStepsIntoState();
 
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];

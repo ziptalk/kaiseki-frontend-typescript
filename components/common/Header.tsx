@@ -394,6 +394,7 @@ const Header: FC = () => {
                   curMintUser && (
                     <MintAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
+                      key={1}
                     >
                       <BombBuy width={24} height={24} />
                       <h1 className="whitespace-nowrap text-sm">
@@ -416,6 +417,7 @@ const Header: FC = () => {
                   curCreateUser && (
                     <CreateAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                      key={2}
                     >
                       <BombCreate width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -444,6 +446,7 @@ const Header: FC = () => {
                   curBurnUser && (
                     <BurnAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
+                      key={3}
                     >
                       <BombSold width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -466,6 +469,7 @@ const Header: FC = () => {
                   curMintUser && (
                     <MintAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-[5px] rounded-[10px] border border-[#83FF80] px-[7px] text-[#83FF80] ${mintAnimationTrigger && "animate"}`}
+                      key={4}
                     >
                       <BombBuy width={24} height={24} />
                       <h1 className="whitespace-nowrap text-sm">
@@ -488,6 +492,7 @@ const Header: FC = () => {
                   curCreateUser && (
                     <CreateAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#09FFD3] px-[7px] text-[#09FFD3] ${createAnimationTrigger && "animate"}`}
+                      key={5}
                     >
                       <BombCreate width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -516,6 +521,7 @@ const Header: FC = () => {
                   curBurnUser && (
                     <BurnAnimateWrapper
                       className={`mr-5 flex h-full items-center justify-center gap-1  rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"}`}
+                      key={6}
                     >
                       <BombSold width={24} height={24} />
                       <div className="whitespace-nowrap text-sm">
@@ -684,6 +690,7 @@ const Header: FC = () => {
             curBurnUser && (
               <BurnAnimateWrapper
                 className={`flex h-10 items-center justify-center gap-[5px] rounded-[10px] border border-[#fa00ff] px-[7px] text-[#fa00ff] ${burnAnimationTrigger && "animate"} mr-2.5`}
+                key={3}
               >
                 <BombSold width={24} height={24} />
                 <div className="whitespace-nowrap text-sm">
