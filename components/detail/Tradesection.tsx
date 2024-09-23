@@ -187,7 +187,6 @@ export const Tradesection = ({
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i] || BigInt(0); // WEI, total supply in the current step
-      // console.log({ i, stepRangeI, currentSupply });
       const supplyLeft = stepRangeI - currentSupply; // WEI, price per token (in Ether) in the current step
       const supplyLeftInETH = BigInt(
         ethers.formatEther(supplyLeft).split(".")[0],

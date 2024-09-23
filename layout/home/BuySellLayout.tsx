@@ -186,9 +186,10 @@ export const BuySellLayout = ({
           curMintedToken -= BigInt(event.amountBurned);
         }
 
-        const divValue = Math.floor(
-          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-        );
+        const divValue =
+          Math.floor(
+            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+          ) || 1;
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,

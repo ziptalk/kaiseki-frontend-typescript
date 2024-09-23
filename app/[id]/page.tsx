@@ -37,7 +37,6 @@ export default function Detail({ params }: { params: { id: string } }) {
     percentage: 0,
   });
   const [Chartdata, setChartData] = useState<BarData[]>();
-  const [getOnce, setGetOnce] = useState(false);
   const [width, setWidth] = useState(1000);
 
   useEffect(() => {
@@ -165,9 +164,10 @@ export default function Detail({ params }: { params: { id: string } }) {
           curMintedToken -= BigInt(event.amountBurned);
         }
 
-        const divValue = Math.floor(
-          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-        );
+        const divValue =
+          Math.floor(
+            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+          ) || 1;
         if (divValue >= 0 && divValue < sp.length) {
           const newDataPoint = {
             time: timestamp,
@@ -193,10 +193,6 @@ export default function Detail({ params }: { params: { id: string } }) {
 
       // // chartData 상태 업데이트
       setChartData(newChartData);
-
-      if (newChartData.length >= 1) {
-        setGetOnce(true);
-      }
     } catch (error) {
       console.log(error);
     }
@@ -262,6 +258,7 @@ export default function Detail({ params }: { params: { id: string } }) {
   //   return true;
   // };
   useEffect(() => {
+    // console.log(Chartdata);
     if (Chartdata) {
       setPricePercentage({
         price: Chartdata[Chartdata.length - 1]?.close || 0,
