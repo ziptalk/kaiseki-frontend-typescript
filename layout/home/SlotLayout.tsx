@@ -12,6 +12,15 @@ import { Raffle } from "@/utils/apis/apis";
 import { RaffleResponse } from "@/utils/apis/type";
 import { useAccount } from "wagmi";
 
+const RotatingImage = () => {
+  return (
+    <div className="absolute top-[-75px] flex items-center justify-center">
+      <div className="rotating-image-container">
+        <Stick className="fill-[#FF2626]" />
+      </div>
+    </div>
+  );
+};
 export const SlotLayout = () => {
   const router = useRouter();
   const account = useAccount();
@@ -88,15 +97,7 @@ export const SlotLayout = () => {
   useEffect(() => {
     getRaffle();
   }, []);
-  const RotatingImage = () => {
-    return (
-      <div className="absolute top-[-75px] flex items-center justify-center">
-        <div className="rotating-image-container">
-          <Stick className="fill-[#FF2626]" />
-        </div>
-      </div>
-    );
-  };
+
   return (
     <div className="main w-full flex-col p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5">
       <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14">

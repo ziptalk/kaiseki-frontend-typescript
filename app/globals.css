@@ -307,11 +307,8 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.rotating-image-container {
   transform-origin: bottom center;
-  animation: rotate 2s infinite ease-in-out;
+  animation: rotate 4s infinite linear;
 }
 
 @keyframes rotate {
