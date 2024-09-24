@@ -57,7 +57,7 @@ export const TokensLayout = () => {
   const setPageNum = (num: number) => {
     setPageNumber(num);
     setInfo(initialTokenInfo);
-    window.scrollTo(0, width < 768 ? 300 : 650);
+    window.scrollTo(0, width < 768 ? 300 : 575);
   };
 
   useEffect(() => {

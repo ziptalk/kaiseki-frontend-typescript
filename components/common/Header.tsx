@@ -65,17 +65,8 @@ const Header: FC = () => {
   const [isWrongChain, setIsWrongChain] = useState(false);
 
   const [isInfoModalActive, setIsInfoModalActive] = useState(false);
-  const [curReserveMarketPrice, setCurReserveMarketPrice] = useState(0.5423);
 
   const [width, setWidth] = useState(250);
-
-  useEffect(() => {
-    if (accountButtonModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [accountButtonModal]);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -246,20 +237,19 @@ const Header: FC = () => {
     }
   }, [createAnimationTrigger]);
 
-  useEffect(() => {
-    setReserveMarketPriceIntoState();
-  }, []);
+  // useEffect(() => {
+  //   setReserveMarketPriceIntoState();
+  // }, []);
 
-  const setReserveMarketPriceIntoState = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
-      );
-      setCurReserveMarketPrice(response.data.price);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const setReserveMarketPriceIntoState = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://api.binance.com/api/v3/ticker/price?symbol=${RESERVE_SYMBOL}USDT`,
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -349,7 +339,8 @@ const Header: FC = () => {
           </ModalContentBox>
         </ModalRootWrapper>
       )}
-      <header className="left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
+      <div className="relative left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]" />
+      <header className="fixed left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
         <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
           <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
             <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">
@@ -631,14 +622,14 @@ const Header: FC = () => {
             />
           </BottomSheet>
         ) : (
-          <ModalRootWrapperWallet onClick={ModalOff}>
-            <MypageModal
-              {...{
-                setModal: setAccountButtonModal,
-                userAddress: address,
-              }}
-            />
-          </ModalRootWrapperWallet>
+          // <ModalRootWrapperWallet onClick={ModalOff}>
+          <MypageModal
+            {...{
+              setModal: setAccountButtonModal,
+              userAddress: address,
+            }}
+          />
+          // </ModalRootWrapperWallet>
         ))}
       <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
         <Slider

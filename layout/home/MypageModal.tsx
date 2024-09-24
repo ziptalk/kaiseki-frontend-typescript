@@ -54,19 +54,21 @@ export const MypageModal = ({
 
   return (
     <div
-      className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:absolute md:right-11 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
+      className="z-50  h-full select-none overflow-hidden rounded-t-lg border-secondary bg-[#252525] py-5 md:fixed md:right-11 md:top-[80px] md:h-[548px] md:w-96 md:rounded-[10px] md:border"
       onClick={(e) => e.stopPropagation()}
     >
       <div className="mr-5 flex w-full items-center justify-between">
-        <div
-          className="ml-5 flex cursor-pointer items-center gap-1 stroke-secondary text-secondary active:stroke-red-500 active:text-red-500 md:hidden"
-          onMouseDown={() => copyToClipboard(userAddress || "")}
-        >
-          <Bomb className="stroke-[#FF2626]" />
-          <div className="text-[15px]">
-            {userAddress?.slice(0, 6) + "..." + userAddress?.slice(-4)}
+        <div className="ml-5 flex cursor-pointer items-center gap-1  md:hidden">
+          <Bomb />
+          <div
+            onMouseDown={() => copyToClipboard(userAddress || "")}
+            className="flex items-center gap-1 stroke-secondary text-secondary active:stroke-red-500 active:text-red-500"
+          >
+            <div className="text-[15px]">
+              {userAddress?.slice(0, 6) + "..." + userAddress?.slice(-4)}
+            </div>
+            <Copy />
           </div>
-          <Copy />
         </div>
         <div className="ml-auto mr-5 flex cursor-pointer gap-2.5">
           <Power onClick={openAccountModal} className="md:hidden" />

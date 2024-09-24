@@ -133,6 +133,11 @@ export const Tradesection = ({
   };
 
   const sellhandlePercentage = (percentage?: number) => {
+    if (!isConnected) {
+      alert("Please connect your wallet");
+      return;
+    }
+
     if (percentage === 0) {
       setInputValue("");
       return;
@@ -183,7 +188,6 @@ export const Tradesection = ({
         : 0;
     let reserveLeft = reserveAmount; // WEI
     let tokensToMint = BigInt(0);
-
     for (let i = curStep; i < stepRanges.length; i++) {
       const stepPriceI = steps[i];
       const stepRangeI = stepRanges[i] || BigInt(0); // WEI, total supply in the current step
@@ -228,6 +232,10 @@ export const Tradesection = ({
   };
 
   const handleBuyMaxinMeme = async (percentage?: number) => {
+    if (!isConnected) {
+      alert("Please connect your wallet");
+      return;
+    }
     await setUserMemeTokenBalanceIntoState();
     const res = await getMintTokenForReserve(
       ethers.parseEther(curUserReserveBalance),
@@ -259,9 +267,6 @@ export const Tradesection = ({
     if (isPending) return;
     await setUserMemeTokenBalanceIntoState();
     if (BigInt(Math.floor(Number(inputValue))) > Number(curMemeTokenValue)) {
-      // setTradeModuleErrorMsg(
-      //   `Insufficient balance : You have ${curMemeTokenValue} ${memeTokenName}`,
-      // );
       alert(
         `Insufficient balance: You have ${curMemeTokenValue} ${memeTokenSymbol}`,
       );
@@ -295,8 +300,8 @@ export const Tradesection = ({
         tokenAddress,
         BigIntValue,
       );
-      const valueInEth = ethers.formatEther(amountETH[0].toString());
-      const valueInWei = ethers.parseEther(valueInEth);
+      // const valueInEth = ethers.formatEther(amountETH[0].toString());
+      // const valueInWei = ethers.parseEther(valueInEth);
 
       const burnDetail = await zapWriteContract.burnToEth(
         tokenAddress,
@@ -431,12 +436,14 @@ export const Tradesection = ({
   // MARK: - Get values
   const setUserReserveBalanceIntoState = async () => {
     try {
-      if (account.address) {
-        const balanceWei = await provider.getBalance(account.address);
+      if (isConnected) {
+        const balanceWei = await provider.getBalance(account.address || "");
         // console.log({ balanceWei });
         const balanceEther = ethers.formatEther(balanceWei);
         // console.log({ balanceEther });
         setCurUserReserveBalance(balanceEther);
+      } else {
+        setCurUserReserveBalance("0");
       }
     } catch (error) {
       console.log(error);
@@ -625,7 +632,9 @@ export const Tradesection = ({
               <button
                 type="button"
                 onClick={() => {
-                  setInputValue(curUserReserveBalance.substring(0, 10));
+                  if (isConnected)
+                    setInputValue(curUserReserveBalance.substring(0, 10));
+                  else alert("Please connect your wallet");
                 }}
                 className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-sm text-white"
               >
