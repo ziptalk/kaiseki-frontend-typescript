@@ -14,6 +14,7 @@ import {
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { CreateConnector } from "../node_modules/@rainbow-me/rainbowkit/dist/wallets/Wallet";
 import {
+  connectorsForWallets,
   getDefaultConfig,
   getDefaultWallets,
   RainbowKitProvider,
@@ -22,15 +23,27 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { injected } from "wagmi/connectors";
-import { createConnector } from "wagmi";
+import { injected, metaMask, walletConnect } from "wagmi/connectors";
+import { createConnector, createConfig, http } from "wagmi";
 import { useEffect } from "react";
 import {
   metaMaskWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
-const { wallets } = getDefaultWallets();
+// const { wallets } = getDefaultWallets();
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: "Recommended",
+      wallets: [seifWallet, metaMaskWallet, walletConnectWallet],
+    },
+  ],
+  {
+    projectId: "RWE",
+    appName: "My RainbowKit App",
+  },
+);
 
 const config = getDefaultConfig({
   // wallets: [...wallets],
@@ -114,9 +127,36 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    );
+  }
+
+  const wagmiWallets = [
+    walletConnect({
+      projectId: "RWE",
+      metadata: {
+        name: "xxxx",
+        description: "xxxx",
+        url: "https://xxxx.ai/",
+        icons: [""],
+      },
+    }),
+    metaMask(),
+  ];
+
+  const wagmiConfig = createConfig({
+    connectors: isMobileDevice() ? wagmiWallets : connectors,
+    chains: [base],
+    transports: {
+      [base.id]: http(""),
+    },
+  });
+
   return (
     <RecoilRoot>
-      <WagmiProvider config={config}>
+      <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>{children}</RainbowKitProvider>
         </QueryClientProvider>
