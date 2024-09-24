@@ -90,8 +90,8 @@ const Header: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (isConnected) {
-      setDisconnectToggle(false);
+    if (!isConnected) {
+      setAccountButtonModal(false);
     }
   }, [isConnected]);
 
@@ -547,11 +547,11 @@ const Header: FC = () => {
               className="relative flex select-none flex-row-reverse items-center md:w-[300px]"
               ref={modalRef}
             >
-              {address ? (
+              {isConnected ? (
                 <>
                   <div className="z-40 hidden h-10 items-center justify-between rounded-lg border border-secondary px-5 text-sm font-bold text-[#FAFF00] md:flex">
                     <div
-                      onClick={() => copyToClipboard(address)}
+                      onClick={() => copyToClipboard(address || "")}
                       className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#FF2626] hover:text-[#FF2626] active:stroke-black active:text-black`}
                     >
                       <Bomb
@@ -623,7 +623,6 @@ const Header: FC = () => {
         </div>
       </header>
       {accountButtonModal &&
-        isConnected &&
         (width < 768 ? (
           <BottomSheet
             {...{

@@ -29,12 +29,6 @@ export default function Raffle() {
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setGifOn(false);
-    }, 2000);
-  }, []);
-
   const onButtonClick = async () => {
     const result = await RaffleTelegramId({
       winnerAddress: account.address,
@@ -55,13 +49,11 @@ export default function Raffle() {
 
   return (
     <div className="p-2">
-      {gifOn && (
-        <img
-          src="/images/congratulation.gif"
-          alt="congrats"
-          className="fixed h-full w-full"
-        />
-      )}
+      <img
+        src="/images/congratulation.gif"
+        alt="congrats"
+        className="fixed h-full w-full"
+      />
       <div className="mx-auto mt-3 w-full md:w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home
