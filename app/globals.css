@@ -308,7 +308,7 @@ input {
   justify-content: center;
   align-items: center;
   transform-origin: bottom center;
-  animation: rotate 4s infinite linear;
+  animation: rotate 3s infinite linear;
 }
 
 @keyframes rotate {

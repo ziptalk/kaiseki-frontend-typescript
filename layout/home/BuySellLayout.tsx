@@ -9,23 +9,14 @@ import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
 import { setCurStepsIntoState } from "@/utils/getCurve";
 import { ethers } from "ethers";
-import { TxlogsMintBurn } from "@/utils/apis/apis";
+import { FindTokenByAddress, TxlogsMintBurn } from "@/utils/apis/apis";
 import { BarData, UTCTimestamp } from "lightweight-charts";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
+import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
 
-export const BuySellLayout = ({
-  cid,
-  createdBy,
-  description,
-  rafflePrize,
-  // marketCap,
-  name,
-  ticker,
-  tokenAddress,
-  setInfo,
-}: TokenInfo) => {
+export const BuySellLayout = ({ tokenAddress, setInfo }: TokenInfo) => {
   const isMobile = typeof window !== undefined && window.innerWidth < 768;
   const [volume, setvolume] = useState<string>("0");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
@@ -38,6 +29,8 @@ export const BuySellLayout = ({
     percentage: 0,
   });
   const [getOnce, setGetOnce] = useState(false);
+  const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
+
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const bondContract = new ethers.Contract(
@@ -61,6 +54,7 @@ export const BuySellLayout = ({
   }, [Chartdata]);
 
   useEffect(() => {
+    getTokenInfo();
     const interval = setInterval(() => {
       // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
       fetch20TXLogsFromServer();
@@ -76,6 +70,12 @@ export const BuySellLayout = ({
     fetchAndUpdateData();
     // fetchHomeTokenInfoFromServer();
   }, [getOnce, tokenAddress]);
+
+  const getTokenInfo = async () => {
+    const response = setTokenInfo(await FindTokenByAddress(tokenAddress));
+    // console.log(response);
+    return response;
+  };
 
   const fetch20TXLogsFromServer = async () => {
     const response = await TxlogsMintBurn(tokenAddress);
@@ -242,18 +242,18 @@ export const BuySellLayout = ({
         <div className="relative flex flex-col gap-3 bg-[#252525] pt-[10px] md:mt-[13px] md:h-[950px] md:w-[420px] md:gap-[20px] md:p-[20px]">
           <div className="flex gap-3 md:gap-[20px]">
             <img
-              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+              src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${tokenInfo.cid}`}
               alt="Image from IPFS"
               className="h-[120px] w-[120px] border-black"
             />
             <TokenDesc
               {...{
-                cid,
-                createdBy,
-                rafflePrize,
-                description,
-                name,
-                ticker,
+                cid: tokenInfo.cid,
+                createdBy: tokenInfo.creator,
+                rafflePrize: tokenInfo.rafflePrize,
+                description: tokenInfo.description,
+                name: tokenInfo.name,
+                ticker: tokenInfo.symbol,
                 tokenAddress,
               }}
             />
@@ -292,13 +292,15 @@ export const BuySellLayout = ({
           <div className="hidden h-[250px] w-full bg-[#151527] p-[13px] md:block">
             <div className="flex items-center gap-[7.15px]">
               <img
-                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}
+                src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${tokenInfo.cid}`}
                 alt="Image from IPFS"
                 className="h-[28.5px] w-[28.5px] border-black "
               />
               <p className="inline-block text-[14.3px] text-white">
-                {name.length > 20 ? name.slice(0, 17) + "..." : name} (${" "}
-                {ticker}) / ETH
+                {tokenInfo.name.length > 20
+                  ? tokenInfo.name.slice(0, 17) + "..."
+                  : tokenInfo.name}{" "}
+                ($ {tokenInfo.symbol}) / ETH
               </p>
             </div>
             <div className="h-[210px] border-black ">
@@ -320,9 +322,9 @@ export const BuySellLayout = ({
           )}
           <Tradesection
             {...{
-              memeTokenSymbol: ticker,
+              memeTokenSymbol: tokenInfo.symbol,
               tokenAddress,
-              cid,
+              cid: tokenInfo.cid,
             }}
           />
           {/* <SellPercentageButton /> */}

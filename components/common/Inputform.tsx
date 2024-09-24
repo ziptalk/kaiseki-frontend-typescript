@@ -22,6 +22,7 @@ export const Inputform = ({
   value,
   file,
   optional = false,
+  register,
   onChange,
 }: InputformProps) => {
   const sharedStyle =
@@ -34,7 +35,7 @@ export const Inputform = ({
       {type === "textarea" ? (
         <textarea
           className={`${sharedStyle} h-40 resize-none`}
-          // {...register(name, { maxLength })}
+          {...register(name, { maxLength })}
         />
       ) : type === "file" ? (
         <div className={sharedStyle + " p-0"}>
@@ -46,7 +47,7 @@ export const Inputform = ({
             id={"upload"}
             className={"hidden"}
             placeholder={optional ? "(optional)" : ""}
-            // {...register(name, { maxLength, onChange })}
+            {...register(name, { maxLength, onChange })}
           />
         </div>
       ) : type === "number" ? (
@@ -60,7 +61,7 @@ export const Inputform = ({
               type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
             }
             className={`"h-full w-full bg-transparent  outline-none`}
-            // {...register(name, { maxLength, onChange })}
+            {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">ETH</div>
         </div>
@@ -70,7 +71,7 @@ export const Inputform = ({
           autoComplete="off"
           className={sharedStyle}
           placeholder={optional ? "(optional)" : ""}
-          // {...register(name, { maxLength, onChange })}
+          {...register(name, { maxLength, onChange })}
         />
       )}
       {type === "file" || optional || !maxLength || (
