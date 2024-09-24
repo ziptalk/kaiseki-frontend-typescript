@@ -403,9 +403,7 @@ export const Tradesection = ({
 
       // Prints "Invalid swap with token contract address 0xabcd."
       console.log("Custom error reason:", decodedError);
-      if (decodedError.name === "CALL_EXCEPTION") {
-        alert("You don't have enough balance");
-      } else if (decodedError.name === "ACTION_REJECTED") {
+      if (decodedError.name === "ACTION_REJECTED") {
         alert("User rejected the transaction");
       } else if (decodedError.type === "CustomError") {
         alert("This Token is Ended");

@@ -17,8 +17,7 @@ export default function Raffle() {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [success, setSuccess] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [gifOn, setGifOn] = useState(true);
-  const [width, setWidth] = useState(250);
+  const [width, setWidth] = useState(1000);
 
   useEffect(() => {
     setWidth(window.innerWidth);

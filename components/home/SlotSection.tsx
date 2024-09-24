@@ -3,6 +3,7 @@ import Image from "next/image";
 
 export const SlotSection = ({ cid }: { cid: string }) => {
   const [width, setWidth] = useState(1000);
+  const [isSpinning, setIsSpinning] = useState([true, true, true]);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -14,6 +15,39 @@ export const SlotSection = ({ cid }: { cid: string }) => {
 
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
+
+  useEffect(() => {
+    if (!isSpinning.includes(true)) {
+      setTimeout(() => resetSlots(), 2000);
+    }
+  }, [isSpinning]);
+
+  const stopSlot = (slotIndex: number) => {
+    setIsSpinning((prevState) => {
+      const newState = [...prevState];
+      newState[slotIndex] = false;
+      return newState;
+    });
+  };
+
+  const resetSlots = () => {
+    setIsSpinning([true, true, true]);
+    const stopTimers = [
+      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1200),
+      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 3200),
+      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3900),
+    ];
+    return () => stopTimers.forEach((timer) => clearTimeout(timer));
+  };
+
+  useEffect(() => {
+    resetSlots();
+
+    return () => {
+      resetSlots();
+    };
+  }, [cid]);
+
   const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`;
   const images1 = [
     { src: "/dump/WIF.png", alt: "Dog" },
@@ -55,25 +89,6 @@ export const SlotSection = ({ cid }: { cid: string }) => {
     { src: "/dump/catcat.png", alt: "Cat" },
   ];
 
-  const [isSpinning, setIsSpinning] = useState([true, true, true]);
-
-  useEffect(() => {
-    const stopTimers = [
-      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1200),
-      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 3200),
-      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3900),
-    ];
-    return () => stopTimers.forEach((timer) => clearTimeout(timer));
-  }, [cid, width]);
-
-  const stopSlot = (slotIndex: number) => {
-    setIsSpinning((prevState) => {
-      const newState = [...prevState];
-      newState[slotIndex] = false;
-      return newState;
-    });
-  };
-
   return (
     <div className="flex h-28 w-full gap-[5px] rounded-lg border-4 border-[#A58C07] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px] md:h-[140px]">
       <SlotColumn images={images1} isSpinning={isSpinning[0]} idx={1} />
@@ -100,6 +115,7 @@ const SlotColumn: FC<{
 
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
+
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
       <div
