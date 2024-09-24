@@ -49,10 +49,6 @@ const Create: NextPage = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(watch());
-  }, [watch()]);
-
   // MARK: - ethers init
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
@@ -74,7 +70,7 @@ const Create: NextPage = () => {
   const [steps, setSteps] = useState<BigInt[]>([]);
 
   useEffect(() => {
-    // if (watch("threshold")) setSteps(createStep(Number(watch("threshold"))));
+    if (watch("threshold")) setSteps(createStep(Number(watch("threshold"))));
   }, [watch("threshold")]);
 
   // MARK: - Upload to Server
