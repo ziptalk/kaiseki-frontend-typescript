@@ -156,7 +156,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   ];
 
   const wagmiConfig = createConfig({
-    connectors: isMobile ? wagmiWallets : connectors,
+    connectors: wagmiWallets,
     chains: [base],
     transports: {
       [base.id]: http(""),
@@ -165,7 +165,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
   return (
     <RecoilRoot>
-      <WagmiProvider config={wagmiConfig}>
+      <WagmiProvider config={isMobile ? wagmiConfig : config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>{children}</RainbowKitProvider>
         </QueryClientProvider>
