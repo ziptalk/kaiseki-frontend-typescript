@@ -9,7 +9,7 @@ import {
 } from "lightweight-charts";
 import { ethers } from "ethers";
 
-import { stepRanges } from "@/global/createValue";
+// import { stepRanges } from "@/global/createValue";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
@@ -72,8 +72,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
       let curMintedToken = BigInt(0);
       const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      const sp: bigint[] = steps.map((step) => step.price);
-      const sr = stepRanges;
+      const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
+      // const sr = stepRanges;
 
       const newChartData: BarData[] = [];
 
@@ -101,12 +101,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         } else {
           curMintedToken -= BigInt(event.amountBurned);
         }
-
-        const divValue =
-          Math.floor(
-            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-          ) || 1;
-        if (divValue >= 0 && divValue < sp.length) {
+        const divValue = Math.floor(
+          Number(curMintedToken) / Number(ethers.parseEther("8000000")),
+        );
+        if (divValue >= 0 && divValue < sp.length && divValue < 100) {
           const newDataPoint = {
             time: timestamp,
             open:
@@ -119,6 +117,18 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
           };
           newChartData.push(newDataPoint);
           // console.log(newDataPoint);
+        } else if (divValue >= 100) {
+          const newDataPoint = {
+            time: timestamp,
+            open:
+              newChartData.length > 0
+                ? newChartData[newChartData.length - 1].close
+                : 0.000000000005,
+            high: Number(ethers.formatEther(sp[99])),
+            low: Number(ethers.formatEther(sp[99])),
+            close: Number(ethers.formatEther(sp[99])),
+          };
+          newChartData.push(newDataPoint);
         }
       }
 

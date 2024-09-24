@@ -28,7 +28,7 @@ const TradesCard: FC<TradesCardType> = ({
           <h1
             className="cursor-pointer text-[#9AFFC2] hover:underline"
             onClick={() => {
-              window.open(`https://etherscan.io/address/${user}`);
+              window.open(`https://basescan.org/address/${user}`);
             }}
           >
             {user.length > 8 ? user.substring(0, 6) + "..." : user}
@@ -47,7 +47,7 @@ const TradesCard: FC<TradesCardType> = ({
         <h1
           className="w-[14%] cursor-pointer overflow-scroll text-nowrap text-right hover:underline"
           onClick={() => {
-            window.open(`https://etherscan.io/tx/${tx}`);
+            window.open(`https://basescan.org/tx/${tx}`);
           }}
         >
           {tx.slice(0, 6) + "..." + tx.slice(-4)}

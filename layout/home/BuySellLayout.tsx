@@ -16,7 +16,13 @@ import contracts from "@/global/contracts";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
 
-export const BuySellLayout = ({ tokenAddress, setInfo }: TokenInfo) => {
+export const BuySellLayout = ({
+  tokenAddress,
+  setInfo,
+}: {
+  tokenAddress: string;
+  setInfo: () => void;
+}) => {
   const isMobile = typeof window !== undefined && window.innerWidth < 768;
   const [volume, setvolume] = useState<string>("0");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);

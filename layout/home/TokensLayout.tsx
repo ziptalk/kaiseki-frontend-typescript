@@ -7,16 +7,6 @@ import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 import { Search } from "@/utils/apis/apis";
 import Link from "next/link";
-export const initialTokenInfo: TokenInfo = {
-  cid: "",
-  createdBy: "",
-  description: "",
-  rafflePrize: "",
-  marketCap: 0,
-  name: "",
-  ticker: "",
-  tokenAddress: "",
-};
 
 export const TokensLayout = () => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
@@ -24,7 +14,8 @@ export const TokensLayout = () => {
   const [maxPage, setMaxPage] = useState<number>(1);
   const [pagePer, setPagePer] = useState<number>(10);
   const [value, setValue] = useState<string | undefined>(undefined);
-  const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
+  // const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
+  const [tokenAddress, setTokenAddress] = useState<string>("");
   const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
     undefined,
   );
@@ -32,12 +23,12 @@ export const TokensLayout = () => {
 
   const [width, setWidth] = useState(0);
   useEffect(() => {
-    if (info.tokenAddress && width < 768) {
+    if (tokenAddress && width < 768) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [info.tokenAddress, width]);
+  }, [tokenAddress, width]);
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -56,7 +47,8 @@ export const TokensLayout = () => {
 
   const setPageNum = (num: number) => {
     setPageNumber(num);
-    setInfo(initialTokenInfo);
+    // setInfo(initialTokenInfo);
+
     window.scrollTo(0, width < 768 ? 300 : 575);
   };
 
@@ -76,7 +68,7 @@ export const TokensLayout = () => {
   };
 
   const setInfotoInitial = () => {
-    setInfo(initialTokenInfo);
+    setTokenAddress("");
   };
 
   return (
@@ -87,7 +79,7 @@ export const TokensLayout = () => {
       }}
     >
       <div
-        className={`${info.tokenAddress ? "md:w-[860px]" : "w-full"} mt-[32px]`}
+        className={`${tokenAddress ? "md:w-[860px]" : "w-full"} mt-[32px]`}
         id="tokens"
       >
         <div className="text-xl text-white underline">Tokens</div>
@@ -140,7 +132,7 @@ export const TokensLayout = () => {
           </form>
         </div>
         <div
-          className={`mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:grid ${info.tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  md:gap-5`}
+          className={`mt-4 flex w-full flex-col gap-2.5 md:mt-5 md:grid ${tokenAddress ? "grid-cols-2 grid-rows-6" : "grid-cols-3 grid-rows-4"}  md:gap-5`}
         >
           {tokenInfo !== null ? (
             tokenInfo.map((card: any, index: any) => (
@@ -148,13 +140,13 @@ export const TokensLayout = () => {
                 key={index}
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  info.tokenAddress && info.tokenAddress === card.tokenAddress
+                  tokenAddress && tokenAddress === card.tokenAddress
                     ? setInfotoInitial()
-                    : setInfo({ ...card });
+                    : setTokenAddress(card.tokenAddress);
                 }}
                 className="w-full md:h-[215px] md:w-[420px]"
               >
-                <HomeTokenCard {...card} clickedToken={info.tokenAddress} />
+                <HomeTokenCard {...card} clickedToken={tokenAddress} />
               </div>
             ))
           ) : (
@@ -226,18 +218,28 @@ export const TokensLayout = () => {
           />
         </div>
       </div>
-      {info.tokenAddress &&
+      {tokenAddress &&
         (width < 768 ? (
           <BottomSheet
             {...{
               setUnVisible: setInfotoInitial,
-              visible: info.tokenAddress !== "",
+              visible: tokenAddress !== "",
             }}
           >
-            <BuySellLayout {...info} setInfo={setInfotoInitial} />
+            <BuySellLayout
+              {...{
+                tokenAddress,
+                setInfo: setInfotoInitial,
+              }}
+            />
           </BottomSheet>
         ) : (
-          <BuySellLayout {...info} />
+          <BuySellLayout
+            {...{
+              tokenAddress,
+              setInfo: setInfotoInitial,
+            }}
+          />
         ))}
     </div>
   );
