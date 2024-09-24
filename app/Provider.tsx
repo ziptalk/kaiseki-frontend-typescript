@@ -25,7 +25,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import { injected, metaMask, walletConnect } from "wagmi/connectors";
 import { createConnector, createConfig, http } from "wagmi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   metaMaskWallet,
   walletConnectWallet,
@@ -116,6 +116,7 @@ function seifWallet(): Wallet {
 }
 
 export default function Provider({ children }: { children: React.ReactNode }) {
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     window.addEventListener("eip6963:announceProvider", (event: any) => {
       const announcedProvider = {
@@ -125,6 +126,14 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       };
       // console.log(announcedProvider);
     });
+  }, []);
+
+  useEffect(() => {
+    setIsMobile(
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ),
+    );
   }, []);
 
   function isMobileDevice() {
@@ -147,7 +156,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   ];
 
   const wagmiConfig = createConfig({
-    connectors: isMobileDevice() ? wagmiWallets : connectors,
+    connectors: isMobile ? wagmiWallets : connectors,
     chains: [base],
     transports: {
       [base.id]: http(""),
