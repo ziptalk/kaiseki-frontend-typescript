@@ -6,7 +6,7 @@ import {
   useConnectModal,
 } from "@rainbow-me/rainbowkit";
 import styled, { keyframes } from "styled-components";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import { ethers } from "ethers";
 import axios from "axios";
 import Link from "next/link";
@@ -37,6 +37,7 @@ import { TokensLatest } from "@/utils/apis/apis";
 const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
+  const { connectors } = useConnect();
   const { openChainModal } = useChainModal();
   const { address, chainId, isConnected, connector } = useAccount();
 
@@ -614,7 +615,7 @@ const Header: FC = () => {
                   </button>
                   <Wallet
                     className="cursor-pointer md:hidden"
-                    onClick={openConnectModal}
+                    onClick={useConnect}
                   />
                 </>
               )}
