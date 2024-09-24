@@ -70,7 +70,7 @@ const Create: NextPage = () => {
   const [steps, setSteps] = useState<BigInt[]>([]);
 
   useEffect(() => {
-    setSteps(createStep(Number(watch("threshold"))));
+    if (watch("threshold")) setSteps(createStep(Number(watch("threshold"))));
   }, [watch("threshold")]);
 
   // MARK: - Upload to Server

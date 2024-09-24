@@ -38,7 +38,8 @@ const Header: FC = () => {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
-  const { address, chainId, isConnected } = useAccount();
+  const { address, chainId, isConnected, connector } = useAccount();
+  console.log({ connector }); // metaMask, seif, walletConnect
   const [disconnectToggle, setDisconnectToggle] = useState(false);
 
   const [curMintValue, setCurMintValue] = useState("");
