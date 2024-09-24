@@ -156,10 +156,10 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   ];
 
   const wagmiConfig = createConfig({
-    connectors: wagmiWallets,
+    connectors: [metaMask()],
     chains: [base],
     transports: {
-      [base.id]: http(""),
+      [base.id]: http(),
     },
   });
 
