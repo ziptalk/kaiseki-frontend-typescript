@@ -1,5 +1,9 @@
 import Image from "next/image";
 import { FC } from "react";
+import Telegram from "@/public/icons/telegram_logo.svg";
+import X from "@/public/icons/X_logo.svg";
+import Website from "@/public/icons/Website_logo.svg";
+import Link from "next/link";
 
 const TokenCard: FC<TokenCardTypes> = ({
   name,
@@ -8,15 +12,34 @@ const TokenCard: FC<TokenCardTypes> = ({
   createdBy,
   description,
   rafflePrize,
+  telegramUrl,
+  websiteUrl,
+  twitterUrl,
 }) => {
   return (
     <div
       className={`flex w-[400px] flex-col items-center justify-between rounded-lg border border-white border-opacity-50 bg-[#1C1C1C] p-[20px]`}
     >
-      <div className="w-full text-[14px] font-bold text-white">
-        {name}
-        <div className="ml-[4px] inline text-[14px] font-bold text-[#9F9FB1]">
-          [ticker:{ticker}]
+      <div className="flex w-full justify-between">
+        <div className="text-[14px] font-bold  text-white">
+          {name} <div className="inline text-[#9F9FB1]">[ticker:{ticker}]</div>
+        </div>
+        <div className="flex items-center gap-4">
+          {telegramUrl && (
+            <Link href={"https://" + telegramUrl} className="cursor-pointer">
+              <Telegram className="fill-[#5E5E5E] hover:fill-[#CFCFCF]" />
+            </Link>
+          )}
+          {twitterUrl && (
+            <Link href={"https://" + twitterUrl} className="cursor-pointer">
+              <X className="fill-[#5E5E5E] hover:fill-[#CFCFCF]" />
+            </Link>
+          )}
+          {websiteUrl && (
+            <Link href={"https://" + websiteUrl} className="cursor-pointer">
+              <Website className="fill-[#5E5E5E] hover:fill-[#CFCFCF]" />
+            </Link>
+          )}
         </div>
       </div>
       <div className="mt-[8px] flex gap-[20px]">

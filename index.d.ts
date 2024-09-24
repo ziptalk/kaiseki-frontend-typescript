@@ -37,6 +37,10 @@ interface TokenCardTypes {
   cid: string;
   rafflePrize?: string;
 
+  twitterUrl?: string;
+  websiteUrl?: string;
+  telegramUrl?: string;
+
   setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

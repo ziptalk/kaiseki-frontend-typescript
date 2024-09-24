@@ -13,6 +13,7 @@ import { ethers } from "ethers";
 import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
+import { initialPrice } from "@/global/createValue";
 
 const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
@@ -81,10 +82,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         // 거래 내역이 없을 경우 기본 데이터 추가
         newChartData.push({
           time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-          open: 0.000000000005,
-          high: 0.000000000005,
-          low: 0.000000000005,
-          close: 0.000000000005,
+          open: initialPrice,
+          high: initialPrice,
+          low: initialPrice,
+          close: initialPrice,
         });
       }
       for (const event of filteredData) {
@@ -110,7 +111,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
-                : 0.000000000005,
+                : initialPrice,
             high: Number(ethers.formatEther(sp[divValue])),
             low: Number(ethers.formatEther(sp[divValue])),
             close: Number(ethers.formatEther(sp[divValue])),
@@ -123,10 +124,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
             open:
               newChartData.length > 0
                 ? newChartData[newChartData.length - 1].close
-                : 0.000000000005,
-            high: Number(ethers.formatEther(sp[99])),
-            low: Number(ethers.formatEther(sp[99])),
-            close: Number(ethers.formatEther(sp[99])),
+                : initialPrice,
+            high: Number(ethers.formatEther(sp[sp.length - 1])),
+            low: Number(ethers.formatEther(sp[sp.length - 1])),
+            close: Number(ethers.formatEther(sp[sp.length - 1])),
           };
           newChartData.push(newDataPoint);
         }
@@ -191,14 +192,18 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
         autoscaleInfoProvider: (original: any) => {
           const res = original();
           if (res !== null) {
-            var minValue = chartData.reduce(
-              (min, p) => (p.open < min ? p.open : min),
-              chartData[0].open,
-            );
-            var maxValue = chartData.reduce(
-              (max, p) => (p.high > max ? p.high : max),
-              chartData[0].high,
-            );
+            var minValue = chartData
+              .slice(-20)
+              .reduce(
+                (min, p) => (p.open < min ? p.open : min),
+                chartData[0].open,
+              );
+            var maxValue = chartData
+              .slice(-20)
+              .reduce(
+                (max, p) => (p.high > max ? p.high : max),
+                chartData[0].high,
+              );
             res.priceRange.minValue = minValue;
             res.priceRange.maxValue = maxValue;
             // res.priceRange.minValue -= 0.00000000001;

@@ -227,6 +227,7 @@ export const stepPrices800 = () => {
 };
 export const maxSupply = ethers.parseEther("1000000000");
 export const creationFee = ethers.parseEther("0.0015");
+export const initialPrice = 0.000000000005;
 
 export const createStep = (threshold: number) => {
   const initialPrice = 0.000000000005;

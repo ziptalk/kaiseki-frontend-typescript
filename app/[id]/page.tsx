@@ -330,6 +330,9 @@ export default function Detail({ params }: { params: { id: string } }) {
               description: tokenInfo.description,
               tokenAddress: params.id,
               rafflePrize: tokenInfo.rafflePrize,
+              twitterUrl: tokenInfo.twitterUrl,
+              websiteUrl: tokenInfo.websiteUrl,
+              telegramUrl: tokenInfo.telegramUrl,
             }}
           />
           {/* progress bar + desc */}
