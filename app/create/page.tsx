@@ -27,6 +27,7 @@ import { BILLION } from "@/global/constants";
 export interface HookFormTypes {
   Name: string;
   Ticker: string;
+  telegramId: string;
   Image: FileList;
   prize: string;
   threshold: string;
@@ -44,6 +45,7 @@ const Create: NextPage = () => {
     defaultValues: {
       Name: "",
       Ticker: "",
+      telegramId: "@",
       Image: undefined,
       Description: "",
     },
@@ -125,6 +127,15 @@ const Create: NextPage = () => {
     setValue("threshold", e.target.value);
   };
 
+  const handleTelegramIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(
+      "telegramId",
+      e.target.value.slice(0, 1) === "@"
+        ? e.target.value
+        : `@${e.target.value}`,
+    );
+  };
+
   // MARK: - Validation
   const getUserReserveBalance = async () => {
     try {
@@ -197,6 +208,10 @@ const Create: NextPage = () => {
     }
     if (!watch("Image")) {
       alert("Invalid Image!");
+      return true;
+    }
+    if (!watch("telegramId")) {
+      alert("Invalid Telegram ID!");
       return true;
     }
 
@@ -331,6 +346,15 @@ const Create: NextPage = () => {
             maxLength: 30,
             register,
             value: watch("Name"),
+          }}
+        />
+        <Inputform
+          {...{
+            name: "telegramId",
+            viewName: "Telegram ID",
+            onChange: handleTelegramIdChange,
+            register,
+            value: watch("telegramId"),
           }}
         />
         <Inputform
