@@ -128,9 +128,9 @@ const Create: NextPage = () => {
   // MARK: - Validation
   const getUserReserveBalance = async () => {
     try {
-      if (!window.ethereum) {
-        throw new Error("MetaMask is not installed!");
-      }
+      // if (!window.ethereum) {
+      //   throw new Error("MetaMask is not installed!");
+      // }
       if (account.address) {
         const balanceWei = await provider.getBalance(account.address);
         // console.log(balanceWei);
