@@ -41,6 +41,22 @@ export const Tradesection = ({
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [steps, setSteps] = useState<BigInt[]>([]);
 
+  useEffect(() => {
+    console.log(
+      curMemeTokenValue,
+      curUserReserveBalance,
+      priceForNextMint,
+      bondingCurveProgress,
+      steps,
+    );
+  }, [
+    curMemeTokenValue,
+    curUserReserveBalance,
+    priceForNextMint,
+    bondingCurveProgress,
+    steps,
+  ]);
+
   const [inputValue, setInputValue] = useState<string>("");
 
   const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
@@ -98,7 +114,7 @@ export const Tradesection = ({
     setInputValue("");
     try {
       if (
-        checkMetaMaskInstalled() &&
+        // checkMetaMaskInstalled() &&
         checkAccountAddressInitialized(account.address)
       ) {
         setUserMemeTokenBalanceIntoState();
