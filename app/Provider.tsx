@@ -41,7 +41,7 @@ const config = getDefaultConfig({
     },
   ],
   appName: "RWEBET",
-  projectId: "80c55c1a9efb7ba1d32582051978a81d",
+  projectId: "989ce3beb9f7f418fb1a2e5dbf8183dd",
   // chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
   chains: [base],
   ssr: true,
