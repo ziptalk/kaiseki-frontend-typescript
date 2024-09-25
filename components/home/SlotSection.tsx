@@ -121,10 +121,16 @@ const SlotColumn: FC<{
       <div
         className={`slot-container ${isSpinning ? "spinning" : "stopped"} ${
           isSpinning || idx === 1
-            ? "top-[-38px]"
+            ? width < 768
+              ? "top-[-50px]"
+              : "top-[-38px]"
             : idx === 6
-              ? "top-[-318px]"
-              : "top-[-597px]"
+              ? width < 768
+                ? "top-[-330px]"
+                : "top-[-318px]"
+              : width < 768
+                ? "top-[-610px]"
+                : "top-[-597px]"
         }`}
       >
         {images.map((image, index) => (

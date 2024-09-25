@@ -168,7 +168,7 @@ export default function Raffle() {
                   </h1>
                   <img
                     className="rounded-full"
-                    src="/images/memesinoGhost.png"
+                    src="/icons/bomb.svg"
                     alt=""
                     style={{ width: 12, height: 12 }}
                   />
