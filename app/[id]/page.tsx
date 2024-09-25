@@ -345,7 +345,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             elements={[
               <ModuleInfo
                 title="Price"
-                className="mr-10 bg-transparent"
+                className="mr-20 bg-transparent"
                 desc={pricePercentage.price + " ETH"}
                 percentage={pricePercentage.percentage}
                 key={"price-detail"}
@@ -363,7 +363,7 @@ export default function Detail({ params }: { params: { id: string } }) {
                 key={"24H Volume-detail"}
               />,
               <ModuleInfo
-                className="mr-10 bg-transparent"
+                className="mr-20 bg-transparent"
                 title="Token Created"
                 desc={TokenCreated + "K"}
                 key={"Token Created-detail"}
