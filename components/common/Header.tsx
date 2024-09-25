@@ -608,7 +608,7 @@ const Header: FC = () => {
                 </>
               ) : (
                 <>
-                  {/* <button
+                  <button
                     onClick={openConnectModal}
                     className="connect-wallet hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border  md:block"
                   >
@@ -617,8 +617,7 @@ const Header: FC = () => {
                   <Wallet
                     className="cursor-pointer md:hidden"
                     onClick={openConnectModal}
-                  /> */}
-                  <ConnectButton />
+                  />
                 </>
               )}
             </div>
