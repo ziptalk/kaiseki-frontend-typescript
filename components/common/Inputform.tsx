@@ -60,7 +60,7 @@ export const Inputform = ({
             placeholder={
               type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
             }
-            className={`h-full w-full bg-transparent  outline-none`}
+            className={`h-full w-full bg-transparent outline-none`}
             {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">ETH</div>

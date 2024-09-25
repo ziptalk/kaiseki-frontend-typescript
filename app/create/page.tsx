@@ -350,15 +350,6 @@ const Create: NextPage = () => {
         />
         <Inputform
           {...{
-            name: "telegramId",
-            viewName: "Telegram ID",
-            onChange: handleTelegramIdChange,
-            register,
-            value: watch("telegramId"),
-          }}
-        />
-        <Inputform
-          {...{
             name: "Ticker",
             maxLength: 10,
             register,
@@ -383,6 +374,21 @@ const Create: NextPage = () => {
             value: watch("prize"),
           }}
         />
+        <div className="flex w-full flex-col items-center">
+          <Inputform
+            {...{
+              name: "telegramId",
+              viewName: "Telegram ID",
+              onChange: handleTelegramIdChange,
+              register,
+              value: watch("telegramId"),
+            }}
+          />
+          <div className="mt-2 w-full break-words text-sm text-[#8F8F8F] md:w-[484px]">
+            Enter your Telegram ID to receive raffle winner details for prize
+            delivery.
+          </div>
+        </div>
         <Inputform
           {...{
             viewName: "Mint Threshold For Raffle and DEX Listing",

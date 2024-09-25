@@ -276,17 +276,21 @@ const Header: FC = () => {
   const WrongChainPopUpModal: FC = () => {
     return (
       <div className="fixed z-10 h-screen w-screen bg-black bg-opacity-70">
-        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform flex-col justify-between gap-8 rounded-[10px] border bg-stone-900 px-10 py-[25px] text-center text-white md:h-[206px] md:w-[470px]">
+        <div className="absolute left-1/2 top-1/2 flex w-[334px] -translate-x-1/2 -translate-y-1/2 transform flex-col items-center justify-between gap-8 rounded-[10px] border bg-stone-900 py-[25px] text-center text-white md:h-[206px] md:w-[470px] md:px-10">
           <div className="flex flex-col gap-5">
-            <h1 className="text-xl font-bold">Oops..wrong network 😞</h1>
-            <h1 className="text-sm">It seems you changed to wrong network..</h1>
+            <h1 className="text-sm font-bold md:text-xl">
+              Oops..wrong network
+            </h1>
+            <h1 className="text-xs md:text-sm">
+              It seems you changed to wrong network..
+            </h1>
           </div>
 
           <div
             onClick={openChainModal}
-            className="flex cursor-pointer items-center justify-center rounded-3xl border text-center text-lg font-bold md:h-[51px]"
+            className="flex h-[46px] w-[310px] cursor-pointer items-center justify-center rounded-[10px] border text-center text-sm font-bold md:h-[51px] md:rounded-2xl md:text-lg"
           >
-            Change Network to {RESERVE_SYMBOL}
+            Change network to BASE
           </div>
         </div>
       </div>
