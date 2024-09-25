@@ -615,7 +615,7 @@ const Header: FC = () => {
                   </button>
                   <Wallet
                     className="cursor-pointer md:hidden"
-                    onClick={useConnect}
+                    onClick={openConnectModal}
                   />
                 </>
               )}
