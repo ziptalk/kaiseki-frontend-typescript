@@ -40,7 +40,7 @@ const config = getDefaultConfig({
       wallets: [seifWallet, metaMaskWallet, walletConnectWallet],
     },
   ],
-  appName: "RWEBET",
+  appName: "RWE",
   projectId: "989ce3beb9f7f418fb1a2e5dbf8183dd",
   // chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
   chains: [base],

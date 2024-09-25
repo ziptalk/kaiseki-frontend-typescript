@@ -33,9 +33,9 @@ export const SlotSection = ({ cid }: { cid: string }) => {
   const resetSlots = () => {
     setIsSpinning([true, true, true]);
     const stopTimers = [
-      setTimeout(() => stopSlot(0), width < 768 ? 1450 : 1200),
-      setTimeout(() => stopSlot(1), width < 768 ? 2550 : 3200),
-      setTimeout(() => stopSlot(2), width < 768 ? 5350 : 3900),
+      setTimeout(() => stopSlot(0), 1200),
+      setTimeout(() => stopSlot(1), 3200),
+      setTimeout(() => stopSlot(2), 3900),
     ];
     return () => stopTimers.forEach((timer) => clearTimeout(timer));
   };
@@ -119,54 +119,30 @@ const SlotColumn: FC<{
   return (
     <div className="flex h-full flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
       <div
-        className={`slot-container ${isSpinning ? (width < 768 ? "spinning-mobile" : "spinning") : "stopped"} ${
+        className={`slot-container ${isSpinning ? "spinning" : "stopped"} ${
           isSpinning || idx === 1
-            ? width < 768
-              ? "top-[-5px]"
-              : "top-[-38px]"
+            ? "top-[-38px]"
             : idx === 6
-              ? width < 768
-                ? "top-[-145px]"
-                : "top-[-318px]"
-              : width < 768
-                ? "top-[-285px]"
-                : "top-[-597px]"
+              ? "top-[-318px]"
+              : "top-[-597px]"
         }`}
       >
-        {images.map((image, index) =>
-          width > 768 ? (
-            <div
-              key={index}
-              className="mt-4 flex min-h-10 w-10 items-center justify-center"
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                width={40}
-                height={40}
-                className={`slot-image ${
-                  !isSpinning && index === idx ? "active" : ""
-                }`}
-              />
-            </div>
-          ) : (
-            <div
-              key={index}
-              className="mt-2 flex min-h-5 w-5 items-center justify-center"
-            >
-              <Image
-                key={index}
-                src={image.src}
-                alt={image.alt}
-                width={20}
-                height={20}
-                className={`slot-image ${
-                  !isSpinning && index === idx ? "active" : ""
-                }`}
-              />
-            </div>
-          ),
-        )}
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className="mt-4 flex min-h-10 w-10 items-center justify-center"
+          >
+            <Image
+              src={image.src}
+              alt={image.alt}
+              width={40}
+              height={40}
+              className={`slot-image ${
+                !isSpinning && index === idx ? "active" : ""
+              }`}
+            />
+          </div>
+        ))}
       </div>
       <style jsx>{`
         .slot-container {
@@ -181,9 +157,9 @@ const SlotColumn: FC<{
           animation: spin-slot 7s linear forwards;
         }
 
-        .spinning-mobile {
+        /* .spinning-mobile {
           animation: spin-slot 20s linear forwards;
-        }
+        } */
 
         .stopped {
           animation: none;
