@@ -14,7 +14,6 @@ import {
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { CreateConnector } from "../node_modules/@rainbow-me/rainbowkit/dist/wallets/Wallet";
 import {
-  connectorsForWallets,
   getDefaultConfig,
   getDefaultWallets,
   RainbowKitProvider,
@@ -23,27 +22,15 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { injected, metaMask, walletConnect } from "wagmi/connectors";
-import { createConnector, createConfig, http } from "wagmi";
-import { useEffect, useState } from "react";
+import { injected } from "wagmi/connectors";
+import { createConnector } from "wagmi";
+import { useEffect } from "react";
 import {
   metaMaskWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
-// const { wallets } = getDefaultWallets();
-const connectors = connectorsForWallets(
-  [
-    {
-      groupName: "Recommended",
-      wallets: [seifWallet, metaMaskWallet, walletConnectWallet],
-    },
-  ],
-  {
-    projectId: "RWE",
-    appName: "My RainbowKit App",
-  },
-);
+const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
   // wallets: [...wallets],
@@ -116,7 +103,6 @@ function seifWallet(): Wallet {
 }
 
 export default function Provider({ children }: { children: React.ReactNode }) {
-  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     window.addEventListener("eip6963:announceProvider", (event: any) => {
       const announcedProvider = {
@@ -128,44 +114,9 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  useEffect(() => {
-    setIsMobile(
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent,
-      ),
-    );
-  }, []);
-
-  function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator && navigator.userAgent,
-    );
-  }
-
-  const wagmiWallets = [
-    walletConnect({
-      projectId: "RWE",
-      metadata: {
-        name: "xxxx",
-        description: "xxxx",
-        url: "https://xxxx.ai/",
-        icons: [""],
-      },
-    }),
-    metaMask(),
-  ];
-
-  const wagmiConfig = createConfig({
-    connectors: [metaMask()],
-    chains: [base],
-    transports: {
-      [base.id]: http(),
-    },
-  });
-
   return (
     <RecoilRoot>
-      <WagmiProvider config={isMobile ? wagmiConfig : config}>
+      <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>{children}</RainbowKitProvider>
         </QueryClientProvider>
