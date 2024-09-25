@@ -25,7 +25,7 @@ export const ModuleInfo = ({
         {title}
         {percentage !== undefined && (
           <p
-            className={`${digital.variable} ml-[3px] inline font-digital text-[12px] text-secondary`}
+            className={`${digital.variable} ml-[3px] inline font-digital text-[14px] text-secondary`}
           >
             {percentage < 0 ? `${percentage}%` : `+${percentage}%`}
           </p>
