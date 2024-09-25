@@ -20,11 +20,7 @@ const TradesCard: FC<TradesCardType> = ({
     <>
       <div className="flex h-[60px] items-center justify-between rounded-[10px] bg-[#313131] px-[20px] py-[15px] text-[13px] text-[#808080]">
         <div className="flex w-[14%] items-center gap-[5px]">
-          <img
-            src="/images/memesinoGhost.png"
-            alt=""
-            style={{ width: 18, height: 18 }}
-          />
+          <img src="/icons/bomb.svg" alt="" style={{ width: 18, height: 18 }} />
           <h1
             className="cursor-pointer text-[#9AFFC2] hover:underline"
             onClick={() => {

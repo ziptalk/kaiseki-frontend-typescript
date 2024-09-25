@@ -15,6 +15,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   setModal,
 }) => {
   const [curve, setCurve] = useState(0);
+  const [width, setWidth] = useState(250);
   const router = useRouter();
 
   const getCurve = async () => {
@@ -25,12 +26,22 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   useEffect(() => {
     getCurve();
   }, [tokenAddress]);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
+
   return (
     <div
       className={`w-full cursor-pointer bg-[#252525] md:hover:bg-[#2C2C2C]`}
       onMouseDown={() => {
-        setModal && setModal(false);
-        router.push(`/${tokenAddress}`);
+        width > 768 && setModal && setModal(false);
+        width > 768 && router.push(`/${tokenAddress}`);
       }}
     >
       <div className={`flex h-20 gap-[10px]`}>

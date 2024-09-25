@@ -132,12 +132,10 @@ const SlotColumn: FC<{
             key={index}
             className="mt-4 flex min-h-10 w-10 items-center justify-center"
           >
-            <Image
+            <img
               src={image.src}
               alt={image.alt}
-              width={40}
-              height={40}
-              className={`slot-image ${
+              className={`slot-image h-10 w-10 ${
                 !isSpinning && index === idx ? "active" : ""
               }`}
             />
