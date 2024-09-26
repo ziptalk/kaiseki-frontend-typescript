@@ -80,6 +80,7 @@ const Create: NextPage = () => {
     const response = await StoreCidAndTokenAddress({
       cid,
       tokenAddress: createdTokenAddress,
+      telegramId: watch("telegramId"),
       description: watch("Description"),
       twitterUrl: watch("twitter") || "",
       telegramUrl: watch("telegram") || "",

@@ -40,6 +40,7 @@ export const StoreCidAndTokenAddress = async (data: {
   cid: string;
   tokenAddress: string;
   description: string;
+  telegramId: string;
   twitterUrl: string;
   telegramUrl: string;
   websiteUrl: string;
