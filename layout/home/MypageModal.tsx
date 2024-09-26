@@ -35,7 +35,7 @@ export const MypageModal = ({
   const TabContents = [
     // <Tokens key="Tokens" />,
     // <Raffle key="Raffle" />,
-    <Trade key="Trade" {...{ userAddress }} />,
+    <Trade key="Trade" {...{ userAddress, setModal }} />,
     <MyMeme key="MyMeme" {...{ userAddress, setModal }} />,
   ];
 
