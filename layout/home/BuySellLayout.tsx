@@ -7,7 +7,7 @@ import Slider from "@/components/common/Slider";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
-import { setCurStepsIntoState } from "@/utils/getCurve";
+import { getDataFromToken, setCurStepsIntoState } from "@/utils/getCurve";
 import { ethers } from "ethers";
 import { FindTokenByAddress, TxlogsMintBurn } from "@/utils/apis/apis";
 import { BarData, UTCTimestamp } from "lightweight-charts";
@@ -26,207 +26,45 @@ export const BuySellLayout = ({
   const isMobile = typeof window !== undefined && window.innerWidth < 768;
   const [volume, setvolume] = useState<string>("0");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState(0);
-  const [TokenCreated, setTokenCreated] = useState(0);
-  const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
+  const [TokenCreated, setTokenCreated] = useState("0");
   const [Chartdata, setChartData] = useState<BarData[]>();
   const [pricePercentage, setPricePercentage] = useState({
     price: 0,
     percentage: 0,
   });
-  const [getOnce, setGetOnce] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
 
-  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
-  const bondContract = new ethers.Contract(
-    contracts.MCV2_Bond,
-    MCV2_BondABI,
-    provider,
-  );
-
   useEffect(() => {
-    if (Chartdata) {
-      setPricePercentage({
-        price: Chartdata[Chartdata.length - 1]?.close || 0,
-        percentage: Math.ceil(
-          ((Chartdata[Chartdata.length - 1]?.close || 0) /
-            (Chartdata[Chartdata.length - 1]?.open || 0)) *
-            100 -
-            100,
-        ),
-      });
-    }
-  }, [Chartdata]);
+    FindTokenByAddress(tokenAddress).then((res) => {
+      setTokenInfo(res);
+    });
 
-  useEffect(() => {
-    getTokenInfo();
+    getDataFromToken(tokenAddress).then((res) => {
+      setPricePercentage(res.price);
+      setvolume(res.volume);
+      setTokenCreated(res.tokenCreated);
+      setBondingCurveProgress(res.bondingCurve);
+      setChartData(res.chartData);
+    });
+
     const interval = setInterval(() => {
-      // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer();
-      fetchAndUpdateData();
+      getDataFromToken(tokenAddress).then((res) => {
+        setPricePercentage(res.price);
+        setvolume(res.volume);
+        setTokenCreated(res.tokenCreated);
+        setBondingCurveProgress(res.bondingCurve);
+        setChartData(res.chartData);
+      });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
   }, [tokenAddress]);
-
-  useEffect(() => {
-    // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-    fetch20TXLogsFromServer();
-    fetchAndUpdateData();
-    // fetchHomeTokenInfoFromServer();
-  }, [getOnce, tokenAddress]);
-
-  const getTokenInfo = async () => {
-    const response = setTokenInfo(await FindTokenByAddress(tokenAddress));
-    // console.log(response);
-    return response;
-  };
-
-  const fetch20TXLogsFromServer = async () => {
-    const response = await TxlogsMintBurn(tokenAddress);
-    setTXLogsFromServer(filterEventsByToken(response, tokenAddress));
-  };
-  function filterEventsByToken(data: any, token: any) {
-    const filteredMintEvents = data.mintEvents.map((event: any) => ({
-      ...event,
-      isMint: true,
-    }));
-
-    const filteredBurnEvents = data.burnEvents.map((event: any) => ({
-      ...event,
-      isMint: false,
-    }));
-
-    const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
-    combinedEvents.sort(
-      (a, b) =>
-        new Date(a.blockTimestamp).getTime() -
-        new Date(b.blockTimestamp).getTime(),
-    );
-
-    return combinedEvents;
-  }
-
-  useEffect(() => {
-    var value = 0;
-    TXLogsFromServer?.map((item) => {
-      if (
-        new Date(item.blockTimestamp).getTime() >=
-        new Date().getTime() - 24 * 60 * 60 * 1000
-      ) {
-        if (item.isMint) {
-          value +=
-            Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
-            10000;
-        } else {
-          value +=
-            Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
-            10000;
-        }
-      }
-      // console.log(marketCap);
-    });
-    setvolume(value.toFixed(5));
-  }, [TXLogsFromServer]);
 
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchBondingCurveProgress();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenAddress]);
-
-  const fetchBondingCurveProgress = async () => {
-    await setCurStepsIntoState({ tokenAddress }).then((res) => {
-      setBondingCurveProgress(res?.curve || 0);
-      setMarketCap(res?.marketCap || 0);
-      setTokenCreated(Number(res?.tokenCreated) || 0);
-    });
-  };
-
-  const fetchAndUpdateData = async () => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/TxlogsMintBurn/${tokenAddress}`,
-      );
-      const data = await response.json();
-      const filteredData = filterEventsByToken(data, tokenAddress);
-
-      let curMintedToken = BigInt(0);
-      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      const sp: bigint[] = steps.map((step) => step.price);
-      // const sr = stepRanges;
-
-      const newChartData: BarData[] = [];
-
-      if (filteredData.length == 0) {
-        // 거래 내역이 없을 경우 기본 데이터 추가
-        newChartData.push({
-          time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-          open: 0.000000000005,
-          high: 0.000000000005,
-          low: 0.000000000005,
-          close: 0.000000000005,
-        });
-      }
-      for (const event of filteredData) {
-        // console.log(event);
-        const date = new Date(event.blockTimestamp);
-        let timestamp = (Math.floor(date.getTime() / 1000) -
-          9 * 60 * 60) as UTCTimestamp; // 한국 표준시 UTC로 변환하기 위해 마이너스
-
-        // 동일한 타임스탬프를 가진 데이터 포인트가 있으면, 1초씩 증가시켜 유니크하게 만듭니다.
-        while (newChartData.some((entry) => entry.time === timestamp)) {
-          timestamp = (timestamp + 1) as UTCTimestamp;
-        }
-        if (event.isMint) {
-          curMintedToken += BigInt(event.amountMinted);
-        } else {
-          curMintedToken -= BigInt(event.amountBurned);
-        }
-
-        const divValue =
-          Math.floor(
-            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-          ) || 1;
-        if (divValue >= 0 && divValue < sp.length) {
-          const newDataPoint = {
-            time: timestamp,
-            open:
-              newChartData.length > 0
-                ? newChartData[newChartData.length - 1].close
-                : 0.000000000005,
-            high: Number(ethers.formatEther(sp[divValue])),
-            low: Number(ethers.formatEther(sp[divValue])),
-            close: Number(ethers.formatEther(sp[divValue])),
-          };
-          newChartData.push(newDataPoint);
-        }
-      }
-
-      // 데이터가 시간 순서대로 정렬되어 있는지 확인
-      newChartData.sort((a, b) => (a.time as number) - (b.time as number));
-
-      // 시리즈 데이터 업데이트
-      // if (seriesRef.current) {
-      //   seriesRef.current.setData(newChartData);
-      // }
-
-      // // chartData 상태 업데이트
-      setChartData(newChartData);
-
-      if (newChartData.length >= 1) {
-        setGetOnce(true);
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -277,7 +115,7 @@ export const BuySellLayout = ({
                 <ModuleInfo
                   title="Marketcap"
                   className="mr-10 bg-transparent"
-                  desc={marketCap + " ETH"}
+                  desc={tokenInfo.marketCap + " ETH"}
                   key={"Marketcap"}
                 />,
                 <ModuleInfo
@@ -310,7 +148,12 @@ export const BuySellLayout = ({
               </p>
             </div>
             <div className="h-[210px] border-black ">
-              <TradingViewChart tokenAddress={tokenAddress} />
+              <TradingViewChart
+                {...{
+                  tokenAddress,
+                  chartData: Chartdata || [],
+                }}
+              />
             </div>
           </div>
           {isMobile && (

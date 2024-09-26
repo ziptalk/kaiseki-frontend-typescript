@@ -92,7 +92,7 @@ const Create: NextPage = () => {
         Number(ethers.formatEther(steps[0].toString())) *
         Number(ethers.formatEther(stepRanges[0].toString())) *
         BILLION,
-      threshold: parseInt(watch("threshold")),
+      threshold: Number(watch("threshold")),
       rafflePrize: watch("prize"),
       timestamp: new Date().toISOString(),
     });
