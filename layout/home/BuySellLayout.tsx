@@ -27,13 +27,11 @@ export const BuySellLayout = ({
   const [volume, setvolume] = useState<string>("0");
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [TokenCreated, setTokenCreated] = useState("0");
-  const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
   const [Chartdata, setChartData] = useState<BarData[]>();
   const [pricePercentage, setPricePercentage] = useState({
     price: 0,
     percentage: 0,
   });
-  const [getOnce, setGetOnce] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
 
   useEffect(() => {

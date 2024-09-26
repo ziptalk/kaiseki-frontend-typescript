@@ -56,7 +56,7 @@ export default function Detail({ params }: { params: { id: string } }) {
       setTokenCreated(res.tokenCreated);
       setBondingCurveProgress(res.bondingCurve);
       setChartData(res.chartData);
-      setTXLogsFromServer(res.txlogsFromServer);
+      setTXLogsFromServer(res.txlogsFromServer || []);
     });
 
     const interval = setInterval(() => {
@@ -67,7 +67,7 @@ export default function Detail({ params }: { params: { id: string } }) {
         setTokenCreated(res.tokenCreated);
         setBondingCurveProgress(res.bondingCurve);
         setChartData(res.chartData);
-        setTXLogsFromServer(res.txlogsFromServer);
+        setTXLogsFromServer(res.txlogsFromServer || []);
       });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
@@ -163,6 +163,7 @@ export default function Detail({ params }: { params: { id: string } }) {
           <TradingViewChart
             {...{
               tokenAddress: params.id,
+              chartData: Chartdata || [],
             }}
           />
         </div>
