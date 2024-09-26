@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
-import { setCurStepsIntoState } from "@/utils/getCurve";
+import { getDataFromToken, setCurStepsIntoState } from "@/utils/getCurve";
 
 export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
@@ -12,20 +12,14 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   tokenAddress,
   clickedToken,
   cid,
+  marketCap,
 }) => {
-  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState(0);
-
-  const fetchBondingCurveProgress = async () => {
-    await setCurStepsIntoState({ tokenAddress }).then((res) => {
-      setBondingCurveProgress(res?.curve || 0);
-      setMarketCap(res?.marketCap || 0);
-    });
-  };
+  const [tokenData, setTokenData] = useState<any>(0);
 
   useEffect(() => {
-    fetchBondingCurveProgress();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getDataFromToken(tokenAddress).then((res) => {
+      setTokenData(res);
+    });
   }, [tokenAddress]);
 
   return (
@@ -46,7 +40,6 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
               createdBy,
               description,
               rafflePrize,
-              marketCap,
               name,
               ticker,
               tokenAddress,
@@ -61,13 +54,15 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         >
           {marketCap} ETH
         </h1>
-        <div className="text-sm text-[#CFCFCF]">({bondingCurveProgress}%)</div>
+        <div className="text-sm text-[#CFCFCF]">
+          ({tokenData.bondingCurve}%)
+        </div>
       </div>
       <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
         <div
           className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
           // style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
-          style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
+          style={{ width: `${Math.floor(tokenData.bondingCurve)}%` }}
         ></div>
       </div>
     </div>

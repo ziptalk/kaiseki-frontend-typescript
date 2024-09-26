@@ -1,12 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-
 import BondingCurveCard from "@/components/detail/BondingCurveCard";
 import TokenCard from "@/components/detail/TokenCard";
-
 import TradingViewChart from "@/components/common/TradingViewWidget";
-import { RESERVE_SYMBOL, SERVER_ENDPOINT } from "@/global/projectConfig";
+import { RESERVE_SYMBOL } from "@/global/projectConfig";
 import { Tradesection } from "@/components/detail/Tradesection";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import Slider from "@/components/common/Slider";
@@ -18,19 +15,16 @@ import {
   HolderDistribution,
   TxlogsMintBurn,
 } from "@/utils/apis/apis";
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
-import { setCurStepsIntoState } from "@/utils/getCurve";
-import contracts from "@/global/contracts";
-import { BarData, UTCTimestamp } from "lightweight-charts";
+import { getDataFromToken } from "@/utils/getCurve";
+import { BarData } from "lightweight-charts";
 import Sorry from "@/public/icons/sorry.svg";
 
 export default function Detail({ params }: { params: { id: string } }) {
   const [volume, setvolume] = useState<string>("0");
   const [tokenInfo, setTokenInfo] = useState<TokenAllInfo>(TokenInfoInit);
   const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
-  const [marketCap, setMarketCap] = useState(0);
-  const [TokenCreated, setTokenCreated] = useState(0);
+  const [TokenCreated, setTokenCreated] = useState("0");
   const [TXLogsFromServer, setTXLogsFromServer] = useState<any[]>([]);
   const [pricePercentage, setPricePercentage] = useState({
     price: 0,
@@ -38,6 +32,9 @@ export default function Detail({ params }: { params: { id: string } }) {
   });
   const [Chartdata, setChartData] = useState<BarData[]>();
   const [width, setWidth] = useState(1000);
+  const [distribution, setDistribution] = useState<FilteredData | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -48,180 +45,42 @@ export default function Detail({ params }: { params: { id: string } }) {
     return () => window.removeEventListener("resize", updateWindowDimensions);
   }, []);
 
-  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
-  const bondContract = new ethers.Contract(
-    contracts.MCV2_Bond,
-    MCV2_BondABI,
-    provider,
-  );
-
   useEffect(() => {
-    var value = 0;
-    var marketCap = 0;
-    // console.log(TXLogsFromServer);
-    TXLogsFromServer?.map((item) => {
-      if (
-        new Date(item.blockTimestamp).getTime() <
-        new Date().getTime() - 24 * 60 * 60 * 1000
-      )
-        return;
-      if (item.isMint) {
-        marketCap += Number(ethers.formatEther(item.amountMinted));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
-          10000;
-      } else {
-        marketCap -= Number(ethers.formatEther(item.amountBurned));
-        value +=
-          Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
-          10000;
-      }
-      // console.log(marketCap);
+    FindTokenByAddress(params.id).then((res) => {
+      setTokenInfo(res);
     });
-    setvolume(value.toFixed(5));
-  }, [TXLogsFromServer]);
+    fetchHolderDistributionFromServer();
+    getDataFromToken(params.id).then((res) => {
+      setPricePercentage(res.price);
+      setvolume(res.volume);
+      setTokenCreated(res.tokenCreated);
+      setBondingCurveProgress(res.bondingCurve);
+      setChartData(res.chartData);
+      setTXLogsFromServer(res.txlogsFromServer);
+    });
 
-  useEffect(() => {
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
-      // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-      fetch20TXLogsFromServer();
-      fetchAndUpdateData();
+      getDataFromToken(params.id).then((res) => {
+        setPricePercentage(res.price);
+        setvolume(res.volume);
+        setTokenCreated(res.tokenCreated);
+        setBondingCurveProgress(res.bondingCurve);
+        setChartData(res.chartData);
+        setTXLogsFromServer(res.txlogsFromServer);
+      });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    getTokenInfo();
-    fetchHolderDistributionFromServer();
-    // fetchTXLogsFromServer(tokenInfo.tokenAddress, setTXLogsFromServer);
-    fetch20TXLogsFromServer();
-    fetchAndUpdateData();
-    // fetchHomeTokenInfoFromServer();
-  }, []);
-
-  const fetchBondingCurveProgress = async () => {
-    await setCurStepsIntoState({ tokenAddress: params.id }).then((res) => {
-      setBondingCurveProgress(res?.curve || 0);
-      setMarketCap(res?.marketCap || 0);
-      setTokenCreated(Number(res?.tokenCreated) || 0);
-    });
-  };
-  useEffect(() => {
-    fetchBondingCurveProgress();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.id]);
-  const getTokenInfo = async () => {
-    const response = setTokenInfo(await FindTokenByAddress(params.id));
-    // console.log(response);
-    return response;
-  };
-  // const [TXLogsFromServer, setTXLogsFromServer] = useState<any[] | null>(null);
-  const [distribution, setDistribution] = useState<FilteredData | undefined>(
-    undefined,
-  );
-
-  const fetchAndUpdateData = async () => {
-    try {
-      const response = await fetch(
-        `${SERVER_ENDPOINT}/TxlogsMintBurn/${params.id}`,
-      );
-      const data = await response.json();
-      const filteredData = filterEventsByToken(data);
-
-      let curMintedToken = BigInt(0);
-      const steps: BondStep[] = await bondContract.getSteps(params.id);
-      const sp: bigint[] = steps.map((step) => step.price);
-      // const sr = stepRanges;
-
-      const newChartData: BarData[] = [];
-
-      if (filteredData.length == 0) {
-        // 거래 내역이 없을 경우 기본 데이터 추가
-        newChartData.push({
-          time: Math.floor(Date.now() / 1000) as UTCTimestamp,
-          open: 0.000000000005,
-          high: 0.000000000005,
-          low: 0.000000000005,
-          close: 0.000000000005,
-        });
-      }
-      for (const event of filteredData) {
-        // console.log(event);
-        const date = new Date(event.blockTimestamp);
-        let timestamp = (Math.floor(date.getTime() / 1000) -
-          9 * 60 * 60) as UTCTimestamp; // 한국 표준시 UTC로 변환하기 위해 마이너스
-
-        // 동일한 타임스탬프를 가진 데이터 포인트가 있으면, 1초씩 증가시켜 유니크하게 만듭니다.
-        while (newChartData.some((entry) => entry.time === timestamp)) {
-          timestamp = (timestamp + 1) as UTCTimestamp;
-        }
-        if (event.isMint) {
-          curMintedToken += BigInt(event.amountMinted);
-        } else {
-          curMintedToken -= BigInt(event.amountBurned);
-        }
-
-        const divValue =
-          Math.floor(
-            Number(curMintedToken) / Number(ethers.parseEther("8000000")),
-          ) || 1;
-        if (divValue >= 0 && divValue < sp.length) {
-          const newDataPoint = {
-            time: timestamp,
-            open:
-              newChartData.length > 0
-                ? newChartData[newChartData.length - 1].close
-                : 0.000000000005,
-            high: Number(ethers.formatEther(sp[divValue])),
-            low: Number(ethers.formatEther(sp[divValue])),
-            close: Number(ethers.formatEther(sp[divValue])),
-          };
-          newChartData.push(newDataPoint);
-        }
-      }
-
-      // 데이터가 시간 순서대로 정렬되어 있는지 확인
-      newChartData.sort((a, b) => (a.time as number) - (b.time as number));
-
-      // 시리즈 데이터 업데이트
-      // if (seriesRef.current) {
-      //   seriesRef.current.setData(newChartData);
-      // }
-
-      // // chartData 상태 업데이트
-      setChartData(newChartData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    var value = 0;
-    // console.log(TXLogsFromServer);
-    TXLogsFromServer?.map((item) => {
-      if (
-        new Date(item.blockTimestamp).getTime() >=
-        new Date().getTime() - 24 * 60 * 60 * 1000
-      ) {
-        if (item.isMint) {
-          value +=
-            Math.ceil(Number(ethers.formatEther(item.reserveAmount)) * 10000) /
-            10000;
-        } else {
-          value +=
-            Math.ceil(Number(ethers.formatEther(item.refundAmount)) * 10000) /
-            10000;
-        }
-      }
-      // console.log(marketCap);
-    });
-    setvolume(value.toFixed(5));
-  }, [TXLogsFromServer]);
 
   const fetchHolderDistributionFromServer = async () => {
+    const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
+      if (targetOuterKey in data) {
+        return { [targetOuterKey]: data[targetOuterKey] };
+      }
+      return {};
+    };
     try {
       const data = await HolderDistribution();
       const filteredData = filterDataByOuterKey(data, params.id);
@@ -231,80 +90,7 @@ export default function Detail({ params }: { params: { id: string } }) {
     }
   };
 
-  // const fetchTXLogsFromServer = async (
-  //   tokenAddress: string,
-  //   setEventsFromDB: any,
-  // ) => {
-  //   const response = await TxlogsMintBurn(tokenAddress);
-  //   setEventsFromDB(response);
-  // };
-
-  const fetch20TXLogsFromServer = async () => {
-    const response = await TxlogsMintBurn(params.id);
-    setTXLogsFromServer(filterEventsByToken(response));
-  };
-
-  // const checkMetaMaskInstalled = () => {
-  //   if (!window.ethereum) {
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
-  // const checkAccountAddressInitialized = (address: any) => {
-  //   if (!address) {
-  //     return false;
-  //   }
-  //   return true;
-  // };
-  useEffect(() => {
-    // console.log(Chartdata);
-    if (Chartdata) {
-      setPricePercentage({
-        price: Chartdata[Chartdata.length - 1]?.close || 0,
-        percentage: Math.ceil(
-          ((Chartdata[Chartdata.length - 1]?.close || 0) /
-            (Chartdata[Chartdata.length - 1]?.open || 0)) *
-            100 -
-            100,
-        ),
-      });
-    }
-  }, [Chartdata]);
-
-  const filterEventsByToken = (data: any): any[] => {
-    try {
-      const filteredMintEvents = data.mintEvents.map((event: any) => ({
-        ...event,
-        isMint: true,
-      }));
-
-      const filteredBurnEvents = data.burnEvents.map((event: any) => ({
-        ...event,
-        isMint: false,
-      }));
-
-      const combinedEvents = [...filteredMintEvents, ...filteredBurnEvents];
-      combinedEvents.sort(
-        (a, b) =>
-          new Date(a.blockTimestamp).getTime() -
-          new Date(b.blockTimestamp).getTime(),
-      );
-
-      return combinedEvents;
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  };
-
   //MARK: - Set Distribution
-  const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
-    if (targetOuterKey in data) {
-      return { [targetOuterKey]: data[targetOuterKey] };
-    }
-    return {};
-  };
   return width < 768 ? (
     <main className="flex h-[70vh] w-[100vw] flex-col items-center justify-center gap-4">
       <Sorry />
@@ -353,7 +139,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               <ModuleInfo
                 title="Marketcap"
                 className="mr-20 bg-transparent"
-                desc={marketCap + " ETH"}
+                desc={tokenInfo.marketCap + " ETH"}
                 key={"Marketcap-detail"}
               />,
               <ModuleInfo

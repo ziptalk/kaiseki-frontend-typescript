@@ -14,6 +14,7 @@ import { SERVER_ENDPOINT } from "@/global/projectConfig";
 import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
 import contracts from "@/global/contracts";
 import { initialPrice } from "@/global/createValue";
+import { getDataFromToken } from "@/utils/getCurve";
 
 const { abi: MCV2_BondABI } = MCV2_BondArtifact;
 const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
@@ -39,6 +40,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({
 
   useEffect(() => {
     fetchAndUpdateData();
+    // console.log(getDataFromToken(tokenAddress));
   }, [getOnce, tokenAddress]);
 
   function filterEventsByToken(data: any, token: any) {

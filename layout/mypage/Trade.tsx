@@ -40,9 +40,9 @@ export const Trade = ({
     }
   };
 
-  useEffect(() => {
-    console.log({ values });
-  }, [values]);
+  // useEffect(() => {
+  //   console.log({ values });
+  // }, [values]);
 
   useEffect(() => {
     fetchValues();
