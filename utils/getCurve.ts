@@ -71,45 +71,60 @@ export const getDataFromToken = async (
   tokenAddress: string,
   setRef?: React.MutableRefObject<ISeriesApi<"Bar"> | undefined>,
 ) => {
-  // const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  // const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
-  // const bondContract = new ethers.Contract(
-  //   contracts.MCV2_Bond,
-  //   MCV2_BondABI,
-  //   provider,
-  // );
+  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
+  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
+  const bondContract = new ethers.Contract(
+    contracts.MCV2_Bond,
+    MCV2_BondABI,
+    provider,
+  );
 
-  const tokenInfo: TokenAllInfo = await FindTokenByAddress(tokenAddress);
-  const sp = createStep(tokenInfo.threshold).slice(1, 101);
-  // const steps: BondStep[] = await bondContract.getSteps(tokenAddress); // 서버로 마이그레이션 작업 필요
-  // const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
-  const data = await TxlogsMintBurn(tokenAddress);
-  const filteredData = filterEventsByToken(data);
-  const currentSupply = getTokenCreated(filteredData);
-  const chartData = getChartData(filteredData, sp);
-  const marketCap = Number(
-    (chartData[chartData.length - 1]?.close || 0) *
-      (Number(currentSupply) + 200000) *
-      1000,
-  ).toFixed(5);
-  await ChangeMcap({ tokenAddress, marketCap: Number(marketCap) });
+  // const tokenInfo: TokenAllInfo = await FindTokenByAddress(tokenAddress);
+  // const sp = createStep(tokenInfo.threshold).slice(1, 101);
+  // console.log("sp", sp, tokenInfo.threshold);
+  try {
+    const steps: BondStep[] = await bondContract.getSteps(tokenAddress); // 서버로 마이그레이션 작업 필요
+    const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
+    const data = await TxlogsMintBurn(tokenAddress);
+    const filteredData = filterEventsByToken(data);
+    const currentSupply = getTokenCreated(filteredData);
+    const chartData = getChartData(filteredData, sp);
+    const marketCap = Number(
+      (chartData[chartData.length - 1]?.close || 0) *
+        (Number(currentSupply) + 200000) *
+        1000,
+    ).toFixed(5);
+    await ChangeMcap({ tokenAddress, marketCap: Number(marketCap) });
 
-  return {
-    price: {
-      price: chartData[chartData.length - 1]?.close || 0,
-      percentage: Math.ceil(
-        ((chartData[chartData.length - 1]?.close || 0) /
-          (chartData[chartData.length - 1]?.open || 0)) *
-          100 -
-          100,
-      ),
-    },
-    volume: await get24HVolume(filteredData),
-    tokenCreated: (Number(currentSupply) + 200000).toFixed(),
-    bondingCurve: getBondingCurve(Number(currentSupply)),
-    chartData,
-    txlogsFromServer: filteredData,
-  };
+    return {
+      price: {
+        price: chartData[chartData.length - 1]?.close || 0,
+        percentage: Math.ceil(
+          ((chartData[chartData.length - 1]?.close || 0) /
+            (chartData[chartData.length - 1]?.open || 0)) *
+            100 -
+            100,
+        ),
+      },
+      volume: await get24HVolume(filteredData),
+      tokenCreated: (Number(currentSupply) + 200000).toFixed(),
+      bondingCurve: getBondingCurve(Number(currentSupply)),
+      chartData,
+      txlogsFromServer: filteredData,
+    };
+  } catch (error: any) {
+    console.error("Error:", error);
+    return {
+      price: {
+        price: 0,
+        percentage: 0,
+      },
+      volume: "0",
+      tokenCreated: "0",
+      bondingCurve: 0,
+      chartData: [],
+    };
+  }
 };
 
 function filterEventsByToken(data: any) {

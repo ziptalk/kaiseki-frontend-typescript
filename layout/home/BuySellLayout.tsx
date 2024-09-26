@@ -51,7 +51,6 @@ export const BuySellLayout = ({
 
     const interval = setInterval(() => {
       getDataFromToken(tokenAddress).then((res) => {
-        console.log(res);
         setPricePercentage(res.price);
         setvolume(res.volume);
         setTokenCreated(res.tokenCreated);
@@ -151,7 +150,12 @@ export const BuySellLayout = ({
               </p>
             </div>
             <div className="h-[210px] border-black ">
-              <TradingViewChart tokenAddress={tokenAddress} />
+              <TradingViewChart
+                {...{
+                  tokenAddress,
+                  chartData: Chartdata || [],
+                }}
+              />
             </div>
           </div>
           {isMobile && (
