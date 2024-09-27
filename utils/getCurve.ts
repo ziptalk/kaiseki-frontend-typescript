@@ -67,7 +67,7 @@ export const setCurStepsIntoState = async ({
   }
 };
 
-export const getDataFromToken = async (
+export const getDataFromToken: any = async (
   tokenAddress: string,
   threshold: number,
 ) => {
@@ -80,7 +80,7 @@ export const getDataFromToken = async (
   // );
 
   const sp = createStep(threshold).slice(1, 101);
-  console.log("sp", sp, threshold);
+  // console.log("sp", sp, threshold);
   // const steps: BondStep[] = await bondContract.getSteps(tokenAddress); // 서버로 마이그레이션 작업 필요
   // const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
   const data = await TxlogsMintBurn(tokenAddress);

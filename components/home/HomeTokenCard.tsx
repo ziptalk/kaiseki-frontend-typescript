@@ -18,7 +18,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   const [tokenData, setTokenData] = useState<any>(0);
 
   useEffect(() => {
-    getDataFromToken(tokenAddress, threshold || 0.01).then((res) => {
+    getDataFromToken(tokenAddress, threshold || 0.01).then((res: any) => {
       setTokenData(res);
     });
   }, [tokenAddress]);

@@ -7,13 +7,9 @@ import Slider from "@/components/common/Slider";
 import { PageLinkButton } from "@/components/atoms/PageLinkButton";
 import { Tradesection } from "@/components/detail/Tradesection";
 import HomeBondingCurveCard from "@/components/home/HomeBondingCurveCard";
-import { getDataFromToken, setCurStepsIntoState } from "@/utils/getCurve";
-import { ethers } from "ethers";
-import { FindTokenByAddress, TxlogsMintBurn } from "@/utils/apis/apis";
-import { BarData, UTCTimestamp } from "lightweight-charts";
-import MCV2_BondArtifact from "@/abis/MCV2_Bond.sol/MCV2_Bond.json";
-import contracts from "@/global/contracts";
-import { SERVER_ENDPOINT } from "@/global/projectConfig";
+import { getDataFromToken } from "@/utils/getCurve";
+import { FindTokenByAddress } from "@/utils/apis/apis";
+import { BarData } from "lightweight-charts";
 import { TokenAllInfo, TokenInfoInit } from "@/utils/apis/type";
 
 export const BuySellLayout = ({
@@ -38,35 +34,28 @@ export const BuySellLayout = ({
     FindTokenByAddress(tokenAddress).then((res) => {
       setTokenInfo(res);
     });
-
-    getDataFromToken(tokenAddress, 0.01)
-      .then((res) => {
-        setPricePercentage(res.price);
-        setvolume(res.volume);
-        setTokenCreated(res.tokenCreated);
-        setBondingCurveProgress(res.bondingCurve);
-        setChartData(res.chartData);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-
+    setDataFromToken();
     const interval = setInterval(() => {
-      getDataFromToken(tokenAddress, 0.01)
-        .then((res) => {
-          setPricePercentage(res.price);
-          setvolume(res.volume);
-          setTokenCreated(res.tokenCreated);
-          setBondingCurveProgress(res.bondingCurve);
-          setChartData(res.chartData);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      setDataFromToken();
     }, 5000); // Fetch every 5 seconds (adjust as needed)
-
     return () => clearInterval(interval);
   }, [tokenAddress]);
+
+  const setDataFromToken = async () => {
+    try {
+      const res = await getDataFromToken(
+        tokenAddress,
+        Number(tokenInfo.threshold),
+      );
+      setPricePercentage(res.price);
+      setvolume(res.volume);
+      setTokenCreated(res.tokenCreated);
+      setBondingCurveProgress(res.bondingCurve);
+      setChartData(res.chartData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const copyToClipboard = async (text: string) => {
     try {

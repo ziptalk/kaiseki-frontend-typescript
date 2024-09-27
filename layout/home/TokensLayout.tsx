@@ -6,7 +6,6 @@ import PagePre from "@/public/icons/pagePre.svg";
 import PageFirst from "@/public/icons/pageFirst.svg";
 import BottomSheet from "@/components/home/BottomSheet/BottomSheet";
 import { Search } from "@/utils/apis/apis";
-import Link from "next/link";
 
 export const TokensLayout = () => {
   const [tokenInfo, setTokenInfo] = useState<any[] | null>(null);
@@ -14,7 +13,6 @@ export const TokensLayout = () => {
   const [maxPage, setMaxPage] = useState<number>(1);
   const [pagePer, setPagePer] = useState<number>(10);
   const [value, setValue] = useState<string | undefined>(undefined);
-  // const [info, setInfo] = useState<TokenInfo>(initialTokenInfo);
   const [tokenAddress, setTokenAddress] = useState<string>("");
   const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
     undefined,
@@ -47,8 +45,6 @@ export const TokensLayout = () => {
 
   const setPageNum = (num: number) => {
     setPageNumber(num);
-    // setInfo(initialTokenInfo);
-
     window.scrollTo(0, width < 768 ? 300 : 575);
   };
 

@@ -63,7 +63,7 @@ export interface TokenAllInfo {
   reserveToken: string;
   symbol: string;
   telegramUrl: string;
-  threshold: number;
+  threshold: string;
   timestamp: string;
   tokenAddress: string;
   twitterUrl: string;
@@ -92,7 +92,7 @@ export const TokenInfoInit: TokenAllInfo = {
   reserveToken: "",
   symbol: "",
   telegramUrl: "",
-  threshold: 0,
+  threshold: "0.01",
   timestamp: "",
   tokenAddress: "",
   twitterUrl: "",

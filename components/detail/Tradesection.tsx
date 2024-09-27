@@ -16,6 +16,7 @@ import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import contracts from "@/global/contracts";
+
 interface TradesectionProps {
   memeTokenSymbol: string;
   tokenAddress: string;
@@ -80,12 +81,12 @@ export const Tradesection = ({
     signer,
   );
 
-  const checkMetaMaskInstalled = () => {
-    if (!window.ethereum) {
-      return false;
-    }
-    return true;
-  };
+  // const checkMetaMaskInstalled = () => {
+  //   if (!window.ethereum) {
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const checkAccountAddressInitialized = (address: any) => {
     if (!address) {

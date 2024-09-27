@@ -50,38 +50,32 @@ export default function Detail({ params }: { params: { id: string } }) {
       setTokenInfo(res);
     });
     fetchHolderDistributionFromServer();
-    getDataFromToken(params.id, 0.01)
-      .then((res) => {
-        setPricePercentage(res.price);
-        setvolume(res.volume);
-        setTokenCreated(res.tokenCreated);
-        setBondingCurveProgress(res.bondingCurve);
-        setChartData(res.chartData);
-        setTXLogsFromServer(res.txlogsFromServer || []);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+    setDataFromToken();
 
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
-      getDataFromToken(params.id, 0.01)
-        .then((res) => {
-          setPricePercentage(res.price);
-          setvolume(res.volume);
-          setTokenCreated(res.tokenCreated);
-          setBondingCurveProgress(res.bondingCurve);
-          setChartData(res.chartData);
-          setTXLogsFromServer(res.txlogsFromServer || []);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      setDataFromToken();
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
   }, [params.id]);
 
+  const setDataFromToken = async () => {
+    try {
+      const res = await getDataFromToken(
+        params.id,
+        Number(tokenInfo.threshold),
+      );
+      setPricePercentage(res.price);
+      setvolume(res.volume);
+      setTokenCreated(res.tokenCreated);
+      setBondingCurveProgress(res.bondingCurve);
+      setChartData(res.chartData);
+      setTXLogsFromServer(res.txlogsFromServer);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const fetchHolderDistributionFromServer = async () => {
     const filterDataByOuterKey = (data: any, targetOuterKey: string) => {
       if (targetOuterKey in data) {
