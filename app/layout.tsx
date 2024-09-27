@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Create your coin with near-zero fee. Trade instantly. Win Big. Each coin on Memeslot is a fair-launch with no presale and no team allocation. ",
   icons: {
-    icon: "icons/logo_icon.svg",
+    icon: "/icons/logo_icon.svg",
   },
 };
 import { arial } from "@/fonts/font";

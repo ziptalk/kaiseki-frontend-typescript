@@ -18,6 +18,11 @@ export default function Raffle() {
   const [success, setSuccess] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
   const [width, setWidth] = useState(1000);
+  const [image, setImage] = useState(false);
+  const [src] = useState({
+    imageSrc: "/images/congratulation.gif",
+    hash: Date.now(),
+  });
 
   useEffect(() => {
     setWidth(window.innerWidth);
@@ -26,6 +31,15 @@ export default function Raffle() {
     };
     window.addEventListener("resize", updateWindowDimensions);
     return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setImage(true);
+    }, 500);
+    setTimeout(() => {
+      setImage(false);
+    }, 3000);
   }, []);
 
   const onButtonClick = async () => {
@@ -48,11 +62,13 @@ export default function Raffle() {
 
   return (
     <div className="p-2">
-      <img
-        src="/images/congratulation.gif"
-        alt="congrats"
-        className="fixed h-full w-full"
-      />
+      {image && (
+        <img
+          src={`${src.imageSrc}?${src.hash}`}
+          alt="congrats"
+          className="fixed h-full w-full"
+        />
+      )}
       <div className="mx-auto mt-3 w-full md:w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home
@@ -149,7 +165,7 @@ export default function Raffle() {
               </h1>
               <div className="mt-2 w-full items-center">
                 <input
-                  className="h-10 w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] px-2 text-xs text-white md:h-[55px] md:px-[20px] md:text-base"
+                  className="z-20 h-10 w-full rounded-[5px] border border-[#8F8F8F] bg-[#303030] px-2 text-xs text-white md:h-[55px] md:px-[20px] md:text-base"
                   type="text"
                   name="inputValue"
                   autoComplete="off"
