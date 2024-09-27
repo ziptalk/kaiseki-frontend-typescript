@@ -3,13 +3,27 @@ import Image from "next/image";
 import { UsersTrades } from "@/utils/apis/apis";
 import { ethers } from "ethers";
 import { MyTradeResponse } from "@/utils/apis/type";
+import { useRouter } from "next/navigation";
 
 export const Trade = ({
   userAddress,
+  setModal,
 }: {
   userAddress: `0x${string}` | undefined;
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
   const [values, setValues] = useState<any[]>([]);
+  const [width, setWidth] = useState(250);
+
+  useEffect(() => {
+    setWidth(window.innerWidth);
+    const updateWindowDimensions = () => {
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => window.removeEventListener("resize", updateWindowDimensions);
+  }, []);
 
   const fetchValues = async () => {
     setValues(filterEventsByToken(await UsersTrades(userAddress)));
@@ -57,17 +71,19 @@ export const Trade = ({
           newDate = date.getDate() !== prevDate.getDate();
         }
         return (
-          <div
-            // href={`${value.tokenAddress}`}
-            key={idx}
-            className="flex flex-col gap-2.5"
-          >
+          <div key={idx} className="flex flex-col gap-2.5">
             {newDate && (
               <div className="mt-5 px-5 text-base font-semibold text-white">
                 {date.toDateString()}
               </div>
             )}
-            <div className="flex items-center justify-between px-5 py-3 md:hover:bg-[#404040]">
+            <div
+              className="flex cursor-pointer items-center justify-between px-5 py-3 md:hover:bg-[#404040]"
+              onMouseDown={() => {
+                width > 768 && setModal && setModal(false);
+                width > 768 && router.push(`/${value.tokenAddress}`);
+              }}
+            >
               <div className="flex items-center gap-2">
                 <div>
                   {value.isMint ? (

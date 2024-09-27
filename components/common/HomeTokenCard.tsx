@@ -14,9 +14,9 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   cid,
   setModal,
 }) => {
+  const router = useRouter();
   const [curve, setCurve] = useState(0);
   const [width, setWidth] = useState(250);
-  const router = useRouter();
 
   const getCurve = async () => {
     await setCurStepsIntoState({ tokenAddress }).then((res) => {
