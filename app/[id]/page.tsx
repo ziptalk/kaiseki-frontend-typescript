@@ -50,25 +50,33 @@ export default function Detail({ params }: { params: { id: string } }) {
       setTokenInfo(res);
     });
     fetchHolderDistributionFromServer();
-    getDataFromToken(params.id).then((res) => {
-      setPricePercentage(res.price);
-      setvolume(res.volume);
-      setTokenCreated(res.tokenCreated);
-      setBondingCurveProgress(res.bondingCurve);
-      setChartData(res.chartData);
-      setTXLogsFromServer(res.txlogsFromServer || []);
-    });
-
-    const interval = setInterval(() => {
-      fetchHolderDistributionFromServer();
-      getDataFromToken(params.id).then((res) => {
+    getDataFromToken(params.id, tokenInfo.threshold)
+      .then((res) => {
         setPricePercentage(res.price);
         setvolume(res.volume);
         setTokenCreated(res.tokenCreated);
         setBondingCurveProgress(res.bondingCurve);
         setChartData(res.chartData);
         setTXLogsFromServer(res.txlogsFromServer || []);
+      })
+      .catch((e) => {
+        console.error(e);
       });
+
+    const interval = setInterval(() => {
+      fetchHolderDistributionFromServer();
+      getDataFromToken(params.id, tokenInfo.threshold)
+        .then((res) => {
+          setPricePercentage(res.price);
+          setvolume(res.volume);
+          setTokenCreated(res.tokenCreated);
+          setBondingCurveProgress(res.bondingCurve);
+          setChartData(res.chartData);
+          setTXLogsFromServer(res.txlogsFromServer || []);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);

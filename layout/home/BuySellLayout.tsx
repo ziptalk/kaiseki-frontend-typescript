@@ -39,22 +39,30 @@ export const BuySellLayout = ({
       setTokenInfo(res);
     });
 
-    getDataFromToken(tokenAddress).then((res) => {
-      setPricePercentage(res.price);
-      setvolume(res.volume);
-      setTokenCreated(res.tokenCreated);
-      setBondingCurveProgress(res.bondingCurve);
-      setChartData(res.chartData);
-    });
-
-    const interval = setInterval(() => {
-      getDataFromToken(tokenAddress).then((res) => {
+    getDataFromToken(tokenAddress, tokenInfo.threshold)
+      .then((res) => {
         setPricePercentage(res.price);
         setvolume(res.volume);
         setTokenCreated(res.tokenCreated);
         setBondingCurveProgress(res.bondingCurve);
         setChartData(res.chartData);
+      })
+      .catch((e) => {
+        console.error(e);
       });
+
+    const interval = setInterval(() => {
+      getDataFromToken(tokenAddress, tokenInfo.threshold)
+        .then((res) => {
+          setPricePercentage(res.price);
+          setvolume(res.volume);
+          setTokenCreated(res.tokenCreated);
+          setBondingCurveProgress(res.bondingCurve);
+          setChartData(res.chartData);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }, 5000); // Fetch every 5 seconds (adjust as needed)
 
     return () => clearInterval(interval);
