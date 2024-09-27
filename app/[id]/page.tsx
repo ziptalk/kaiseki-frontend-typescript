@@ -50,7 +50,7 @@ export default function Detail({ params }: { params: { id: string } }) {
       setTokenInfo(res);
     });
     fetchHolderDistributionFromServer();
-    getDataFromToken(params.id, tokenInfo.threshold)
+    getDataFromToken(params.id, 0.01)
       .then((res) => {
         setPricePercentage(res.price);
         setvolume(res.volume);
@@ -65,7 +65,7 @@ export default function Detail({ params }: { params: { id: string } }) {
 
     const interval = setInterval(() => {
       fetchHolderDistributionFromServer();
-      getDataFromToken(params.id, tokenInfo.threshold)
+      getDataFromToken(params.id, 0.01)
         .then((res) => {
           setPricePercentage(res.price);
           setvolume(res.volume);

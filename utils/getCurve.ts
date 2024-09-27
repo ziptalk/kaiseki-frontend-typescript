@@ -71,18 +71,18 @@ export const getDataFromToken = async (
   tokenAddress: string,
   threshold: number,
 ) => {
-  const { abi: MCV2_BondABI } = MCV2_BondArtifact;
-  const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
-  const bondContract = new ethers.Contract(
-    contracts.MCV2_Bond,
-    MCV2_BondABI,
-    provider,
-  );
+  // const { abi: MCV2_BondABI } = MCV2_BondArtifact;
+  // const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_BASE);
+  // const bondContract = new ethers.Contract(
+  //   contracts.MCV2_Bond,
+  //   MCV2_BondABI,
+  //   provider,
+  // );
 
-  // const sp = createStep(threshold).slice(1, 101);
-  // console.log("sp", sp, threshold);
-  const steps: BondStep[] = await bondContract.getSteps(tokenAddress); // 서버로 마이그레이션 작업 필요
-  const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
+  const sp = createStep(threshold).slice(1, 101);
+  console.log("sp", sp, threshold);
+  // const steps: BondStep[] = await bondContract.getSteps(tokenAddress); // 서버로 마이그레이션 작업 필요
+  // const sp: bigint[] = steps.map((step) => step.price).slice(1, 101);
   const data = await TxlogsMintBurn(tokenAddress);
   const filteredData = filterEventsByToken(data);
   const currentSupply = getTokenCreated(filteredData);

@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
-import { getDataFromToken, setCurStepsIntoState } from "@/utils/getCurve";
+import { getDataFromToken } from "@/utils/getCurve";
 
 export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
   createdBy,
+  threshold,
   rafflePrize,
   description,
   tokenAddress,
@@ -17,7 +18,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   const [tokenData, setTokenData] = useState<any>(0);
 
   useEffect(() => {
-    getDataFromToken(tokenAddress).then((res) => {
+    getDataFromToken(tokenAddress, threshold || 0.01).then((res) => {
       setTokenData(res);
     });
   }, [tokenAddress]);

@@ -36,7 +36,7 @@ interface TokenCardTypes {
   clickedToken?: string;
   cid: string;
   rafflePrize?: string;
-
+  threshold?: number;
   twitterUrl?: string;
   websiteUrl?: string;
   telegramUrl?: string;

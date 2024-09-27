@@ -39,7 +39,7 @@ export const BuySellLayout = ({
       setTokenInfo(res);
     });
 
-    getDataFromToken(tokenAddress, tokenInfo.threshold)
+    getDataFromToken(tokenAddress, 0.01)
       .then((res) => {
         setPricePercentage(res.price);
         setvolume(res.volume);
@@ -52,7 +52,7 @@ export const BuySellLayout = ({
       });
 
     const interval = setInterval(() => {
-      getDataFromToken(tokenAddress, tokenInfo.threshold)
+      getDataFromToken(tokenAddress, 0.01)
         .then((res) => {
           setPricePercentage(res.price);
           setvolume(res.volume);
