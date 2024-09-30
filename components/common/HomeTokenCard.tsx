@@ -12,6 +12,7 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
   tokenAddress,
   rafflePrize,
   cid,
+  bondingCurve,
   setModal,
 }) => {
   const router = useRouter();
@@ -65,7 +66,11 @@ export const MyPageTokenCard: FC<TokenCardTypes> = ({
         </div>
       </div>
       <div className="mt-4 w-full">
-        <BondingCurveCard prog={Math.floor(curve)} bgColor="[#454545]" my />
+        <BondingCurveCard
+          prog={Math.floor(Number(bondingCurve))}
+          bgColor="[#454545]"
+          my
+        />
       </div>
     </div>
   );

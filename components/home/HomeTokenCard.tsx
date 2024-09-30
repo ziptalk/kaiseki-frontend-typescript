@@ -7,22 +7,14 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
   ticker,
   createdBy,
-  threshold,
   rafflePrize,
   description,
   tokenAddress,
   clickedToken,
   cid,
+  bondingCurve,
   marketCap,
 }) => {
-  const [tokenData, setTokenData] = useState<any>(0);
-
-  useEffect(() => {
-    getDataFromToken(tokenAddress, threshold || 0.01).then((res: any) => {
-      setTokenData(res);
-    });
-  }, [tokenAddress]);
-
   return (
     <div
       // href={tokenAddress ? tokenAddress : ""}
@@ -55,15 +47,13 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         >
           {marketCap} ETH
         </h1>
-        <div className="text-sm text-[#CFCFCF]">
-          ({tokenData.bondingCurve}%)
-        </div>
+        <div className="text-sm text-[#CFCFCF]">({Number(bondingCurve)}%)</div>
       </div>
       <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
         <div
           className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
           // style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
-          style={{ width: `${Math.floor(tokenData.bondingCurve)}%` }}
+          style={{ width: `${Math.floor(Number(bondingCurve))}%` }}
         ></div>
       </div>
     </div>

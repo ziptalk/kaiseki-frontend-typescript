@@ -46,6 +46,7 @@ const Create: NextPage = () => {
       Name: "",
       Ticker: "",
       telegramId: "@",
+      prize: "",
       Image: undefined,
       Description: "",
     },

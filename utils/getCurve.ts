@@ -92,7 +92,11 @@ export const getDataFromToken: any = async (
       (Number(currentSupply) + 200000) *
       1000,
   ).toFixed(5);
-  await ChangeMcap({ tokenAddress, marketCap: Number(marketCap) });
+  await ChangeMcap({
+    tokenAddress,
+    marketCap: Number(marketCap),
+    bondingCurve: getBondingCurve(Number(currentSupply)).toFixed(),
+  });
 
   return {
     price: {

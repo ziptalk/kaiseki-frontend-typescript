@@ -27,6 +27,7 @@ export const HolderDistribution = async () => {
 export const ChangeMcap = async (data: {
   tokenAddress: string;
   marketCap: number;
+  bondingCurve: string;
 }) => {
   try {
     const response = await baseAPI.put("changeMcap", data);

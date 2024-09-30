@@ -40,6 +40,7 @@ interface TokenCardTypes {
   twitterUrl?: string;
   websiteUrl?: string;
   telegramUrl?: string;
+  bondingCurve?: string;
 
   setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }

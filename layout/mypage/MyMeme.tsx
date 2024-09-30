@@ -30,6 +30,7 @@ export const MyMeme = ({
             tokenAddress: meme.tokenAddress,
             cid: meme.cid,
             rafflePrize: meme.rafflePrize,
+            bondingCurve: meme.bondingCurve,
             setModal,
           }}
           key={index}
