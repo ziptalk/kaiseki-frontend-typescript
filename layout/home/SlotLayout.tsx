@@ -75,7 +75,6 @@ export const SlotLayout = () => {
           raffleData.result.tokens[page - 1].token
         ) {
           setHref("/raffle/fail");
-          return;
         }
       }
     } else {
