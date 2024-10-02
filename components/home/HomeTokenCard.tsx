@@ -28,6 +28,8 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
           <Link
             className="dexbutton hover:dexbutton-hover absolute bottom-5 right-5 flex h-[50px] w-[150px] items-center justify-center rounded-2xl text-base font-bold text-white"
             href="https://app.uniswap.org/explore"
+            target="_blank"
+            onMouseDown={(e) => e.stopPropagation()}
           >
             Go to the DEX
           </Link>
