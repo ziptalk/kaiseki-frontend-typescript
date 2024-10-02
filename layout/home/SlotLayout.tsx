@@ -133,7 +133,7 @@ export const SlotLayout = () => {
             title={
               raffleData && raffleData.result.tokens
                 ? href === "/raffle/check" || href === "/raffle/fail"
-                  ? "Check Winner!"
+                  ? "Check the winner!"
                   : "Raffle is ready!"
                 : "Loading..."
             }
