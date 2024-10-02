@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { TokenDesc } from "../common/TokenDesc";
 import { digital } from "@/fonts/font";
-import { getDataFromToken } from "@/utils/getCurve";
+import Pointing from "/public/icons/pointing.svg";
+import Link from "next/link";
 
 export const HomeTokenCard: FC<TokenCardTypes> = ({
   name,
@@ -18,8 +19,20 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
   return (
     <div
       // href={tokenAddress ? tokenAddress : ""}
-      className={`h-full w-full cursor-pointer bg-[#252525] p-[10px] ${tokenAddress === clickedToken && "md:tokenarea-background"} md:hover:tokenarea-background border border-transparent`}
+      className={`relative h-full w-full cursor-pointer bg-[#252525] p-[10px] ${tokenAddress === clickedToken && "md:tokenarea-background"} md:hover:tokenarea-background border border-transparent`}
     >
+      {bondingCurve === "100" && (
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[#000000b3] p-5">
+          <img src="/images/not_for_sale.png" alt="Not for sale" />
+          <Pointing className="absolute right-20 top-20 animate-bounce" />
+          <Link
+            className="dexbutton hover:dexbutton-hover absolute bottom-5 right-5 flex h-[50px] w-[150px] items-center justify-center rounded-2xl text-base font-bold text-white"
+            href="https://app.uniswap.org/explore"
+          >
+            Go to the DEX
+          </Link>
+        </div>
+      )}
       <div className={`flex ${createdBy && "h-[148px]"} gap-[10px]`}>
         <img
           src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`}

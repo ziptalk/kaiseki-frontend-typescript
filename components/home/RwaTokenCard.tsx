@@ -71,7 +71,7 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
             ? `${day} Day ${hour.toString().padStart(2, "0")}:
           ${minute.toString().padStart(2, "0")} :
           ${second.toString().padStart(2, "0")} left!`
-            : "Check winner!"}
+            : "Check the winner!"}
         </div>
       </div>
     </div>

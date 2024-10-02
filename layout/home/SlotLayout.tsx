@@ -21,6 +21,16 @@ const RotatingImage = () => {
     </div>
   );
 };
+
+const RotatingPCImage = ({ hovered }: { hovered: boolean }) => {
+  return (
+    <div className="absolute flex items-center justify-center">
+      <div className="rotating-image-container">
+        <Stick className={hovered ? "fill-yellow-300" : `fill-[#FF2626]`} />
+      </div>
+    </div>
+  );
+};
 export const SlotLayout = () => {
   const router = useRouter();
   const account = useAccount();
@@ -173,9 +183,7 @@ export const SlotLayout = () => {
       >
         <h1 className="create-title">create new coin</h1>
         <div className="flex h-36 w-20 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
-          <Stick
-            className={`${isHovered ? "fill-[#ffea00]" : stickColor ? `fill-[#FF2626]` : `fill-[#ffea00]`}`}
-          />
+          <RotatingPCImage hovered={isHovered} />
         </div>
       </div>
       <div

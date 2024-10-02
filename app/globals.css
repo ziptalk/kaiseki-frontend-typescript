@@ -32,6 +32,18 @@
       rgba(166, 13, 7, 0.3) 97.87%
     );
   }
+  .dexbutton {
+    background: var(
+      --raffle-progress-linear,
+      linear-gradient(279deg, #e00900 1.93%, #a60d07 86.23%)
+    );
+  }
+  .dexbutton-hover {
+    background: var(
+      --slot-color,
+      linear-gradient(201deg, #ff57f8 5.73%, #f00 54.03%, #ff002e 106.37%)
+    );
+  }
 }
 
 .connect-wallet {
