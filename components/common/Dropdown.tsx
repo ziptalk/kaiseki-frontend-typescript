@@ -33,7 +33,7 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
         />
       </button>
       <div
-        className={`absolute mt-1 flex w-full flex-col items-center justify-center rounded-[10px] bg-[#363636]`}
+        className={`absolute  z-20  mt-1 flex w-full flex-col items-center justify-center rounded-[10px] bg-[#363636]`}
       >
         {isDropdownView &&
           items.map((li, i) => (
