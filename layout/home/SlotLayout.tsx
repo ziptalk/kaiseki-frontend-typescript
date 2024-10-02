@@ -182,7 +182,7 @@ export const SlotLayout = () => {
         onClick={() => router.push("/create")}
       >
         <h1 className="create-title">create new coin</h1>
-        <div className="flex h-36 w-20 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
+        <div className="flex h-36 w-32 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
           <RotatingPCImage hovered={isHovered} />
         </div>
       </div>
