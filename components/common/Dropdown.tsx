@@ -24,7 +24,7 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
     >
       <button
         onClick={handleClickContainer}
-        className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#363636] text-sm text-[#AEAEAE] md:text-base"
+        className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#363636] text-sm text-[#AEAEAE] hover:bg-[#454545] md:text-base"
       >
         {placeholder}
         {selectedItem}
@@ -44,7 +44,7 @@ export const Dropdown = ({ items, placeholder, setItem }: DropdownProps) => {
                 setDropdownView(false);
               }}
               key={i}
-              className="relative w-full cursor-pointer rounded-[10px] px-[15px] py-[10px] text-center text-[#AEAEAE] hover:bg-[#2a2a2a]"
+              className="relative w-full cursor-pointer rounded-[10px] px-[15px] py-[10px] text-center text-[#AEAEAE]  hover:bg-[#454545]"
             >
               {selectedItem === li.item && (
                 <Selected className="absolute left-8 top-3" />
