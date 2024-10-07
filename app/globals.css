@@ -32,6 +32,12 @@
       rgba(166, 13, 7, 0.3) 97.87%
     );
   }
+  .buttonhover {
+    background: var(
+      --red-linear,
+      linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%)
+    );
+  }
   .dexbutton {
     background: var(
       --raffle-progress-linear,

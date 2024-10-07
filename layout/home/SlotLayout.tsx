@@ -104,6 +104,18 @@ export const SlotLayout = () => {
   }, [raffleData]);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      if (totalPage === 0) return;
+      if (page === totalPage) {
+        setPage(1);
+      } else {
+        setPage(page + 1);
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [page]);
+
+  useEffect(() => {
     getRaffle();
   }, []);
 

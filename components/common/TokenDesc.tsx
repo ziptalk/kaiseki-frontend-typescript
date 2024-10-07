@@ -28,11 +28,11 @@ export const TokenDesc = ({
         [ticker: {ticker}]
       </h1>
       {createdBy && (
-        <div className=" flex items-center gap-[5px] text-sm text-[#C5F900]">
+        <div className=" flex items-center gap-[5px] text-sm text-[#FAFF00]">
           <h1 className="text-nowrap ">created by: </h1>
           <img
             className="rounded-full"
-            src="/icons/bomb.svg"
+            src="/icons/userIcon.svg"
             alt=""
             style={{ width: 12, height: 12 }}
           />

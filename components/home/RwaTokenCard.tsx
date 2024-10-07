@@ -53,11 +53,11 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           {`[ticker: ${props.symbol}]`}
         </div>
         <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
-          <div className="neon-lime whitespace-nowrap text-[#C5F900]">
+          <div className="neon-lime whitespace-nowrap text-[#FAFF00]">
             created by:{" "}
           </div>
-          <img className="h-3 w-3" src="/icons/bomb.svg" alt="" />
-          <div className="neon-lime truncate text-[#C5F900]">
+          <img className="h-3 w-3" src="/icons/userIcon.svg" alt="" />
+          <div className="neon-lime truncate text-[#FAFF00]">
             {width < 768 ? props.creator.slice(0, 6) + "..." : props.creator}
           </div>
         </div>
@@ -67,11 +67,13 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
         <div
           className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
         >
-          {time - new Date().getTime() > 0
-            ? `${day} Day ${hour.toString().padStart(2, "0")}:
+          {time - new Date().getTime() > 0 ? (
+            `${day} Day ${hour.toString().padStart(2, "0")}:
           ${minute.toString().padStart(2, "0")} :
           ${second.toString().padStart(2, "0")} left!`
-            : "Check the winner!"}
+          ) : (
+            <img src="/images/checkTheWinner.gif" alt="Raffle End" />
+          )}
         </div>
       </div>
     </div>

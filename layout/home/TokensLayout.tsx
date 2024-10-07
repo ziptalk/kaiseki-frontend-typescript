@@ -14,10 +14,12 @@ export const TokensLayout = () => {
   const [pagePer, setPagePer] = useState<number>(10);
   const [value, setValue] = useState<string | undefined>(undefined);
   const [tokenAddress, setTokenAddress] = useState<string>("");
-  const [sort, setSort] = useState<"createdAt" | "currentSupply" | undefined>(
+  const [sort, setSort] = useState<"created" | "marketCap" | undefined>(
     undefined,
   );
-  const [order, setOrder] = useState<"asc" | "desc" | undefined>(undefined);
+  const [state, setState] = useState<"all" | "available" | "dex" | undefined>(
+    undefined,
+  );
 
   const [width, setWidth] = useState(0);
   useEffect(() => {
@@ -50,14 +52,14 @@ export const TokensLayout = () => {
 
   useEffect(() => {
     setHomeTokens();
-  }, [pageNum, sort, order]);
+  }, [pageNum, sort, state]);
 
   const setHomeTokens = async () => {
     const response = await Search({
       page: pageNum,
       keyword: value,
       sort,
-      order,
+      state,
     });
     setTokenInfo(response.tokens);
     setMaxPage(response.maxPage);
@@ -85,7 +87,7 @@ export const TokensLayout = () => {
               placeholder="sort : "
               items={[
                 { item: "created", value: "createdAt" },
-                { item: "popularity", value: "currentSupply" },
+                { item: "market cap", value: "marketCap" },
               ]}
               setItem={(value) => {
                 setSort(value);
@@ -94,11 +96,12 @@ export const TokensLayout = () => {
             <Dropdown // order dropdown
               placeholder="order : "
               items={[
-                { item: "desc", value: "desc" },
-                { item: "asc", value: "asc" },
+                { item: "all", value: "all" },
+                { item: "available", value: "available" },
+                { item: "listed on dex", value: "dex" },
               ]}
               setItem={(value) => {
-                setOrder(value);
+                setState(value);
               }}
             />
           </div>

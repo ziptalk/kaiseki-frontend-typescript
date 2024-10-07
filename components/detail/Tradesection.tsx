@@ -16,15 +16,18 @@ import MCV2_ZapArtifact from "@/abis/MCV2_ZapV1.sol/MCV2_ZapV1.json";
 import { ether, wei } from "@/utils/weiAndEther";
 import { useEthersSigner } from "@/utils/ethersSigner";
 import contracts from "@/global/contracts";
+import Link from "next/link";
 
 interface TradesectionProps {
   memeTokenSymbol: string;
+  bondingCurveProgress: number;
   tokenAddress: string;
   cid: string;
 }
 
 export const Tradesection = ({
   tokenAddress,
+  bondingCurveProgress,
   memeTokenSymbol,
   cid,
 }: TradesectionProps) => {
@@ -39,7 +42,7 @@ export const Tradesection = ({
   const [isPending, setIsPending] = useState(false);
   const [curUserReserveBalance, setCurUserReserveBalance] = useState("0");
   const [priceForNextMint, setPriceForNextMint] = useState(0);
-  const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
+  // const [bondingCurveProgress, setBondingCurveProgress] = useState(0);
   const [steps, setSteps] = useState<BigInt[]>([]);
 
   const [inputValue, setInputValue] = useState<string>("");
@@ -103,7 +106,7 @@ export const Tradesection = ({
         checkAccountAddressInitialized(account.address)
       ) {
         setUserMemeTokenBalanceIntoState();
-        setCurStepsIntoState();
+        // setCurStepsIntoState();
         setPriceForNextMintIntoState();
         setUserReserveBalanceIntoState();
         getBondSteps();
@@ -162,20 +165,20 @@ export const Tradesection = ({
     }
   };
 
-  const setCurStepsIntoState = async () => {
-    try {
-      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      const targetPrice = await bondContract.priceForNextMint(tokenAddress);
-      const stepPrices: bigint[] = steps.map((step) => step.price);
-      for (let i = 0; i < stepPrices.length; i++) {
-        if (Number(stepPrices[i]) == Number(targetPrice)) {
-          setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
-        }
-      }
-    } catch (error: any) {
-      console.error("Error:", error);
-    }
-  };
+  // const setCurStepsIntoState = async () => {
+  //   try {
+  //     const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
+  //     const targetPrice = await bondContract.priceForNextMint(tokenAddress);
+  //     const stepPrices: bigint[] = steps.map((step) => step.price);
+  //     for (let i = 0; i < stepPrices.length; i++) {
+  //       if (Number(stepPrices[i]) == Number(targetPrice)) {
+  //         setBondingCurveProgress(((i + 1) / stepPrices.length) * 100);
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   const getMintTokenForReserve = async (curUserReserveBalance?: bigint) => {
     const reserveAmount = curUserReserveBalance
@@ -335,8 +338,8 @@ export const Tradesection = ({
   // MARK: - Buy
   const buy = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (account.address == null) {
-      // setTradeModuleErrorMsg("Connect your wallet first!");
+    if (inputValue === "" || inputValue === "0") {
+      alert("Please enter the amount");
       return;
     }
 
@@ -477,7 +480,7 @@ export const Tradesection = ({
           <button
             key={i}
             type="button"
-            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
+            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE] hover:bg-[#333] hover:text-[#e2e2e2]"
             onClick={() => {
               if (eth.eth === 0) {
                 setInputValue("");
@@ -500,7 +503,7 @@ export const Tradesection = ({
           <button
             key={percentage}
             type="button"
-            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE]"
+            className="flex items-center justify-center rounded-[4px] bg-[#454545] px-2 py-1 text-[12px] text-[#AEAEAE] hover:bg-[#333] hover:text-[#e2e2e2]"
             onClick={
               () => {
                 if (isBuy) {
@@ -531,7 +534,8 @@ export const Tradesection = ({
     return (
       <div className="flex h-10 justify-between gap-[5px] md:h-[50px]">
         <Button
-          className={`h-full flex-1 ${!isBuy && "bg-[#454545]"}`}
+          className={`h-full flex-1`}
+          off={!isBuy}
           onClick={() => {
             setIsBuy(true);
             setInputValue("");
@@ -540,7 +544,8 @@ export const Tradesection = ({
           Buy
         </Button>
         <Button
-          className={`h-full flex-1 ${isBuy && "bg-[#454545]"}`}
+          className={`h-full flex-1`}
+          off={isBuy}
           onClick={() => {
             setIsBuy(false);
             setIsInputInTokenAmount(true);
@@ -562,7 +567,7 @@ export const Tradesection = ({
             setIsInputInTokenAmount(!isInputInTokenAmount);
             handleReset();
           }}
-          className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE]`}
+          className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE] hover:bg-[#333] hover:text-[#e2e2e2]`}
         >
           Switch to {isInputInTokenAmount ? "ETH" : "$" + memeTokenSymbol}
         </div>
@@ -604,7 +609,7 @@ export const Tradesection = ({
                     sellhandlePercentage();
                   }
                 }}
-                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white"
+                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] px-[8px] text-sm text-white hover:bg-[#950000]"
               >
                 MAX
               </button>
@@ -635,7 +640,7 @@ export const Tradesection = ({
                     setInputValue(curUserReserveBalance.substring(0, 10));
                   else alert("Please connect your wallet");
                 }}
-                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-sm text-white"
+                className="flex h-[30px] w-[52px] items-center justify-center rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-sm text-white hover:bg-[#950000]"
               >
                 MAX
               </button>
@@ -653,19 +658,29 @@ export const Tradesection = ({
         <SellPercentageButton />
       )}
       {isConnected ? (
-        <Button submit className="mt-5 h-12" variant="gradiant">
-          {isPending ? (
-            <Image
-              src="/icons/Loading.svg"
-              alt="loading Icon"
-              height={24}
-              width={24}
-              className="animate-spin"
-            />
-          ) : (
-            "Place Trade"
-          )}
-        </Button>
+        bondingCurveProgress === 100 ? (
+          <Link
+            className="button-shadow mt-5 flex h-12 w-full items-center justify-center rounded-[6px] text-sm font-bold text-white md:h-[50px] md:rounded-[10px] md:text-[16px]"
+            href="https://app.uniswap.org/explore"
+            target="_blank"
+          >
+            Go to the DEX
+          </Link>
+        ) : (
+          <Button submit className="mt-5 h-12" variant="gradiant">
+            {isPending ? (
+              <Image
+                src="/icons/Loading.svg"
+                alt="loading Icon"
+                height={24}
+                width={24}
+                className="animate-spin"
+              />
+            ) : (
+              "Place Trade"
+            )}
+          </Button>
+        )
       ) : (
         <Button
           onClick={openConnectModal}

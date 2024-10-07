@@ -121,6 +121,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               twitterUrl: tokenInfo.twitterUrl,
               websiteUrl: tokenInfo.websiteUrl,
               telegramUrl: tokenInfo.telegramUrl,
+              bondingCurve: bondingCurveProgress.toString(),
             }}
           />
           {/* progress bar + desc */}
@@ -186,6 +187,7 @@ export default function Detail({ params }: { params: { id: string } }) {
             {...{
               memeTokenSymbol: tokenInfo.symbol,
               RESERVE_SYMBOL,
+              bondingCurveProgress,
               tokenAddress: params.id,
               cid: tokenInfo.cid,
             }}

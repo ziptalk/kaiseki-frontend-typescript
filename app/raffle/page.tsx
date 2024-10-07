@@ -212,7 +212,7 @@ export default function Raffle() {
                 {buttonValue.map((item, index) => (
                   <Button
                     key={index}
-                    className="h-8 flex-1 rounded-[5px] bg-[#303030] text-xs md:h-[50px] md:text-[14px]"
+                    className="h-8 flex-1 rounded-[5px] bg-[#303030] text-xs hover:bg-[#454545] md:h-[50px] md:text-[14px]"
                     onClick={item.onClick}
                   >
                     {item.value}%

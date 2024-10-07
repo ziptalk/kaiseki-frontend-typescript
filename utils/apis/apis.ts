@@ -64,8 +64,8 @@ export const StoreCidAndTokenAddress = async (data: {
 export const Search = async (params: {
   keyword?: string;
   page: number;
-  sort?: "createdAt" | "currentSupply";
-  order?: "asc" | "desc";
+  sort?: "created" | "marketCap";
+  state?: "all" | "available" | "dex";
 }) => {
   try {
     const response = await baseAPI.get("search", { params });

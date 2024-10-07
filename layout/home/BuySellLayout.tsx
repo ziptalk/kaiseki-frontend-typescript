@@ -169,6 +169,7 @@ export const BuySellLayout = ({
           <Tradesection
             {...{
               memeTokenSymbol: tokenInfo.symbol,
+              bondingCurveProgress,
               tokenAddress,
               cid: tokenInfo.cid,
             }}

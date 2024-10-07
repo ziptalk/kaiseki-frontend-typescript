@@ -15,11 +15,21 @@ const TokenCard: FC<TokenCardTypes> = ({
   telegramUrl,
   websiteUrl,
   twitterUrl,
+  bondingCurve,
 }) => {
   return (
     <div
-      className={`flex w-[400px] flex-col items-center justify-between rounded-lg border border-white border-opacity-50 bg-[#1C1C1C] p-[20px]`}
+      className={`relative flex w-[400px] flex-col items-center justify-between rounded-lg border border-white border-opacity-50 bg-[#1C1C1C] p-[20px]`}
     >
+      {bondingCurve === "100" && (
+        <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-lg bg-[#000000b3] p-5">
+          <img
+            src="/images/not_for_sale.png"
+            alt="Not for sale"
+            className="scale-90"
+          />
+        </div>
+      )}
       <div className="flex w-full justify-between">
         <div className="text-[14px] font-bold  text-white">
           {name} <div className="inline text-[#9F9FB1]">[ticker:{ticker}]</div>
@@ -53,16 +63,16 @@ const TokenCard: FC<TokenCardTypes> = ({
             {description}
           </p>
           <div className="mt-[10px] flex items-center gap-[5px]">
-            <h1 className="text-xs text-[#C5F900] ">Created by:</h1>
+            <h1 className="text-xs text-[#FAFF00] ">Created by:</h1>
             <Image
               className="rounded-full"
-              src="/icons/bomb.svg"
+              src="/icons/userIcon.svg"
               alt=""
               width={12}
               height={12}
               style={{ width: 12, height: 12 }}
             />
-            <div className="text-xs text-[#C5F900] ">
+            <div className="text-xs text-[#FAFF00] ">
               {createdBy && createdBy.slice(0, 6) + "..."}
             </div>
           </div>
