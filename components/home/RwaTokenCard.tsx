@@ -53,11 +53,9 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           {`[ticker: ${props.symbol}]`}
         </div>
         <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
-          <div className="neon-lime whitespace-nowrap text-[#FAFF00]">
-            created by:{" "}
-          </div>
+          <div className=" whitespace-nowrap text-[#FAFF00]">created by: </div>
           <img className="h-3 w-3" src="/icons/userIcon.svg" alt="" />
-          <div className="neon-lime truncate text-[#FAFF00]">
+          <div className=" truncate text-[#FAFF00]">
             {width < 768 ? props.creator.slice(0, 6) + "..." : props.creator}
           </div>
         </div>
