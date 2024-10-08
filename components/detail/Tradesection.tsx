@@ -558,7 +558,7 @@ export const Tradesection = ({
     );
   };
   return (
-    <form onSubmit={isBuy ? buy : sell} className="flex flex-col">
+    <div className="flex flex-col">
       <BuySellButtonSection />
 
       {isBuy ? (
@@ -583,7 +583,6 @@ export const Tradesection = ({
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
-              // step={1}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(Number(e.target.value).toFixed());
@@ -667,7 +666,12 @@ export const Tradesection = ({
             Go to the DEX
           </Link>
         ) : (
-          <Button submit className="mt-5 h-12" variant="gradiant">
+          <Button
+            submit
+            className="mt-5 h-12"
+            variant="gradiant"
+            onClick={isBuy ? buy : sell}
+          >
             {isPending ? (
               <Image
                 src="/icons/Loading.svg"
@@ -690,6 +694,6 @@ export const Tradesection = ({
           Connect Wallet
         </Button>
       )}
-    </form>
+    </div>
   );
 };
