@@ -188,6 +188,7 @@ export default function Detail({ params }: { params: { id: string } }) {
               memeTokenSymbol: tokenInfo.symbol,
               RESERVE_SYMBOL,
               bondingCurveProgress,
+              threshold: tokenInfo.threshold,
               tokenAddress: params.id,
               cid: tokenInfo.cid,
             }}

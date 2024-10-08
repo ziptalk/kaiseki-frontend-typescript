@@ -111,7 +111,7 @@ export const SlotLayout = () => {
       } else {
         setPage(page + 1);
       }
-    }, 3000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [page]);
 

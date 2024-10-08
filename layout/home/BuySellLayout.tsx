@@ -171,6 +171,7 @@ export const BuySellLayout = ({
               memeTokenSymbol: tokenInfo.symbol,
               bondingCurveProgress,
               tokenAddress,
+              threshold: tokenInfo.threshold,
               cid: tokenInfo.cid,
             }}
           />

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useAccount } from "wagmi";
 import { Button } from "../atoms/Button";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { stepRanges } from "@/global/createValue";
+import { createStep, stepRanges } from "@/global/createValue";
 import { RESERVE_SYMBOL } from "@/global/projectConfig";
 
 import { ErrorDecoder } from "ethers-decode-error";
@@ -22,6 +22,7 @@ interface TradesectionProps {
   memeTokenSymbol: string;
   bondingCurveProgress: number;
   tokenAddress: string;
+  threshold: string;
   cid: string;
 }
 
@@ -29,6 +30,7 @@ export const Tradesection = ({
   tokenAddress,
   bondingCurveProgress,
   memeTokenSymbol,
+  threshold,
   cid,
 }: TradesectionProps) => {
   const account = useAccount();
@@ -118,8 +120,9 @@ export const Tradesection = ({
 
   const getBondSteps = async () => {
     try {
-      const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
-      const stepPrices: bigint[] = steps.map((step) => step.price);
+      // const steps: BondStep[] = await bondContract.getSteps(tokenAddress);
+      // const stepPrices: bigint[] = steps.map((step) => step.price);
+      const stepPrices = createStep(Number(threshold));
       setSteps(stepPrices);
     } catch (error) {
       console.error(error);

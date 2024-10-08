@@ -46,7 +46,7 @@ export const SlotSection = ({ cid }: { cid: string }) => {
     return () => {
       resetSlots();
     };
-  }, [cid]);
+  }, []);
 
   const cidImg = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${cid}`;
   const images1 = [

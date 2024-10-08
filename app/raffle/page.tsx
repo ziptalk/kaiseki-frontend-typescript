@@ -203,7 +203,7 @@ export default function Raffle() {
                 <button
                   type="button"
                   onClick={() => setInputValue(curMemeTokenValue.toFixed())}
-                  className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
+                  className="absolute right-0 mr-2 flex h-5 w-9 items-center justify-center gap-[5px] rounded-[4px] border border-[#8F8F8F] bg-[#0E0E0E] text-[10px] text-white hover:bg-[#950000] md:mr-[20px] md:h-[30px] md:w-[52px] md:px-[10px] md:text-[14px]"
                 >
                   MAX
                 </button>
@@ -214,6 +214,7 @@ export default function Raffle() {
                     key={index}
                     className="h-8 flex-1 rounded-[5px] bg-[#303030] text-xs hover:bg-[#454545] md:h-[50px] md:text-[14px]"
                     onClick={item.onClick}
+                    off
                   >
                     {item.value}%
                   </Button>
