@@ -116,25 +116,20 @@ const SliderComp = () => {
       {raffleData && raffleData.result.tokens && (
         <div className="flex select-none items-center gap-3 md:gap-5">
           <Arrow
-            fill={activeSlide + 1 > 1 ? "white" : "#AEAEAE"}
+            fill={"white"}
             className="cursor-pointer"
             onClick={() => {
-              if (activeSlide + 1 > 1) sliderRef.current?.slickPrev();
+              sliderRef.current?.slickPrev();
             }}
           />
           <h1 className="text-sm text-white md:text-base">
             {activeSlide + 1} / {raffleData.result.tokens.length || 0}
           </h1>
           <Arrow
-            fill={
-              activeSlide + 1 < raffleData.result.tokens.length
-                ? "white"
-                : "#AEAEAE"
-            }
+            fill={"white"}
             className="rotate-180 transform cursor-pointer"
             onClick={() => {
-              if (activeSlide + 1 < raffleData.result.tokens.length)
-                sliderRef.current?.slickNext();
+              sliderRef.current?.slickNext();
             }}
           />
         </div>
