@@ -94,7 +94,7 @@ export const TokensLayout = () => {
               }}
             />
             <Dropdown // order dropdown
-              placeholder="order : "
+              placeholder="state : "
               items={[
                 { item: "all", value: "all" },
                 { item: "available", value: "available" },

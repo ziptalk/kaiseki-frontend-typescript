@@ -327,7 +327,7 @@ const Header: FC = () => {
                 <b>step 3</b> : sell at any time to lock in your profits or
                 losses
               </div>
-              <div className="text-xs md:text-[18px]">
+              <div className="text-xs leading-6 md:text-[18px]">
                 <b>step 4</b> : once enough people buy, the coin reaches its set
                 market cap threshold
               </div>

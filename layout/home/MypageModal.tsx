@@ -29,7 +29,7 @@ export const MypageModal = ({
     // "Token",
     //  "Raffle",
     "Trade",
-    "My meme",
+    "My token",
   ];
 
   const TabContents = [
