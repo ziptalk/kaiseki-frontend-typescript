@@ -310,9 +310,9 @@ const Header: FC = () => {
                 How it works
               </div>
               <div className="text-xs leading-6 md:text-[18px]">
-                RWE prevents rugs by making sure that all created tokens are
-                safe. Each coin on RWE is a fair-launch with no presale and no
-                team allocation.
+                Memeslot prevents rugs by making sure that all created tokens
+                are safe. Each coin on Memeslot is a fair-launch with no presale
+                and no team allocation.
               </div>
             </div>
 
@@ -358,19 +358,11 @@ const Header: FC = () => {
         <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
           <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
             <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">
-              <Link
-                href="/"
-                className="flex items-center gap-2 rounded-full md:h-[40px] md:gap-[15px] "
-              >
+              <Link href="/" className="flex items-center gap-2 rounded-full ">
                 <img
-                  src="/icons/logo_icon.svg"
+                  src="/icons/logo.svg"
                   alt=""
-                  className="h-6 w-6 md:h-[40px] md:w-[40px]"
-                />
-                <img
-                  src="/icons/RWE.svg"
-                  alt=""
-                  className="h-6 w-20 md:h-[30px] md:w-[86px]"
+                  // className="h-10 w-6 md:h-[40px] md:w-[40px]"
                 />
               </Link>
 

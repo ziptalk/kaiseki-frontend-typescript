@@ -6,11 +6,11 @@ import Provider from "./Provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "RWE",
+  title: "Memeslot",
   description:
     "Create your coin with near-zero fee. Trade instantly. Win Big. Each coin on Memeslot is a fair-launch with no presale and no team allocation. ",
   icons: {
-    icon: "/icons/logo_icon.svg",
+    icon: "/images/memeLogo.png",
   },
 };
 import { arial } from "@/fonts/font";
