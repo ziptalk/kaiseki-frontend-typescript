@@ -17,6 +17,7 @@ import { arial } from "@/fonts/font";
 import Header from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { Suspense } from "react";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -25,6 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Script src="/static/datafeeds/udf/dist/bundle.js" />
       <body
         className={`${inter.className} ${arial.variable} scroll-smooth bg-[#0E0E0E] font-arial`}
       >
