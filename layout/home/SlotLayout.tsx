@@ -8,7 +8,7 @@ import SliderComp from "@/components/home/Slider";
 
 const RotatingImage = () => {
   return (
-    <div className="absolute top-[-75px] flex items-center justify-center">
+    <div className="absolute top-[-75px] flex items-center justify-center ">
       <div className="rotating-image-container">
         <Stick className="fill-[#FF2626]" />
       </div>
@@ -86,7 +86,15 @@ export const SlotLayout = () => {
 
   return (
     <>
-      <div className="main w-full flex-col p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5">
+      <div
+        className="main w-full flex-col bg-[#ff2503] p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5"
+        style={{
+          backgroundImage: "url('/images/Texture.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "repeat-y",
+        }}
+      >
         {/* <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14"> */}
         {/* raffle section */}
 
@@ -95,7 +103,7 @@ export const SlotLayout = () => {
         {/* </div> */}
         {/* create new coin */}
         <div
-          className="create-default hidden h-[293px] w-[201px] cursor-pointer md:flex"
+          className="create-default hidden h-[293px] w-[201px] cursor-pointer md:flex "
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => router.push("/create")}
