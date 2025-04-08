@@ -173,12 +173,12 @@ const Create: NextPage = () => {
       return true;
     }
     // TODO - Make this able later
-    if (await isUserGotMoreThanCreationFee()) {
-      alert(
-        `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
-      );
-      return true;
-    }
+    // if (await isUserGotMoreThanCreationFee()) {
+    //   alert(
+    //     `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
+    //   );
+    //   return true;
+    // }
     if (!watch("threshold")) {
       alert("Invalid input value!");
       return true;

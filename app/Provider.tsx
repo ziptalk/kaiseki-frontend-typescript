@@ -2,18 +2,19 @@
 import { RecoilRoot } from "recoil";
 
 import { WagmiProvider } from "wagmi";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  seiDevnet,
-  sepolia,
-} from "wagmi/chains";
+// import {
+//   mainnet,
+//   polygon,
+//   optimism,
+//   arbitrum,
+//   base,
+//   seiDevnet,
+//   sepolia,
+// } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { CreateConnector } from "../node_modules/@rainbow-me/rainbowkit/dist/wallets/Wallet";
 import {
+  Chain,
   getDefaultConfig,
   getDefaultWallets,
   RainbowKitProvider,
@@ -32,6 +33,18 @@ import {
 
 const { wallets } = getDefaultWallets();
 
+const kaiaKairosTestnet = {
+  rpcUrls: { default: { http: ["https://public-en-kairos.node.kaia.io"] } },
+  id: 1001,
+  name: "Kaia Kairos Testnet",
+  nativeCurrency: {
+    decimals: 9,
+    name: "Kairos",
+    symbol: "Kairos",
+  },
+  // accounts: [process.env.TEST_PRIVATE_KEY],
+} as const satisfies Chain;
+
 const config = getDefaultConfig({
   // wallets: [...wallets],
   wallets: [
@@ -40,11 +53,11 @@ const config = getDefaultConfig({
       wallets: [seifWallet, metaMaskWallet, walletConnectWallet],
     },
   ],
-  appName: "RWE",
+  appName: "Kaiseki",
   projectId: "989ce3beb9f7f418fb1a2e5dbf8183dd",
   // chains: [mainnet, polygon, optimism, arbitrum, base, seiDevnet],
-  chains: [base],
-  ssr: true,
+  chains: [kaiaKairosTestnet],
+  // ssr: true,
 });
 
 const queryClient = new QueryClient();
