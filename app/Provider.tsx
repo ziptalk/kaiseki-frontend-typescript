@@ -16,7 +16,7 @@ import { CreateConnector } from "../node_modules/@rainbow-me/rainbowkit/dist/wal
 import {
   Chain,
   getDefaultConfig,
-  getDefaultWallets,
+  // getDefaultWallets,
   RainbowKitProvider,
   Wallet,
   WalletDetailsParams,
@@ -31,17 +31,18 @@ import {
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
-const { wallets } = getDefaultWallets();
+// const { wallets } = getDefaultWallets();
 
 const kaiaKairosTestnet = {
   rpcUrls: { default: { http: ["https://public-en-kairos.node.kaia.io"] } },
   id: 1001,
   name: "Kaia Kairos Testnet",
   nativeCurrency: {
-    decimals: 9,
+    decimals: 18,
     name: "Kairos",
-    symbol: "Kairos",
+    symbol: "KAIROS",
   },
+  testnet: true,
   // accounts: [process.env.TEST_PRIVATE_KEY],
 } as const satisfies Chain;
 
