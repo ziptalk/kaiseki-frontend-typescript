@@ -28,7 +28,7 @@ export const CreateCard = ({
         />
       ) : (
         <img
-          src={`http://via.placeholder.com/120x120`}
+          src={`https://placehold.co/400`}
           alt="Image from IPFS"
           className="h-[120px] w-[120px] bg-[#D9D9D9]"
         />

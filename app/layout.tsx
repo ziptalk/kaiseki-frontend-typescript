@@ -29,6 +29,12 @@ export default function RootLayout({
       <Script src="/static/datafeeds/udf/dist/bundle.js" />
       <body
         className={`${inter.className} ${arial.variable} scroll-smooth bg-[#0E0E0E] font-arial`}
+        style={{
+          backgroundImage: "url('/images/bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "repeat-y",
+        }}
       >
         <Suspense fallback={<div>Loading...</div>}>
           <Provider>

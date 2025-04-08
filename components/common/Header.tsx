@@ -310,9 +310,9 @@ const Header: FC = () => {
                 How it works
               </div>
               <div className="text-xs leading-6 md:text-[18px]">
-                Memeslot prevents rugs by making sure that all created tokens
-                are safe. Each coin on Memeslot is a fair-launch with no presale
-                and no team allocation.
+                Kaiseki prevents rugs by making sure that all created tokens are
+                safe. Each coin on Kaiseki is a fair-launch with no presale and
+                no team allocation.
               </div>
             </div>
 
@@ -370,7 +370,7 @@ const Header: FC = () => {
                 <Telegram
                   // fill={isHoveredTG ? "#5E5E5E" : "white"}
                   className="h-4 w-4 cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
-                  onClick={() => handleUrlClick("https://t.me/rwe_bet")}
+                  onClick={() => handleUrlClick("https://t.me/m/-Y3bstHbMzE9")}
                 />
                 <X
                   className="cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
