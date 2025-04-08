@@ -173,12 +173,12 @@ const Create: NextPage = () => {
       return true;
     }
     // TODO - Make this able later
-    // if (await isUserGotMoreThanCreationFee()) {
-    //   alert(
-    //     `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
-    //   );
-    //   return true;
-    // }
+    if (await isUserGotMoreThanCreationFee()) {
+      alert(
+        `You must have at least ${ethers.formatEther(creationFee)} ${RESERVE_SYMBOL} to create a token.`,
+      );
+      return true;
+    }
     if (!watch("threshold")) {
       alert("Invalid input value!");
       return true;
@@ -243,7 +243,9 @@ const Create: NextPage = () => {
   const fetchTokenAddressFromEvent = async () => {
     try {
       const filter = bondReadContract.filters.TokenCreated();
+      console.log("filter", filter.fragment);
       const events = await bondReadContract.queryFilter(filter, -1000);
+      console.log("events", events);
 
       if (events.length > 0) {
         for (const log of events) {
@@ -288,7 +290,7 @@ const Create: NextPage = () => {
       console.log("Transaction receipt :" + receipt);
 
       const createdTokenAddress = await fetchTokenAddressFromEvent();
-
+      console.log("Created token address:", createdTokenAddress);
       await sendCidAndTokenAddressToServer(createdTokenAddress);
       setIsLoading(false);
 

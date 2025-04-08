@@ -31,6 +31,7 @@ const SliderComp = () => {
 
   const getRaffle = async () => {
     const response = await Raffle();
+    console.log("response", response);
     setRaffleData(response);
   };
 

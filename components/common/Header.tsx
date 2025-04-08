@@ -82,7 +82,7 @@ const Header: FC = () => {
   }, []);
 
   useEffect(() => {
-    FetchLatestToken();
+    // FetchLatestToken();
     localStorage.setItem("isFetching", "false");
     localStorage.setItem("isFetchingCreate", "false");
     if (localStorage.getItem("FirstVisit") === null) {
@@ -126,126 +126,126 @@ const Header: FC = () => {
   // }, []);
 
   // this works
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (isConnected && chainId !== PROJECT_CHAIN_ID) {
-        console.log("chainId from changed" + chainId);
-        setIsWrongChain(true);
-      } else {
-        setIsWrongChain(false);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [chainId]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (isConnected && chainId !== PROJECT_CHAIN_ID) {
+  //       console.log("chainId from changed" + chainId);
+  //       setIsWrongChain(true);
+  //     } else {
+  //       setIsWrongChain(false);
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [chainId]);
 
-  const FetchLatestToken = async () => {
-    try {
-      const response = await TokensLatest();
-      const newCreateTic = response.latestCreatedToken.ticker?.substring(0, 5);
-      const newCreateUser = response.latestCreatedToken.creator?.substring(
-        0,
-        5,
-      );
-      const newCreateCid = response.latestCreatedToken.cid;
-      const newCreateTokenAddress = response.latestCreatedToken.tokenAddress;
-      const date = new Date(response.latestCreatedToken.createdAt);
-      const formattedDate = `${String(date.getMonth() + 1).padStart(
-        2,
-        "0",
-      )}/${String(date.getDate()).padStart(2, "0")}/${String(
-        date.getFullYear(),
-      ).slice(-2)}`;
-      const newMintTic = response.latestMintedToken.ticker?.substring(0, 5);
-      const newMintUser = response.latestMintedToken.user?.substring(0, 5);
-      const newMintCid = response.latestMintedToken.cid;
-      const newMintValue = Number(
-        ethers.formatEther(response.latestMintedToken.reserveAmount),
-      )
-        .toFixed(4)
-        .toString();
-      const newMintTokenAddress = response.latestMintedToken.tokenAddress;
+  // const FetchLatestToken = async () => {
+  //   try {
+  //     const response = await TokensLatest();
+  //     const newCreateTic = response.latestCreatedToken.ticker?.substring(0, 5);
+  //     const newCreateUser = response.latestCreatedToken.creator?.substring(
+  //       0,
+  //       5,
+  //     );
+  //     const newCreateCid = response.latestCreatedToken.cid;
+  //     const newCreateTokenAddress = response.latestCreatedToken.tokenAddress;
+  //     const date = new Date(response.latestCreatedToken.createdAt);
+  //     const formattedDate = `${String(date.getMonth() + 1).padStart(
+  //       2,
+  //       "0",
+  //     )}/${String(date.getDate()).padStart(2, "0")}/${String(
+  //       date.getFullYear(),
+  //     ).slice(-2)}`;
+  //     const newMintTic = response.latestMintedToken.ticker?.substring(0, 5);
+  //     const newMintUser = response.latestMintedToken.user?.substring(0, 5);
+  //     const newMintCid = response.latestMintedToken.cid;
+  //     const newMintValue = Number(
+  //       ethers.formatEther(response.latestMintedToken.reserveAmount),
+  //     )
+  //       .toFixed(4)
+  //       .toString();
+  //     const newMintTokenAddress = response.latestMintedToken.tokenAddress;
 
-      const newBurnTic = response.latestBurnedToken.ticker?.substring(0, 5);
-      const newBurnUser = response.latestBurnedToken.user?.substring(0, 5);
-      const newBurnCid = response.latestBurnedToken.cid;
-      const newBurnValue = Number(
-        ethers.formatEther(response.latestBurnedToken.refundAmount),
-      )
-        .toFixed(4)
-        .toString();
-      const newBurnTokenAddress = response.latestBurnedToken.tokenAddress;
-      if (
-        newMintTic !== curMintTic ||
-        newMintUser !== curMintUser ||
-        newMintCid !== curMintCid ||
-        newMintValue !== curMintValue ||
-        newMintTokenAddress !== curMintTokenAddress
-      ) {
-        console.log("value changed!");
-        setCurMintTic(newMintTic);
-        setCurMintUser(newMintUser);
-        setCurMintCid(newMintCid);
-        setCurMintValue(newMintValue);
-        setCurMintTokenAddress(newMintTokenAddress);
-        setMintAnimationTrigger(true);
-      }
-      if (
-        newCreateTic !== curCreateTic ||
-        newCreateUser !== curCreateUser ||
-        newCreateCid !== curCreateCid ||
-        formattedDate !== curCreateTime ||
-        newCreateTokenAddress !== curCreateTokenAddress
-      ) {
-        setCurCreateTic(newCreateTic);
-        setCurCreateUser(newCreateUser);
-        setCurCreateCid(newCreateCid);
-        setCurCreateTime(formattedDate);
-        setCurCreateTokenAddress(newCreateTokenAddress);
-        setCreateAnimationTrigger(true); // Trigger animation
-      }
-      if (
-        newBurnTic !== curBurnTic ||
-        newBurnUser !== curBurnUser ||
-        newBurnCid !== curBurnCid ||
-        newBurnValue !== curBurnValue ||
-        newBurnTokenAddress !== curBurnTokenAddress
-      ) {
-        setCurBurnTic(newBurnTic);
-        setCurBurnUser(newBurnUser);
-        setCurBurnCid(newBurnCid);
-        setCurBurnTime(formattedDate);
-        setCurBurnValue(newBurnValue);
-        setCurBurnTokenAddress(newBurnTokenAddress);
-        setBurnAnimationTrigger(true); // Trigger animation
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     const newBurnTic = response.latestBurnedToken.ticker?.substring(0, 5);
+  //     const newBurnUser = response.latestBurnedToken.user?.substring(0, 5);
+  //     const newBurnCid = response.latestBurnedToken.cid;
+  //     const newBurnValue = Number(
+  //       ethers.formatEther(response.latestBurnedToken.refundAmount),
+  //     )
+  //       .toFixed(4)
+  //       .toString();
+  //     const newBurnTokenAddress = response.latestBurnedToken.tokenAddress;
+  //     if (
+  //       newMintTic !== curMintTic ||
+  //       newMintUser !== curMintUser ||
+  //       newMintCid !== curMintCid ||
+  //       newMintValue !== curMintValue ||
+  //       newMintTokenAddress !== curMintTokenAddress
+  //     ) {
+  //       console.log("value changed!");
+  //       setCurMintTic(newMintTic);
+  //       setCurMintUser(newMintUser);
+  //       setCurMintCid(newMintCid);
+  //       setCurMintValue(newMintValue);
+  //       setCurMintTokenAddress(newMintTokenAddress);
+  //       setMintAnimationTrigger(true);
+  //     }
+  //     if (
+  //       newCreateTic !== curCreateTic ||
+  //       newCreateUser !== curCreateUser ||
+  //       newCreateCid !== curCreateCid ||
+  //       formattedDate !== curCreateTime ||
+  //       newCreateTokenAddress !== curCreateTokenAddress
+  //     ) {
+  //       setCurCreateTic(newCreateTic);
+  //       setCurCreateUser(newCreateUser);
+  //       setCurCreateCid(newCreateCid);
+  //       setCurCreateTime(formattedDate);
+  //       setCurCreateTokenAddress(newCreateTokenAddress);
+  //       setCreateAnimationTrigger(true); // Trigger animation
+  //     }
+  //     if (
+  //       newBurnTic !== curBurnTic ||
+  //       newBurnUser !== curBurnUser ||
+  //       newBurnCid !== curBurnCid ||
+  //       newBurnValue !== curBurnValue ||
+  //       newBurnTokenAddress !== curBurnTokenAddress
+  //     ) {
+  //       setCurBurnTic(newBurnTic);
+  //       setCurBurnUser(newBurnUser);
+  //       setCurBurnCid(newBurnCid);
+  //       setCurBurnTime(formattedDate);
+  //       setCurBurnValue(newBurnValue);
+  //       setCurBurnTokenAddress(newBurnTokenAddress);
+  //       setBurnAnimationTrigger(true); // Trigger animation
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // GNB data update
-  useEffect(() => {
-    const interval = setInterval(() => {
-      FetchLatestToken();
-    }, 5000); // Fetch every 5 seconds (adjust as needed)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     FetchLatestToken();
+  //   }, 5000); // Fetch every 5 seconds (adjust as needed)
 
-    return () => clearInterval(interval); // Clean up the interval on unmount
-  }, [curMintTic, curMintUser, curMintCid, curMintValue, curMintTokenAddress]);
+  //   return () => clearInterval(interval); // Clean up the interval on unmount
+  // }, [curMintTic, curMintUser, curMintCid, curMintValue, curMintTokenAddress]);
 
-  // for animation
-  useEffect(() => {
-    if (mintAnimationTrigger) {
-      const timeout = setTimeout(() => setMintAnimationTrigger(false), 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [mintAnimationTrigger]);
+  // // for animation
+  // useEffect(() => {
+  //   if (mintAnimationTrigger) {
+  //     const timeout = setTimeout(() => setMintAnimationTrigger(false), 1000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [mintAnimationTrigger]);
 
-  useEffect(() => {
-    if (createAnimationTrigger) {
-      const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [createAnimationTrigger]);
+  // useEffect(() => {
+  //   if (createAnimationTrigger) {
+  //     const timeout = setTimeout(() => setCreateAnimationTrigger(false), 1000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [createAnimationTrigger]);
 
   // useEffect(() => {
   //   setReserveMarketPriceIntoState();
@@ -346,19 +346,19 @@ const Header: FC = () => {
                 e.stopPropagation();
                 setIsInfoModalActive(!isInfoModalActive);
               }}
-              className="h-[46px] w-full rounded-[10px] border text-sm font-bold hover:border-[#FAFF00] hover:text-[#FAFF00] md:h-[53px] md:text-xl"
+              className="h-[46px] w-full rounded-[10px] border text-sm font-bold hover:border-[#fff] hover:text-[#fff] md:h-[53px] md:text-xl"
             >
               Let&apos;s start
             </button>
           </ModalContentBox>
         </ModalRootWrapper>
       )}
-      <div className="relative left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]" />
-      <header className="fixed left-0 top-0 z-[50] flex h-14 w-screen bg-[#0E0E0E] md:h-[80px]">
+      <div className="relative left-0 top-0 z-[50] flex h-14 w-screen md:h-[81px] " />
+      <header className="fixed left-0 top-0 z-[50] flex h-14 w-screen border-b border-[#767676] bg-[#262626]  px-32 md:h-[80px] ">
         <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
           <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
             <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">
-              <Link href="/" className="flex items-center gap-2 rounded-full ">
+              <Link href="/" className="flex items-center gap-2 rounded-full">
                 <img
                   src="/icons/logo.svg"
                   alt=""
@@ -382,7 +382,7 @@ const Header: FC = () => {
                 />
               </div>
             </div>
-            <div
+            {/* <div
               className={`ml-14 hidden h-[40px] items-center md:inline`}
               style={{ width: `${width - 700}px` }}
             >
@@ -540,24 +540,24 @@ const Header: FC = () => {
                   ),
                 ]}
               />
-            </div>
+            </div> */}
             <div
               className="relative flex select-none flex-row-reverse items-center md:w-[300px]"
               ref={modalRef}
             >
               {isConnected ? (
                 <>
-                  <div className="z-40 hidden h-10 items-center justify-between rounded-lg border border-secondary px-5 text-sm font-bold text-[#FAFF00] md:flex">
+                  <div className="z-40 hidden h-10 items-center justify-between rounded-lg border border-white px-5 text-sm font-bold text-[#fff] md:flex">
                     <div
                       onClick={() => copyToClipboard(address || "")}
                       className={`flex cursor-pointer items-center gap-2 stroke-transparent hover:stroke-[#FF2626] hover:text-[#FF2626] active:stroke-black active:text-black`}
                     >
-                      <Bomb
+                      {/* <Bomb
                         className="h-[24px] w-[24px] stroke-none"
                         width={24}
                         height={24}
                         viewBox="0 0 24 24"
-                      />
+                      /> */}
                       <div
                         className={`absolute duration-1000 ${disconnectToggle ? "w-[130px]" : "w-0"} right-11 flex h-6 items-center justify-center overflow-hidden rounded-full bg-secondary stroke-third text-[15px] text-third hover:bg-[#FF2626] hover:stroke-secondary hover:text-secondary`}
                         onClick={openAccountModal}
@@ -573,7 +573,7 @@ const Header: FC = () => {
                         width={24}
                         height={24}
                         viewBox="0 0 24 24"
-                        className={`h-[24px] w-[24px] cursor-pointer stroke-secondary hover:stroke-third`}
+                        className={`h-[24px] w-[24px] cursor-pointer stroke-white hover:stroke-third`}
                         onClick={() => setDisconnectToggle(true)}
                       />
                       <div
@@ -583,7 +583,7 @@ const Header: FC = () => {
                         }
                       >
                         <DownArrow
-                          className={`transform ${accountButtonModal && "rotate-180"} fill-secondary hover:fill-third`}
+                          className={`transform ${accountButtonModal && "rotate-180"} fill-white hover:fill-third`}
                         />
                       </div>
                     </div>
@@ -606,7 +606,7 @@ const Header: FC = () => {
                 <>
                   <button
                     onClick={openConnectModal}
-                    className="connect-wallet hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border  md:block"
+                    className="hidden h-[40px] w-[180px] cursor-pointer rounded-[10px] border text-[15px]  md:block"
                   >
                     Connect Wallet
                   </button>
@@ -646,7 +646,7 @@ const Header: FC = () => {
           />
           // </ModalRootWrapperWallet>
         ))}
-      <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
+      {/* <div className="mt-2.5 flex h-12 items-center gap-[20px] md:hidden">
         <Slider
           elements={[
             curMintCid && (
@@ -716,7 +716,7 @@ const Header: FC = () => {
             ),
           ]}
         />
-      </div>
+      </div> */}
     </>
   );
 };
