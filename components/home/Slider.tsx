@@ -17,7 +17,10 @@ const SliderComp = () => {
   const [oldSlide, setOldSlide] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
   const [activeSlide2, setActiveSlide2] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   let sliderRef = useRef<Slider>(null);
+
   useEffect(() => {
     getRaffle();
   }, []);
@@ -27,17 +30,34 @@ const SliderComp = () => {
       getRaffle();
     }, 5000);
     return () => clearInterval(interval);
-  }, [raffleData]);
+  }, []);
 
   const getRaffle = async () => {
-    const response = await Raffle();
-    console.log("response", response);
-    setRaffleData(response);
+    try {
+      setIsLoading(true);
+      const response = await Raffle();
+      console.log("response", response);
+
+      if (!response) {
+        setError("API 응답을 받지 못했습니다.");
+      } else {
+        setRaffleData(response);
+        setError(null);
+      }
+    } catch (err) {
+      console.error("Raffle API 호출 오류:", err);
+      setError("데이터를 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const tokens = raffleData?.result?.tokens || [];
+  const uniqueTokens = Array.isArray(tokens) ? tokens.flat() : [tokens];
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: uniqueTokens.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -50,71 +70,90 @@ const SliderComp = () => {
     },
     afterChange: (current: number) => setActiveSlide2(current),
   };
+
+  if (isLoading && !raffleData) {
+    return (
+      <div className="main-inner flex w-full flex-col items-center justify-center px-9 md:h-[474px] md:w-[520px] md:px-14">
+        <p className="text-lg text-white">Loading...</p>
+      </div>
+    );
+  }
+
+  if (uniqueTokens.length === 0) {
+    return (
+      <div className="main-inner flex w-full flex-col items-center justify-center px-9 md:h-[474px] md:w-[520px] md:px-14">
+        <p className="text-lg text-white">There is no ongoing raffle.</p>
+      </div>
+    );
+  }
+
+  const renderRaffleCard = (raffle: TokenResponse, index: number) => {
+    let href = "/raffle";
+    if (raffleData?.winner?.raffles) {
+      for (let i = 0; i < raffleData.winner.raffles.length; i++) {
+        if (
+          raffleData.winner.raffles[i].tokenAddress === raffle.token &&
+          raffleData.winner.raffles[i].winnerAddress === account.address
+        ) {
+          href = "/raffle/check";
+          break;
+        } else if (raffleData.winner.raffles[i].tokenAddress === raffle.token) {
+          href = "/raffle/fail";
+        }
+      }
+    }
+
+    return (
+      <Link
+        key={index}
+        href={{
+          pathname: href,
+          query: raffle
+            ? {
+                cid: raffle.cid,
+                rafflePrize: raffle.rafflePrize,
+                token: raffle.token,
+                name: raffle.name,
+                symbol: raffle.symbol,
+                creator: raffle.creator,
+                description: raffle.description,
+                startDate: raffle.startDate,
+              }
+            : {},
+        }}
+      >
+        <div className="flex w-full flex-col items-center gap-5">
+          <MainTitle
+            title={
+              raffle
+                ? href === "/raffle/check" || href === "/raffle/fail"
+                  ? "Check the winner!"
+                  : "Raffle is ready!"
+                : "Loading..."
+            }
+          />
+          {raffle && (
+            <>
+              <RWATokenCard props={raffle} />
+              <SlotSection cid={raffle.cid} />
+            </>
+          )}
+        </div>
+      </Link>
+    );
+  };
+
   return (
     <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14">
-      <Slider {...settings} className="h-full w-full" ref={sliderRef}>
-        {raffleData &&
-          raffleData.result &&
-          raffleData.result.tokens &&
-          raffleData.result.tokens.map(
-            (raffle: TokenResponse, index: number) => {
-              let href = "/raffle";
-              for (let i = 0; i < raffleData.winner.raffles.length; i++) {
-                if (
-                  raffleData.winner.raffles[i].tokenAddress === raffle.token &&
-                  raffleData.winner.raffles[i].winnerAddress === account.address
-                ) {
-                  href = "/raffle/check";
-                  return;
-                } else if (
-                  raffleData.winner.raffles[i].tokenAddress === raffle.token
-                ) {
-                  href = "/raffle/fail";
-                }
-              }
-              return (
-                <Link
-                  key={index}
-                  href={{
-                    pathname: href,
-                    query: raffle &&
-                      raffle && {
-                        cid: raffle.cid,
-                        rafflePrize: raffle.rafflePrize,
-                        token: raffle.token,
-                        name: raffle.name,
-                        symbol: raffle.symbol,
-                        creator: raffle.creator,
-                        description: raffle.description,
-                        startDate: raffle.startDate,
-                      },
-                  }}
-                >
-                  <div className="flex w-full flex-col items-center gap-5">
-                    <MainTitle
-                      title={
-                        raffle && raffle.token
-                          ? href === "/raffle/check" || href === "/raffle/fail"
-                            ? "Check the winner!"
-                            : "Raffle is ready!"
-                          : "Loading..."
-                      }
-                    />
-                    {raffle && (
-                      <>
-                        <RWATokenCard props={raffle} />
-                        <SlotSection cid={raffle.cid} />
-                      </>
-                    )}
-                  </div>
-                </Link>
-              );
-            },
-          )}
-        {/* {raffleData && raffleData.result.tokens.length} */}
-      </Slider>
+      {uniqueTokens.length > 1 ? (
+        <Slider {...settings} ref={sliderRef}>
+          {uniqueTokens.map(renderRaffleCard)}
+        </Slider>
+      ) : (
+        renderRaffleCard(uniqueTokens[0], 0)
+      )}
 
-      {raffleData && raffleData.result.tokens && (
+      {uniqueTokens.length > 1 && (
         <div className="flex select-none items-center gap-3 md:gap-5">
           <Arrow
             fill={"white"}
@@ -124,7 +163,7 @@ const SliderComp = () => {
             }}
           />
           <h1 className="text-sm text-white md:text-base">
-            {activeSlide + 1} / {raffleData.result.tokens.length || 0}
+            {activeSlide + 1} / {uniqueTokens.length}
           </h1>
           <Arrow
             fill={"white"}

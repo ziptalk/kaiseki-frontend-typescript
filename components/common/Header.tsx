@@ -374,7 +374,7 @@ const Header: FC = () => {
                 />
                 <X
                   className="cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
-                  onClick={() => handleUrlClick("https://twitter.com/rwe_bet")}
+                  onClick={() => handleUrlClick("https://x.com/KAI_Seki_Node")}
                 />
                 <Info
                   className="cursor-pointer fill-[#5E5E5E] hover:fill-[#CFCFCF]"
