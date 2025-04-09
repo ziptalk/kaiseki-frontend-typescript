@@ -1,3 +1,3 @@
-export const SERVER_ENDPOINT = "https://api.kairaage.xyz";
+export const SERVER_ENDPOINT = "https://api.kaiseki.fun";
 export const PROJECT_CHAIN_ID = 1001;
 export const RESERVE_SYMBOL = "KAIROS";
