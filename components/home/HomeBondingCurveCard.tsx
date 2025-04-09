@@ -12,7 +12,7 @@ const HomeBondingCurveCard: FC<BondingCurveCardTypes> = ({ prog }) => {
         </h1>
         <div className="h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
           <div
-            className="h-full rounded-full bg-gradient-to-t from-[#A60D07] to-[#E00900]"
+            className="h-full rounded-full bg-gradient-to-t from-[#ff583e] to-[#ff583e]"
             style={{ width: `${prog}%` }}
           ></div>
         </div>

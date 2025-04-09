@@ -150,7 +150,7 @@ export const Trade = ({
                         : Number(
                             ethers.formatEther(value.reserveAmount),
                           ).toFixed(8)}{" "}
-                      ETH
+                      KAIA
                     </div>
                     <div className="text-sm text-[#EDF102]">
                       +{" "}
@@ -177,7 +177,7 @@ export const Trade = ({
                         : Number(
                             ethers.formatEther(value.refundAmount),
                           ).toFixed(8)}{" "}
-                      ETH
+                      KAIA
                     </div>
                   </>
                 )}

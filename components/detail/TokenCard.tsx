@@ -63,7 +63,7 @@ const TokenCard: FC<TokenCardTypes> = ({
             {description}
           </p>
           <div className="mt-[10px] flex items-center gap-[5px]">
-            <h1 className="text-xs ">Created by:</h1>
+            <h1 className="text-xs text-white">Created by:</h1>
             <Image
               className="rounded-full"
               src="/icons/userIcon.svg"
@@ -72,11 +72,11 @@ const TokenCard: FC<TokenCardTypes> = ({
               height={12}
               style={{ width: 12, height: 12 }}
             />
-            <div className="text-xs">
+            <div className="text-xs text-white">
               {createdBy && createdBy.slice(0, 6) + "..."}
             </div>
           </div>
-          <h1 className="">prize: {rafflePrize}</h1>
+          <h1 className="text-white">prize: {rafflePrize}</h1>
         </div>
       </div>
     </div>

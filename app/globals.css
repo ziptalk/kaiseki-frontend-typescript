@@ -25,29 +25,25 @@
     @apply flex h-full w-full justify-between gap-2.5 border border-dashed border-secondary bg-black p-[10px] shadow-[0_0px_20px_rgba(0,0,0,0.5)] shadow-[#FF2525];
   }
   .tokenarea-background {
-    border: 1px dashed var(--red-linear, #e00900);
-    background: linear-gradient(
-      183deg,
-      rgba(224, 9, 0, 0.3) 2.23%,
-      rgba(166, 13, 7, 0.3) 97.87%
-    );
+    border: 1px dashed var(--red-linear, #ff852d);
+    background: linear-gradient(183deg, #ff852d50 2.23%, #ff352d50 97.87%);
   }
   .buttonhover {
     background: var(
       --red-linear,
-      linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%)
+      linear-gradient(183deg, #ff852d 2.23%, #ff352d 97.87%)
     );
   }
   .dexbutton {
     background: var(
       --raffle-progress-linear,
-      linear-gradient(279deg, #e00900 1.93%, #a60d07 86.23%)
+      linear-gradient(279deg, #ff852d 1.93%, #ff352d 86.23%)
     );
   }
   .dexbutton-hover {
     background: var(
       --slot-color,
-      linear-gradient(201deg, #ff57f8 5.73%, #f00 54.03%, #ff002e 106.37%)
+      linear-gradient(201deg, #ff852d 5.73%, #ff852d 54.03%, #ff352d 106.37%)
     );
   }
 }
@@ -69,22 +65,22 @@
   filter: drop-shadow(0 0 10px red);
 }
 .button-bg-primary {
-  background: linear-gradient(183deg, #e00900 2.23%, #a60d07 97.87%);
+  background: linear-gradient(183deg, #ff852d 2.23%, #ff352d 97.87%);
 }
 .tokenarea-background {
-  border: 1px dashed var(--red-linear, #e00900);
+  border: 1px dashed var(--red-linear, #ff852d);
   background: linear-gradient(
     183deg,
-    rgba(224, 9, 0, 0.3) 2.23%,
-    rgba(166, 13, 7, 0.3) 97.87%
+    rgba(255, 133, 45, 0.3) 2.23%,
+    rgba(255, 53, 45, 0.3) 97.87%
   );
 }
 .button-shadow {
   background: linear-gradient(
     230deg,
-    #ff57f8 -22.44%,
-    #f00 76.28%,
-    #ff002e 104.03%
+    #ff852d -22.44%,
+    #ff352d 76.28%,
+    #ff852d 104.03%
   );
   box-shadow: 1.936px 1.936px 3.872px 0px rgba(0, 0, 0, 0.08);
 }

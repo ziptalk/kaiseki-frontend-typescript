@@ -27,7 +27,7 @@ const BondingCurveCard: FC<BondingCurveCardTypes> = ({
       </div>
       <div className={`mt-2 h-[6px] w-full rounded-full bg-${bgColor}`}>
         <div
-          className="h-full rounded-full bg-primary"
+          className="h-full rounded-full bg-[#ff583e]"
           style={{ width: `${prog}%` }}
         />
       </div>
