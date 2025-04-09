@@ -116,14 +116,14 @@ export const TokensLayout = () => {
             }}
           >
             <input
-              className="flex-[2] rounded-[10px] border border-background bg-black px-[20px] text-white placeholder:text-[#808080] md:text-[15px]"
+              className="flex-[2] rounded-[10px] border border-white bg-black px-[20px] text-white placeholder:text-[#808080] md:text-[15px]"
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="search for token"
             />
             <button
-              className="flex-1 rounded-[10px] bg-[#FF20F6] font-bold text-white hover:bg-[#DA00D1]"
+              className="flex-1 rounded-[10px] bg-[#fff] font-bold text-black hover:bg-[#fff]"
               type="submit"
             >
               search
