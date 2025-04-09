@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Stick from "@/public/icons/stick.svg";
+import CNC from "@/public/icons/create-new-coin.svg";
 import { useAccount } from "wagmi";
 import SliderComp from "@/components/home/Slider";
+import Chopstick from "@/public/icons/chopstick.svg";
 
 const RotatingImage = () => {
   return (
@@ -20,7 +22,7 @@ const RotatingPCImage = ({ hovered }: { hovered: boolean }) => {
   return (
     <div className="absolute flex items-center justify-center">
       <div className="rotating-image-container">
-        <Stick className={hovered ? "fill-yellow-300" : `fill-[#FF2626]`} />
+        <Stick />
       </div>
     </div>
   );
@@ -103,13 +105,13 @@ export const SlotLayout = () => {
         {/* </div> */}
         {/* create new coin */}
         <div
-          className="create-default hidden h-[293px] w-[201px] cursor-pointer md:flex "
+          className="create-default hidden h-[293px] w-[230px] cursor-pointer md:flex "
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => router.push("/create")}
         >
-          <h1 className="create-title">create new coin</h1>
-          <div className="flex h-36 w-32 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
+          <CNC />
+          <div className="flex h-36 w-20 items-center justify-center rounded-2xl border-2 border-[#A58C08] bg-[#0E0E0E]">
             <RotatingPCImage hovered={isHovered} />
           </div>
         </div>
@@ -124,6 +126,7 @@ export const SlotLayout = () => {
           <div className="gradiant-create-box h-14 w-full" />
           <div className="create-title absolute bottom-4">create new coin</div>
         </div>
+        <Chopstick className="hidden md:flex" />
       </div>
     </>
   );

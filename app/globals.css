@@ -285,7 +285,7 @@ input {
 .create-default {
   border-radius: 20px;
   border: 5px solid #e6180f;
-  background: radial-gradient(50% 50% at 50% 50%, #d0140c 0%, #6a0a06 100%);
+  background: white;
   box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.5) inset;
   flex-direction: column;
   justify-content: center;
@@ -293,7 +293,7 @@ input {
   gap: 30px;
 }
 .create-title {
-  color: white;
+  color: #ff583e;
   font-family: Impact;
   -webkit-text-stroke-width: 1.5px;
   -webkit-text-stroke-color: #5a0703;

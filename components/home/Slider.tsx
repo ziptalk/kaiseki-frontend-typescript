@@ -65,10 +65,6 @@ const SliderComp = () => {
     autoplay: uniqueTokens.length > 1,
     autoplaySpeed: 5000,
     arrows: false,
-    adaptiveHeight: true,
-    swipe: true,
-    swipeToSlide: true,
-    touchMove: true,
     className: "raffle-slider",
     beforeChange: (current: number, next: number) => {
       setOldSlide(current);
