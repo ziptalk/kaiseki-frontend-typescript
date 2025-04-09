@@ -60,7 +60,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         <h1
           className={`${digital.variable} font-digital text-lg leading-[14px] text-[#FAFF00]`}
         >
-          {marketCap} ETH
+          {marketCap} KAIA
         </h1>
         <div className="text-sm text-[#CFCFCF]">({Number(bondingCurve)}%)</div>
       </div>
