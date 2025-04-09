@@ -98,7 +98,7 @@ export default function Raffle() {
     setLoading(true);
     try {
       const multiTokenReceiverContract = new ethers.Contract(
-        contracts.MCV2_MultiToken, // MultiTokenReceiver 컨트랙트 주소
+        contracts.MCV2_MultiTokenReceiver, // MultiTokenReceiver 컨트랙트 주소
         MCV2_MultiTokenABI, // MultiTokenReceiver ABI
         signer, // 서명자 (signer)
       );
@@ -106,7 +106,7 @@ export default function Raffle() {
       // 먼저 토큰을 전송할 수 있도록 approve 호출
       const tokenContract = new ethers.Contract(tokenAddress, erc20Abi, signer);
       const txApprove = await tokenContract.approve(
-        contracts.MCV2_MultiToken,
+        contracts.MCV2_MultiTokenReceiver,
         BigInt(wei(Number(amount))),
         // amount,
       );

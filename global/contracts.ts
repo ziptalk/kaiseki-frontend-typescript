@@ -6,6 +6,7 @@ const contracts: any = {
   Locker: "0x9DaD2d6FC514A8e2c3E8470392F77C12E583fbaD",
   MerkleDistributor: "0xF662c11F7d18F919e17E22604BBbED678501D3bf",
   Exchange: "0x2057e6a37b52AFa820f2f0cC21bfb8DeA79495C3",
+  MCV2_MultiTokenReceiver: "0x93d067916aef760729cF71Ed2b26e3a4DbB902C1",
 
   ReserveToken: "0x9F508aE06C9fE547F458F163C1eC9030efe4c466", // WETH address
 };

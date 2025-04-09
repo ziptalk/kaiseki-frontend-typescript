@@ -388,9 +388,12 @@ export const Tradesection = ({
         tokenAddress,
         isInputInTokenAmount ? inputInToken : inputInReserve,
       );
+      console.log({ amountETH });
 
       const valueInEth = ethers.formatEther(amountETH[0].toString());
+      console.log("valueInEth :" + valueInEth);
       const valueInWei = ethers.parseEther(valueInEth);
+      console.log("valueInWei :" + valueInWei);
       const mintDetail = await zapWriteContract.mintWithEth(
         tokenAddress,
         isInputInTokenAmount ? inputInToken : inputInReserve,
@@ -418,7 +421,6 @@ export const Tradesection = ({
         alert("Unknown error");
       }
       console.error("Error while minting:", error);
-      console.error(error);
     }
     setIsPending(false);
   };
@@ -429,6 +431,7 @@ export const Tradesection = ({
         setCurMemeTokenValue("0");
         return;
       }
+      console.log("account.address :" + account.address);
       const detail = await memeTokenContract.balanceOf(account.address);
       // console.log("detail :" + detail);
 
@@ -461,7 +464,7 @@ export const Tradesection = ({
         setCurMemeTokenValue("");
         return;
       }
-
+      console.log("tokenAddress :" + tokenAddress);
       const detail = await bondContract.priceForNextMint(tokenAddress);
       setPriceForNextMint(detail);
       // console.log("NextMintPrice :" + detail);
