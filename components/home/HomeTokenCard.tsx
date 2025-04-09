@@ -23,7 +23,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
     >
       {bondingCurve === "100" && (
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[#000000b3] p-5">
-          <img src="/images/not_for_sale.png" alt="Not for sale" />
+          <img src="/icons/not-for-sale.svg" alt="Not for sale" />
           <Pointing className="absolute right-20 top-20 animate-bounce" />
           <Link
             className="dexbutton hover:dexbutton-hover absolute bottom-5 right-5 flex h-[50px] w-[150px] items-center justify-center rounded-2xl text-base font-bold text-white"

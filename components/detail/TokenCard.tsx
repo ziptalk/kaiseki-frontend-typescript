@@ -24,7 +24,7 @@ const TokenCard: FC<TokenCardTypes> = ({
       {bondingCurve === "100" && (
         <div className="absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center rounded-lg bg-[#000000b3] p-5">
           <img
-            src="/images/not_for_sale.png"
+            src="/icons/not-for-sale.svg"
             alt="Not for sale"
             className="scale-90"
           />
