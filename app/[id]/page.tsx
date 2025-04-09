@@ -135,20 +135,20 @@ export default function Detail({ params }: { params: { id: string } }) {
               <ModuleInfo
                 title="Price"
                 className="mr-20 bg-transparent"
-                desc={pricePercentage.price + " ETH"}
+                desc={pricePercentage.price + " KAIA"}
                 percentage={pricePercentage.percentage}
                 key={"price-detail"}
               />,
               <ModuleInfo
                 title="Marketcap"
                 className="mr-20 bg-transparent"
-                desc={tokenInfo.marketCap + " ETH"}
+                desc={tokenInfo.marketCap + " KAIA"}
                 key={"Marketcap-detail"}
               />,
               <ModuleInfo
                 title="24H Volume"
                 className="mr-20 bg-transparent"
-                desc={volume + " ETH"}
+                desc={volume + " KAIA"}
                 key={"24H Volume-detail"}
               />,
               <ModuleInfo

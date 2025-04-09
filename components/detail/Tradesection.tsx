@@ -473,9 +473,9 @@ export const Tradesection = ({
   const EthSetButton = () => {
     const eths = [
       { name: "reset", eth: 0 },
-      { name: "+ 0.01 ETH", eth: 0.01 },
-      { name: "+ 0.1 ETH", eth: 0.1 },
-      { name: "+ 1 ETH", eth: 1 },
+      { name: "+ 0.01 KAIA", eth: 0.01 },
+      { name: "+ 0.1 KAIA", eth: 0.1 },
+      { name: "+ 1 KAIA", eth: 1 },
     ];
     return (
       <div className="flex items-center gap-2">
@@ -572,7 +572,7 @@ export const Tradesection = ({
           }}
           className={`mt-5 flex w-32 cursor-pointer items-center justify-center rounded-[4px] bg-[#454545] p-1 text-[12px] text-[#AEAEAE] hover:bg-[#333] hover:text-[#e2e2e2]`}
         >
-          Switch to {isInputInTokenAmount ? "ETH" : "$" + memeTokenSymbol}
+          Switch to {isInputInTokenAmount ? "KAIA" : "$" + memeTokenSymbol}
         </div>
       ) : (
         <div className="h-5"></div>

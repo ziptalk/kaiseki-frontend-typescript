@@ -105,20 +105,20 @@ export const BuySellLayout = ({
                 <ModuleInfo
                   title="Price"
                   className="mr-10 bg-transparent"
-                  desc={pricePercentage.price + " ETH"}
+                  desc={pricePercentage.price + " KAIA"}
                   percentage={pricePercentage.percentage}
                   key={"price"}
                 />,
                 <ModuleInfo
                   title="Marketcap"
                   className="mr-10 bg-transparent"
-                  desc={tokenInfo.marketCap + " ETH"}
+                  desc={tokenInfo.marketCap + " KAIA"}
                   key={"Marketcap"}
                 />,
                 <ModuleInfo
                   title="24H Volume"
                   className="mr-10 bg-transparent"
-                  desc={volume + " ETH"}
+                  desc={volume + " KAIA"}
                   key={"24H Volume"}
                 />,
                 <ModuleInfo
@@ -141,7 +141,7 @@ export const BuySellLayout = ({
                 {tokenInfo.name.length > 20
                   ? tokenInfo.name.slice(0, 17) + "..."
                   : tokenInfo.name}{" "}
-                ($ {tokenInfo.symbol}) / ETH
+                ($ {tokenInfo.symbol}) / KAIA
               </p>
             </div>
             <div className="h-[210px] border-black ">
