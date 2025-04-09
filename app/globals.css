@@ -16,7 +16,7 @@
 
 @layer components {
   .main {
-    @apply mx-auto flex h-full w-full items-center justify-center gap-[60px] rounded-3xl border-[11px]  border-[#ff2503] bg-primary shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.80)] outline-[#ff2503];
+    @apply mx-auto flex h-full w-full items-center justify-center gap-[60px] rounded-3xl border-[11px]  border-[#ff2503] bg-primary bg-[url('/images/Texture.png')] bg-cover bg-center bg-repeat-y shadow-[inset_0px_0px_30px_0px_rgba(0,0,0,0.80)] outline-[#ff2503];
   }
   .main-inner {
     @apply flex h-full w-full flex-col items-center justify-center gap-[20px] rounded-lg border-2 border-white bg-black py-[20px];

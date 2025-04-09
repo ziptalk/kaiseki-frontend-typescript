@@ -313,7 +313,7 @@ const Create: NextPage = () => {
   };
 
   return (
-    <div className="relative flex w-screen flex-col items-center gap-6 bg-[#0E0E0E] p-5">
+    <div className="relative flex w-screen flex-col items-center gap-6 p-5">
       <div className="mx-auto mt-3 hidden w-full md:block md:w-[1151px]">
         <PageLinkButton href={"/"} prev>
           Back Home

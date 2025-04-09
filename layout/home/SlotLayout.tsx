@@ -90,12 +90,12 @@ export const SlotLayout = () => {
     <>
       <div
         className="main w-full flex-col bg-[#ff2503] p-5 pb-0 md:h-[534px] md:w-[1150px] md:flex-row md:pb-5"
-        style={{
-          backgroundImage: "url('/images/Texture.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-          backgroundRepeat: "repeat-y",
-        }}
+        // style={{
+        //   backgroundImage: "url('/images/Texture.png')",
+        //   backgroundSize: "cover",
+        //   backgroundPosition: "center top",
+        //   backgroundRepeat: "repeat-y",
+        // }}
       >
         {/* <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14"> */}
         {/* raffle section */}
