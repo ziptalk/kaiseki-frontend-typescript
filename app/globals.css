@@ -222,20 +222,20 @@ input {
 }
 .raffle-typo {
   font-family: var(--font-anton);
-  -webkit-text-stroke-width: 0.4px;
-  -webkit-text-stroke-color: #860000;
-  font-weight: 400;
-  letter-spacing: -0.6px;
-  background: linear-gradient(0deg, #fff 0%, #faff00 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* -webkit-text-stroke-width: 0.4px; */
+  /* -webkit-text-stroke-color: #860000; */
+  /* font-weight: 400; */
+  /* letter-spacing: -0.6px; */
+  /* background: linear-gradient(0deg, #fff 0%, #faff00 100%); */
+  /* background-clip: text; */
+  /* -webkit-background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
 }
 
 .title-typo {
   font-family: var(--font-anton);
   -webkit-text-stroke: 0.7px #860000;
-  letter-spacing: -1px;
+  /* letter-spacing: -1px; */
   background: linear-gradient(0deg, #fff 0%, #faff00 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -349,4 +349,7 @@ input {
 
 html {
   scroll-behavior: smooth;
+}
+* {
+  color: #fff;
 }

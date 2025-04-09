@@ -25,7 +25,7 @@ export const Button = ({
           ? "button-shadow"
           : off
             ? "bg-[#303030] hover:bg-[#454545]"
-            : "hover:buttonhover bg-[#950000]",
+            : "hover:buttonhover bg-[#fe583e]",
         className,
       ])}
       onClick={onClick}

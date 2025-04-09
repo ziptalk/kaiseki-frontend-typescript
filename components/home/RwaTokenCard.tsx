@@ -76,7 +76,7 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           className="h-[66px] w-[66px] border-black md:h-[100px] md:w-[100px]"
           onError={(e) => {
             // 이미지 로드 실패 시 기본 이미지로 대체
-            e.currentTarget.src = "/icons/logo_icon.svg";
+            e.currentTarget.src = "/icons/userIcon.svg";
           }}
         />
       )}
@@ -90,9 +90,9 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           {`[ticker: ${props?.symbol || "---"}]`}
         </div>
         <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
-          <div className=" whitespace-nowrap text-[#FAFF00]">created by: </div>
+          <div className=" whitespace-nowrap">created by: </div>
           <img className="h-3 w-3" src="/icons/userIcon.svg" alt="" />
-          <div className=" truncate text-[#FAFF00]">
+          <div className=" truncate">
             {width < 768
               ? props?.creator
                 ? props.creator.slice(0, 6) + "..."
@@ -100,9 +100,7 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
               : props?.creator || "---"}
           </div>
         </div>
-        <div className="text-xs text-[#FAFF00]">
-          prize : {props?.rafflePrize || "---"}
-        </div>
+        <div className="text-xs">prize : {props?.rafflePrize || "---"}</div>
         <div
           className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
         >

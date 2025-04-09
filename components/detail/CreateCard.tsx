@@ -38,7 +38,7 @@ export const CreateCard = ({
           {name || "Name"} [ticker: {ticker || "ticker"}]
         </h1>
         <div className="flex items-center gap-1">
-          <p className="text-xs text-[#C5F900] ">Created by:</p>
+          <p className="text-xs ">Created by:</p>
           <Image
             className="rounded-full"
             src="/images/memesinoGhost.png"
@@ -47,7 +47,7 @@ export const CreateCard = ({
             height={12}
             style={{ width: 12, height: 12 }}
           />
-          <p className="text-xs text-[#C5F900] ">{address}</p>
+          <p className="text-xs ">{address}</p>
         </div>
 
         <div className="flex">
