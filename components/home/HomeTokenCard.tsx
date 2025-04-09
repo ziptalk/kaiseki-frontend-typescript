@@ -56,9 +56,9 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
         </div>
       </div>
       <div className="flex items-center gap-[5px]">
-        <h1 className="text-sm text-[#FAFF00]">Market cap :</h1>
+        <h1 className="text-sm text-[#fff]">Market cap :</h1>
         <h1
-          className={`${digital.variable} font-digital text-lg leading-[14px] text-[#FAFF00]`}
+          className={`${digital.variable} font-digital text-lg leading-[14px] text-[#fff]`}
         >
           {marketCap} KAIA
         </h1>

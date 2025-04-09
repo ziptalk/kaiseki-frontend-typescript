@@ -28,7 +28,7 @@ export const TokenDesc = ({
         [ticker: {ticker}]
       </h1>
       {createdBy && (
-        <div className=" flex items-center gap-[5px] text-sm text-[#FAFF00]">
+        <div className=" flex items-center gap-[5px] text-sm text-white">
           <h1 className="text-nowrap ">created by: </h1>
           <img
             className="rounded-full"
@@ -42,9 +42,9 @@ export const TokenDesc = ({
         </div>
       )}
       {rafflePrize && (
-        <h1 className="text-sm text-[#FAFF00]">prize: {rafflePrize}</h1>
+        <h1 className="text-sm text-white">prize: {rafflePrize}</h1>
       )}
-      <p className="overflow-scroll break-words text-[14px] text-[#CFCFCF] md:h-14 md:w-full">
+      <p className="overflow-scroll break-words text-[14px] text-white md:h-14 md:w-full">
         {description}
       </p>
     </div>

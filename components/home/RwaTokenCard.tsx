@@ -90,9 +90,9 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
           {`[ticker: ${props?.symbol || "---"}]`}
         </div>
         <div className="mt-0.5 flex h-[14px] items-center gap-[2px] text-xs md:gap-[5px]">
-          <div className=" whitespace-nowrap">created by: </div>
+          <div className=" whitespace-nowrap text-white">created by: </div>
           <img className="h-3 w-3" src="/icons/userIcon.svg" alt="" />
-          <div className=" truncate">
+          <div className=" truncate text-white">
             {width < 768
               ? props?.creator
                 ? props.creator.slice(0, 6) + "..."
@@ -100,7 +100,9 @@ export const RWATokenCard = ({ props }: { props: TokenResponse }) => {
               : props?.creator || "---"}
           </div>
         </div>
-        <div className="text-xs">prize : {props?.rafflePrize || "---"}</div>
+        <div className="text-xs text-white">
+          prize : {props?.rafflePrize || "---"}
+        </div>
         <div
           className={`raffle-typo ${anton.variable} font-anton text-sm md:text-lg`}
         >
