@@ -353,8 +353,8 @@ const Header: FC = () => {
           </ModalContentBox>
         </ModalRootWrapper>
       )}
-      <div className="relative left-0 top-0 z-[50] flex h-14 w-screen md:h-[81px] " />
-      <header className="fixed left-0 top-0 z-[50] flex h-14 w-screen border-b border-[#767676] bg-[#262626]  px-32 md:h-[80px] ">
+      <div className="relative left-0 top-0 z-50 flex h-14 w-screen md:h-[81px] " />
+      <header className="fixed left-0 top-0 z-50 flex h-14 w-screen border-b border-[#767676] bg-[#262626]  px-32 md:h-[80px] ">
         <div className="flex h-full w-full items-center justify-between px-2 md:px-7">
           <div className="flex h-[40px] w-full items-center justify-between px-5 text-white">
             <div className="flex h-full items-center justify-evenly gap-4 md:w-[300px] md:gap-[30px]">

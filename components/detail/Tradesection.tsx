@@ -54,7 +54,11 @@ export const Tradesection = ({
   const { abi: MCV2_TokenABI } = MCV2_TokenArtifact;
   const { abi: MCV2_BondABI } = MCV2_BondArtifact;
   const { abi: MCV2_ZapABI } = MCV2_ZapArtifact;
-  const errorDecoder = ErrorDecoder.create([MCV2_ZapABI]);
+  const errorDecoder = ErrorDecoder.create([
+    MCV2_ZapABI,
+    MCV2_BondABI,
+    MCV2_TokenABI,
+  ]);
 
   const memeTokenContract = new ethers.Contract(
     tokenAddress,
@@ -585,7 +589,7 @@ export const Tradesection = ({
         <>
           <div className="relative flex w-full items-center">
             <input
-              className="my-[10px] h-[50px] w-full rounded border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
+              className="my-[10px] h-[50px] w-full rounded-sm border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"
@@ -626,7 +630,7 @@ export const Tradesection = ({
           {/*input amount == RESERVE_SYMBOL*/}
           <div className="relative flex w-full items-center">
             <input
-              className="my-[10px] h-[50px] w-full rounded border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
+              className="my-[10px] h-[50px] w-full rounded-sm border border-[#5C5C5C] bg-[#454545] px-[50px] text-[#FFFFFF] md:rounded-[10px]"
               type="number"
               placeholder="Enter the amount"
               name="inputValue"

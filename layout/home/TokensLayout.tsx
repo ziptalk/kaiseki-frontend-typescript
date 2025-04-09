@@ -116,7 +116,7 @@ export const TokensLayout = () => {
             }}
           >
             <input
-              className="flex-[2] rounded-[10px] border border-white bg-black px-[20px] text-white placeholder:text-[#808080] md:text-[15px]"
+              className="flex-2 rounded-[10px] border border-white bg-black px-[20px] text-white placeholder:text-[#808080] md:text-[15px]"
               type="text"
               value={value}
               onChange={(e) => setValue(e.target.value)}

@@ -155,7 +155,7 @@ export const BuySellLayout = ({
           </div>
           {isMobile && (
             <div className="flex items-center justify-between gap-2 bg-[#1c1c1c] p-1">
-              <div className=" overflow-hidden overflow-ellipsis whitespace-nowrap text-xs text-[#aeaeae]">
+              <div className=" overflow-hidden text-ellipsis whitespace-nowrap text-xs text-[#aeaeae]">
                 Contract Address: {tokenAddress}
               </div>
               <button

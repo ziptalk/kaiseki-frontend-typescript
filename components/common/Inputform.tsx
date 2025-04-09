@@ -26,7 +26,7 @@ export const Inputform = ({
   onChange,
 }: InputformProps) => {
   const sharedStyle =
-    "mt-2 h-13 w-full rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-none";
+    "mt-2 h-13 w-full rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 text-white outline-hidden";
   return (
     <div className="w-full md:w-[484px]">
       <div className="text-sm font-bold text-white md:text-[16px]">
@@ -52,7 +52,7 @@ export const Inputform = ({
         </div>
       ) : type === "number" ? (
         <div
-          className={`h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 outline-none ${value !== "" && (Number(value) < 0.01 || (value?.includes(".") && value?.split(".")[1].length > 2)) ? "border-[#FF2626] text-[#FF2626]" : "border-[#8F8F8F] text-white"}`}
+          className={`h-13 mt-2 flex w-full items-center justify-between rounded-md border border-[#8F8F8F] bg-[#303030] p-2.5 outline-hidden ${value !== "" && (Number(value) < 0.01 || (value?.includes(".") && value?.split(".")[1].length > 2)) ? "border-[#FF2626] text-[#FF2626]" : "border-[#8F8F8F] text-white"}`}
         >
           <input
             type={type ? type : `text`}
@@ -60,7 +60,7 @@ export const Inputform = ({
             placeholder={
               type === "number" ? "The minimum value allowed is 0.01 KAIA" : ""
             }
-            className={`h-full w-full bg-transparent outline-none`}
+            className={`h-full w-full bg-transparent outline-hidden`}
             {...register(name, { maxLength, onChange })}
           />
           <div className="text-sm font-bold">KAIA</div>

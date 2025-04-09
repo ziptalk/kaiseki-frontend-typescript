@@ -66,7 +66,7 @@ export const HomeTokenCard: FC<TokenCardTypes> = ({
       </div>
       <div className="mt-[8px] h-[6px] w-full rounded-full bg-[#343434] text-[13px]">
         <div
-          className="h-full rounded-full bg-gradient-to-t from-[#ff583e] to-[#ff583e]"
+          className="h-full rounded-full bg-linear-to-t from-[#ff583e] to-[#ff583e]"
           // style={{ width: `${Math.floor(bondingCurveProgress)}%` }}
           style={{ width: `${Math.floor(Number(bondingCurve))}%` }}
         ></div>

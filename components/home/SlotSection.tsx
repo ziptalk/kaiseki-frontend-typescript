@@ -90,7 +90,7 @@ export const SlotSection = ({ cid }: { cid: string }) => {
   ];
 
   return (
-    <div className="flex h-28 w-full gap-[5px] rounded-lg border-[5px] border-[#FF583E] bg-black bg-gradient-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px] md:h-[140px]">
+    <div className="flex h-28 w-full gap-[5px] rounded-lg border-[5px] border-[#FF583E] bg-black bg-linear-to-b from-neutral-600 via-neutral-800 to-neutral-600 p-[10px] md:h-[140px]">
       <SlotColumn images={images1} isSpinning={isSpinning[0]} idx={1} />
       <SlotColumn images={images2} isSpinning={isSpinning[1]} idx={6} />
       <SlotColumn images={images3} isSpinning={isSpinning[2]} idx={11} />
@@ -117,7 +117,7 @@ const SlotColumn: FC<{
   }, []);
 
   return (
-    <div className="flex h-full flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-white via-[#C0C0C0] to-white shadow-inner">
+    <div className="flex h-full flex-1 flex-col items-center justify-center overflow-hidden rounded-xl bg-linear-to-b from-white via-[#C0C0C0] to-white shadow-inner">
       <div
         className={`slot-container ${isSpinning ? "spinning" : "stopped"} ${
           isSpinning || idx === 1
