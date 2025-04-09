@@ -36,7 +36,6 @@ const SliderComp = () => {
     try {
       setIsLoading(true);
       const response = await Raffle();
-      console.log("response", response);
 
       if (!response) {
         setError("API 응답을 받지 못했습니다.");
@@ -52,8 +51,10 @@ const SliderComp = () => {
     }
   };
 
-  const tokens = raffleData?.result?.tokens || [];
-  const uniqueTokens = Array.isArray(tokens) ? tokens.flat() : [tokens];
+  let tokens = raffleData?.result?.tokens || [];
+  let uniqueTokens: TokenResponse[] = Array.isArray(tokens)
+    ? tokens
+    : [tokens as TokenResponse];
 
   const settings = {
     dots: false,
@@ -61,31 +62,24 @@ const SliderComp = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: uniqueTokens.length > 1,
     autoplaySpeed: 5000,
     arrows: false,
+    adaptiveHeight: true,
+    swipe: true,
+    swipeToSlide: true,
+    touchMove: true,
+    className: "raffle-slider",
     beforeChange: (current: number, next: number) => {
       setOldSlide(current);
       setActiveSlide(next);
     },
     afterChange: (current: number) => setActiveSlide2(current),
+    lazyLoad: "ondemand" as const,
+    fade: false,
+    pauseOnHover: true,
+    cssEase: "linear",
   };
-
-  if (isLoading && !raffleData) {
-    return (
-      <div className="main-inner flex w-full flex-col items-center justify-center px-9 md:h-[474px] md:w-[520px] md:px-14">
-        <p className="text-lg text-white">Loading...</p>
-      </div>
-    );
-  }
-
-  if (uniqueTokens.length === 0) {
-    return (
-      <div className="main-inner flex w-full flex-col items-center justify-center px-9 md:h-[474px] md:w-[520px] md:px-14">
-        <p className="text-lg text-white">There is no ongoing raffle.</p>
-      </div>
-    );
-  }
 
   const renderRaffleCard = (raffle: TokenResponse, index: number) => {
     let href = "/raffle";
@@ -145,34 +139,46 @@ const SliderComp = () => {
 
   return (
     <div className="main-inner w-full px-9 md:h-[474px] md:w-[520px] md:px-14">
-      {uniqueTokens.length > 1 ? (
-        <Slider {...settings} ref={sliderRef}>
-          {uniqueTokens.map(renderRaffleCard)}
-        </Slider>
+      {isLoading && !raffleData ? (
+        <div className="flex w-full flex-col items-center justify-center">
+          <p className="text-lg text-white">Loading...</p>
+        </div>
+      ) : uniqueTokens.length === 0 ? (
+        <div className="flex w-full flex-col items-center justify-center">
+          <p className="text-lg text-white">There is no ongoing raffle.</p>
+        </div>
+      ) : uniqueTokens.length > 1 ? (
+        <>
+          <div className="slider-container w-full">
+            <Slider {...settings} ref={sliderRef}>
+              {uniqueTokens.map((raffle, index) =>
+                renderRaffleCard(raffle, index),
+              )}
+            </Slider>
+          </div>
+
+          <div className="mt-4 flex select-none items-center justify-center gap-3 md:gap-5">
+            <Arrow
+              fill={"white"}
+              className="cursor-pointer"
+              onClick={() => {
+                sliderRef.current?.slickPrev();
+              }}
+            />
+            <h1 className="text-sm text-white md:text-base">
+              {activeSlide + 1} / {uniqueTokens.length}
+            </h1>
+            <Arrow
+              fill={"white"}
+              className="rotate-180 transform cursor-pointer"
+              onClick={() => {
+                sliderRef.current?.slickNext();
+              }}
+            />
+          </div>
+        </>
       ) : (
         renderRaffleCard(uniqueTokens[0], 0)
-      )}
-
-      {uniqueTokens.length > 1 && (
-        <div className="flex select-none items-center gap-3 md:gap-5">
-          <Arrow
-            fill={"white"}
-            className="cursor-pointer"
-            onClick={() => {
-              sliderRef.current?.slickPrev();
-            }}
-          />
-          <h1 className="text-sm text-white md:text-base">
-            {activeSlide + 1} / {uniqueTokens.length}
-          </h1>
-          <Arrow
-            fill={"white"}
-            className="rotate-180 transform cursor-pointer"
-            onClick={() => {
-              sliderRef.current?.slickNext();
-            }}
-          />
-        </div>
       )}
     </div>
   );
