@@ -58,12 +58,12 @@ export const Inputform = ({
             type={type ? type : `text`}
             step={0.01}
             placeholder={
-              type === "number" ? "The minimum value allowed is 0.01 ETH" : ""
+              type === "number" ? "The minimum value allowed is 0.01 KAIA" : ""
             }
             className={`h-full w-full bg-transparent outline-none`}
             {...register(name, { maxLength, onChange })}
           />
-          <div className="text-sm font-bold">ETH</div>
+          <div className="text-sm font-bold">KAIA</div>
         </div>
       ) : (
         <input
